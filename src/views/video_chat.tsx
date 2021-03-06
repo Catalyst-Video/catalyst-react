@@ -1,18 +1,12 @@
 import React, { useState } from "react";
 import ChatComponent from "../components/chat_comp";
 import DetectRTC from "detectrtc";
-import {
-	getBrowserName,
-	displayWaitingCaption,
-	muteMicrophone
-} from "../utils/main_utils";
-// sounds
-import joinSound from "../assets/sound/join.mp3";
-import leaveSound from "../assets/sound/leave.mp3";
+import { getBrowserName, displayWaitingCaption } from "../utils/main_utils";
 import { fadeIn, fadeOut } from "../utils/fade";
-// import Snackbar from "../components/toast-snackbar";
 import { VideoChatData } from "../utils/chat_stream";
 import { useSnackbar } from "react-simple-snackbar";
+import ReactTooltip from "react-tooltip";
+// icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faClosedCaptioning,
@@ -23,6 +17,9 @@ import {
 	faPause,
 	faPhoneSlash
 } from "@fortawesome/free-solid-svg-icons";
+// sounds
+import joinSound from "../assets/sound/join.mp3";
+import leaveSound from "../assets/sound/leave.mp3";
 
 const captionText = document.querySelector("remote-video-text");
 const buttonLabels = document.querySelectorAll(
@@ -84,44 +81,7 @@ const startUp = () => {
 		});
 	});
 
-	// Fade out / show UI on mouse move
-	/* 	var timedelay = 1;
-	function delayCheck() {
-		if (timedelay === 5) {
-			// $(".multi-button").fadeOut();
-			$("#header").fadeOut();
-			$(".multi-button").fadeOut();
-			timedelay = 1;
-		}
-		timedelay = timedelay + 1;
-	}
-	$(document).mousemove(function () {
-		$(".multi-button").fadeIn();
-		$("#header").fadeIn();
-		timedelay = 1;
-		clearInterval(_delay);
-		_delay = setInterval(delayCheck, 500);
-	});
-	_delay = setInterval(delayCheck, 500);
- */
-	// // Show accept webcam snackbar
-	// Snackbar.show({
-	// 	text: "Please press allow to enable webcam and audio access",
-	// 	actionText: "Directions",
-	// 	width: "455px",
-	// 	actionTextColor: "#000000",
-	// 	pos: "top-right",
-	// 	duration: 50000,
-	// 	onActionClick: function (element) {
-	// 		window.open(
-	// 			"https://help.clipchamp.com/en/articles/1505527-how-do-i-enable-my-webcam-for-recording",
-	// 			"_blank"
-	// 		);
-	// 	}
-	// });
-
 	displayWaitingCaption();
-
 	// On change media devices refresh page and switch to system default
 	navigator.mediaDevices.ondevicechange = () => window.location.reload();
 };
@@ -131,21 +91,37 @@ startUp();
 const VideoChat = ({
 	sessionKey,
 	chatOptions,
-	showChat,
+	defaultSettings,
 	hideLogo,
 	customModalMessage
 }: {
 	sessionKey: string;
 	chatOptions?: any;
-	showChat?: boolean;
+	defaultSettings?: {
+		showChat?: boolean;
+		muted?: boolean;
+		showCaptions?: boolean;
+	};
 	hideLogo?: boolean;
 	customModalMessage?: string;
 }) => {
 	/* STATE */
-	const mode = useState("camera");
-	const isFullscreen = useState(false);
-	const sendingCaptions = useState(false);
-	const receivingCaptions = useState(false);
+	// const mode = useState("camera");
+	// const isFullscreen = useState(false);
+	// const sendingCaptions = useState(false);
+	// const receivingCaptions = useState(false);
+
+	const [muted, setMuted] = useState(
+		defaultSettings?.muted ? defaultSettings.muted : false
+	);
+	const [vidPaused, setVidPaused] = useState(false);
+	const [sharing, setSharing] = useState(false);
+	const [showChat, setShowChat] = useState(
+		defaultSettings?.showChat ? defaultSettings.showChat : true
+	);
+	const [captions, setCaptions] = useState(
+		defaultSettings?.showCaptions ? defaultSettings.showCaptions : false
+	);
 
 	const [openSnackbar, closeSnackbar] = useSnackbar({ position: "top-center" });
 
@@ -203,8 +179,19 @@ const VideoChat = ({
 
 				<div className="multi-button">
 					<div className="buttonContainer">
+						<ReactTooltip
+							id="mute-tooltip"
+							place="top"
+							type="dark"
+							effect="float"
+						>
+							<div className="HoverState" id="mic-text">
+								Mute Audio
+							</div>
+						</ReactTooltip>
 						<button
-							id="Hover"
+							data-tip="mute-tooltip"
+							data-for="mute-tooltip"
 							className="hoverButton"
 							onClick={
 								// TODO: muteMicrophone
@@ -213,9 +200,6 @@ const VideoChat = ({
 						>
 							<FontAwesomeIcon icon={faMicrophone} />
 						</button>
-						<div id="HoverState">
-							<div id="mic-text">Mute</div>
-						</div>
 					</div>
 
 					{/* <div className="buttonContainer">
@@ -232,8 +216,19 @@ const VideoChat = ({
 					</div> */}
 
 					<div className="buttonContainer">
+						<ReactTooltip
+							id="pause-tooltip"
+							place="top"
+							type="dark"
+							effect="float"
+						>
+							<div className="HoverState" id="video-text">
+								Pause Video
+							</div>
+						</ReactTooltip>
 						<button
-							id="Hover"
+							data-tip="pause-tooltip"
+							data-for="pause-tooltip"
 							className="hoverButton"
 							onClick={
 								// TODO: pauseVideo
@@ -242,13 +237,22 @@ const VideoChat = ({
 						>
 							<FontAwesomeIcon icon={faPause} />
 						</button>
-						<div id="HoverState">
-							<div id="video-text">Pause Video</div>
-						</div>
 					</div>
 
 					<div className="buttonContainer">
+						<ReactTooltip
+							id="share-tooltip"
+							place="top"
+							type="dark"
+							effect="float"
+						>
+							<div className="HoverState" id="swap-text">
+								Share Screen
+							</div>
+						</ReactTooltip>
 						<button
+							data-tip="share-tooltip"
+							data-for="share-tooltip"
 							className="hoverButton"
 							id="share-button"
 							onClick={
@@ -258,14 +262,22 @@ const VideoChat = ({
 						>
 							<FontAwesomeIcon icon={faDesktop} />
 						</button>
-						<div className="HoverState" id="swap-text">
-							Share Screen
-						</div>
 					</div>
 
 					<div className="buttonContainer">
+						<ReactTooltip
+							id="chat-tooltip"
+							place="top"
+							type="dark"
+							effect="float"
+						>
+							<div className="HoverState" id="chat-text">
+								Hide Chat
+							</div>
+						</ReactTooltip>
 						<button
-							id="Hover"
+							data-tip="chat-tooltip"
+							data-for="chat-tooltip"
 							className="hoverButton"
 							onClick={
 								// TODO: toggleChat
@@ -274,33 +286,47 @@ const VideoChat = ({
 						>
 							<FontAwesomeIcon icon={faComment} />
 						</button>
-						<div id="HoverState">
-							<div id="chat-text">Hide Chat</div>
-						</div>
 					</div>
 
 					<div className="buttonContainer">
-						<div id="Hover">
-							<button
-								className="hoverButton"
-								id="pip-button"
-								onClick={
-									// TODO: togglePictureInPicture
-									() => {}
-								}
-							>
-								<FontAwesomeIcon icon={faExternalLinkAlt} />
-							</button>
-						</div>
-
-						<div id="HoverState">
-							<div id="pip-text">Toggle Picture in Picture</div>
-						</div>
-					</div>
-
-					<div className="buttonContainer">
+						<ReactTooltip
+							id="pic-tooltip"
+							place="top"
+							type="dark"
+							effect="float"
+						>
+							<div className="HoverState" id="pip-text">
+								Picture in Picture
+							</div>
+						</ReactTooltip>
 						<button
-							id="Hover"
+							data-tip="pic-tooltip"
+							data-for="pic-tooltip"
+							className="hoverButton"
+							id="pip-button"
+							onClick={
+								// TODO: togglePictureInPicture
+								() => {}
+							}
+						>
+							<FontAwesomeIcon icon={faExternalLinkAlt} />
+						</button>
+					</div>
+
+					<div className="buttonContainer">
+						<ReactTooltip
+							id="caption-tooltip"
+							place="top"
+							type="dark"
+							effect="float"
+						>
+							<div className="HoverState" id="caption-button-text">
+								Closed Captions
+							</div>
+						</ReactTooltip>
+						<button
+							data-tip="caption-tooltip"
+							data-for="caption-tooltip"
 							className="hoverButton"
 							onClick={
 								// TODO: requestToggleCaptions
@@ -309,14 +335,20 @@ const VideoChat = ({
 						>
 							<FontAwesomeIcon icon={faClosedCaptioning} />
 						</button>
-						<div id="HoverState">
-							<div id="caption-button-text">Start Live Caption</div>
-						</div>
 					</div>
 
 					<div className="buttonContainer">
+						<ReactTooltip
+							id="end-call-tooltip"
+							place="top"
+							type="dark"
+							effect="float"
+						>
+							<div className="HoverState">End Call</div>
+						</ReactTooltip>
 						<button
-							id="Hover"
+							data-tip="end-call-tooltip"
+							data-for="end-call-tooltip"
 							className="hoverButton"
 							onClick={() => {
 								window.location.href = "/newcall";
@@ -324,15 +356,13 @@ const VideoChat = ({
 						>
 							<FontAwesomeIcon icon={faPhoneSlash} />
 						</button>
-						<div id="HoverState">End Call</div>
-
 						<audio id="join-sound" src={joinSound}></audio>
 						<audio id="leave-sound" src={leaveSound}></audio>
 					</div>
 				</div>
 			</div>
 
-			<ChatComponent defaultShowChat={showChat ? showChat : true} />
+			<ChatComponent defaultShowChat={chatVisible} />
 		</>
 	);
 };
