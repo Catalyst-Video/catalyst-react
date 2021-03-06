@@ -1,0 +1,597 @@
+@import url("https://fonts.googleapis.com/css?family=Fira+Sans:600|Heebo:400,500,700&display=swap");
+
+/*Fade in page on load*/
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* End Fade in page on load*/
+
+body {
+  background: #f3f5fd;
+  margin: 0;
+  padding: 0;
+  opacity: 0; /* make things invisible upon start */
+  -webkit-animation: fadeIn ease-in 1;
+  -moz-animation: fadeIn ease-in 1;
+  animation: fadeIn ease-in 1;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-duration: 0.3s;
+  -moz-animation-duration: 0.3s;
+  animation-duration: 0.3s;
+  overflow: hidden;
+}
+
+video {
+  background: #16171a;
+}
+
+#header {
+  color: white;
+  padding: 20px;
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
+  float: left;
+}
+
+#header p,
+img {
+  float: left;
+  padding: 7px;
+}
+
+#header,
+a {
+  color: white;
+  text-decoration: none;
+}
+
+#permanent-header {
+  width: 100%;
+  height: 50px;
+  background-color: black;
+  color: white;
+  display: flex;
+  font-family: "Montserrat", sans-serif;
+  align-items: center;
+  justify-content: center;
+}
+
+#support-link {
+  color: #00a8ff;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+/*Moveable local video id*/
+#moveable {
+  z-index: 100;
+  position: absolute;
+  width: 15%;
+  cursor: move;
+}
+
+#local-video {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  background: #16171a;
+}
+
+/*Text inside local video*/
+#moveable p {
+  z-index: 101;
+  position: absolute;
+  color: white;
+  font-family: "Heebo", sans-serif;
+  white-space: nowrap;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  background: rgba(0, 0, 0, 0.12);
+  padding: 10px;
+  border-radius: 5px;
+}
+
+#wrapper {
+  display: flex;
+  /* flex: 1 1 20em; */
+  /* flex-basis: 30%; */
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+}
+
+/*caption text*/
+#remote-video-text {
+  margin: 0;
+  position: absolute;
+  max-height: 300px;
+  top: calc(80%);
+  left: 50%;
+  width: 400px;
+  margin-left: -200px;
+  z-index: 1;
+  color: black;
+  font-family: "Heebo", sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+  border-radius: 10px;
+  padding: 10px;
+}
+/* TEST */
+
+/* #moveable #remote-video-text {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+} */
+#remote-video:first-child:nth-last-child(1) {
+  width: min(calc(80vh * 4 / 3), 80vw);
+  max-height: 80vh;
+}
+
+/* two items */
+#remote-video:first-child:nth-last-child(2),
+#remote-video:first-child:nth-last-child(2) ~ #remote-video {
+  max-height: 40vh;
+}
+
+/* three items */
+#remote-video:first-child:nth-last-child(3),
+#remote-video:first-child:nth-last-child(3) ~ #remote-video {
+  max-height: 40vh;
+}
+
+/* four items */
+#remote-video:first-child:nth-last-child(4),
+#remote-video:first-child:nth-last-child(4) ~ #remote-video {
+  max-height: 40vh;
+}
+
+#remote-video {
+  padding: 0;
+  margin: 10px;
+  width: auto;
+  border-radius: 10px;
+  background-image: url(../assets/img/wordmark_logo.png);
+  background-size: 400px auto;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.fullscreen {
+  width: 100%;
+  height: 100%;
+}
+
+/*Buttons*/
+.multi-button button {
+  border: none;
+  font-size: 1.5rem;
+  transition: all 0.3s ease-in-out;
+  color: black;
+  background: transparent;
+  cursor: pointer;
+  padding: 7px;
+  border-radius: 5px;
+}
+
+button:focus {
+  outline: none;
+}
+
+button:hover {
+  color: #2253ff;
+}
+
+.multi-button {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  bottom: calc(7.5vh - 40px);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 1);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  /* grid-gap: 0.2rem; */
+  width: 500px;
+}
+
+.HoverState {
+  z-index: 999;
+  color: white;
+  font-family: "Heebo", sans-serif;
+  font-size: 0.8rem;
+  position: absolute;
+  left: 35px;
+  white-space: nowrap;
+  top: 0px;
+  font-weight: bold;
+  background: #16171a;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.buttonContainer {
+  position: relative;
+  margin: 0 auto;
+}
+
+/*.fa-phone-slash {*/
+/*  color: #470000;*/
+/*}*/
+
+/*End buttons*/
+
+/*Text chat*/
+#entire-chat {
+  position: absolute;
+  height: 100%;
+  right: 0;
+  width: 400px;
+  padding: 0;
+  margin: 20px;
+}
+
+.compose {
+  width: 400px;
+  height: 45px;
+  font-family: "Heebo", sans-serif;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 100;
+  border-radius: 10px;
+  margin: 20px;
+  box-sizing: border-box;
+  padding: 10px;
+  padding-left: 16px;
+  background: #fff;
+  overflow-x: hidden;
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.compose input {
+  /*font-family: inherit;*/
+  font-size: 0.8rem;
+  border: none;
+  width: 100%;
+  resize: none;
+  outline: none;
+  background-color: inherit;
+  color: black;
+}
+
+#chat-zone {
+  padding-top: 20px;
+  box-sizing: border-box;
+  position: absolute;
+  height: 100%;
+  right: 0;
+  width: 100%;
+  overflow: scroll;
+  font-family: "Heebo", sans-serif;
+  font-size: 0.8rem;
+}
+
+#chat-zone::-webkit-scrollbar {
+  width: 0 !important;
+}
+
+#chat-zone .chat-messages .message-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 0 0px 4px;
+  margin-bottom: 10px;
+}
+
+.chat-messages {
+  width: 100%;
+  overflow-x: hidden;
+  padding-bottom: 80px;
+  overflow: -moz-scrollbars-none;
+}
+
+#chat-zone .chat-messages .message-item.customer {
+  padding-left: 40px;
+}
+
+/*received messages*/
+#chat-zone .message-item.moderator .message-bloc {
+  background-color: white;
+  color: black;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  max-width: 100%;
+  border-style: solid;
+  border-width: 2px;
+  border-color: var(--bloc-color);
+  border-radius: 20px 20px 20px 5px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+/*sent messages*/
+#chat-zone .message-item.customer .message-bloc {
+  background-color: white;
+  color: black;
+  border-style: solid;
+  border-width: 2px;
+  border-color: var(--bloc-color);
+  border-radius: 20px 20px 5px 20px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+#chat-zone .chat-messages .message-item.customer .message-bloc {
+  margin-left: auto;
+}
+
+#chat-zone .chat-messages .message-item .message-bloc {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  max-width: 100%;
+}
+
+.message {
+  word-break: break-all;
+}
+
+.message a {
+  text-decoration: underline;
+}
+
+.cssanimation {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+.fadeInBottom {
+  animation-name: fadeInBottom;
+}
+@keyframes fadeInBottom {
+  from {
+    opacity: 0;
+    transform: translateY(200%);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/*End text chat*/
+
+/* Begin mobile layout */
+
+@media (max-width: 640px) {
+  /* @media (min-width: 320px) and (max-width: 480px) { */
+
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    font-size: 1em;
+  }
+
+  #header {
+    z-index: 5;
+  }
+
+  #header img {
+    width: auto;
+    height: 2rem;
+  }
+
+  #header p {
+    margin: 0;
+    line-height: 2rem;
+  }
+  #wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, calc(-50% - 3rem));
+    max-height: 90%;
+    max-width: 100%;
+  }
+  #remote-video {
+    /* width: 75vw;
+    height: calc((16/9) * 75vw); */
+    width: 100%;
+    height: 100%;
+    /* border: 3px solid red; */
+  }
+  .multi-button {
+    position: fixed;
+    left: 0;
+    top: initial;
+    bottom: 0;
+    width: 80vw;
+    height: 3rem;
+    margin: 0 10vw;
+    -ms-transform: translate(0%, 0%);
+    transform: translate(0%, 0%);
+    z-index: 999;
+    border-radius: 10px;
+    padding: 0;
+    /* display: flex; */
+    flex-direction: row;
+    /* overflow: hidden; */
+  }
+
+  .buttonContainer {
+    position: relative;
+    height: 100%;
+    font-size: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+    width: 100%;
+    margin: 0;
+    /* line-height: 1.5rem; */
+  }
+
+  .multi-button button {
+    position: relative;
+    width: 100%;
+    border: none;
+    font-size: 2rem;
+    transition: all 0.3s ease-in-out;
+    color: gray;
+    background: transparent;
+    cursor: pointer;
+    padding: 7px;
+    border-radius: 5px;
+  }
+
+  .HoverState {
+    display: none !important;
+  }
+
+  .buttonContainer:nth-child(3),
+  .buttonContainer:nth-child(5) {
+    display: none;
+  }
+
+  #entire-chat {
+    pointer-events: none;
+
+    position: absolute;
+    top: 3rem;
+    right: 0;
+    height: calc(100% - 3rem - 3rem);
+    width: 100vw;
+    /* padding: 1rem 0; */
+    padding: 0;
+    /* border: 3px solid green; */
+    text-align: center;
+    /* background: #16171a; */
+  }
+
+  #chat-zone {
+    position: relative;
+    padding-top: 20px;
+    width: 100%;
+    height: calc(100% - 2rem);
+    margin-left: 0;
+    /* box-shadow: 4px 4px 12px #030506, -4px -4px 12px #292a30; */
+    /* border: 5px solid blue */
+    border-radius: 10px;
+    /* background: #16171a; */
+  }
+
+  .compose {
+    position: absolute;
+    font-size: 0.8rem;
+    left: 10%;
+    right: initial;
+    /* bottom: calc(3rem + 2rem); */
+    bottom: 0;
+    width: 80%;
+    height: 2rem;
+    margin: 0.5rem 0;
+    padding: 0;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+
+  .compose input {
+    width: 90%;
+    height: 2rem;
+    line-height: 2rem;
+  }
+
+  .compose input::placeholder {
+    color: gray;
+    font-weight: bold;
+  }
+}
+
+/*Hide video controls on mobile*/
+/*todo: still buggy on iOS, play/pause button pops up on load for iOS,
+   goes away after you press pause then play again*/
+video ::-webkit-media-controls-panel {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
+video ::--webkit-media-controls-play-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
+video ::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
+/* End mobile layout */
