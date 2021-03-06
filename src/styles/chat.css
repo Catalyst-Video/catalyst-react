@@ -248,7 +248,7 @@ button:hover {
   width: 500px;
 }
 
-.HoverState {
+/* .div:hover + div .HoverState {
   z-index: 999;
   color: white;
   font-family: "Heebo", sans-serif;
@@ -261,6 +261,39 @@ button:hover {
   background: #16171a;
   padding: 10px;
   border-radius: 10px;
+  display: block !important;
+} */
+
+#HoverState {
+  opacity: 0.0;
+  -webkit-transition: all 500ms ease-in-out;
+  -moz-transition: all 500ms ease-in-out;
+  -ms-transition: all 500ms ease-in-out;
+  -o-transition: all 500ms ease-in-out;
+  transition: all 500ms ease-in-out;
+  z-index: 999;
+  color: white;
+  font-family: "Heebo", sans-serif;
+  font-size: 0.8rem;
+  position: absolute;
+  /* left: 35px; */
+  white-space: nowrap;
+  top: 0px;
+  font-weight: bold;
+  background: #16171a;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* #Hover {
+    width:80px;
+    height:20px;
+    background-color:green;
+    margin-bottom:15px;
+} */
+
+#Hover:hover + #HoverState {
+    opacity: 1.0;
 }
 
 .buttonContainer {
@@ -514,10 +547,6 @@ button:hover {
     border-radius: 5px;
   }
 
-  .HoverState {
-    display: none !important;
-  }
-
   .buttonContainer:nth-child(3),
   .buttonContainer:nth-child(5) {
     display: none;
@@ -593,5 +622,10 @@ video ::-webkit-media-controls-start-playback-button {
   display: none !important;
   -webkit-appearance: none;
 }
+
+.HoverState {
+    display: none !important;
+}
+
 
 /* End mobile layout */

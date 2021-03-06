@@ -1,16 +1,33 @@
 import React, { useState } from "react";
 import ChatComponent from "../components/chat_comp";
 import DetectRTC from "detectrtc";
-import { getBrowserName } from "../utils/main_utils";
+import {
+	getBrowserName,
+	displayWaitingCaption,
+	muteMicrophone
+} from "../utils/main_utils";
 // sounds
 import joinSound from "../assets/sound/join.mp3";
 import leaveSound from "../assets/sound/leave.mp3";
 import { fadeIn, fadeOut } from "../utils/fade";
-import Snackbar from "../components/toast-snackbar";
-// import VideoChatData from "../utils/chat_stream";
+// import Snackbar from "../components/toast-snackbar";
+import { VideoChatData } from "../utils/chat_stream";
+import { useSnackbar } from "react-simple-snackbar";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+	faClosedCaptioning,
+	faComment,
+	faDesktop,
+	faExternalLinkAlt,
+	faMicrophone,
+	faPause,
+	faPhoneSlash
+} from "@fortawesome/free-solid-svg-icons";
 
 const captionText = document.querySelector("remote-video-text");
-const buttonLabels = document.querySelectorAll(".HoverState");
+const buttonLabels = document.querySelectorAll(
+	".HoverState"
+) as NodeListOf<HTMLElement>;
 
 const startUp = () => {
 	//  Detect in-app browsers and redirect
@@ -46,7 +63,7 @@ const startUp = () => {
 		window.location.href.substring(window.location.href.lastIndexOf("/") + 1);
 
 	// get webcam on load
-	// VideoChatData.requestMediaStream();
+	VideoChatData.requestMediaStream();
 
 	// Captions empty/hidden by default
 	if (captionText !== null) {
@@ -57,8 +74,9 @@ const startUp = () => {
 	// Hide button labels on load
 	fadeOut(buttonLabels, 400);
 	// Show/hide button labels on hover
-	buttonLabels.forEach((button: Element) => {
+	buttonLabels.forEach((button: HTMLElement) => {
 		button.addEventListener("mouseover", e => {
+			console.log("hover");
 			fadeIn(button, 400);
 		});
 		button.addEventListener("mouseout", e => {
@@ -86,21 +104,21 @@ const startUp = () => {
 	});
 	_delay = setInterval(delayCheck, 500);
  */
-	// Show accept webcam snackbar
-	Snackbar.show({
-		text: "Please press allow to enable webcam and audio access",
-		actionText: "Directions",
-		width: "455px",
-		actionTextColor: "#000000",
-		pos: "top-right",
-		duration: 50000,
-		onActionClick: function (element) {
-			window.open(
-				"https://help.clipchamp.com/en/articles/1505527-how-do-i-enable-my-webcam-for-recording",
-				"_blank"
-			);
-		}
-	});
+	// // Show accept webcam snackbar
+	// Snackbar.show({
+	// 	text: "Please press allow to enable webcam and audio access",
+	// 	actionText: "Directions",
+	// 	width: "455px",
+	// 	actionTextColor: "#000000",
+	// 	pos: "top-right",
+	// 	duration: 50000,
+	// 	onActionClick: function (element) {
+	// 		window.open(
+	// 			"https://help.clipchamp.com/en/articles/1505527-how-do-i-enable-my-webcam-for-recording",
+	// 			"_blank"
+	// 		);
+	// 	}
+	// });
 
 	displayWaitingCaption();
 
@@ -129,6 +147,8 @@ const VideoChat = ({
 	const sendingCaptions = useState(false);
 	const receivingCaptions = useState(false);
 
+	const [openSnackbar, closeSnackbar] = useSnackbar({ position: "top-center" });
+
 	// Map to keep track of dataChannel connecting with each peer
 	var dataChannel = new Map();
 
@@ -144,13 +164,32 @@ const VideoChat = ({
 		<>
 			<div id="arbitrary-data" style={{ display: "none" }}></div>
 			<div id="header">
-				<a target="_blank" href="/">
+				<button
+					onClick={() =>
+						openSnackbar(
+							<div>
+								Please press allow to enable webcam and audio access{" "}
+								<button
+									onClick={() => {
+										window.open(
+											"https://help.clipchamp.com/en/articles/1505527-how-do-i-enable-my-webcam-for-recording",
+											"_blank"
+										);
+									}}
+								>
+									Help!
+								</button>
+							</div>,
+							[10000]
+						)
+					}
+				>
 					<img
 						src="/images/wordmark_logo.png"
 						alt="Catalyst Logo"
 						height="48"
 					/>
-				</a>
+				</button>
 			</div>
 
 			<div id="call-section">
@@ -164,33 +203,60 @@ const VideoChat = ({
 
 				<div className="multi-button">
 					<div className="buttonContainer">
-						<button className="hoverButton" onClick={muteMicrophone}>
-							<i id="mic-icon" className="fas fa-microphone fa-xs"></i>
+						<button
+							id="Hover"
+							className="hoverButton"
+							onClick={
+								// TODO: muteMicrophone
+								() => {}
+							}
+						>
+							<FontAwesomeIcon icon={faMicrophone} />
 						</button>
-						<div className="HoverState" id="mic-text">
-							Mute
+						<div id="HoverState">
+							<div id="mic-text">Mute</div>
 						</div>
 					</div>
 
-					<div className="buttonContainer">
-						<button className="hoverButton" onClick={openFullscreen}>
+					{/* <div className="buttonContainer">
+						<button
+							className="hoverButton"
+							onClick={
+								// TODO: openFullScreen
+								() => {}
+							}
+						>
 							<i className="fas fa-compress fa-xs"></i>
 						</button>
 						<div className="HoverState">The Fanatic Mode</div>
-					</div>
+					</div> */}
 
 					<div className="buttonContainer">
-						<button className="hoverButton" onClick={pauseVideo}>
-							<i className="fas fa-video fa-xs" id="video-icon"></i>
+						<button
+							id="Hover"
+							className="hoverButton"
+							onClick={
+								// TODO: pauseVideo
+								() => {}
+							}
+						>
+							<FontAwesomeIcon icon={faPause} />
 						</button>
-						<div className="HoverState" id="video-text">
-							Pause Video
+						<div id="HoverState">
+							<div id="video-text">Pause Video</div>
 						</div>
 					</div>
 
 					<div className="buttonContainer">
-						<button className="hoverButton" id="share-button" onClick={swap}>
-							<i id="swap-icon" className="fas fa-desktop fa-xs"></i>
+						<button
+							className="hoverButton"
+							id="share-button"
+							onClick={
+								// TODO: swap
+								() => {}
+							}
+						>
+							<FontAwesomeIcon icon={faDesktop} />
 						</button>
 						<div className="HoverState" id="swap-text">
 							Share Screen
@@ -198,46 +264,68 @@ const VideoChat = ({
 					</div>
 
 					<div className="buttonContainer">
-						<button className="hoverButton" onClick={toggleChat}>
-							<i id="chat-icon" className="fas fa-comment-slash fa-xs"></i>
-						</button>
-						<div className="HoverState" id="chat-text">
-							Hide Chat
-						</div>
-					</div>
-
-					<div className="buttonContainer">
 						<button
+							id="Hover"
 							className="hoverButton"
-							id="pip-button"
-							onClick={togglePictureInPicture}
+							onClick={
+								// TODO: toggleChat
+								() => {}
+							}
 						>
-							<i className="fas fa-external-link-alt fa-xs"></i>
+							<FontAwesomeIcon icon={faComment} />
 						</button>
-						<div className="HoverState" id="pip-text">
-							Toggle Picture in Picture
+						<div id="HoverState">
+							<div id="chat-text">Hide Chat</div>
 						</div>
 					</div>
 
 					<div className="buttonContainer">
-						<button className="hoverButton" onClick={requestToggleCaptions}>
-							<i className="fas fa-closed-captioning fa-xs"></i>
-						</button>
-						<div className="HoverState" id="caption-button-text">
-							Start Live Caption
+						<div id="Hover">
+							<button
+								className="hoverButton"
+								id="pip-button"
+								onClick={
+									// TODO: togglePictureInPicture
+									() => {}
+								}
+							>
+								<FontAwesomeIcon icon={faExternalLinkAlt} />
+							</button>
+						</div>
+
+						<div id="HoverState">
+							<div id="pip-text">Toggle Picture in Picture</div>
 						</div>
 					</div>
 
 					<div className="buttonContainer">
 						<button
+							id="Hover"
+							className="hoverButton"
+							onClick={
+								// TODO: requestToggleCaptions
+								() => {}
+							}
+						>
+							<FontAwesomeIcon icon={faClosedCaptioning} />
+						</button>
+						<div id="HoverState">
+							<div id="caption-button-text">Start Live Caption</div>
+						</div>
+					</div>
+
+					<div className="buttonContainer">
+						<button
+							id="Hover"
 							className="hoverButton"
 							onClick={() => {
 								window.location.href = "/newcall";
 							}}
 						>
-							<i className="fas fa-phone-slash fa-xs"></i>
+							<FontAwesomeIcon icon={faPhoneSlash} />
 						</button>
-						<div className="HoverState">End Call</div>
+						<div id="HoverState">End Call</div>
+
 						<audio id="join-sound" src={joinSound}></audio>
 						<audio id="leave-sound" src={leaveSound}></audio>
 					</div>

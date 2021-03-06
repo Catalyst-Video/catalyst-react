@@ -2,6 +2,7 @@
 
 export function fadeIn(elem, ms) {
 	if (!elem) return;
+	if (!elem.style) return;
 
 	elem.style.opacity = 0;
 	elem.style.filter = "alpha(opacity=0)";
@@ -27,6 +28,7 @@ export function fadeIn(elem, ms) {
 
 export function fadeOut(elem, ms) {
 	if (!elem) return;
+	if (!elem.style) return;
 
 	if (ms) {
 		var opacity = 1;
