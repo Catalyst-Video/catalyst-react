@@ -1,10 +1,11 @@
 import io from "socket.io";
+import { fadeIn, fadeOut } from "./fade";
 
 export interface VideoChatDataInterface {
 	videoEnabled: boolean;
 	audioEnabled: boolean;
 	connected: Map<any, any>;
-	localICECandidates: {};
+	localICECandidates: any;
 	socket: any;
 	remoteVideoWrapper: HTMLMediaElement;
 	localVideo: HTMLMediaElement;
@@ -15,18 +16,22 @@ export interface VideoChatDataInterface {
 
 	requestMediaStream(e?: any): any;
 	onMediaStream(e: any): any;
-	onLeave(e: any): any;
-	onOffer(offer: any, uuid: any): any;
-	call(uuid: string, room: any): any;
-	onCandidate(e: any): any;
-	onAnswer(answer: any, uuid: any): any;
-	establishConnection(uuid: any, func: Function): any;
-	createOffer(a: any): any;
-	onCandidate(candidate: any, uuid: any): void;
-	onIceCandidate(e: any, uuid: any): any;
 	onMediaStream(e: any, uuid: any): any;
+
 	onAddStream(e: any, uuid: any): any;
+	onLeave(e: any): any;
+
+	createOffer(a: any): any;
+	onOffer(offer: any, uuid: any): any;
+
 	createAnswer(offer: any, a: any): any;
+	onAnswer(answer: any, uuid: any): any;
+
+	call(uuid: string, room: any): any;
+	establishConnection(uuid: any, func: Function): any;
+
+	onCandidate(candidate: any, uuid: any): any;
+	onIceCandidate(e: any, uuid: any): any;
 }
 
 var VideoChatData: VideoChatDataInterface = {
@@ -57,16 +62,17 @@ var VideoChatData: VideoChatDataInterface = {
 			.then(stream => {
 				VideoChatData.onMediaStream(stream);
 				localVideoText.text("Drag Me");
-				setTimeout(() => localVideoText.fadeOut(), 5000);
+				fadeOut(localVideoText, 5000);
 			})
 			.catch(error => {
 				logIt(error);
-
-				captionText
-					.text(
+				fadeIn(
+					captionText.text(
 						"Failed to activate your webcam. Check your webcam/privacy settings."
-					)
-					.fadeIn();
+					),
+					400
+				);
+
 				logIt(
 					"Failed to get local webcam video, check webcam privacy settings"
 				);
@@ -426,7 +432,7 @@ var VideoChatData: VideoChatDataInterface = {
 		// Update connection status
 		VideoChatData.connected.set(uuid, true);
 		// Hide caption status text
-		captionText.fadeOut();
+		fadeOut(captionText, 400);
 		// Reposition local video after a second, as there is often a delay
 		// between adding a stream and the height of the video div changing
 		setTimeout(() => rePositionLocalVideo(), 500);
