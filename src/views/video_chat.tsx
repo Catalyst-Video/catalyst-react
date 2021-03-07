@@ -23,6 +23,7 @@ import {
 	faPlay,
 	faVideo
 } from "@fortawesome/free-solid-svg-icons";
+import logo from "../assets/img/wordmark_logo.png";
 // sounds
 import joinSound from "../assets/sound/join.mp3";
 import leaveSound from "../assets/sound/leave.mp3";
@@ -382,11 +383,11 @@ const VideoChat = ({
 			);
 		},
 
-		// Create an answer with the media capabilities that the client and peer browsers share.
-		// This function is called with the offer from the originating browser, which
-		// needs to be parsed into an RTCSessionDescription and added as the remote
-		// description to the peerConnection object. Then the answer is created in the
-		// same manner as the offer and sent over the socket.
+		/* Create an answer with the media capabilities that the client and peer browsers share.
+		This function is called with the offer from the originating browser, which
+		needs to be parsed into an RTCSessionDescription and added as the remote
+		description to the peerConnection object. Then the answer is created in the
+		same manner as the offer and sent over the socket. */
 		createAnswer: (offer: any, uuid: any) => {
 			console.log("createAnswer");
 			var rtcOffer = new RTCSessionDescription(JSON.parse(offer));
@@ -511,11 +512,8 @@ const VideoChat = ({
 						)
 					}
 				>
-					<img
-						src="/images/wordmark_logo.png"
-						alt="Catalyst Logo"
-						height="48"
-					/>
+					<img src={logo} alt="Catalyst Logo" height="48" />
+					{sessionKey}
 				</button>
 			</div>
 
@@ -556,19 +554,6 @@ const VideoChat = ({
 							/>
 						</button>
 					</div>
-
-					{/* <div className="buttonContainer">
-						<button
-							className="hoverButton"
-							onClick={
-								// TODO: openFullScreen
-								() => {}
-							}
-						>
-							<i className="fas fa-compress fa-xs"></i>
-						</button>
-						<div className="HoverState">The Fanatic Mode</div>
-					</div> */}
 
 					<div className="buttonContainer">
 						<ReactTooltip

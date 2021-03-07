@@ -1,5 +1,3 @@
-import { fadeIn } from "./fade";
-
 export function getBrowserName(): string {
 	var name = "Unknown";
 	if (window.navigator.userAgent.indexOf("MSIE") !== -1) {
@@ -19,7 +17,6 @@ export function chatRoomFull(): void {
 	alert(
 		"Chat room is full. Check to ensure you don't have multiple tabs open, or try with a new room link."
 	);
-	// Exit room and redirect
 	window.location.href = "/newcall";
 }
 
@@ -37,22 +34,6 @@ export function muteMicrophone(): void {
 			audioTrack.enabled = VideoChat.audioEnabled;
 		}
 	});
-
-	// select mic button and mic button text
-	const micButtonIcon = document.getElementById("mic-icon");
-	const micButtonText = document.getElementById("mic-text");
-	// Update mute button text and icon
-	if (micButtonIcon && micButtonText) {
-		if (!VideoChat.audioEnabled) {
-			micButtonIcon.classList.remove("fa-microphone");
-			micButtonIcon.classList.add("fa-microphone-slash");
-			micButtonText.innerText = "Unmute";
-		} else {
-			micButtonIcon.classList.add("fa-microphone");
-			micButtonIcon.classList.remove("fa-microphone-slash");
-			micButtonText.innerText = "Mute";
-		}
-	}
 }
 
 // // Reposition local video to top left of remote video

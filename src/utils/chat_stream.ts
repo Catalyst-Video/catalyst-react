@@ -1,6 +1,5 @@
 // import io from "socket.io";
 import { io } from "socket.io-client";
-import { fadeIn, fadeOut } from "./fade";
 import SnackbarProvider from "react-simple-snackbar";
 import { VideoChatDataInterface } from "./interfaces";
 
@@ -34,7 +33,7 @@ export var VideoChatData: VideoChatDataInterface = {
 			.then(stream => {
 				VideoChatData.onMediaStream(stream);
 				localVideoText.text("Drag Me");
-				fadeOut(localVideoText, 5000);
+				// fadeOut(localVideoText, 5000);
 			})
 			.catch(error => {
 				console.log(error);
@@ -370,7 +369,7 @@ export var VideoChatData: VideoChatDataInterface = {
 		// Update connection status
 		VideoChatData.connected.set(uuid, true);
 		// Hide caption status text
-		fadeOut(captionText, 400);
+		// fadeOut(captionText, 400);/
 		// Reposition local video after a second, as there is often a delay
 		// between adding a stream and the height of the video div changing
 		// setTimeout(() => rePositionLocalVideo(), 500);
