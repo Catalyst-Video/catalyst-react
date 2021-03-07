@@ -1,7 +1,9 @@
+// @ts-nocheck
+
 // import io from "socket.io";
 import { io } from "socket.io-client";
 import SnackbarProvider from "react-simple-snackbar";
-import { VideoChatDataInterface } from "./interfaces";
+import { VideoChatDataInterface } from "../../../typings/interfaces";
 
 export var VideoChatData: VideoChatDataInterface = {
 	videoEnabled: true,

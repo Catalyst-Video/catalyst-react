@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from "react";
 import ChatComponent from "../components/chat_comp";
 import DetectRTC from "detectrtc";
-import { getBrowserName, chatRoomFull } from "../utils/main_utils";
-// import { VideoChatData } from "../utils/chat_stream";
+import {
+	getBrowserName,
+	chatRoomFull,
+	sendToAllDataChannels,
+	setStreamColor,
+	hueToColor,
+	handlereceiveMessage,
+	uuidToHue
+} from "../utils/general_utils";
 import { useSnackbar } from "react-simple-snackbar";
 import ReactTooltip from "react-tooltip";
 import Draggable from "react-draggable";
@@ -30,7 +37,7 @@ import leaveSound from "../assets/sound/leave.mp3";
 
 // import io from "socket.io";
 import { io } from "socket.io-client";
-import { VideoChatDataInterface } from "../utils/interfaces";
+import { VideoChatDataInterface } from "../../typings/interfaces";
 
 const VideoChat = ({
 	sessionKey,
@@ -92,6 +99,7 @@ const VideoChat = ({
 	const [hideCaptions, setHideCaptions] = useState(
 		defaultSettings?.hideCaptions ? defaultSettings.hideCaptions : true
 	);
+	const [sendingCaptions, setSendingCaptions] = useState(false);
 	const [captionsText, setCaptionsText] = useState(
 		"Room ready. Waiting for others to join..."
 	);
@@ -154,10 +162,10 @@ const VideoChat = ({
 				) as HTMLMediaElement;
 			}
 			VideoChatData.localVideo.srcObject = stream;
-			// Join the chat room.
+			// Join the chat room
 			VideoChatData.socket.emit("join", sessionKey, () => {
 				VideoChatData.borderColor = hueToColor(
-					uuidToHue(VideoChatData.socket.id)
+					uuidToHue(VideoChatData.socket.id, VideoChatData)
 				);
 				VideoChatData.localVideo.style.border = `3px solid ${VideoChatData.borderColor}`;
 			});
@@ -170,11 +178,12 @@ const VideoChat = ({
 			VideoChatData.socket.on("candidate", VideoChatData.onCandidate);
 			VideoChatData.socket.on("answer", VideoChatData.onAnswer);
 			VideoChatData.socket.on("requestToggleCaptions", () =>
-				toggleSendCaptions()
+				setSendingCaptions(!sendingCaptions)
 			);
-			VideoChatData.socket.on("receiveCaptions", (captions: any) =>
-				receiveCaptions(captions)
-			);
+			VideoChatData.socket.on("receiveCaptions", (captions: any) => {
+				// TODO: handle receive captions
+				// receiveCaptions(captions)
+			});
 		},
 
 		call: (uuid: string, room: any) => {
@@ -247,14 +256,17 @@ const VideoChat = ({
 					if (dataType === "mes:") {
 						handlereceiveMessage(
 							cleanedMessage,
-							hueToColor(VideoChatData.peerColors.get(uuid))
+							hueToColor(VideoChatData.peerColors.get(uuid)),
+							hideChat,
+							setHideChat
 						);
 					} else if (dataType === "cap:") {
-						receiveCaptions(cleanedMessage);
+						// TODO: captions
+						// receiveCaptions(cleanedMessage);
 					} else if (dataType === "tog:") {
-						toggleSendCaptions();
+						setSendingCaptions(!sendingCaptions);
 					} else if (dataType === "clr:") {
-						setStreamColor(uuid);
+						setStreamColor(uuid, VideoChatData);
 					} else {
 						// Arbitrary data handling
 						console.log("Received arbitrary data: ", receivedData);
@@ -266,7 +278,7 @@ const VideoChat = ({
 				/* 	Called when dataChannel is successfully opened - Set up callbacks for the connection generating iceCandidates or receiving the remote media stream. Wrapping callback functions to pass in the peer uuids. */
 				dataChannel.get(uuid).onopen = (e: any) => {
 					console.log("dataChannel opened");
-					setStreamColor(uuid);
+					setStreamColor(uuid, VideoChatData);
 				};
 
 				VideoChatData.peerConnections.get(uuid).onicecandidate = (e: any) => {
@@ -302,43 +314,40 @@ const VideoChat = ({
 		},
 
 		// When the peerConnection generates an ice candidate, send it over the socket to the peer.
-		onIceCandidate: (event: any, uuid: any) => {
+		onIceCandidate: (e: any, uuid: any) => {
 			console.log("onIceCandidate");
-			if (event.candidate) {
+			if (e.candidate) {
 				console.log(
-					`<<< Received local ICE candidate from STUN/TURN server (${event.candidate.address}) for connection with ${uuid}`
+					`<<< Received local ICE candidate from STUN/TURN server (${e.candidate.address}) for connection with ${uuid}`
 				);
 				if (VideoChatData.connected.get(uuid)) {
 					console.log(
-						`>>> Sending local ICE candidate (${event.candidate.address})`
+						`>>> Sending local ICE candidate (${e.candidate.address})`
 					);
 					VideoChatData.socket.emit(
 						"candidate",
-						JSON.stringify(event.candidate),
+						JSON.stringify(e.candidate),
 						sessionKey,
 						uuid
 					);
 				} else {
 					/* If we are not 'connected' to the other peer, we are buffering the local ICE candidates. This most likely is happening on the "caller" side. The peer may not have created the RTCPeerConnection yet, so we are waiting for the 'answer' to arrive. This will signal that the peer is ready to receive signaling. */
-					VideoChatData.localICECandidates[uuid].push(event.candidate);
+					VideoChatData.localICECandidates[uuid].push(e.candidate);
 				}
 			}
 		},
-
 		// When receiving a candidate over the socket, turn it back into a real RTCIceCandidate and add it to the peerConnection.
 		onCandidate: (candidate: any, uuid: any) => {
 			// Update caption text
-			captionText.text("Found other user... connecting");
+			setCaptionsText("Found other user... connecting");
 			var rtcCandidate: RTCIceCandidate = new RTCIceCandidate(
 				JSON.parse(candidate)
 			);
-
 			console.log(
 				`onCandidate <<< Received remote ICE candidate (${rtcCandidate.port} - ${rtcCandidate.relatedAddress})`
 			);
 			VideoChatData.peerConnections.get(uuid).addIceCandidate(rtcCandidate);
 		},
-
 		// Create an offer that contains the media capabilities of the browser.
 		createOffer: (uuid: any) => {
 			console.log(`createOffer to ${uuid} >>> Creating offer...`);
@@ -417,7 +426,7 @@ const VideoChat = ({
 			// VideoChat.localICECandidates[uuid] = []; // TESTING
 		},
 
-		// Called when a stream is added to the peer connection: Create new remote video source in wrapper and create a <video> node
+		// Called when a stream is added to the peer connection: Create new <video> node and append remote video source to wrapper div
 		onAddStream: (e: any, uuid: any) => {
 			console.log(
 				"onAddStream <<< Received new stream from remote. Adding it..."
@@ -429,13 +438,21 @@ const VideoChat = ({
 			node.setAttribute("playsinline", "");
 			node.setAttribute("id", "remote-video");
 			node.setAttribute("uuid", uuid);
+			if (!VideoChatData.remoteVideoWrapper) {
+				VideoChatData.remoteVideoWrapper = document.getElementById(
+					"wrapper"
+				) as HTMLMediaElement;
+			}
 			VideoChatData?.remoteVideoWrapper?.appendChild(node);
 			// Update remote video source
-			if (VideoChatData.remoteVideoWrapper?.lastChild !== null) {
-				// @ts-ignore
-				VideoChatData.remoteVideoWrapper.lastChild.srcObject = e.stream;
-			}
-			// // Close the initial share url snackbar
+			VideoChatData.remoteVideoWrapper.srcObject = e.stream;
+
+			// if (VideoChatData.remoteVideoWrapper?.lastChild !== null) {
+			// 	// @ts-ignore
+			// 	VideoChatData.remoteVideoWrapper.lastChild.srcObject = e.stream;
+			// }
+
+			// TODO: Close the initial share url snackbar
 			// Snackbar.close();
 			// Remove the loading gif from video
 			if (VideoChatData.remoteVideoWrapper.lastChild) {
@@ -454,7 +471,7 @@ const VideoChat = ({
 	window.onmessage = (e: MessageEvent) => {
 		try {
 			if (JSON.parse(e.data).type === "arbitraryData") {
-				sendToAllDataChannels(e.data);
+				sendToAllDataChannels(e.data, dataChannel);
 			}
 		} catch (e) {}
 	};
