@@ -46,7 +46,7 @@ const VideoChat = ({
 	};
 	customModalMessage?: string;
 }) => {
-	/* ON LOAD - Detect in-app browsers & redirect, set tab title, get webcam */
+	/* ON LOAD: Detect in-app browsers & redirect, set tab title, get webcam */
 	useEffect(() => {
 		var ua: string = navigator.userAgent || navigator.vendor;
 		if (
@@ -79,7 +79,7 @@ const VideoChat = ({
 		navigator.mediaDevices.ondevicechange = () => window.location.reload();
 	});
 
-	/* STATE - track toggleable UI/UX */
+	/* STATE: track toggleable UI/UX */
 	const [muted, setMuted] = useState(
 		defaultSettings?.muted ? defaultSettings.muted : false
 	);
@@ -98,10 +98,10 @@ const VideoChat = ({
 	const [localVideoText, setLocalVideoText] = useState("No webcam input");
 	const [openSnackbar, closeSnackbar] = useSnackbar({ position: "top-center" });
 
-	// Map to keep track of dataChannel connecting with each peer
+	// Track dataChannel connecting w/ each peer
 	var dataChannel = new Map();
 
-	/* VIDEO CHAT DATA - track video/audio streams, peer connections, handle webrtc */
+	/* VIDEO CHAT DATA: track video/audio streams, peer connections, handle webrtc */
 	var VideoChatData: VideoChatDataInterface = {
 		videoEnabled: true,
 		audioEnabled: true,
@@ -117,10 +117,7 @@ const VideoChat = ({
 		localAudio: "",
 		localStream: "",
 
-		/* Call to getUserMedia (provided by adapter.js for  browser compatibility)
-		asking for access to both the video and audio streams. If the request is
-		accepted callback to the onMediaStream function, otherwise callback to the
-		noMediaStream function. */
+		/* Call to getUserMedia (provided by adapter.js for  browser compatibility) asking for access to both the video and audio streams. If the request is accepted callback to the onMediaStream function, otherwise callback to the noMediaStream function. */
 		requestMediaStream: (e?: any) => {
 			console.log("requestMediaStream");
 			// rePositionLocalVideo();
@@ -146,16 +143,10 @@ const VideoChat = ({
 				});
 		},
 
-		// Called when a video stream is added to VideoChat
 		onMediaStream: (stream: MediaStream) => {
 			console.log("onMediaStream");
 			VideoChatData.localStream = stream;
-
-			// We need to store the local audio track, because
-			// the screen sharing MediaStream doesn't have audio
-			// by default, which is problematic for peer C who joins
-			// while another peer A/B is screen sharing (C won't receive
-			// A/Bs audio).<br />
+			/* When a video stream is added to VideoChat, we need to store the local audio track, because the screen sharing MediaStream doesn't have audio by default, which is problematic for peer C who joins while another peer A/B is screen sharing (C won't receive A/Bs audio). */
 			VideoChatData.localAudio = stream.getAudioTracks()[0];
 			if (!VideoChatData.localVideo) {
 				VideoChatData.localVideo = document.getElementById(
@@ -163,21 +154,18 @@ const VideoChat = ({
 				) as HTMLMediaElement;
 			}
 			VideoChatData.localVideo.srcObject = stream;
-
-			// Now we're ready to join the chat room.
+			// Join the chat room.
 			VideoChatData.socket.emit("join", sessionKey, () => {
 				VideoChatData.borderColor = hueToColor(
 					uuidToHue(VideoChatData.socket.id)
 				);
 				VideoChatData.localVideo.style.border = `3px solid ${VideoChatData.borderColor}`;
 			});
-
 			// Add listeners to the websocket
 			VideoChatData.socket.on("leave", VideoChatData.onLeave);
 			VideoChatData.socket.on("full", chatRoomFull);
 			VideoChatData.socket.on("offer", VideoChatData.onOffer);
 			VideoChatData.socket.on("willInitiateCall", VideoChatData.call);
-
 			// Set up listeners on the socket
 			VideoChatData.socket.on("candidate", VideoChatData.onCandidate);
 			VideoChatData.socket.on("answer", VideoChatData.onAnswer);
@@ -202,9 +190,7 @@ const VideoChat = ({
 
 		onLeave: (uuid: string) => {
 			console.log("disconnected - UUID " + uuid);
-
 			(document.getElementById("leave-sound") as HTMLVideoElement)?.play();
-
 			// Remove video element
 			VideoChatData?.remoteVideoWrapper?.removeChild(
 				document.querySelectorAll(`[uuid="${uuid}"]`)[0]
@@ -277,15 +263,12 @@ const VideoChat = ({
 						window.top.postMessage(receivedData, "*");
 					}
 				};
-
-				// Called when dataChannel is successfully opened
+				/* 	Called when dataChannel is successfully opened - Set up callbacks for the connection generating iceCandidates or receiving the remote media stream. Wrapping callback functions to pass in the peer uuids. */
 				dataChannel.get(uuid).onopen = (e: any) => {
 					console.log("dataChannel opened");
 					setStreamColor(uuid);
 				};
-				// Set up callbacks for the connection generating iceCandidates or
-				// receiving the remote media stream. Wrapping callback functions
-				// to pass in the peer uuids.
+
 				VideoChatData.peerConnections.get(uuid).onicecandidate = (e: any) => {
 					VideoChatData.onIceCandidate(e, uuid);
 				};
@@ -336,17 +319,13 @@ const VideoChat = ({
 						uuid
 					);
 				} else {
-					// If we are not 'connected' to the other peer, we are buffering the local ICE candidates.
-					// This most likely is happening on the "caller" side.
-					// The peer may not have created the RTCPeerConnection yet, so we are waiting for the 'answer'
-					// to arrive. This will signal that the peer is ready to receive signaling.
+					/* If we are not 'connected' to the other peer, we are buffering the local ICE candidates. This most likely is happening on the "caller" side. The peer may not have created the RTCPeerConnection yet, so we are waiting for the 'answer' to arrive. This will signal that the peer is ready to receive signaling. */
 					VideoChatData.localICECandidates[uuid].push(event.candidate);
 				}
 			}
 		},
 
-		// When receiving a candidate over the socket, turn it back into a real
-		// RTCIceCandidate and add it to the peerConnection.
+		// When receiving a candidate over the socket, turn it back into a real RTCIceCandidate and add it to the peerConnection.
 		onCandidate: (candidate: any, uuid: any) => {
 			// Update caption text
 			captionText.text("Found other user... connecting");
@@ -365,9 +344,7 @@ const VideoChat = ({
 			console.log(`createOffer to ${uuid} >>> Creating offer...`);
 			VideoChatData.peerConnections.get(uuid).createOffer(
 				(offer: any) => {
-					// If the offer is created successfully, set it as the local description
-					// and send it over the socket connection to initiate the peerConnection
-					// on the other side.
+					/* If the offer is created successfully, set it as the local description and send it over the socket connection to initiate the peerConnection on the other side. */
 					VideoChatData.peerConnections.get(uuid).setLocalDescription(offer);
 					VideoChatData.socket.emit(
 						"offer",
@@ -383,11 +360,7 @@ const VideoChat = ({
 			);
 		},
 
-		/* Create an answer with the media capabilities that the client and peer browsers share.
-		This function is called with the offer from the originating browser, which
-		needs to be parsed into an RTCSessionDescription and added as the remote
-		description to the peerConnection object. Then the answer is created in the
-		same manner as the offer and sent over the socket. */
+		/* Create an answer with the media capabilities that the client and peer browsers share. This function is called with the offer from the originating browser, which needs to be parsed into an RTCSessionDescription and added as the remote description to the peerConnection object. Then the answer is created in the same manner as the offer and sent over the socket. */
 		createAnswer: (offer: any, uuid: any) => {
 			console.log("createAnswer");
 			var rtcOffer = new RTCSessionDescription(JSON.parse(offer));
@@ -410,8 +383,7 @@ const VideoChat = ({
 			);
 		},
 
-		// When a browser receives an offer, set up a callback to be run when the
-		// ephemeral token is returned from Twilio.
+		// When a browser receives an offer, set up a callback to be run when the ephemeral token is returned from Twilio.
 		onOffer: (offer: any, uuid: any) => {
 			console.log("onOffer <<< Received offer");
 			VideoChatData.socket.on(
@@ -440,17 +412,16 @@ const VideoChat = ({
 					uuid
 				);
 			});
+			// TODO: determine if we're attempting this
 			// Reset the buffer of local ICE candidates. This is not really needed, but it's good practice
 			// VideoChat.localICECandidates[uuid] = []; // TESTING
 		},
 
-		// Called when a stream is added to the peer connection
+		// Called when a stream is added to the peer connection: Create new remote video source in wrapper and create a <video> node
 		onAddStream: (e: any, uuid: any) => {
 			console.log(
 				"onAddStream <<< Received new stream from remote. Adding it..."
 			);
-			// Create new remote video source in wrapper
-			// Create a <video> node
 			console.log("onAddStream <<< Playing join sound...");
 			(document.getElementById("join-sound") as HTMLVideoElement)?.play();
 			var node = document.createElement("video");
