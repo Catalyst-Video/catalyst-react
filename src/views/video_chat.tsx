@@ -28,11 +28,6 @@ import joinSound from "../assets/sound/join.mp3";
 import leaveSound from "../assets/sound/leave.mp3";
 import Draggable from "react-draggable";
 
-const captionText = document.querySelector("remote-video-text");
-const buttonLabels = document.querySelectorAll(
-	".HoverState"
-) as NodeListOf<HTMLElement>;
-
 const startUp = () => {
 	//  Detect in-app browsers and redirect
 	var ua: string = navigator.userAgent || navigator.vendor;
@@ -68,25 +63,6 @@ const startUp = () => {
 
 	// get webcam on load
 	VideoChatData.requestMediaStream();
-
-	// Captions empty/hidden by default
-	if (captionText !== null) {
-		captionText.textContent = "";
-		fadeOut(captionText, 400);
-	}
-
-	// Hide button labels on load
-	fadeOut(buttonLabels, 400);
-	// Show/hide button labels on hover
-	buttonLabels.forEach((button: HTMLElement) => {
-		button.addEventListener("mouseover", e => {
-			console.log("hover");
-			fadeIn(button, 400);
-		});
-		button.addEventListener("mouseout", e => {
-			fadeOut(button, 400);
-		});
-	});
 
 	displayWaitingCaption();
 	// On change media devices refresh page and switch to system default
@@ -128,7 +104,7 @@ const VideoChat = ({
 		defaultSettings?.hideCaptions ? defaultSettings.hideCaptions : true
 	);
 
-	const [remoteVideoText, setRemoteVideoText] = useState(
+	const [captionsText, setCaptionsText] = useState(
 		"Room ready. Waiting for others to join..."
 	);
 
@@ -179,13 +155,11 @@ const VideoChat = ({
 
 			<div id="call-section">
 				<Draggable>
-					<div id="remote-video-text" draggable="true">
-						{remoteVideoText}
-					</div>
+					<div id="remote-video-text">{captionsText}</div>
 				</Draggable>
 				<div id="wrapper"></div>
 				<Draggable defaultPosition={{ x: 30, y: 150 }}>
-					<div id="moveable" draggable="true">
+					<div id="moveable">
 						<p id="local-video-text">No webcam input</p>
 						<video id="local-video" autoPlay muted playsInline></video>
 					</div>
@@ -388,7 +362,7 @@ const VideoChat = ({
 				</div>
 			</div>
 
-			<ChatComponent defaultShowChat={hideChat} />
+			<ChatComponent hideChat={hideChat} />
 		</>
 	);
 };
