@@ -124,6 +124,8 @@ const VideoChat = ({
 		recognition: "",
 		borderColor: "",
 		peerColors: new Map(),
+		localAudio: "",
+		localStream: "",
 
 		/* Call to getUserMedia (provided by adapter.js for  browser compatibility)
 	asking for access to both the video and audio streams. If the request is
@@ -206,7 +208,7 @@ const VideoChat = ({
 		onLeave: (uuid: string) => {
 			console.log("disconnected - UUID " + uuid);
 
-			document.getElementById("leave-sound")?.play();
+			(document.getElementById("leave-sound") as HTMLVideoElement)?.play();
 
 			// Remove video element
 			VideoChatData?.remoteVideoWrapper?.removeChild(
@@ -451,7 +453,7 @@ const VideoChat = ({
 			// Create new remote video source in wrapper
 			// Create a <video> node
 			console.log("onAddStream <<< Playing join sound...");
-			document.getElementById("join-sound")?.play();
+			(document.getElementById("join-sound") as HTMLVideoElement)?.play();
 			var node = document.createElement("video");
 			node.setAttribute("autoplay", "");
 			node.setAttribute("playsinline", "");
