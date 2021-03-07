@@ -9,17 +9,24 @@ import ReactTooltip from "react-tooltip";
 // icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+	faAudioDescription,
 	faClosedCaptioning,
 	faComment,
+	faCommentSlash,
 	faDesktop,
 	faExternalLinkAlt,
+	faExternalLinkSquareAlt,
 	faMicrophone,
+	faMicrophoneSlash,
 	faPause,
-	faPhoneSlash
+	faPhoneSlash,
+	faPlay,
+	faVideo
 } from "@fortawesome/free-solid-svg-icons";
 // sounds
 import joinSound from "../assets/sound/join.mp3";
 import leaveSound from "../assets/sound/leave.mp3";
+import Draggable from "react-draggable";
 
 const captionText = document.querySelector("remote-video-text");
 const buttonLabels = document.querySelectorAll(
@@ -90,19 +97,16 @@ startUp();
 
 const VideoChat = ({
 	sessionKey,
-	chatOptions,
 	defaultSettings,
-	hideLogo,
 	customModalMessage
 }: {
 	sessionKey: string;
-	chatOptions?: any;
 	defaultSettings?: {
-		showChat?: boolean;
+		hideChat?: boolean;
 		muted?: boolean;
-		showCaptions?: boolean;
+		hideCaptions?: boolean;
+		hideLogo?: boolean;
 	};
-	hideLogo?: boolean;
 	customModalMessage?: string;
 }) => {
 	/* STATE */
@@ -116,11 +120,16 @@ const VideoChat = ({
 	);
 	const [vidPaused, setVidPaused] = useState(false);
 	const [sharing, setSharing] = useState(false);
-	const [showChat, setShowChat] = useState(
-		defaultSettings?.showChat ? defaultSettings.showChat : true
+	const [picInPic, setPicInPic] = useState(false);
+	const [hideChat, setHideChat] = useState(
+		defaultSettings?.hideChat ? defaultSettings.hideChat : false
 	);
-	const [captions, setCaptions] = useState(
-		defaultSettings?.showCaptions ? defaultSettings.showCaptions : false
+	const [hideCaptions, setHideCaptions] = useState(
+		defaultSettings?.hideCaptions ? defaultSettings.hideCaptions : true
+	);
+
+	const [remoteVideoText, setRemoteVideoText] = useState(
+		"Room ready. Waiting for others to join..."
 	);
 
 	const [openSnackbar, closeSnackbar] = useSnackbar({ position: "top-center" });
@@ -169,13 +178,18 @@ const VideoChat = ({
 			</div>
 
 			<div id="call-section">
-				<div id="remote-video-text" draggable="true"></div>
-
+				<Draggable>
+					<div id="remote-video-text" draggable="true">
+						{remoteVideoText}
+					</div>
+				</Draggable>
 				<div id="wrapper"></div>
-				<div id="moveable" draggable="true">
-					<p id="local-video-text">No webcam input</p>
-					<video id="local-video" autoPlay muted playsInline></video>
-				</div>
+				<Draggable defaultPosition={{ x: 30, y: 150 }}>
+					<div id="moveable" draggable="true">
+						<p id="local-video-text">No webcam input</p>
+						<video id="local-video" autoPlay muted playsInline></video>
+					</div>
+				</Draggable>
 
 				<div className="multi-button">
 					<div className="buttonContainer">
@@ -186,19 +200,20 @@ const VideoChat = ({
 							effect="float"
 						>
 							<div className="HoverState" id="mic-text">
-								Mute Audio
+								{!muted ? <span>Mute Audio</span> : <span>Unmute Audio</span>}
 							</div>
 						</ReactTooltip>
 						<button
 							data-tip="mute-tooltip"
 							data-for="mute-tooltip"
 							className="hoverButton"
-							onClick={
-								// TODO: muteMicrophone
-								() => {}
-							}
+							onClick={() => {
+								setMuted(!muted);
+							}}
 						>
-							<FontAwesomeIcon icon={faMicrophone} />
+							<FontAwesomeIcon
+								icon={!muted ? faMicrophone : faMicrophoneSlash}
+							/>
 						</button>
 					</div>
 
@@ -223,19 +238,22 @@ const VideoChat = ({
 							effect="float"
 						>
 							<div className="HoverState" id="video-text">
-								Pause Video
+								{!vidPaused ? (
+									<span>Pause Video</span>
+								) : (
+									<span>Unpause Video</span>
+								)}
 							</div>
 						</ReactTooltip>
 						<button
 							data-tip="pause-tooltip"
 							data-for="pause-tooltip"
 							className="hoverButton"
-							onClick={
-								// TODO: pauseVideo
-								() => {}
-							}
+							onClick={() => {
+								setVidPaused(!vidPaused);
+							}}
 						>
-							<FontAwesomeIcon icon={faPause} />
+							<FontAwesomeIcon icon={!vidPaused ? faPause : faPlay} />
 						</button>
 					</div>
 
@@ -255,12 +273,11 @@ const VideoChat = ({
 							data-for="share-tooltip"
 							className="hoverButton"
 							id="share-button"
-							onClick={
-								// TODO: swap
-								() => {}
-							}
+							onClick={() => {
+								setSharing(!sharing);
+							}}
 						>
-							<FontAwesomeIcon icon={faDesktop} />
+							<FontAwesomeIcon icon={!sharing ? faDesktop : faVideo} />
 						</button>
 					</div>
 
@@ -272,19 +289,18 @@ const VideoChat = ({
 							effect="float"
 						>
 							<div className="HoverState" id="chat-text">
-								Hide Chat
+								{!hideChat ? <span>Hide Chat</span> : <span>Show Chat</span>}
 							</div>
 						</ReactTooltip>
 						<button
 							data-tip="chat-tooltip"
 							data-for="chat-tooltip"
 							className="hoverButton"
-							onClick={
-								// TODO: toggleChat
-								() => {}
-							}
+							onClick={() => {
+								setHideChat(!hideChat);
+							}}
 						>
-							<FontAwesomeIcon icon={faComment} />
+							<FontAwesomeIcon icon={!hideChat ? faComment : faCommentSlash} />
 						</button>
 					</div>
 
@@ -296,7 +312,11 @@ const VideoChat = ({
 							effect="float"
 						>
 							<div className="HoverState" id="pip-text">
-								Picture in Picture
+								{!picInPic ? (
+									<span>Picture in Picture</span>
+								) : (
+									<span>Normal View</span>
+								)}
 							</div>
 						</ReactTooltip>
 						<button
@@ -304,12 +324,13 @@ const VideoChat = ({
 							data-for="pic-tooltip"
 							className="hoverButton"
 							id="pip-button"
-							onClick={
-								// TODO: togglePictureInPicture
-								() => {}
-							}
+							onClick={() => {
+								setPicInPic(!picInPic);
+							}}
 						>
-							<FontAwesomeIcon icon={faExternalLinkAlt} />
+							<FontAwesomeIcon
+								icon={!picInPic ? faExternalLinkAlt : faExternalLinkSquareAlt}
+							/>
 						</button>
 					</div>
 
@@ -321,19 +342,24 @@ const VideoChat = ({
 							effect="float"
 						>
 							<div className="HoverState" id="caption-button-text">
-								Closed Captions
+								{!picInPic ? (
+									<span>Closed Captions</span>
+								) : (
+									<span>Hide Closed Captions</span>
+								)}
 							</div>
 						</ReactTooltip>
 						<button
 							data-tip="caption-tooltip"
 							data-for="caption-tooltip"
 							className="hoverButton"
-							onClick={
-								// TODO: requestToggleCaptions
-								() => {}
-							}
+							onClick={() => {
+								// setHideCaptions(!hideCaptions);
+							}}
 						>
-							<FontAwesomeIcon icon={faClosedCaptioning} />
+							<FontAwesomeIcon
+								icon={hideCaptions ? faClosedCaptioning : faAudioDescription}
+							/>
 						</button>
 					</div>
 
@@ -362,7 +388,7 @@ const VideoChat = ({
 				</div>
 			</div>
 
-			<ChatComponent defaultShowChat={chatVisible} />
+			<ChatComponent defaultShowChat={hideChat} />
 		</>
 	);
 };
