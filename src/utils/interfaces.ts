@@ -14,7 +14,7 @@ export interface VideoChatDataInterface {
 	localAudio: any;
 
 	requestMediaStream(e?: any): any;
-	onMediaStream(e: any): any;
+	onMediaStream(e: MediaStream): any;
 	onMediaStream(e: any, uuid: any): any;
 
 	onAddStream(e: any, uuid: any): any;

@@ -15,16 +15,12 @@ export function getBrowserName(): string {
 	return name;
 }
 
-// Helper function for displaying waiting caption
-export function displayWaitingCaption(): void {
-	// Set caption text on start
-	let captionText = document.querySelector("remote-video-text");
-	if (captionText) {
-		captionText.textContent = "Room ready. Waiting for others to join...";
-	}
-	fadeIn(captionText, 400);
-	// Reposition captions on start
-	// rePositionCaptions();
+export function chatRoomFull(): void {
+	alert(
+		"Chat room is full. Check to ensure you don't have multiple tabs open, or try with a new room link."
+	);
+	// Exit room and redirect
+	window.location.href = "/newcall";
 }
 
 // Mute microphone

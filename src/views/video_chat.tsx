@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ChatComponent from "../components/chat_comp";
 import DetectRTC from "detectrtc";
-import { getBrowserName, displayWaitingCaption } from "../utils/main_utils";
+import { getBrowserName, chatRoomFull } from "../utils/main_utils";
 // import { VideoChatData } from "../utils/chat_stream";
 import { useSnackbar } from "react-simple-snackbar";
 import ReactTooltip from "react-tooltip";
@@ -45,14 +45,8 @@ const VideoChat = ({
 	};
 	customModalMessage?: string;
 }) => {
-	/* STATE */
-	// const mode = useState("camera");
-	// const isFullscreen = useState(false);
-	// const sendingCaptions = useState(false);
-	// const receivingCaptions = useState(false);
-
+	/* ON LOAD - Detect in-app browsers & redirect, set tab title, get webcam */
 	useEffect(() => {
-		//  Detect in-app browsers and redirect
 		var ua: string = navigator.userAgent || navigator.vendor;
 		if (
 			DetectRTC.isMobileDevice &&
@@ -66,33 +60,25 @@ const VideoChat = ({
 				window.location.href = "/browser-not-supported";
 			}
 		}
-		// Redirect all iOS browsers that are not Safari
 		if (DetectRTC.isMobileDevice) {
 			if (DetectRTC.osName === "iOS" && !DetectRTC.browser.isSafari) {
 				window.location.href = "/browser-not-supported";
 			}
 		}
-
 		const isWebRTCSupported =
 			navigator.getUserMedia || window.RTCPeerConnection;
 		const browserName: string = getBrowserName();
 		if (!isWebRTCSupported || browserName === "MSIE") {
 			window.location.href = "/browser-not-supported";
 		}
-
-		// Set tab title
 		document.title =
 			"Catalyst - " +
 			window.location.href.substring(window.location.href.lastIndexOf("/") + 1);
-
-		// get webcam on load
 		VideoChatData.requestMediaStream();
-
-		displayWaitingCaption();
-		// On change media devices refresh page and switch to system default
 		navigator.mediaDevices.ondevicechange = () => window.location.reload();
 	});
 
+	/* STATE - track toggleable UI/UX */
 	const [muted, setMuted] = useState(
 		defaultSettings?.muted ? defaultSettings.muted : false
 	);
@@ -105,13 +91,16 @@ const VideoChat = ({
 	const [hideCaptions, setHideCaptions] = useState(
 		defaultSettings?.hideCaptions ? defaultSettings.hideCaptions : true
 	);
-
 	const [captionsText, setCaptionsText] = useState(
 		"Room ready. Waiting for others to join..."
 	);
-
+	const [localVideoText, setLocalVideoText] = useState("No webcam input");
 	const [openSnackbar, closeSnackbar] = useSnackbar({ position: "top-center" });
 
+	// Map to keep track of dataChannel connecting with each peer
+	var dataChannel = new Map();
+
+	/* VIDEO CHAT DATA - track video/audio streams, peer connections, handle webrtc */
 	var VideoChatData: VideoChatDataInterface = {
 		videoEnabled: true,
 		audioEnabled: true,
@@ -128,9 +117,9 @@ const VideoChat = ({
 		localStream: "",
 
 		/* Call to getUserMedia (provided by adapter.js for  browser compatibility)
-	asking for access to both the video and audio streams. If the request is
-	 accepted callback to the onMediaStream function, otherwise callback to the
-	 noMediaStream function. */
+		asking for access to both the video and audio streams. If the request is
+		accepted callback to the onMediaStream function, otherwise callback to the
+		noMediaStream function. */
 		requestMediaStream: (e?: any) => {
 			console.log("requestMediaStream");
 			// rePositionLocalVideo();
@@ -141,7 +130,7 @@ const VideoChat = ({
 				})
 				.then(stream => {
 					VideoChatData.onMediaStream(stream);
-					localVideoText.text("Drag Me");
+					setLocalVideoText("Drag Me");
 				})
 				.catch(error => {
 					console.log(error);
@@ -157,7 +146,7 @@ const VideoChat = ({
 		},
 
 		// Called when a video stream is added to VideoChat
-		onMediaStream: (stream: any) => {
+		onMediaStream: (stream: MediaStream) => {
 			console.log("onMediaStream");
 			VideoChatData.localStream = stream;
 
@@ -167,6 +156,11 @@ const VideoChat = ({
 			// while another peer A/B is screen sharing (C won't receive
 			// A/Bs audio).<br />
 			VideoChatData.localAudio = stream.getAudioTracks()[0];
+			if (!VideoChatData.localVideo) {
+				VideoChatData.localVideo = document.getElementById(
+					"local-video"
+				) as HTMLMediaElement;
+			}
 			VideoChatData.localVideo.srcObject = stream;
 
 			// Now we're ready to join the chat room.
@@ -220,7 +214,7 @@ const VideoChat = ({
 			VideoChatData.peerConnections.delete(uuid);
 			dataChannel.delete(uuid);
 			if (VideoChatData.peerConnections.size === 0) {
-				displayWaitingCaption();
+				setCaptionsText("Room ready. Waiting for others to join...");
 			}
 		},
 
@@ -277,7 +271,8 @@ const VideoChat = ({
 					} else {
 						// Arbitrary data handling
 						console.log("Received arbitrary data: ", receivedData);
-						document.getElementById("arbitrary-data")?.append(receivedData);
+						// TODO: determine whether to add arbitrary data to DOM
+						// document.getElementById("arbitrary-data")?.append(receivedData);
 						window.top.postMessage(receivedData, "*");
 					}
 				};
@@ -354,9 +349,12 @@ const VideoChat = ({
 		onCandidate: (candidate: any, uuid: any) => {
 			// Update caption text
 			captionText.text("Found other user... connecting");
-			var rtcCandidate = new RTCIceCandidate(JSON.parse(candidate));
+			var rtcCandidate: RTCIceCandidate = new RTCIceCandidate(
+				JSON.parse(candidate)
+			);
+
 			console.log(
-				`onCandidate <<< Received remote ICE candidate (${rtcCandidate.address} - ${rtcCandidate.relatedAddress})`
+				`onCandidate <<< Received remote ICE candidate (${rtcCandidate.port} - ${rtcCandidate.relatedAddress})`
 			);
 			VideoChatData.peerConnections.get(uuid).addIceCandidate(rtcCandidate);
 		},
@@ -389,7 +387,7 @@ const VideoChat = ({
 		// needs to be parsed into an RTCSessionDescription and added as the remote
 		// description to the peerConnection object. Then the answer is created in the
 		// same manner as the offer and sent over the socket.
-		createAnswer: function (offer: any, uuid: any) {
+		createAnswer: (offer: any, uuid: any) => {
 			console.log("createAnswer");
 			var rtcOffer = new RTCSessionDescription(JSON.parse(offer));
 			console.log(`>>> Creating answer to ${uuid}`);
@@ -404,7 +402,7 @@ const VideoChat = ({
 						uuid
 					);
 				},
-				function (err: any) {
+				(err: any) => {
 					console.log("Failed answer creation.");
 					console.log(err, true);
 				}
@@ -431,7 +429,7 @@ const VideoChat = ({
 			// Set remote description of RTCSession
 			VideoChatData.peerConnections.get(uuid).setRemoteDescription(rtcAnswer);
 			// The caller now knows that the callee is ready to accept new ICE candidates, so sending the buffer over
-			VideoChatData.localICECandidates[uuid].forEach(candidate => {
+			VideoChatData.localICECandidates[uuid].forEach((candidate: any) => {
 				console.log(`>>> Sending local ICE candidate (${candidate.address})`);
 				// Send ice candidate over websocket
 				VideoChatData.socket.emit(
@@ -462,12 +460,15 @@ const VideoChat = ({
 			VideoChatData?.remoteVideoWrapper?.appendChild(node);
 			// Update remote video source
 			if (VideoChatData.remoteVideoWrapper?.lastChild !== null) {
+				// @ts-ignore
 				VideoChatData.remoteVideoWrapper.lastChild.srcObject = e.stream;
 			}
 			// // Close the initial share url snackbar
 			// Snackbar.close();
 			// Remove the loading gif from video
-			VideoChatData.remoteVideoWrapper.lastChild.style.background = "none";
+			if (VideoChatData.remoteVideoWrapper.lastChild) {
+				VideoChatData.remoteVideoWrapper.style.background = "none";
+			}
 			// Update connection status
 			VideoChatData.connected.set(uuid, true);
 			// Hide caption status text
@@ -477,17 +478,13 @@ const VideoChat = ({
 		}
 	};
 
-	// Map to keep track of dataChannel connecting with each peer
-	var dataChannel = new Map();
-
-	/* POST MESSAGING */
-	window.onmessage = function (e: MessageEvent) {
-		// forward post messaging from one parent to the other
+	/* POST MESSAGING - forward post messaging from one parent to the other */
+	window.onmessage = (e: MessageEvent) => {
 		try {
 			if (JSON.parse(e.data).type === "arbitraryData") {
 				sendToAllDataChannels(e.data);
 			}
-		} catch {}
+		} catch (e) {}
 	};
 
 	return (
@@ -529,7 +526,7 @@ const VideoChat = ({
 				<div id="wrapper"></div>
 				<Draggable defaultPosition={{ x: 30, y: 150 }}>
 					<div id="moveable">
-						<p id="local-video-text">No webcam input</p>
+						<p id="local-video-text">{localVideoText}</p>
 						<video id="local-video" autoPlay muted playsInline></video>
 					</div>
 				</Draggable>

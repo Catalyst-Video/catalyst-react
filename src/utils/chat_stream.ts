@@ -1,7 +1,6 @@
 // import io from "socket.io";
 import { io } from "socket.io-client";
 import { fadeIn, fadeOut } from "./fade";
-import { displayWaitingCaption } from "./main_utils";
 import SnackbarProvider from "react-simple-snackbar";
 import { VideoChatDataInterface } from "./interfaces";
 
@@ -116,9 +115,6 @@ export var VideoChatData: VideoChatDataInterface = {
 		VideoChatData.peerConnections.get(uuid).close(); // This is necessary, because otherwise the RTC connection isn't closed
 		VideoChatData.peerConnections.delete(uuid);
 		dataChannel.delete(uuid);
-		if (VideoChatData.peerConnections.size === 0) {
-			displayWaitingCaption();
-		}
 	},
 
 	establishConnection: (correctUuid: any, callback: Function) => {
