@@ -3,38 +3,7 @@ import { io } from "socket.io-client";
 import { fadeIn, fadeOut } from "./fade";
 import { displayWaitingCaption } from "./main_utils";
 import SnackbarProvider from "react-simple-snackbar";
-export interface VideoChatDataInterface {
-	videoEnabled: boolean;
-	audioEnabled: boolean;
-	connected: Map<any, any>;
-	localICECandidates: any;
-	socket: any;
-	remoteVideoWrapper: HTMLMediaElement;
-	localVideo: HTMLMediaElement;
-	peerConnections: Map<any, any>;
-	recognition: string;
-	borderColor: string;
-	peerColors: Map<any, any>;
-
-	requestMediaStream(e?: any): any;
-	onMediaStream(e: any): any;
-	onMediaStream(e: any, uuid: any): any;
-
-	onAddStream(e: any, uuid: any): any;
-	onLeave(e: any): any;
-
-	createOffer(a: any): any;
-	onOffer(offer: any, uuid: any): any;
-
-	createAnswer(offer: any, a: any): any;
-	onAnswer(answer: any, uuid: any): any;
-
-	call(uuid: string, room: any): any;
-	establishConnection(uuid: any, func: Function): any;
-
-	onCandidate(candidate: any, uuid: any): any;
-	onIceCandidate(e: any, uuid: any): any;
-}
+import { VideoChatDataInterface } from "./interfaces";
 
 export var VideoChatData: VideoChatDataInterface = {
 	videoEnabled: true,
@@ -48,6 +17,8 @@ export var VideoChatData: VideoChatDataInterface = {
 	recognition: "",
 	borderColor: "",
 	peerColors: new Map(),
+	localStream: "",
+	localAudio: "",
 
 	/* Call to getUserMedia (provided by adapter.js for  browser compatibility)
 	asking for access to both the video and audio streams. If the request is
