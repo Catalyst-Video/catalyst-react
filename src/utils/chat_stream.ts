@@ -2,7 +2,6 @@
 import { io } from "socket.io-client";
 import { fadeIn, fadeOut } from "./fade";
 import { displayWaitingCaption } from "./main_utils";
-// import Snackbar from "../components/toast-snackbar";
 import SnackbarProvider from "react-simple-snackbar";
 export interface VideoChatDataInterface {
 	videoEnabled: boolean;
@@ -69,11 +68,9 @@ export var VideoChatData: VideoChatDataInterface = {
 			})
 			.catch(error => {
 				console.log(error);
-				let captionText = document.querySelector("remote-video-text");
-				if (captionText)
-					captionText.textContent =
-						"Failed to activate your webcam. Check your webcam/privacy settings.";
-				fadeIn(captionText, 400);
+				// setCaptionsText(
+				// 	"Failed to activate your webcam. Check your webcam/privacy settings."
+				// );
 				console.log(
 					"Failed to get local webcam video, check webcam privacy settings"
 				);
@@ -95,37 +92,6 @@ export var VideoChatData: VideoChatDataInterface = {
 		// A/Bs audio).<br />
 		// @ts-ignore
 		VideoChatData.localAudio = stream.getAudioTracks()[0];
-
-		// Add the stream as video's srcObject.
-		// Now that we have webcam video sorted, prompt user to share URL
-		// Snackbar.show({
-		// 	text: joinMessage || "Share this link to join: " + coreUrl,
-		// 	actionText: hideJoinMessageCopyButton ? "Dismiss" : "Copy Link",
-		// 	width: "750px",
-		// 	pos: "top-center",
-		// 	actionTextColor: "#000000",
-		// 	duration: 500000,
-		// 	backgroundColor: "#16171a",
-		// 	onActionClick: (element: any) => {
-		// 		// Copy url to clipboard, this is achieved by creating a temporary element,
-		// 		// adding the text we want to that element, selecting it, then deleting it
-
-		// 		// if (!hideJoinMessageCopyButton) {
-		// 		// 	var copyContent = window.location.href;
-		// 		// 	document
-		// 		// 		.querySelector('<input id="some-element">')
-		// 		// 		.val(copyContent)
-		// 		// 		.appendTo("body")
-		// 		// 		.select();
-		// 		// 	document.execCommand("copy");
-		// 		// 	var toRemove = document.querySelector("#some-element");
-		// 		// 	toRemove?.parentNode?.removeChild(toRemove);
-		// 		// }
-
-		// 		// Snackbar.close();
-		// 	}
-		// });
-
 		VideoChatData.localVideo.srcObject = stream;
 
 		// Now we're ready to join the chat room.
