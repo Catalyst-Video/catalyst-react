@@ -84,6 +84,30 @@ const VideoChat = ({
 			window.location.href.substring(window.location.href.lastIndexOf("/") + 1);
 		VideoChatData.requestMediaStream();
 		navigator.mediaDevices.ondevicechange = () => window.location.reload();
+
+		// Listen for enter press on chat input
+		const TextInput = document.querySelector(
+			".compose input"
+		) as HTMLInputElement;
+		TextInput?.addEventListener("keypress", (e: any) => {
+			if (e.keyCode === 13) {
+				e.preventDefault();
+				var msg = TextInput.value;
+				// Send message over data channel, Add message to screen, auto scroll chat down
+				if (msg && msg.length > 0) {
+					// Prevent cross site scripting
+					msg = msg.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+					sendToAllDataChannels("mes:" + msg, dataChannel);
+					addMessageToScreen(msg, VideoChatData.borderColor, true);
+					document.getElementById("chat-end")?.scrollIntoView({
+						behavior: "smooth",
+						block: "nearest",
+						inline: "start"
+					});
+					TextInput.value = "";
+				}
+			}
+		});
 	});
 
 	/* STATE: track toggleable UI/UX */
@@ -500,29 +524,6 @@ const VideoChat = ({
 			VideoChatData.connected.set(uuid, true);
 		}
 	};
-
-	const TextInput = document.querySelector(".compose input");
-	// Listen for enter press on chat input
-	TextInput?.addEventListener("keypress", (e: any) => {
-		if (e.keyCode === 13) {
-			// Prevent page refresh on enter
-			e.preventDefault();
-			var msg = TextInput.textContent ?? "";
-			// Prevent cross site scripting
-			msg = msg.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-			// Send message over data channel
-			sendToAllDataChannels("mes:" + msg, dataChannel);
-			// Add message to screen
-			addMessageToScreen(msg, VideoChatData.borderColor, true);
-			// Auto scroll chat down
-			var chatZone = document.querySelector("chat-zone");
-			if (chatZone) {
-				chatZone.scrollTop = chatZone[0].scrollHeight;
-			}
-			// Clear chat input
-			TextInput.textContent = "";
-		}
-	});
 
 	/* POST MESSAGING - forward post messaging from one parent to the other */
 	window.onmessage = (e: MessageEvent) => {

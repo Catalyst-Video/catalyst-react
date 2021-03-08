@@ -40,11 +40,9 @@ export function handlereceiveMessage(
 	// Add message to screen
 	addMessageToScreen(msg, color, false);
 	// Auto scroll chat down
-	var chatZone = document.querySelector("chat-zone");
-	if (chatZone) {
-		chatZone.scrollTop = chatZone[0].scrollHeight;
-		// Show chat if hidden
-	}
+	document
+		.getElementById("chat-end")
+		?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
 	if (hideChat) {
 		setHideChat(false);
 	}
@@ -56,22 +54,26 @@ export function addMessageToScreen(
 	border: any,
 	isOwnMessage: boolean
 ) {
-	if (isOwnMessage) {
-		document
-			.querySelector(".chat-messages")
-			?.append(
-				`<div class="message-item customer cssanimation fadeInBottom"><div class="message-bloc" style="--bloc-color: ${border}"><div class="message">` +
-					msg +
-					"</div></div></div>"
-			);
-	} else {
-		document
-			.querySelector(".chat-messages")
-			?.append(
-				`<div class="message-item moderator cssanimation fadeInBottom"><div class="message-bloc" style="--bloc-color: ${border}"><div class="message">` +
-					msg +
-					"</div></div></div>"
-			);
+	if (msg.length > 0) {
+		if (isOwnMessage) {
+			document
+				.querySelector(".chat-messages")
+				?.insertAdjacentHTML(
+					"beforeend",
+					`<div class="message-item customer cssanimation fadeInBottom"><div class="message-bloc" style="--bloc-color: ${border}"><div class="message">` +
+						msg +
+						"</div></div></div>"
+				);
+		} else {
+			document
+				.querySelector(".chat-messages")
+				?.insertAdjacentHTML(
+					"beforeend",
+					`<div class="message-item moderator cssanimation fadeInBottom"><div class="message-bloc" style="--bloc-color: ${border}"><div class="message">` +
+						msg +
+						"</div></div></div>"
+				);
+		}
 	}
 }
 
