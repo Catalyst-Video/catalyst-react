@@ -34,6 +34,7 @@ import {
 	faPause,
 	faPhoneSlash,
 	faPlay,
+	faTimes,
 	faVideo
 } from "@fortawesome/free-solid-svg-icons";
 // assets
@@ -125,6 +126,7 @@ const VideoChat = ({
 	const [hideCaptions, setHideCaptions] = useState<boolean>(
 		defaultSettings?.hideCaptions ? defaultSettings.hideCaptions : true
 	);
+	const [showSessionDetails, setShowSessionDetails] = useState(false);
 	const [sendingCaptions, setSendingCaptions] = useState(false);
 	const [captionsText, setCaptionsText] = useState(
 		"Room ready. Waiting for others to join..."
@@ -538,10 +540,37 @@ const VideoChat = ({
 		<>
 			<div id="arbitrary-data" style={{ display: "none" }}></div>
 			<div id="header">
-				<img src={logo} alt="Catalyst Logo" height="48" draggable="false" />
-				<span style={{ color: "black" }}>{sessionKey}</span>
+				<button
+					className="header-btn"
+					style={{ display: "inline" }}
+					onClick={() => setShowSessionDetails(!showSessionDetails)}
+				>
+					<img src={logo} alt="Catalyst Logo" height="48" draggable="false" />
+				</button>
 			</div>
-
+			{showSessionDetails && (
+				<button
+					className="session-details-btn"
+					onClick={() => setShowSessionDetails(!showSessionDetails)}
+				>
+					<span className="session-details-title">
+						<strong>Session Details</strong>
+						<FontAwesomeIcon
+							icon={faTimes}
+							size="lg"
+							title="Close Session Details"
+							className="session-details-close"
+						/>
+					</span>
+					Session Key:<i> {sessionKey}</i>
+					<br />
+					Host:<i> {sessionKey}</i>
+					<br />
+					IP:<i> {sessionKey}</i>
+					<br />
+					UUID:<i> {sessionKey}</i>
+				</button>
+			)}
 			<div id="call-section">
 				<Draggable>
 					<div id="remote-video-text">{captionsText}</div>

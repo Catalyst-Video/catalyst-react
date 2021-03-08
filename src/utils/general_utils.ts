@@ -106,7 +106,7 @@ export function uuidToHue(uuid: any, VideoChat: VCDataInterface) {
 export function hueToColor(hue: any) {
 	return `hsl(${hue},100%,70%)`;
 }
-// Sets the border color of uuid's stream
+// Sets the border color of UUID's stream
 export function setStreamColor(uuid: any, VideoChat: VCDataInterface) {
 	const hue = uuidToHue(uuid, VideoChat);
 	let elem = document.querySelectorAll(`[uuid="${uuid}"]`)[0] as HTMLElement;

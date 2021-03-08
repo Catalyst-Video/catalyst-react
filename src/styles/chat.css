@@ -578,6 +578,41 @@ button:hover {
   }
 }
 
+.header-btn {
+  border: none !important;
+  outline: none !important;
+  background: none;
+  cursor: pointer; 
+  
+}
+
+.session-details-btn {
+	background: white;
+	border-radius: 10px;
+	padding: 25px;
+	z-index: 20px;
+	position: fixed;
+	top: 0.5rem;
+	left: 0.5rem;
+  border: none !important;
+  outline: none !important;
+  text-align: left;
+  cursor: pointer; 
+  backdrop-filter: blur(6px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05);
+}
+
+.session-details-close {
+ position: absolute;
+ right: 0.75rem;
+ top:  0.75rem;
+ cursor: pointer; 
+}
+
+.session-details-title {
+  display: flex;
+  margin-bottom: 5px;
+}
 /*Hide video controls on mobile*/
 /*todo: still buggy on iOS, play/pause button pops up on load for iOS,
    goes away after you press pause then play again*/
