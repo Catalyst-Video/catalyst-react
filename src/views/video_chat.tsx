@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ChatComponent from "../components/chat_comp";
-import DetectRTC from "detectrtc";
 import {
 	getBrowserName,
 	chatRoomFull,
@@ -10,9 +8,14 @@ import {
 	handlereceiveMessage,
 	uuidToHue
 } from "../utils/general_utils";
+import ChatComponent from "../components/chat_comp";
 import { useSnackbar } from "react-simple-snackbar";
 import ReactTooltip from "react-tooltip";
 import Draggable from "react-draggable";
+import { io } from "socket.io-client";
+import DetectRTC from "detectrtc";
+// typings
+import { VideoChatDataInterface } from "../../typings/interfaces";
 // icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -34,10 +37,6 @@ import logo from "../assets/img/wordmark_logo.png";
 // sounds
 import joinSound from "../assets/sound/join.mp3";
 import leaveSound from "../assets/sound/leave.mp3";
-
-// import io from "socket.io";
-import { io } from "socket.io-client";
-import { VideoChatDataInterface } from "../../typings/interfaces";
 
 const VideoChat = ({
 	sessionKey,
