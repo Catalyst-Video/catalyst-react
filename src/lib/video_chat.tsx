@@ -48,11 +48,13 @@ import "../styles/snackbar.css";
 const VideoChat = ({
 	sessionKey,
 	defaultSettings,
-	customSnackbarMsg
+	customSnackbarMsg,
+	styles
 }: {
 	sessionKey: string;
 	defaultSettings?: DefaultSettings;
 	customSnackbarMsg?: HTMLElement | Element | string;
+	styles?: Object;
 }) => {
 	/* ON LOAD: detect in-app browsers & redirect, set tab title, get webcam */
 	useEffect(() => {

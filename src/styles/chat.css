@@ -101,6 +101,8 @@ a {
 #local-video {
   width: 100%;
   height: auto;
+  min-width: 100px;
+  text-align: center;
   border-radius: 10px;
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
@@ -427,6 +429,7 @@ button:hover {
 
 @media (max-width: 640px) {
   /* @media (min-width: 320px) and (max-width: 480px) { */
+    
 
   html,
   body {
@@ -489,6 +492,41 @@ button:hover {
     flex-direction: row;
     /* overflow: hidden; */
   }
+
+  
+/*Text inside local video*/
+#moveable p {
+  z-index: 101;
+  position: absolute;
+  color: white;
+  font-family: "Heebo", sans-serif;
+  white-space: nowrap;
+  font-weight: bold;
+  margin-left: 20px;
+  background: rgba(0, 0, 0, 0.12);
+  padding: 10px;
+  border-radius: 5px;
+}
+
+#remote-video-text {
+  margin: 0;
+  position: absolute;
+  max-height: 300px;
+  top: calc(80%);
+  left: 50%;
+  width: 80vw;
+  margin-left: -200px;
+  z-index: 1;
+  color: black;
+  font-family: "Heebo", sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+  border-radius: 10px;
+  padding: 10px;
+}
 
   .buttonContainer {
     position: relative;
