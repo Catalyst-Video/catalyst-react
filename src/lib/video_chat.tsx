@@ -13,9 +13,10 @@ import {
 	setStreamColor,
 	hueToColor,
 	handlereceiveMessage,
-	uuidToHue
+	uuidToHue,
+	addMessageToScreen
 } from "../utils/general_utils";
-import { handleMute, handlePauseVideo } from "../utils/chat_utils";
+import { handleMute, handlePauseVideo } from "../utils/stream_utils";
 // typings
 import { DefaultSettings, VCDataInterface } from "../../typings/interfaces";
 // icons
@@ -39,6 +40,9 @@ import {
 import joinSound from "../assets/sound/join.mp3";
 import leaveSound from "../assets/sound/leave.mp3";
 import logo from "../assets/img/wordmark_logo.png";
+// styles
+import "../styles/chat.css";
+import "../styles/snackbar.css";
 
 const VideoChat = ({
 	sessionKey,
@@ -496,6 +500,29 @@ const VideoChat = ({
 			VideoChatData.connected.set(uuid, true);
 		}
 	};
+
+	const TextInput = document.querySelector(".compose input");
+	// Listen for enter press on chat input
+	TextInput?.addEventListener("keypress", (e: any) => {
+		if (e.keyCode === 13) {
+			// Prevent page refresh on enter
+			e.preventDefault();
+			var msg = TextInput.textContent ?? "";
+			// Prevent cross site scripting
+			msg = msg.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+			// Send message over data channel
+			sendToAllDataChannels("mes:" + msg, dataChannel);
+			// Add message to screen
+			addMessageToScreen(msg, VideoChatData.borderColor, true);
+			// Auto scroll chat down
+			var chatZone = document.querySelector("chat-zone");
+			if (chatZone) {
+				chatZone.scrollTop = chatZone[0].scrollHeight;
+			}
+			// Clear chat input
+			TextInput.textContent = "";
+		}
+	});
 
 	/* POST MESSAGING - forward post messaging from one parent to the other */
 	window.onmessage = (e: MessageEvent) => {

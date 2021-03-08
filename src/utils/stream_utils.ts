@@ -223,43 +223,6 @@ function receiveCaptions(captions) {
 
 // Text Chat
 // Add text message to chat screen on page
-function addMessageToScreen(msg, border, isOwnMessage) {
-	if (isOwnMessage) {
-		$(".chat-messages").append(
-			`<div class="message-item customer cssanimation fadeInBottom"><div class="message-bloc" style="--bloc-color: ${border}"><div class="message">` +
-				msg +
-				"</div></div></div>"
-		);
-	} else {
-		$(".chat-messages").append(
-			`<div class="message-item moderator cssanimation fadeInBottom"><div class="message-bloc" style="--bloc-color: ${border}"><div class="message">` +
-				msg +
-				"</div></div></div>"
-		);
-	}
-}
-
-// Listen for enter press on chat input
-chatInput.addEventListener("keypress", function (event) {
-	if (event.keyCode === 13) {
-		// Prevent page refresh on enter
-		event.preventDefault();
-		var msg = chatInput.value;
-		// Prevent cross site scripting
-		msg = msg.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-		// Make links clickable
-		msg = msg.autoLink();
-		// Send message over data channel
-		sendToAllDataChannels("mes:" + msg);
-		// Add message to screen
-		addMessageToScreen(msg, VideoChat.borderColor, true);
-		// Auto scroll chat down
-		chatZone.scrollTop(chatZone[0].scrollHeight);
-		// Clear chat input
-		chatInput.value = "";
-	}
-});
-
 
 
 // Picture in picture
