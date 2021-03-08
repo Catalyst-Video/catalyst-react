@@ -1,46 +1,102 @@
-# Getting Started with Create React App
+# Catalyst Video Chat React Component
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+📷💬 An open-source React component that allows developers to quickly and easily add Zoom-like video chat to their web applications. Built using WebRTC, using Typescript. A functioning build be enabled in minutes with as few as five lines of code.
+## Functionality & Params
 
-## Available Scripts
 
-In the project directory, you can run:
+| Param        | Description                                                                                                 | Sample Type                             | Default Value                             | Required |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- | -------------------------------------- | -------- |
+| `sessionKey` | Unique session identifier - peers with the same `sessionKey` are connected                                                                    |  `string` | `"UNDEFINED"` |  Yes      |
+| `defaultSettings`          | Settings for the default instance of Catalyst                                                                                   | ```{ hideChat?: boolean; audioOn?: boolean; videoOn?: boolean; hideCaptions?: boolean; hideLogo?: boolean; }```                              | ```{ hideChat: true, audioOn: true, videoOn: true, hideCaptions: true, hideLogo: false }```  | Optional      |
+| `customSnackbarMsg`  | Displays message in snackbar popup on session start | `HTMLElement` or `Element` or `string`                              | `Share your session key {sessionKey} with whoever wants to join `                                | Optional |
 
-### `yarn start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
 
-### `yarn test`
+## Usage
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Installation
 
-### `yarn build`
+Install this package in any of your projects by running 
+```
+npm install catalyst-vc-react
+```
+or 
+```
+yarn install catalyst-vc-react
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Importing
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```typescript
+import { VideoChat } from "catalyst-vc-react"
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+If you want to access the utils or interfaces within the package, use
 
-### `yarn eject`
+```typescript
+import { VCDataInterface } from "catalyst-vc-react/interfaces"
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+import { Utils } from "catalyst-vc-react/utils";
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Implementation
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```tsx
+	<VideoChat
+			sessionKey={"testKey"}
+			defaultSettings={{
+				hideChat: true,
+				audioOn: true,
+				videoOn: true,
+				hideCaptions: true,
+				hideLogo: false
+			}}
+		/>
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Above is a simplistic example of a `VideoChat` component being embedded in a project. The rooms are paired by the `sessionKey` attribute: two users looking at a version of this component with the same sessionKey will enter a video chat session.
 
-## Learn More
+This will use Catalyst's demo signaling server by default, allowing you to see a functioning version of video chat in your projects immediately. This server has the following usage quotas:
+```
+<Insert Quotas here>
+```
+You can create your own server by following the Catalyst server setup docs [here](https://linktoserversetupdocs)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Examples
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```typescript
+<Further examples of component in use>
+```
+
+Catalyst can be seen in action in the following active projects:
+-  [ReadTogether](https://github.com/GoldinGuy/ReadTogether)
+-  [Example 2](https://github.com/GoldinGuy/Ex2)
+-  [Example 3](https://github.com/GoldinGuy/Ex3)
+## Contributing
+
+1. Fork Catalyst-React [here](https://github.com/Catalyst-Video/catalyst-react/fork)
+2. Create a feature branch (`git checkout -b feature/fooBar`)
+3. Commit your changes (`git commit -am 'Add some fooBar'`)
+4. Push to the branch (`git push origin feature/fooBar`)
+5. Create a new Pull Request
+
+
+### Development setup
+
+After you have the repo on your local machine, run the following commands to install deps
+
+```
+npm install
+```
+
+Once you have everything installed and updated, run the following command to compile a demo version to localhost
+
+```
+yarn start
+```
+## Meta
+
+Created by [@GoldinGuy](https://github.com/GoldinGuy) and [@JoeSemrai](https://github.com/JosephSemrai)
+
+Distributed under the MIT license. See [LICENSE](https://github.com/Catalyst-Video/catalyst-react/blob/master/LICENSE) for more information.

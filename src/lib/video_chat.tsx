@@ -47,11 +47,11 @@ import "../styles/snackbar.css";
 const VideoChat = ({
 	sessionKey,
 	defaultSettings,
-	customModalMessage
+	customSnackbarMsg
 }: {
 	sessionKey: string;
 	defaultSettings?: DefaultSettings;
-	customModalMessage?: string;
+	customSnackbarMsg?: HTMLElement | Element | string;
 }) => {
 	/* ON LOAD: detect in-app browsers & redirect, set tab title, get webcam */
 	useEffect(() => {
@@ -182,8 +182,8 @@ const VideoChat = ({
 			toast(
 				() => (
 					<div className="text-center justify-between">
-						{customModalMessage ? (
-							customModalMessage
+						{customSnackbarMsg ? (
+							customSnackbarMsg
 						) : (
 							<>
 								<span>Share your session key </span>
