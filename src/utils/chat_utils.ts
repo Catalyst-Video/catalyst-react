@@ -19,7 +19,7 @@ export function handleMute(
 	});
 }
 
-export function pauseVideo(
+export function handlePauseVideo(
 	videoEnabled: boolean,
 	setVideo: Function,
 	VideoChat: VCDataInterface

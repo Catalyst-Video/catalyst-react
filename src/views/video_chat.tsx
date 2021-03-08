@@ -15,7 +15,7 @@ import {
 	handlereceiveMessage,
 	uuidToHue
 } from "../utils/general_utils";
-import { handleMute } from "../utils/chat_utils";
+import { handleMute, handlePauseVideo } from "../utils/chat_utils";
 // typings
 import { DefaultSettings, VCDataInterface } from "../../typings/interfaces";
 // icons
@@ -92,7 +92,7 @@ const VideoChat = ({
 	const [sharing, setSharing] = useState(false);
 	const [picInPic, setPicInPic] = useState(false);
 	const [hideChat, setHideChat] = useState<boolean>(
-		defaultSettings?.hideChat ? defaultSettings.hideChat : false
+		defaultSettings?.hideChat ? defaultSettings.hideChat : true
 	);
 	const [hideCaptions, setHideCaptions] = useState<boolean>(
 		defaultSettings?.hideCaptions ? defaultSettings.hideCaptions : true
@@ -573,9 +573,9 @@ const VideoChat = ({
 							data-tip="pause-tooltip"
 							data-for="pause-tooltip"
 							className="hoverButton"
-							onClick={() => {
-								setVideo(!videoEnabled);
-							}}
+							onClick={() =>
+								handlePauseVideo(videoEnabled, setVideo, VideoChatData)
+							}
 						>
 							<FontAwesomeIcon icon={videoEnabled ? faPause : faPlay} />
 						</button>
@@ -589,7 +589,11 @@ const VideoChat = ({
 							effect="float"
 						>
 							<div className="HoverState" id="swap-text">
-								Share Screen
+								{!sharing ? (
+									<span>Share Screen</span>
+								) : (
+									<span>Stop Sharing Screen</span>
+								)}
 							</div>
 						</ReactTooltip>
 						<button
