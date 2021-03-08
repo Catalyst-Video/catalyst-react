@@ -9,7 +9,9 @@ import {
 	uuidToHue
 } from "../utils/general_utils";
 import ChatComponent from "../components/chat_comp";
-import { useSnackbar } from "react-simple-snackbar";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+// import { useSnackbar } from "react-simple-snackbar";
 import ReactTooltip from "react-tooltip";
 import Draggable from "react-draggable";
 import { io } from "socket.io-client";
@@ -52,7 +54,7 @@ const VideoChat = ({
 	};
 	customModalMessage?: string;
 }) => {
-	/* ON LOAD: Detect in-app browsers & redirect, set tab title, get webcam */
+	/* ON LOAD: detect in-app browsers & redirect, set tab title, get webcam */
 	useEffect(() => {
 		var ua: string = navigator.userAgent || navigator.vendor;
 		if (
@@ -92,10 +94,10 @@ const VideoChat = ({
 	const [vidPaused, setVidPaused] = useState(false);
 	const [sharing, setSharing] = useState(false);
 	const [picInPic, setPicInPic] = useState(false);
-	const [hideChat, setHideChat] = useState(
+	const [hideChat, setHideChat] = React.useState<boolean>(
 		defaultSettings?.hideChat ? defaultSettings.hideChat : false
 	);
-	const [hideCaptions, setHideCaptions] = useState(
+	const [hideCaptions, setHideCaptions] = React.useState<boolean>(
 		defaultSettings?.hideCaptions ? defaultSettings.hideCaptions : true
 	);
 	const [sendingCaptions, setSendingCaptions] = useState(false);
@@ -103,7 +105,6 @@ const VideoChat = ({
 		"Room ready. Waiting for others to join..."
 	);
 	const [localVideoText, setLocalVideoText] = useState("No webcam input");
-	const [openSnackbar, closeSnackbar] = useSnackbar({ position: "top-center" });
 
 	// Track dataChannel connecting w/ each peer
 	var dataChannel = new Map();
@@ -139,6 +140,29 @@ const VideoChat = ({
 				})
 				.catch(error => {
 					console.log(error);
+					// show initial connect to peer prompt
+					toast(
+						() => (
+							<div className="text-center justify-between">
+								Please press allow to enable webcam & audio access
+								<button
+									className="snack-btn"
+									onClick={() => {
+										window.open(
+											"https://help.clipchamp.com/en/articles/1505527-how-do-i-enable-my-webcam-for-recording",
+											"_blank"
+										);
+									}}
+								>
+									Directions
+								</button>
+							</div>
+						),
+						{
+							autoClose: false,
+							toastId: "webcam/audio_error"
+						}
+					);
 					setCaptionsText(
 						"Failed to activate your webcam. Check your webcam/privacy settings."
 					);
@@ -153,6 +177,26 @@ const VideoChat = ({
 		onMediaStream: (stream: MediaStream) => {
 			console.log("onMediaStream");
 			VideoChatData.localStream = stream;
+			// show initial connect to peer prompt
+			// toast.dismiss();
+			toast(
+				() => (
+					<div className="text-center justify-between">
+						{customModalMessage ? (
+							customModalMessage
+						) : (
+							<>
+								<span>Share your session key </span>
+								<strong>{sessionKey}</strong>
+								<span> with whoever wants to join</span>
+							</>
+						)}
+					</div>
+				),
+				{
+					toastId: "peer_prompt"
+				}
+			);
 			/* When a video stream is added to VideoChat, we need to store the local audio track, because the screen sharing MediaStream doesn't have audio by default, which is problematic for peer C who joins while another peer A/B is screen sharing (C won't receive A/Bs audio). */
 			VideoChatData.localAudio = stream.getAudioTracks()[0];
 			if (!VideoChatData.localVideo) {
@@ -346,6 +390,7 @@ const VideoChat = ({
 				`onCandidate <<< Received remote ICE candidate (${rtcCandidate.port} - ${rtcCandidate.relatedAddress})`
 			);
 			VideoChatData.peerConnections.get(uuid).addIceCandidate(rtcCandidate);
+			toast.dismiss();
 		},
 		// Create an offer that contains the media capabilities of the browser.
 		createOffer: (uuid: any) => {
@@ -479,29 +524,8 @@ const VideoChat = ({
 		<>
 			<div id="arbitrary-data" style={{ display: "none" }}></div>
 			<div id="header">
-				<button
-					onClick={() =>
-						openSnackbar(
-							<div>
-								Please press allow to enable webcam and audio access{" "}
-								<button
-									onClick={() => {
-										window.open(
-											"https://help.clipchamp.com/en/articles/1505527-how-do-i-enable-my-webcam-for-recording",
-											"_blank"
-										);
-									}}
-								>
-									Help!
-								</button>
-							</div>,
-							[10000]
-						)
-					}
-				>
-					<img src={logo} alt="Catalyst Logo" height="48" />
-					{sessionKey}
-				</button>
+				<img src={logo} alt="Catalyst Logo" height="48" draggable="false" />
+				<span style={{ color: "black" }}>{sessionKey}</span>
 			</div>
 
 			<div id="call-section">
@@ -666,7 +690,7 @@ const VideoChat = ({
 							data-for="caption-tooltip"
 							className="hoverButton"
 							onClick={() => {
-								// setHideCaptions(!hideCaptions);
+								setHideCaptions(!hideCaptions);
 							}}
 						>
 							<FontAwesomeIcon
@@ -701,6 +725,18 @@ const VideoChat = ({
 			</div>
 
 			<ChatComponent hideChat={hideChat} />
+			<ToastContainer
+				position="top-center"
+				autoClose={50000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+				limit={2}
+			/>
 		</>
 	);
 };

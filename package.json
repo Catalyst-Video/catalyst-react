@@ -28,6 +28,7 @@
 		"react-draggable": "^4.4.3",
 		"react-scripts": "4.0.3",
 		"react-simple-snackbar": "^1.1.10",
+		"react-toastify": "^7.0.3",
 		"react-tooltip": "^4.2.15",
 		"socket.io": "^2.2.0",
 		"socket.io-client": "^3.1.2",
