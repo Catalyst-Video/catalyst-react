@@ -1,6 +1,6 @@
-export interface VideoChatDataInterface {
-	videoEnabled: boolean;
-	audioEnabled: boolean;
+export interface VCDataInterface {
+	// videoEnabled: boolean;
+	// audioEnabled: boolean;
 	connected: Map<any, any>;
 	localICECandidates: any;
 	socket: any;
@@ -31,4 +31,12 @@ export interface VideoChatDataInterface {
 
 	onCandidate(candidate: any, uuid: any): any;
 	onIceCandidate(e: any, uuid: any): any;
+}
+
+export interface DefaultSettings {
+	hideChat?: boolean;
+	audioOn?: boolean;
+	videoOn?: boolean;
+	hideCaptions?: boolean;
+	hideLogo?: boolean;
 }

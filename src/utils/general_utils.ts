@@ -1,4 +1,4 @@
-import { VideoChatDataInterface } from "../../typings/interfaces";
+import { VCDataInterface } from "../../typings/interfaces";
 
 export function getBrowserName(): string {
 	var name = "Unknown";
@@ -76,7 +76,7 @@ export function addMessageToScreen(
 }
 
 // Using uuid to generate random, unique pastel color
-export function uuidToHue(uuid: any, VideoChat: VideoChatDataInterface) {
+export function uuidToHue(uuid: any, VideoChat: VCDataInterface) {
 	var hash = 0;
 	for (var i = 0; i < uuid.length; i++) {
 		hash = uuid.charCodeAt(i) + ((hash << 5) - hash);
@@ -105,7 +105,7 @@ export function hueToColor(hue: any) {
 	return `hsl(${hue},100%,70%)`;
 }
 // Sets the border color of uuid's stream
-export function setStreamColor(uuid: any, VideoChat: VideoChatDataInterface) {
+export function setStreamColor(uuid: any, VideoChat: VCDataInterface) {
 	const hue = uuidToHue(uuid, VideoChat);
 	let elem = document.querySelectorAll(`[uuid="${uuid}"]`)[0] as HTMLElement;
 	elem.style.border = `3px solid ${hueToColor(hue)}`;

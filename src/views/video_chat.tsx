@@ -1,4 +1,11 @@
 import React, { useEffect, useState } from "react";
+import ChatComponent from "../components/chat_comp";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ReactTooltip from "react-tooltip";
+import Draggable from "react-draggable";
+import { io } from "socket.io-client";
+import DetectRTC from "detectrtc";
 import {
 	getBrowserName,
 	chatRoomFull,
@@ -8,16 +15,9 @@ import {
 	handlereceiveMessage,
 	uuidToHue
 } from "../utils/general_utils";
-import ChatComponent from "../components/chat_comp";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-// import { useSnackbar } from "react-simple-snackbar";
-import ReactTooltip from "react-tooltip";
-import Draggable from "react-draggable";
-import { io } from "socket.io-client";
-import DetectRTC from "detectrtc";
+import { handleMute } from "../utils/chat_utils";
 // typings
-import { VideoChatDataInterface } from "../../typings/interfaces";
+import { DefaultSettings, VCDataInterface } from "../../typings/interfaces";
 // icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -35,10 +35,10 @@ import {
 	faPlay,
 	faVideo
 } from "@fortawesome/free-solid-svg-icons";
-import logo from "../assets/img/wordmark_logo.png";
-// sounds
+// assets
 import joinSound from "../assets/sound/join.mp3";
 import leaveSound from "../assets/sound/leave.mp3";
+import logo from "../assets/img/wordmark_logo.png";
 
 const VideoChat = ({
 	sessionKey,
@@ -46,12 +46,7 @@ const VideoChat = ({
 	customModalMessage
 }: {
 	sessionKey: string;
-	defaultSettings?: {
-		hideChat?: boolean;
-		muted?: boolean;
-		hideCaptions?: boolean;
-		hideLogo?: boolean;
-	};
+	defaultSettings?: DefaultSettings;
 	customModalMessage?: string;
 }) => {
 	/* ON LOAD: detect in-app browsers & redirect, set tab title, get webcam */
@@ -88,16 +83,18 @@ const VideoChat = ({
 	});
 
 	/* STATE: track toggleable UI/UX */
-	const [muted, setMuted] = useState(
-		defaultSettings?.muted ? defaultSettings.muted : false
+	const [audioEnabled, setAudio] = useState<boolean>(
+		defaultSettings?.audioOn ? defaultSettings.audioOn : true
 	);
-	const [vidPaused, setVidPaused] = useState(false);
+	const [videoEnabled, setVideo] = useState<boolean>(
+		defaultSettings?.videoOn ? defaultSettings.videoOn : true
+	);
 	const [sharing, setSharing] = useState(false);
 	const [picInPic, setPicInPic] = useState(false);
-	const [hideChat, setHideChat] = React.useState<boolean>(
+	const [hideChat, setHideChat] = useState<boolean>(
 		defaultSettings?.hideChat ? defaultSettings.hideChat : false
 	);
-	const [hideCaptions, setHideCaptions] = React.useState<boolean>(
+	const [hideCaptions, setHideCaptions] = useState<boolean>(
 		defaultSettings?.hideCaptions ? defaultSettings.hideCaptions : true
 	);
 	const [sendingCaptions, setSendingCaptions] = useState(false);
@@ -110,9 +107,9 @@ const VideoChat = ({
 	var dataChannel = new Map();
 
 	/* VIDEO CHAT DATA: track video/audio streams, peer connections, handle webrtc */
-	var VideoChatData: VideoChatDataInterface = {
-		videoEnabled: true,
-		audioEnabled: true,
+	var VideoChatData: VCDataInterface = {
+		// videoEnabled: true,
+		// audioEnabled: true,
 		connected: new Map(),
 		localICECandidates: {},
 		socket: io(),
@@ -178,7 +175,6 @@ const VideoChat = ({
 			console.log("onMediaStream");
 			VideoChatData.localStream = stream;
 			// show initial connect to peer prompt
-			// toast.dismiss();
 			toast(
 				() => (
 					<div className="text-center justify-between">
@@ -344,7 +340,6 @@ const VideoChat = ({
 							break;
 						case "failed":
 							console.log("failed");
-							// Refresh page if connection has failed
 							window.location.reload();
 							break;
 						case "closed":
@@ -381,7 +376,6 @@ const VideoChat = ({
 		},
 		// When receiving a candidate over the socket, turn it back into a real RTCIceCandidate and add it to the peerConnection.
 		onCandidate: (candidate: any, uuid: any) => {
-			// Update caption text
 			setCaptionsText("Found other user... connecting");
 			var rtcCandidate: RTCIceCandidate = new RTCIceCandidate(
 				JSON.parse(candidate)
@@ -390,7 +384,6 @@ const VideoChat = ({
 				`onCandidate <<< Received remote ICE candidate (${rtcCandidate.port} - ${rtcCandidate.relatedAddress})`
 			);
 			VideoChatData.peerConnections.get(uuid).addIceCandidate(rtcCandidate);
-			toast.dismiss();
 		},
 		// Create an offer that contains the media capabilities of the browser.
 		createOffer: (uuid: any) => {
@@ -490,24 +483,17 @@ const VideoChat = ({
 			VideoChatData?.remoteVideoWrapper?.appendChild(node);
 			// Update remote video source
 			VideoChatData.remoteVideoWrapper.srcObject = e.stream;
-
 			// if (VideoChatData.remoteVideoWrapper?.lastChild !== null) {
 			// 	// @ts-ignore
 			// 	VideoChatData.remoteVideoWrapper.lastChild.srcObject = e.stream;
 			// }
-
-			// TODO: Close the initial share url snackbar
-			// Snackbar.close();
+			toast.dismiss();
 			// Remove the loading gif from video
 			if (VideoChatData.remoteVideoWrapper.lastChild) {
 				VideoChatData.remoteVideoWrapper.style.background = "none";
 			}
 			// Update connection status
 			VideoChatData.connected.set(uuid, true);
-			// Hide caption status text
-			// Reposition local video after a second, as there is often a delay
-			// between adding a stream and the height of the video div changing
-			// setTimeout(() => rePositionLocalVideo(), 500);
 		}
 	};
 
@@ -549,19 +535,21 @@ const VideoChat = ({
 							effect="float"
 						>
 							<div className="HoverState" id="mic-text">
-								{!muted ? <span>Mute Audio</span> : <span>Unmute Audio</span>}
+								{audioEnabled ? (
+									<span>Mute Audio</span>
+								) : (
+									<span>Unmute Audio</span>
+								)}
 							</div>
 						</ReactTooltip>
 						<button
 							data-tip="mute-tooltip"
 							data-for="mute-tooltip"
 							className="hoverButton"
-							onClick={() => {
-								setMuted(!muted);
-							}}
+							onClick={() => handleMute(audioEnabled, setAudio, VideoChatData)}
 						>
 							<FontAwesomeIcon
-								icon={!muted ? faMicrophone : faMicrophoneSlash}
+								icon={audioEnabled ? faMicrophone : faMicrophoneSlash}
 							/>
 						</button>
 					</div>
@@ -574,7 +562,7 @@ const VideoChat = ({
 							effect="float"
 						>
 							<div className="HoverState" id="video-text">
-								{!vidPaused ? (
+								{videoEnabled ? (
 									<span>Pause Video</span>
 								) : (
 									<span>Unpause Video</span>
@@ -586,10 +574,10 @@ const VideoChat = ({
 							data-for="pause-tooltip"
 							className="hoverButton"
 							onClick={() => {
-								setVidPaused(!vidPaused);
+								setVideo(!videoEnabled);
 							}}
 						>
-							<FontAwesomeIcon icon={!vidPaused ? faPause : faPlay} />
+							<FontAwesomeIcon icon={videoEnabled ? faPause : faPlay} />
 						</button>
 					</div>
 

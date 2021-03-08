@@ -1,35 +1,42 @@
-export {};
+import { VCDataInterface } from "../../typings/interfaces";
 
-// export function muteMicrophone(): void {
-// 	var audioTrack: any;
-// 	VideoChat.audioEnabled = !VideoChat.audioEnabled;
-// 	VideoChat.peerConnections.forEach((value: any, key: any, map: any) => {
-// 		value.getSenders().find((s: any) => {
-// 			if (s.track.kind === "audio") {
-// 				audioTrack = s.track;
-// 			}
-// 		});
-// 		if (audioTrack) {
-// 			audioTrack.enabled = VideoChat.audioEnabled;
-// 		}
-// 	});
-// }
+export function handleMute(
+	audioEnabled: boolean,
+	setAudio: Function,
+	VideoChat: VCDataInterface
+): void {
+	var audioTrack: any;
+	setAudio(!audioEnabled);
+	VideoChat.peerConnections.forEach((value: any, key: any, map: any) => {
+		value.getSenders().find((s: any) => {
+			if (s.track.kind === "audio") {
+				audioTrack = s.track;
+			}
+		});
+		if (audioTrack) {
+			audioTrack.enabled = audioEnabled;
+		}
+	});
+}
 
-// // Communicate pause to all the peers' video tracks
-// export function pauseVideo() {
-// 	var videoTrack: any;
-// 	VideoChat.videoEnabled = !VideoChat.videoEnabled;
-// 	VideoChat.peerConnections.forEach((value: any, key: any, map: any) => {
-// 		console.log("pausing video for ", key);
-// 		value.getSenders().find((s: any) => {
-// 			if (s.track.kind === "video") {
-// 				console.log("found video track");
-// 				videoTrack = s.track;
-// 			}
-// 		});
-// 		videoTrack.enabled = VideoChat.videoEnabled;
-// 	});
-// }
+export function pauseVideo(
+	videoEnabled: boolean,
+	setVideo: Function,
+	VideoChat: VCDataInterface
+) {
+	var videoTrack: any;
+	setVideo(!videoEnabled);
+	VideoChat.peerConnections.forEach((value: any, key: any, map: any) => {
+		console.log("pausing video for ", key);
+		value.getSenders().find((s: any) => {
+			if (s.track.kind === "video") {
+				console.log("found video track");
+				videoTrack = s.track;
+			}
+		});
+		videoTrack.enabled = videoEnabled;
+	});
+}
 
 /* 
 // Swap current video track with passed in stream
