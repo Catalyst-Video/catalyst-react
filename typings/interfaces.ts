@@ -1,4 +1,4 @@
-export interface VCDataInterface {
+export interface VideoChatData {
 	// videoEnabled: boolean;
 	// audioEnabled: boolean;
 	connected: Map<any, any>;

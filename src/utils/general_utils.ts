@@ -1,4 +1,4 @@
-import { VCDataInterface } from "../../typings/interfaces";
+import { VideoChatData } from "../../typings/interfaces";
 
 export function getBrowserName(): string {
 	var name = "Unknown";
@@ -15,10 +15,10 @@ export function getBrowserName(): string {
 	return name;
 }
 
-export function isConnected(VideoChat: VCDataInterface) {
+export function isConnected(VCData: VideoChatData) {
 	var connected = false;
 	// No way to 'break' forEach -> we go through all anyway
-	VideoChat.connected.forEach((value: any, key: any, map: any) => {
+	VCData.connected.forEach((value: any, key: any, map: any) => {
 		if (value) {
 			connected = true;
 		}
@@ -41,16 +41,14 @@ export function sendToAllDataChannels(message: string, dataChannel: any) {
 	});
 }
 
-// Called when a message is received over the dataChannel
 export function handlereceiveMessage(
 	msg: any,
 	color: any,
 	hideChat: boolean,
 	setHideChat: Function
 ) {
-	// Add message to screen
+	// Called when a message is received over the dataChannel, adds message to screen - auto scrolls chat down
 	addMessageToScreen(msg, color, false);
-	// Auto scroll chat down
 	document
 		.getElementById("chat-end")
 		?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
@@ -59,7 +57,6 @@ export function handlereceiveMessage(
 	}
 }
 
-// Add text message to chat screen on page
 export function addMessageToScreen(
 	msg: any,
 	border: any,
@@ -89,7 +86,7 @@ export function addMessageToScreen(
 }
 
 // Using uuid to generate random, unique pastel color
-export function uuidToHue(uuid: any, VideoChat: VCDataInterface) {
+export function uuidToHue(uuid: any, VCData: VideoChatData) {
 	var hash = 0;
 	for (var i = 0; i < uuid.length; i++) {
 		hash = uuid.charCodeAt(i) + ((hash << 5) - hash);
@@ -98,7 +95,7 @@ export function uuidToHue(uuid: any, VideoChat: VCDataInterface) {
 	var hue = Math.abs(hash % 360);
 	// Ensure color is not similar to other colors
 	var availColors = Array.from({ length: 6 }, (x, i) => i * 60);
-	VideoChat.peerColors.forEach((value: any, key: any, map: any) => {
+	VCData.peerColors.forEach((value: any, key: any, map: any) => {
 		availColors[Math.floor(value / 60)] = -1;
 	});
 	if (availColors[Math.floor(hue / 60)] === -1) {
@@ -110,7 +107,7 @@ export function uuidToHue(uuid: any, VideoChat: VCDataInterface) {
 			}
 		}
 	}
-	VideoChat.peerColors.set(uuid, hue);
+	VCData.peerColors.set(uuid, hue);
 	return hue;
 }
 
@@ -118,8 +115,8 @@ export function hueToColor(hue: any) {
 	return `hsl(${hue},100%,70%)`;
 }
 // Sets the border color of UUID's stream
-export function setStreamColor(uuid: any, VideoChat: VCDataInterface) {
-	const hue = uuidToHue(uuid, VideoChat);
+export function setStreamColor(uuid: any, VCData: VideoChatData) {
+	const hue = uuidToHue(uuid, VCData);
 	let elem = document.querySelectorAll(`[uuid="${uuid}"]`)[0] as HTMLElement;
 	elem.style.border = `3px solid ${hueToColor(hue)}`;
 }

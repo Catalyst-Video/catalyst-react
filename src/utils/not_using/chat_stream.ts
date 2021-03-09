@@ -3,9 +3,9 @@
 // import io from "socket.io";
 import { io } from "socket.io-client";
 import SnackbarProvider from "react-simple-snackbar";
-import { VCDataInterface } from "../../../typings/interfaces";
+import { VideoChatData } from "../../../typings/interfaces";
 
-export var VideoChatData: VCDataInterface = {
+export var VideoChatData: VideoChatData = {
 	videoEnabled: true,
 	audioEnabled: true,
 	connected: new Map(),

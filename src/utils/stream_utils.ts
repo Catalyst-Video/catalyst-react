@@ -1,15 +1,15 @@
 import { toast } from "react-toastify";
-import { VCDataInterface } from "../../typings/interfaces";
+import { VideoChatData } from "../../typings/interfaces";
 import { isConnected, sendToAllDataChannels } from "./general_utils";
 
 export function handleMute(
 	audioEnabled: boolean,
 	setAudio: Function,
-	VideoChat: VCDataInterface
+	VCData: VideoChatData
 ): void {
 	var audioTrack: any;
 	setAudio(!audioEnabled);
-	VideoChat.peerConnections.forEach((value: any, key: any, map: any) => {
+	VCData.peerConnections.forEach((value: any, key: any, map: any) => {
 		value.getSenders().find((s: any) => {
 			if (s.track.kind === "audio") {
 				audioTrack = s.track;
@@ -25,11 +25,11 @@ export function handleMute(
 export function handlePauseVideo(
 	videoEnabled: boolean,
 	setVideo: Function,
-	VideoChat: VCDataInterface
+	VCData: VideoChatData
 ) {
 	var videoTrack: any;
 	setVideo(!videoEnabled);
-	VideoChat.peerConnections.forEach((value: any, key: any, map: any) => {
+	VCData.peerConnections.forEach((value: any, key: any, map: any) => {
 		console.log("pausing video for ", key);
 		value.getSenders().find((s: any) => {
 			if (s.track.kind === "video") {
@@ -47,7 +47,7 @@ export function handleSwitchStreamHelper(
 	stream: any,
 	videoEnabled: boolean,
 	setVideo: Function,
-	VideoChat: VCDataInterface
+	VCData: VideoChatData
 ) {
 	// Get current video track
 	let videoTrack = stream.getVideoTracks()[0];
@@ -57,10 +57,10 @@ export function handleSwitchStreamHelper(
 		// TODO: swap();
 	};
 	// Swap video for every peer connection
-	VideoChat.connected.forEach((value: any, key: any, map: any) => {
+	VCData.connected.forEach((value: any, key: any, map: any) => {
 		// check if connected before swapping video channel
-		if (VideoChat.connected.get(key)) {
-			const sender = VideoChat.peerConnections
+		if (VCData.connected.get(key)) {
+			const sender = VCData.peerConnections
 				.get(key)
 				.getSenders()
 				.find((s: any) => {
@@ -70,7 +70,7 @@ export function handleSwitchStreamHelper(
 			// Replace audio track if sharing screen with audio
 			if (stream.getAudioTracks()[0]) {
 				console.log("Audio track is", audioTrack);
-				const sender2 = VideoChat.peerConnections
+				const sender2 = VCData.peerConnections
 					.get(key)
 					.getSenders()
 					.find((s: any) => {
@@ -85,24 +85,24 @@ export function handleSwitchStreamHelper(
 		}
 	});
 	// Update local video stream
-	VideoChat.localStream = stream;
+	VCData.localStream = stream;
 	// Update local video object
-	VideoChat.localVideo.srcObject = stream;
+	VCData.localVideo.srcObject = stream;
 	// Unpause video on swap
 	if (!videoEnabled) {
-		handlePauseVideo(videoEnabled, setVideo, VideoChat);
+		handlePauseVideo(videoEnabled, setVideo, VCData);
 	}
 }
 
 export function handleRequestToggleCaptions(
 	receivingCaptions: boolean,
 	setReceivingCaptions: Function,
-	VideoChat: VCDataInterface,
+	VCData: VideoChatData,
 	setCaptionsText: Function,
 	dataChannel: Map<any, any>
 ) {
 	// Handle requesting captions before connected
-	if (!isConnected(VideoChat)) {
+	if (!isConnected(VCData)) {
 		alert("You must be connected to a peer to use Live Caption");
 		return;
 	}
@@ -130,11 +130,11 @@ export function handleRequestToggleCaptions(
 export function handleToggleCaptions(
 	sendingCaptions: boolean,
 	setSendingCaptions: Function,
-	VideoChat: VCDataInterface
+	VCData: VideoChatData
 ) {
 	if (sendingCaptions) {
 		setSendingCaptions(false);
-		VideoChat.recognition.stop();
+		VCData.recognition.stop();
 	} else {
 		setSendingCaptions(true);
 		sendingCaptions = true;
@@ -142,14 +142,14 @@ export function handleToggleCaptions(
 }
 
 export function handleStartSpeech(
-	VideoChat: VCDataInterface,
+	VCData: VideoChatData,
 	sendingCaptions: boolean,
 	setSendingCaptions: Function,
 	dataChannel: Map<any, any>
 ) {
 	try {
 		var SpeechRecognition = window.SpeechRecognition;
-		VideoChat.recognition = new SpeechRecognition();
+		VCData.recognition = new SpeechRecognition();
 	} catch (e) {
 		setSendingCaptions(false);
 		console.log(e);
@@ -158,11 +158,11 @@ export function handleStartSpeech(
 		sendToAllDataChannels("cap:notusingchrome", dataChannel);
 		return;
 	}
-	VideoChat.recognition.continuous = true;
+	VCData.recognition.continuous = true;
 	// Show results that aren't final
-	VideoChat.recognition.interimResults = true;
+	VCData.recognition.interimResults = true;
 	// var finalTranscript: any;
-	VideoChat.recognition.onresult = (e: any) => {
+	VCData.recognition.onresult = (e: any) => {
 		let interimTranscript = "";
 		for (let i = e.resultIndex, len = e.results.length; i < len; i++) {
 			var transcript = e.results[i][0].transcript;
@@ -181,21 +181,21 @@ export function handleStartSpeech(
 			}
 		}
 	};
-	VideoChat.recognition.onend = function () {
+	VCData.recognition.onend = function () {
 		console.log("on speech recording end");
 		// Restart speech recognition if user has not stopped it
 		if (sendingCaptions) {
 			handleStartSpeech(
-				VideoChat,
+				VCData,
 				sendingCaptions,
 				setSendingCaptions,
 				dataChannel
 			);
 		} else {
-			VideoChat.recognition.stop();
+			VCData.recognition.stop();
 		}
 	};
-	VideoChat.recognition.start();
+	VCData.recognition.start();
 }
 
 export function handleReceiveCaptions(
@@ -269,14 +269,14 @@ export function togglePictureInPicture(VideoChat: VCDataInterface) {
  */
 
 export function handleSharing(
-	VideoChat: VCDataInterface,
+	VCData: VideoChatData,
 	sharing: boolean,
 	setSharing: Function,
 	videoEnabled: boolean,
 	setVideo: Function
 ) {
 	// Handle swap video before video call is connected by checking that there's at least one peer connected
-	if (!isConnected(VideoChat)) {
+	if (!isConnected(VCData)) {
 		alert("You must join a call before you can share your screen.");
 		return;
 	}
@@ -302,14 +302,14 @@ export function handleSharing(
 					stream.addTrack(stream.getAudioTracks()[0]);
 				}
 				console.log(stream);
-				handleSwitchStreamHelper(stream, videoEnabled, setVideo, VideoChat);
+				handleSwitchStreamHelper(stream, videoEnabled, setVideo, VCData);
 			})
 			.catch((e: any) => {
 				console.log("Error sharing screen" + e);
 			});
 	} else {
 		// Stop the screen share video track. (We don't want to stop the audio track obviously.)
-		(VideoChat.localVideo?.srcObject as MediaStream)
+		(VCData.localVideo?.srcObject as MediaStream)
 			?.getVideoTracks()
 			.forEach((track: any) => track.stop());
 		// Get webcam input
@@ -320,7 +320,7 @@ export function handleSharing(
 			})
 			.then(stream => {
 				setSharing(false);
-				handleSwitchStreamHelper(stream, videoEnabled, setVideo, VideoChat);
+				handleSwitchStreamHelper(stream, videoEnabled, setVideo, VCData);
 			});
 	}
 }
