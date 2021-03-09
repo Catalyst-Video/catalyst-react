@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import ChatComponent from "../components/chat_comp";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ReactTooltip from "react-tooltip";
 import Draggable from "react-draggable";
 import { io } from "socket.io-client";
 import DetectRTC from "detectrtc";
@@ -595,26 +594,12 @@ const VideoChat = ({
 
 				<div className="multi-button">
 					<div className="buttonContainer">
-						<ReactTooltip
-							id="mute-tooltip"
-							place="top"
-							type="dark"
-							effect="float"
-						>
-							<div className="HoverState" id="mic-text">
-								{audioEnabled ? (
-									<span>Mute Audio</span>
-								) : (
-									<span>Unmute Audio</span>
-								)}
-							</div>
-						</ReactTooltip>
 						<button
-							data-tip="mute-tooltip"
-							data-for="mute-tooltip"
-							className="hoverButton"
+							className="hoverButton tooltip"
 							onClick={() => handleMute(audioEnabled, setAudio, VCData)}
 						>
+							<span>{audioEnabled ? "Mute Audio" : "Unmute Audio"}</span>
+
 							<FontAwesomeIcon
 								icon={audioEnabled ? faMicrophone : faMicrophoneSlash}
 							/>
@@ -622,49 +607,18 @@ const VideoChat = ({
 					</div>
 
 					<div className="buttonContainer">
-						<ReactTooltip
-							id="pause-tooltip"
-							place="top"
-							type="dark"
-							effect="float"
-						>
-							<div className="HoverState" id="video-text">
-								{videoEnabled ? (
-									<span>Pause Video</span>
-								) : (
-									<span>Unpause Video</span>
-								)}
-							</div>
-						</ReactTooltip>
 						<button
-							data-tip="pause-tooltip"
-							data-for="pause-tooltip"
-							className="hoverButton"
+							className="hoverButton tooltip"
 							onClick={() => handlePauseVideo(videoEnabled, setVideo, VCData)}
 						>
+							<span>{videoEnabled ? "Pause Video" : "Unpause Video"}</span>
 							<FontAwesomeIcon icon={videoEnabled ? faPause : faPlay} />
 						</button>
 					</div>
 
 					<div className="buttonContainer">
-						<ReactTooltip
-							id="share-tooltip"
-							place="top"
-							type="dark"
-							effect="float"
-						>
-							<div className="HoverState" id="swap-text">
-								{!sharing ? (
-									<span>Share Screen</span>
-								) : (
-									<span>Stop Sharing Screen</span>
-								)}
-							</div>
-						</ReactTooltip>
 						<button
-							data-tip="share-tooltip"
-							data-for="share-tooltip"
-							className="hoverButton"
+							className="hoverButton tooltip"
 							id="share-button"
 							onClick={() =>
 								handleSharing(
@@ -676,57 +630,33 @@ const VideoChat = ({
 								)
 							}
 						>
+							<span>{!sharing ? "Share Screen" : "Stop Sharing Screen"}</span>
 							<FontAwesomeIcon icon={!sharing ? faDesktop : faVideo} />
 						</button>
 					</div>
 
 					<div className="buttonContainer">
-						<ReactTooltip
-							id="chat-tooltip"
-							place="top"
-							type="dark"
-							effect="float"
-						>
-							<div className="HoverState" id="chat-text">
-								{!hideChat ? <span>Hide Chat</span> : <span>Show Chat</span>}
-							</div>
-						</ReactTooltip>
 						<button
-							data-tip="chat-tooltip"
-							data-for="chat-tooltip"
-							className="hoverButton"
+							className="hoverButton tooltip"
 							onClick={() => {
 								setHideChat(!hideChat);
 							}}
 						>
+							<span>{!hideChat ? "Hide Chat" : "Show Chat"}</span>
 							<FontAwesomeIcon icon={!hideChat ? faComment : faCommentSlash} />
 						</button>
 					</div>
 
 					<div className="buttonContainer">
-						<ReactTooltip
-							id="pic-tooltip"
-							place="top"
-							type="dark"
-							effect="float"
-						>
-							<div className="HoverState" id="pip-text">
-								{!picInPic ? (
-									<span>Picture in Picture</span>
-								) : (
-									<span>Normal View</span>
-								)}
-							</div>
-						</ReactTooltip>
 						<button
-							data-tip="pic-tooltip"
-							data-for="pic-tooltip"
-							className="hoverButton"
+							className="hoverButton tooltip"
 							id="pip-button"
 							onClick={() => {
 								setPicInPic(!picInPic);
 							}}
 						>
+							<span>{!picInPic ? "Picture in Picture" : "Normal View"}</span>
+
 							<FontAwesomeIcon
 								icon={!picInPic ? faExternalLinkAlt : faExternalLinkSquareAlt}
 							/>
@@ -734,24 +664,8 @@ const VideoChat = ({
 					</div>
 
 					<div className="buttonContainer">
-						<ReactTooltip
-							id="caption-tooltip"
-							place="top"
-							type="dark"
-							effect="float"
-						>
-							<div className="HoverState" id="caption-button-text">
-								{!picInPic ? (
-									<span>Closed Captions</span>
-								) : (
-									<span>Hide Closed Captions</span>
-								)}
-							</div>
-						</ReactTooltip>
 						<button
-							data-tip="caption-tooltip"
-							data-for="caption-tooltip"
-							className="hoverButton"
+							className="hoverButton tooltip"
 							onClick={() => {
 								handleRequestToggleCaptions(
 									receivingCaptions,
@@ -765,27 +679,21 @@ const VideoChat = ({
 							<FontAwesomeIcon
 								icon={hideCaptions ? faClosedCaptioning : faAudioDescription}
 							/>
+							<span>
+								{!hideCaptions ? "Closed Captions" : "Hide Closed Captions"}
+							</span>
 						</button>
 					</div>
 
 					<div className="buttonContainer">
-						<ReactTooltip
-							id="end-call-tooltip"
-							place="top"
-							type="dark"
-							effect="float"
-						>
-							<div className="HoverState">End Call</div>
-						</ReactTooltip>
 						<button
-							data-tip="end-call-tooltip"
-							data-for="end-call-tooltip"
-							className="hoverButton"
+							className="hoverButton tooltip"
 							onClick={() => {
 								window.location.href = "/newcall";
 							}}
 						>
 							<FontAwesomeIcon icon={faPhoneSlash} />
+							<span>End Call</span>
 						</button>
 						<audio id="join-sound" src={joinSound}></audio>
 						<audio id="leave-sound" src={leaveSound}></audio>

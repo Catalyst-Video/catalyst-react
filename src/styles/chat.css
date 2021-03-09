@@ -673,25 +673,6 @@ video ::-webkit-media-controls-start-playback-button {
 
 /* End mobile layout */
 
-
-button.tooltip {
-  /* border-bottom: 1px dashed;
-  text-decoration: none; */
-}
-button.tooltip:hover {
-  /* z-index: 999;
-  color: white;
-  font-family: "Heebo", sans-serif;
-  font-size: 0.8rem;
-  position: absolute;
-  left: 35px;
-  white-space: nowrap;
-  top: 0px;
-  font-weight: bold;
-  background: #16171a;
-  padding: 10px;
-  border-radius: 10px; */
-}
 button.tooltip span {
   display: none;
 }
@@ -708,4 +689,5 @@ button.tooltip:hover span {
   background: #16171a;
   padding: 10px;
   border-radius: 10px;
+  display: flex;
 }
