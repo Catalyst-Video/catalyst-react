@@ -103,11 +103,11 @@ export function handleRequestToggleCaptions(
 ) {
 	// Handle requesting captions before connected
 	if (!isConnected(VCData)) {
-		alert("You must be connected to a peer to use Live Caption");
+		alert("You must be connected to a peer to use Live Captions");
 		return;
 	}
 	if (receivingCaptions) {
-		setCaptionsText("Start Live Caption");
+		setCaptionsText("Start Live Captions");
 		setReceivingCaptions(false);
 	} else {
 		toast(
@@ -120,7 +120,7 @@ export function handleRequestToggleCaptions(
 			}
 		);
 
-		setCaptionsText("End Live Caption");
+		setCaptionsText("End Live Captions");
 		setReceivingCaptions(true);
 	}
 	// Send request to get captions over data channel
@@ -154,7 +154,7 @@ export function handleStartSpeech(
 		setSendingCaptions(false);
 		console.log(e);
 		console.log("error importing speech library");
-		// Alert other user that they cannon use live caption
+		// Alert other user that they cannon use live captions
 		sendToAllDataChannels("cap:notusingchrome", dataChannel);
 		return;
 	}
@@ -207,24 +207,24 @@ export function handleReceiveCaptions(
 ) {
 	if (receivingCaptions) {
 		setCaptionsText("");
+		setReceivingCaptions(false);
 		setHideCaptions(false);
 	} else {
 		setCaptionsText("");
 		setHideCaptions(true);
+		setReceivingCaptions(true);
 	}
 	// Other user is not using chrome
 	if (captions === "notusingchrome") {
 		alert(
-			"Other caller must be using chrome for this feature to work. Live Caption turned off."
+			"Other caller must be using chrome for this feature to work. Live Captions disabled."
 		);
 		setCaptionsText("");
 		setHideCaptions(true);
-		setCaptionsText("Start Live Caption");
-		// captionButtontext.text("Start Live Caption");
+		setCaptionsText("Start Live Captions");
 		return;
 	}
 	setCaptionsText(captions);
-	// rePositionCaptions();
 }
 
 /*
