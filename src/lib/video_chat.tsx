@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import ChatComponent from "../components/chat_comp";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import Draggable from "react-draggable";
-import { io } from "socket.io-client";
-import DetectRTC from "detectrtc";
+// components
+import {
+	HeaderComponent,
+	ChatComponent,
+	IncompatibleComponent
+} from "../components/index";
+// utils
 import {
 	getBrowserName,
 	chatRoomFull,
@@ -39,16 +40,20 @@ import {
 	faPause,
 	faPhoneSlash,
 	faPlay,
-	faTimes,
 	faVideo
 } from "@fortawesome/free-solid-svg-icons";
 // assets
 import joinSound from "../assets/sound/join.mp3";
 import leaveSound from "../assets/sound/leave.mp3";
-import logo from "../assets/img/wordmark_logo.png";
 // styles
 import "../styles/chat.css";
 import "../styles/snackbar.css";
+import "react-toastify/dist/ReactToastify.css";
+// packages
+import { ToastContainer, toast } from "react-toastify";
+import Draggable from "react-draggable";
+import { io } from "socket.io-client";
+import DetectRTC from "detectrtc";
 
 const VideoChat = ({
 	sessionKey,
@@ -130,7 +135,6 @@ const VideoChat = ({
 	const [hideChat, setHideChat] = useState<boolean>(
 		defaultSettings?.hideChat ? defaultSettings.hideChat : true
 	);
-	const [showSessionDetails, setShowSessionDetails] = useState(false);
 	const [sendingCaptions, setSendingCaptions] = useState(false);
 	const [receivingCaptions, setReceivingCaptions] = useState(false);
 	const [hideCaptions, setHideCaptions] = useState<boolean>(
@@ -544,178 +548,152 @@ const VideoChat = ({
 			}
 		} catch (e) {}
 	};
+	if (window.location.href !== "/browser-not-supported") {
+		return (
+			<>
+				<div id="arbitrary-data" style={{ display: "none" }}></div>
+				<HeaderComponent sessionKey={sessionKey} />
+				<div id="call-section">
+					<Draggable>
+						<div id="remote-video-text">{captionsText}</div>
+					</Draggable>
+					<div id="wrapper"></div>
+					<Draggable defaultPosition={{ x: 30, y: 150 }}>
+						<div id="moveable">
+							<p id="local-video-text">{localVideoText}</p>
+							<video id="local-video" autoPlay muted playsInline></video>
+						</div>
+					</Draggable>
 
-	return (
-		<>
-			<div id="arbitrary-data" style={{ display: "none" }}></div>
-			<div id="header" className="notSelectable">
-				<button
-					className="header-btn"
-					style={{ display: "inline" }}
-					onClick={() => setShowSessionDetails(!showSessionDetails)}
-				>
-					<img src={logo} alt="Catalyst Logo" height="48" draggable="false" />
-				</button>
-			</div>
-			{showSessionDetails && (
-				<button
-					className="session-details-btn"
-					onClick={() => setShowSessionDetails(!showSessionDetails)}
-				>
-					<span className="session-details-title">
-						<strong>Session Details</strong>
-						<FontAwesomeIcon
-							icon={faTimes}
-							size="lg"
-							title="Close Session Details"
-							className="session-details-close"
-						/>
-					</span>
-					Session Key:<i> {sessionKey}</i>
-					<br />
-					Host:<i> {sessionKey}</i>
-					<br />
-					IP:<i> {sessionKey}</i>
-					<br />
-					UUID:<i> {sessionKey}</i>
-				</button>
-			)}
-			<div id="call-section">
-				<Draggable>
-					<div id="remote-video-text">{captionsText}</div>
-				</Draggable>
-				<div id="wrapper"></div>
-				<Draggable defaultPosition={{ x: 30, y: 150 }}>
-					<div id="moveable">
-						<p id="local-video-text">{localVideoText}</p>
-						<video id="local-video" autoPlay muted playsInline></video>
-					</div>
-				</Draggable>
+					<div className="multi-button">
+						<div className="buttonContainer">
+							<button
+								className="hoverButton tooltip notSelectable"
+								onClick={() => handleMute(audioEnabled, setAudio, VCData)}
+							>
+								<span>{audioEnabled ? "Mute Audio" : "Unmute Audio"}</span>
 
-				<div className="multi-button">
-					<div className="buttonContainer">
-						<button
-							className="hoverButton tooltip notSelectable"
-							onClick={() => handleMute(audioEnabled, setAudio, VCData)}
-						>
-							<span>{audioEnabled ? "Mute Audio" : "Unmute Audio"}</span>
+								<FontAwesomeIcon
+									icon={audioEnabled ? faMicrophone : faMicrophoneSlash}
+								/>
+							</button>
+						</div>
 
-							<FontAwesomeIcon
-								icon={audioEnabled ? faMicrophone : faMicrophoneSlash}
-							/>
-						</button>
-					</div>
+						<div className="buttonContainer">
+							<button
+								className="hoverButton tooltip notSelectable"
+								onClick={() => handlePauseVideo(videoEnabled, setVideo, VCData)}
+							>
+								<span>{videoEnabled ? "Pause Video" : "Unpause Video"}</span>
+								<FontAwesomeIcon icon={videoEnabled ? faPause : faPlay} />
+							</button>
+						</div>
 
-					<div className="buttonContainer">
-						<button
-							className="hoverButton tooltip notSelectable"
-							onClick={() => handlePauseVideo(videoEnabled, setVideo, VCData)}
-						>
-							<span>{videoEnabled ? "Pause Video" : "Unpause Video"}</span>
-							<FontAwesomeIcon icon={videoEnabled ? faPause : faPlay} />
-						</button>
-					</div>
+						<div className="buttonContainer">
+							<button
+								className="hoverButton tooltip notSelectable"
+								id="share-button"
+								onClick={() =>
+									handleSharing(
+										VCData,
+										sharing,
+										setSharing,
+										videoEnabled,
+										setVideo
+									)
+								}
+							>
+								<span>{!sharing ? "Share Screen" : "Stop Sharing Screen"}</span>
+								<FontAwesomeIcon icon={!sharing ? faDesktop : faVideo} />
+							</button>
+						</div>
 
-					<div className="buttonContainer">
-						<button
-							className="hoverButton tooltip notSelectable"
-							id="share-button"
-							onClick={() =>
-								handleSharing(
-									VCData,
-									sharing,
-									setSharing,
-									videoEnabled,
-									setVideo
-								)
-							}
-						>
-							<span>{!sharing ? "Share Screen" : "Stop Sharing Screen"}</span>
-							<FontAwesomeIcon icon={!sharing ? faDesktop : faVideo} />
-						</button>
-					</div>
+						<div className="buttonContainer">
+							<button
+								className="hoverButton tooltip notSelectable"
+								onClick={() => {
+									setHideChat(!hideChat);
+								}}
+							>
+								<span>{!hideChat ? "Hide Chat" : "Show Chat"}</span>
+								<FontAwesomeIcon
+									icon={!hideChat ? faComment : faCommentSlash}
+								/>
+							</button>
+						</div>
 
-					<div className="buttonContainer">
-						<button
-							className="hoverButton tooltip notSelectable"
-							onClick={() => {
-								setHideChat(!hideChat);
-							}}
-						>
-							<span>{!hideChat ? "Hide Chat" : "Show Chat"}</span>
-							<FontAwesomeIcon icon={!hideChat ? faComment : faCommentSlash} />
-						</button>
-					</div>
+						<div className="buttonContainer">
+							<button
+								className="hoverButton tooltip notSelectable"
+								id="pip-button"
+								onClick={() => {
+									setPicInPic(!picInPic);
+								}}
+							>
+								<span>{!picInPic ? "Picture in Picture" : "Normal View"}</span>
 
-					<div className="buttonContainer">
-						<button
-							className="hoverButton tooltip notSelectable"
-							id="pip-button"
-							onClick={() => {
-								setPicInPic(!picInPic);
-							}}
-						>
-							<span>{!picInPic ? "Picture in Picture" : "Normal View"}</span>
+								<FontAwesomeIcon
+									icon={!picInPic ? faExternalLinkAlt : faExternalLinkSquareAlt}
+								/>
+							</button>
+						</div>
 
-							<FontAwesomeIcon
-								icon={!picInPic ? faExternalLinkAlt : faExternalLinkSquareAlt}
-							/>
-						</button>
-					</div>
+						<div className="buttonContainer">
+							<button
+								className="hoverButton tooltip notSelectable"
+								onClick={() => {
+									handleRequestToggleCaptions(
+										receivingCaptions,
+										setReceivingCaptions,
+										VCData,
+										setCaptionsText,
+										dataChannel
+									);
+								}}
+							>
+								<FontAwesomeIcon
+									icon={hideCaptions ? faClosedCaptioning : faAudioDescription}
+								/>
+								<span>
+									{hideCaptions ? "Closed Captions" : "Hide Closed Captions"}
+								</span>
+							</button>
+						</div>
 
-					<div className="buttonContainer">
-						<button
-							className="hoverButton tooltip notSelectable"
-							onClick={() => {
-								handleRequestToggleCaptions(
-									receivingCaptions,
-									setReceivingCaptions,
-									VCData,
-									setCaptionsText,
-									dataChannel
-								);
-							}}
-						>
-							<FontAwesomeIcon
-								icon={hideCaptions ? faClosedCaptioning : faAudioDescription}
-							/>
-							<span>
-								{hideCaptions ? "Closed Captions" : "Hide Closed Captions"}
-							</span>
-						</button>
-					</div>
-
-					<div className="buttonContainer">
-						<button
-							className="hoverButton tooltip notSelectable"
-							onClick={() => {
-								window.location.href = "/newcall";
-							}}
-						>
-							<FontAwesomeIcon icon={faPhoneSlash} />
-							<span>End Call</span>
-						</button>
-						<audio id="join-sound" src={joinSound}></audio>
-						<audio id="leave-sound" src={leaveSound}></audio>
+						<div className="buttonContainer">
+							<button
+								className="hoverButton tooltip notSelectable"
+								onClick={() => {
+									window.location.href = "/newcall";
+								}}
+							>
+								<FontAwesomeIcon icon={faPhoneSlash} />
+								<span>End Call</span>
+							</button>
+							<audio id="join-sound" src={joinSound}></audio>
+							<audio id="leave-sound" src={leaveSound}></audio>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<ChatComponent hideChat={hideChat} />
-			<ToastContainer
-				position="top-center"
-				autoClose={50000}
-				hideProgressBar={false}
-				newestOnTop={false}
-				closeOnClick
-				rtl={false}
-				pauseOnFocusLoss
-				draggable
-				pauseOnHover
-				limit={2}
-			/>
-		</>
-	);
+				<ChatComponent hideChat={hideChat} />
+				<ToastContainer
+					position="top-center"
+					autoClose={50000}
+					hideProgressBar={false}
+					newestOnTop={false}
+					closeOnClick
+					rtl={false}
+					pauseOnFocusLoss
+					draggable
+					pauseOnHover
+					limit={2}
+				/>
+			</>
+		);
+	} else {
+		return <IncompatibleComponent />;
+	}
 };
 
 export default VideoChat;
