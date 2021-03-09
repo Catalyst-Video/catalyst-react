@@ -299,8 +299,8 @@ const VideoChat = ({
 			}
 		},
 
-		establishConnection: (correctUuid: any, callback: Function) => {
-			return (token: any, uuid: any) => {
+		establishConnection: (correctUuid: string, callback: Function) => {
+			return (token: any, uuid: string) => {
 				if (correctUuid !== uuid) {
 					return;
 				}
@@ -396,7 +396,7 @@ const VideoChat = ({
 		},
 
 		// When the peerConnection generates an ice candidate, send it over the socket to the peer.
-		onIceCandidate: (e: any, uuid: any) => {
+		onIceCandidate: (e: any, uuid: string) => {
 			console.log("onIceCandidate");
 			if (e.candidate) {
 				console.log(
@@ -419,7 +419,7 @@ const VideoChat = ({
 			}
 		},
 		// When receiving a candidate over the socket, turn it back into a real RTCIceCandidate and add it to the peerConnection.
-		onCandidate: (candidate: any, uuid: any) => {
+		onCandidate: (candidate: any, uuid: string) => {
 			setCaptionsText("Found other user... connecting");
 			var rtcCandidate: RTCIceCandidate = new RTCIceCandidate(
 				JSON.parse(candidate)
@@ -430,7 +430,7 @@ const VideoChat = ({
 			VCData.peerConnections.get(uuid).addIceCandidate(rtcCandidate);
 		},
 		// Create an offer that contains the media capabilities of the browser.
-		createOffer: (uuid: any) => {
+		createOffer: (uuid: string) => {
 			console.log(`createOffer to ${uuid} >>> Creating offer...`);
 			VCData.peerConnections.get(uuid).createOffer(
 				(offer: any) => {
@@ -446,7 +446,7 @@ const VideoChat = ({
 		},
 
 		/* Create an answer with the media capabilities that the client and peer browsers share. This function is called with the offer from the originating browser, which needs to be parsed into an RTCSessionDescription and added as the remote description to the peerConnection object. Then the answer is created in the same manner as the offer and sent over the socket. */
-		createAnswer: (offer: any, uuid: any) => {
+		createAnswer: (offer: any, uuid: string) => {
 			console.log("createAnswer");
 			var rtcOffer = new RTCSessionDescription(JSON.parse(offer));
 			console.log(`>>> Creating answer to ${uuid}`);
@@ -469,7 +469,7 @@ const VideoChat = ({
 		},
 
 		// When a browser receives an offer, set up a callback to be run when the ephemeral token is returned from Twilio.
-		onOffer: (offer: any, uuid: any) => {
+		onOffer: (offer: any, uuid: string) => {
 			console.log("onOffer <<< Received offer");
 			VCData.socket.on(
 				"token",
@@ -481,7 +481,7 @@ const VideoChat = ({
 		},
 
 		// When an answer is received, add it to the peerConnection as the remote description.
-		onAnswer: (answer: any, uuid: any) => {
+		onAnswer: (answer: any, uuid: string) => {
 			console.log(`onAnswer <<< Received answer from ${uuid}`);
 			var rtcAnswer = new RTCSessionDescription(JSON.parse(answer));
 			// Set remote description of RTCSession
@@ -503,7 +503,7 @@ const VideoChat = ({
 		},
 
 		// Called when a stream is added to the peer connection: Create new <video> node and append remote video source to wrapper div
-		onAddStream: (e: any, uuid: any) => {
+		onAddStream: (e: any, uuid: string) => {
 			console.log(
 				"onAddStream <<< Received new stream from remote. Adding it..."
 			);

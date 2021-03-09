@@ -3440,8 +3440,8 @@ var adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
 var noun = nouns[Math.floor(Math.random() * nouns.length)];
 noun = noun.charAt(0).toUpperCase() + noun.substring(1);
 adjective = adjective.charAt(0).toUpperCase() + adjective.substring(1);
-var roomName = document.getElementById("input-01");
-if (roomName) {
-	roomName.textContent = adjective + noun;
+var sessionKey = document.getElementById("input-01");
+if (sessionKey) {
+	sessionKey.textContent = adjective + noun;
 }
-export default roomName;
+export default sessionKey;

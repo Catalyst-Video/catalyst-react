@@ -233,6 +233,8 @@ button:hover {
   color: #2253ff;
 }
 
+
+
 .multi-button {
   position: absolute;
   left: 50%;
@@ -255,14 +257,14 @@ button:hover {
   color: white;
   font-family: "Heebo", sans-serif;
   font-size: 0.8rem;
-  /* position: absolute; */
-  /* left: 35px; */
+  position: absolute;
+  left: 35px;
   white-space: nowrap;
-  /* top: 0px; */
+  top: 0px;
   font-weight: bold;
-  /* background: #16171a; */
-  /* padding: 10px; */
-  /* border-radius: 10px; */
+  background: #16171a;
+  padding: 10px;
+  border-radius: 10px;
 }
 
 .buttonContainer {
@@ -670,3 +672,40 @@ video ::-webkit-media-controls-start-playback-button {
 }
 
 /* End mobile layout */
+
+
+button.tooltip {
+  /* border-bottom: 1px dashed;
+  text-decoration: none; */
+}
+button.tooltip:hover {
+  /* z-index: 999;
+  color: white;
+  font-family: "Heebo", sans-serif;
+  font-size: 0.8rem;
+  position: absolute;
+  left: 35px;
+  white-space: nowrap;
+  top: 0px;
+  font-weight: bold;
+  background: #16171a;
+  padding: 10px;
+  border-radius: 10px; */
+}
+button.tooltip span {
+  display: none;
+}
+button.tooltip:hover span {
+  z-index: 999;
+  color: white;
+  font-family: "Heebo", sans-serif;
+  font-size: 0.8rem;
+  position: absolute;
+  left: 35px;
+  white-space: nowrap;
+  top: 0px;
+  font-weight: bold;
+  background: #16171a;
+  padding: 10px;
+  border-radius: 10px;
+}

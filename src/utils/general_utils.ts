@@ -86,7 +86,7 @@ export function addMessageToScreen(
 }
 
 // Using uuid to generate random, unique pastel color
-export function uuidToHue(uuid: any, VCData: VideoChatData) {
+export function uuidToHue(uuid: string, VCData: VideoChatData) {
 	var hash = 0;
 	for (var i = 0; i < uuid.length; i++) {
 		hash = uuid.charCodeAt(i) + ((hash << 5) - hash);
@@ -115,7 +115,7 @@ export function hueToColor(hue: any) {
 	return `hsl(${hue},100%,70%)`;
 }
 // Sets the border color of UUID's stream
-export function setStreamColor(uuid: any, VCData: VideoChatData) {
+export function setStreamColor(uuid: string, VCData: VideoChatData) {
 	const hue = uuidToHue(uuid, VCData);
 	let elem = document.querySelectorAll(`[uuid="${uuid}"]`)[0] as HTMLElement;
 	elem.style.border = `3px solid ${hueToColor(hue)}`;

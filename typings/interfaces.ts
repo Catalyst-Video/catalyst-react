@@ -15,22 +15,22 @@ export interface VideoChatData {
 
 	requestMediaStream(e?: any): any;
 	onMediaStream(e: MediaStream): any;
-	onMediaStream(e: any, uuid: any): any;
+	onMediaStream(e: any, uuid: string): any;
 
-	onAddStream(e: any, uuid: any): any;
+	onAddStream(e: any, uuid: string): any;
 	onLeave(e: any): any;
 
 	createOffer(a: any): any;
-	onOffer(offer: any, uuid: any): any;
+	onOffer(offer: any, uuid: string): any;
 
 	createAnswer(offer: any, a: any): any;
-	onAnswer(answer: any, uuid: any): any;
+	onAnswer(answer: any, uuid: string): any;
 
 	call(uuid: string, room: any): any;
-	establishConnection(uuid: any, func: Function): any;
+	establishConnection(uuid: string, func: Function): any;
 
-	onCandidate(candidate: any, uuid: any): any;
-	onIceCandidate(e: any, uuid: any): any;
+	onCandidate(candidate: any, uuid: string): any;
+	onIceCandidate(e: any, uuid: string): any;
 }
 
 export interface DefaultSettings {
