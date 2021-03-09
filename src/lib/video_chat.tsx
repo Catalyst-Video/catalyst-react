@@ -16,7 +16,13 @@ import {
 	uuidToHue,
 	addMessageToScreen
 } from "../utils/general_utils";
-import { handleMute, handlePauseVideo } from "../utils/stream_utils";
+import {
+	handleMute,
+	handlePauseVideo,
+	handleToggleCaptions,
+	handleRequestToggleCaptions,
+	handleSharing
+} from "../utils/stream_utils";
 // typings
 import { DefaultSettings, VCDataInterface } from "../../typings/interfaces";
 // icons
@@ -125,11 +131,12 @@ const VideoChat = ({
 	const [hideChat, setHideChat] = useState<boolean>(
 		defaultSettings?.hideChat ? defaultSettings.hideChat : true
 	);
+	const [showSessionDetails, setShowSessionDetails] = useState(false);
+	const [sendingCaptions, setSendingCaptions] = useState(false);
+	const [receivingCaptions, setReceivingCaptions] = useState(false);
 	const [hideCaptions, setHideCaptions] = useState<boolean>(
 		defaultSettings?.hideCaptions ? defaultSettings.hideCaptions : true
 	);
-	const [showSessionDetails, setShowSessionDetails] = useState(false);
-	const [sendingCaptions, setSendingCaptions] = useState(false);
 	const [captionsText, setCaptionsText] = useState(
 		"Room ready. Waiting for others to join..."
 	);
@@ -249,7 +256,7 @@ const VideoChat = ({
 			VideoChatData.socket.on("candidate", VideoChatData.onCandidate);
 			VideoChatData.socket.on("answer", VideoChatData.onAnswer);
 			VideoChatData.socket.on("requestToggleCaptions", () =>
-				setSendingCaptions(!sendingCaptions)
+				handleToggleCaptions(sendingCaptions, setSendingCaptions, VideoChatData)
 			);
 			VideoChatData.socket.on("receiveCaptions", (captions: any) => {
 				// TODO: handle receive captions
@@ -526,6 +533,7 @@ const VideoChat = ({
 			}
 			// Update connection status
 			VideoChatData.connected.set(uuid, true);
+			setHideCaptions(true);
 		}
 	};
 
@@ -660,9 +668,15 @@ const VideoChat = ({
 							data-for="share-tooltip"
 							className="hoverButton"
 							id="share-button"
-							onClick={() => {
-								setSharing(!sharing);
-							}}
+							onClick={() =>
+								handleSharing(
+									VideoChatData,
+									sharing,
+									setSharing,
+									videoEnabled,
+									setVideo
+								)
+							}
 						>
 							<FontAwesomeIcon icon={!sharing ? faDesktop : faVideo} />
 						</button>
@@ -741,7 +755,13 @@ const VideoChat = ({
 							data-for="caption-tooltip"
 							className="hoverButton"
 							onClick={() => {
-								setHideCaptions(!hideCaptions);
+								handleRequestToggleCaptions(
+									receivingCaptions,
+									setReceivingCaptions,
+									VideoChatData,
+									setCaptionsText,
+									dataChannel
+								);
 							}}
 						>
 							<FontAwesomeIcon

@@ -1,4 +1,6 @@
+import { toast } from "react-toastify";
 import { VCDataInterface } from "../../typings/interfaces";
+import { isConnected, sendToAllDataChannels } from "./general_utils";
 
 export function handleMute(
 	audioEnabled: boolean,
@@ -12,6 +14,7 @@ export function handleMute(
 			if (s.track.kind === "audio") {
 				audioTrack = s.track;
 			}
+			return audioTrack;
 		});
 		if (audioTrack) {
 			audioTrack.enabled = audioEnabled;
@@ -33,68 +36,50 @@ export function handlePauseVideo(
 				console.log("found video track");
 				videoTrack = s.track;
 			}
+			return videoTrack;
 		});
 		videoTrack.enabled = videoEnabled;
 	});
 }
 
-/* 
 // Swap current video track with passed in stream
-function switchStreamHelper(stream: any) {
+export function handleSwitchStreamHelper(
+	stream: any,
+	videoEnabled: boolean,
+	setVideo: Function,
+	VideoChat: VCDataInterface
+) {
 	// Get current video track
 	let videoTrack = stream.getVideoTracks()[0];
 	let audioTrack = stream.getAudioTracks()[0];
 	// Add listen for if the current track swaps, swap back
-	videoTrack.onended =  () => {
-		swap();
+	videoTrack.onended = () => {
+		// TODO: swap();
 	};
 	// Swap video for every peer connection
-	VideoChat.connected.forEach( (value, key, map) => {
-		// Just to be safe, check if connected before swapping video channel
+	VideoChat.connected.forEach((value: any, key: any, map: any) => {
+		// check if connected before swapping video channel
 		if (VideoChat.connected.get(key)) {
 			const sender = VideoChat.peerConnections
 				.get(key)
 				.getSenders()
-				.find( (s: any) => {
+				.find((s: any) => {
 					return s.track.kind === videoTrack.kind;
 				});
 			sender.replaceTrack(videoTrack);
-
-			// TEST: Replace audio track if sharing screen with audio
+			// Replace audio track if sharing screen with audio
 			if (stream.getAudioTracks()[0]) {
 				console.log("Audio track is", audioTrack);
-				// START TEST ADDING STREAM (NOT WORKING)
-
-				// // TEST: Add the local audio stream to the peerConnection.
-				// console.log("Attempting to add track.");
-				// console.log("Getting Socket ID");
-				// console.log("SOCKET ID", VideoChat.socket.id);
-				// // VideoChat.peerConnections.forEach((peerConnection) => {
-				// //   peerConnection.addTrack(audioTrack);
-				// //   console.log("Adding track to: ", peerConnection.key);
-				// // });
-
-				// VideoChat.peerConnections.get(key).addTrack(audioTrack);
-
-				// console.log(
-				//   "Adding audio track to this peer connection: ",
-				//   VideoChat.peerConnections.get(key)
-				// );
-
-				// console.log("Adding this audio track: ", audioTrack);
-
-				// END TEST ADDING STREAM (NOT WORKING)
-
 				const sender2 = VideoChat.peerConnections
 					.get(key)
 					.getSenders()
-					.find(function (s) {
+					.find((s: any) => {
 						if (s.track.kind === audioTrack.kind) {
 							console.log("Found matching track: ", s.track);
 						}
 						return s.track.kind === audioTrack.kind;
 					});
-				// Try with Add Track to add track instead of replacing
+				// add track instead of replacing
 				sender2.replaceTrack(audioTrack);
 			}
 		}
@@ -104,94 +89,108 @@ function switchStreamHelper(stream: any) {
 	// Update local video object
 	VideoChat.localVideo.srcObject = stream;
 	// Unpause video on swap
-	if (!VideoChat.videoEnabled) {
-		pauseVideo();
+	if (!videoEnabled) {
+		handlePauseVideo(videoEnabled, setVideo, VideoChat);
 	}
 }
-// End swap camera / screen share
 
-// Live caption
-// Request captions from other user, toggles state
-function requestToggleCaptions() {
+export function handleRequestToggleCaptions(
+	receivingCaptions: boolean,
+	setReceivingCaptions: Function,
+	VideoChat: VCDataInterface,
+	setCaptionsText: Function,
+	dataChannel: Map<any, any>
+) {
 	// Handle requesting captions before connected
-	if (!isConnected()) {
+	if (!isConnected(VideoChat)) {
 		alert("You must be connected to a peer to use Live Caption");
 		return;
 	}
 	if (receivingCaptions) {
-		captionText.text("").fadeOut();
-		captionButtontext.text("Start Live Caption");
-		receivingCaptions = false;
+		setCaptionsText("Start Live Caption");
+		setReceivingCaptions(false);
 	} else {
-		Snackbar.show({
-			text: "Experimental: The user speaking must be using a Chromium browser.",
-			width: "400px",
-			pos: "bottom-center",
-			actionTextColor: "#000000",
-			duration: 10000
-		});
-		captionButtontext.text("End Live Caption");
-		receivingCaptions = true;
+		toast(
+			() =>
+				`<div className="text-center justify-between">
+					Experimental: The user speaking must be using a Chromium browser.
+				</div>`,
+			{
+				toastId: "captions_start"
+			}
+		);
+
+		setCaptionsText("End Live Caption");
+		setReceivingCaptions(true);
 	}
 	// Send request to get captions over data channel
-	sendToAllDataChannels("tog:");
+	sendToAllDataChannels("tog:", dataChannel);
 }
 
-// Start/stop sending captions to other user
-function toggleSendCaptions() {
+export function handleToggleCaptions(
+	sendingCaptions: boolean,
+	setSendingCaptions: Function,
+	VideoChat: VCDataInterface
+) {
 	if (sendingCaptions) {
-		sendingCaptions = false;
+		setSendingCaptions(false);
 		VideoChat.recognition.stop();
 	} else {
-		startSpeech();
+		setSendingCaptions(true);
 		sendingCaptions = true;
 	}
 }
 
-// Start speech recognition
-function startSpeech() {
+export function handleStartSpeech(
+	VideoChat: VCDataInterface,
+	sendingCaptions: boolean,
+	setSendingCaptions: Function,
+	dataChannel: Map<any, any>
+) {
 	try {
-		var SpeechRecognition =
-			window.SpeechRecognition || window.webkitSpeechRecognition;
+		var SpeechRecognition = window.SpeechRecognition;
 		VideoChat.recognition = new SpeechRecognition();
-		// VideoChat.recognition.lang = "en";
 	} catch (e) {
-		sendingCaptions = false;
-		logIt(e);
-		logIt("error importing speech library");
+		setSendingCaptions(false);
+		console.log(e);
+		console.log("error importing speech library");
 		// Alert other user that they cannon use live caption
-		sendToAllDataChannels("cap:notusingchrome");
+		sendToAllDataChannels("cap:notusingchrome", dataChannel);
 		return;
 	}
-	// recognition.maxAlternatives = 3;
 	VideoChat.recognition.continuous = true;
 	// Show results that aren't final
 	VideoChat.recognition.interimResults = true;
-	var finalTranscript;
-	VideoChat.recognition.onresult = event => {
+	// var finalTranscript: any;
+	VideoChat.recognition.onresult = (e: any) => {
 		let interimTranscript = "";
-		for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
-			var transcript = event.results[i][0].transcript;
+		for (let i = e.resultIndex, len = e.results.length; i < len; i++) {
+			var transcript = e.results[i][0].transcript;
 			console.log(transcript);
-			if (event.results[i].isFinal) {
-				finalTranscript += transcript;
+			if (e.results[i].isFinal) {
+				// finalTranscript += transcript;
 			} else {
 				interimTranscript += transcript;
 				var charsToKeep = interimTranscript.length % 100;
-				// Send captions over data chanel,
-				// subtracting as many complete 100 char slices from start
+				// Send captions over data chanel, subtracting as many complete 100 char slices from start
 				sendToAllDataChannels(
 					"cap:" +
-						interimTranscript.substring(interimTranscript.length - charsToKeep)
+						interimTranscript.substring(interimTranscript.length - charsToKeep),
+					dataChannel
 				);
 			}
 		}
 	};
 	VideoChat.recognition.onend = function () {
-		logIt("on speech recording end");
+		console.log("on speech recording end");
 		// Restart speech recognition if user has not stopped it
 		if (sendingCaptions) {
-			startSpeech();
+			handleStartSpeech(
+				VideoChat,
+				sendingCaptions,
+				setSendingCaptions,
+				dataChannel
+			);
 		} else {
 			VideoChat.recognition.stop();
 		}
@@ -199,58 +198,61 @@ function startSpeech() {
 	VideoChat.recognition.start();
 }
 
-// receive captions over datachannel
-function receiveCaptions(captions) {
+export function handleReceiveCaptions(
+	captions: any,
+	receivingCaptions: boolean,
+	setReceivingCaptions: Function,
+	setHideCaptions: Function,
+	setCaptionsText: Function
+) {
 	if (receivingCaptions) {
-		captionText.text("").fadeIn();
+		setCaptionsText("");
+		setHideCaptions(false);
 	} else {
-		captionText.text("").fadeOut();
+		setCaptionsText("");
+		setHideCaptions(true);
 	}
 	// Other user is not using chrome
 	if (captions === "notusingchrome") {
 		alert(
 			"Other caller must be using chrome for this feature to work. Live Caption turned off."
 		);
-		receivingCaptions = false;
-		captionText.text("").fadeOut();
-		captionButtontext.text("Start Live Caption");
+		setCaptionsText("");
+		setHideCaptions(true);
+		setCaptionsText("Start Live Caption");
+		// captionButtontext.text("Start Live Caption");
 		return;
 	}
-	captionText.text(captions);
-	rePositionCaptions();
+	setCaptionsText(captions);
+	// rePositionCaptions();
 }
-// End Live caption
 
-// Text Chat
-// Add text message to chat screen on page
-
-
-// Picture in picture
-function togglePictureInPicture() {
+/*
+export function togglePictureInPicture(VideoChat: VCDataInterface) {
 	if (
-		"pictureInPictureEnabled" in document ||
-		VideoChat.remoteVideoWrapper.lastChild.webkitSetPresentationMode
+		"pictureInPictureEnabled" in document 
+		// || (VideoChat.remoteVideoWrapper.lastChild as HTMLVideoElement).webkitSetPresentationMode
 	) {
-		if (document.pictureInPictureElement) {
-			document.exitPictureInPicture().catch(error => {
-				logIt("Error exiting pip.");
-				logIt(error);
+		var video = VideoChat.remoteVideoWrapper.lastChild as HTMLMediaElement;
+		if (document && document.pictureInPictureElement && video !== null) {
+			document.exitPictureInPicture().catch((e: string) => {
+				console.log("Error exiting pip." + e);
 			});
 		} else if (
-			VideoChat.remoteVideoWrapper.lastChild.webkitPresentationMode === "inline"
+			video.webkitPresentationMode === "inline"
 		) {
-			VideoChat.remoteVideoWrapper.lastChild.webkitSetPresentationMode(
+			video?.webkitSetPresentationMode(
 				"picture-in-picture"
 			);
 		} else if (
-			VideoChat.remoteVideoWrapper.lastChild.webkitPresentationMode ===
+			video.webkitPresentationMode ===
 			"picture-in-picture"
 		) {
-			VideoChat.remoteVideoWrapper.lastChild.webkitSetPresentationMode(
+			video.webkitSetPresentationMode(
 				"inline"
 			);
 		} else {
-			VideoChat.remoteVideoWrapper.lastChild
+			video
 				.requestPictureInPicture()
 				.catch(error => {
 					alert(
@@ -266,49 +268,49 @@ function togglePictureInPicture() {
 }
  */
 
-/* // Swap camera / screen share
-function swap() {
+export function handleSharing(
+	VideoChat: VCDataInterface,
+	sharing: boolean,
+	setSharing: Function,
+	videoEnabled: boolean,
+	setVideo: Function
+) {
 	// Handle swap video before video call is connected by checking that there's at least one peer connected
-	if (!isConnected()) {
+	if (!isConnected(VideoChat)) {
 		alert("You must join a call before you can share your screen.");
 		return;
 	}
-
-	// If mode is camera then switch to screen share
-	if (mode === "camera") {
-		// Show accept screenshare snackbar
-		Snackbar.show({
-			text:
-				"Please allow screen share. Click the middle of the picture above and then press share.",
-			width: "400px",
-			pos: "bottom-center",
-			actionTextColor: "#000000",
-			duration: 50000
-		});
+	if (!sharing) {
+		toast(
+			() =>
+				`<div className="text-center justify-between">
+				Please allow screen share. Click the middle of the picture above and then press share.
+				</div>`,
+			{
+				toastId: "screen_share"
+			}
+		);
 		// Request screen share, note: we can request to capture audio for screen sharing video content.
 		navigator.mediaDevices
 			.getDisplayMedia({
 				video: true,
 				audio: true
 			})
-			.then( (stream: any) => {
-				// Change display mode
-				mode = "screen";
+			.then((stream: any) => {
+				setSharing(true);
 				if (stream.getAudioTracks()[0]) {
 					stream.addTrack(stream.getAudioTracks()[0]);
 				}
 				console.log(stream);
-				switchStreamHelper(stream);
+				handleSwitchStreamHelper(stream, videoEnabled, setVideo, VideoChat);
 			})
-			.catch( (err: any) => {
-				logIt(err);
-				logIt("Error sharing screen");
+			.catch((e: any) => {
+				console.log("Error sharing screen" + e);
 			});
-		// If mode is screenshare then switch to webcam
 	} else {
 		// Stop the screen share video track. (We don't want to stop the audio track obviously.)
-		VideoChat.localVideo?.srcObject
-			.getVideoTracks()
+		(VideoChat.localVideo?.srcObject as MediaStream)
+			?.getVideoTracks()
 			.forEach((track: any) => track.stop());
 		// Get webcam input
 		navigator.mediaDevices
@@ -316,10 +318,9 @@ function swap() {
 				video: true,
 				audio: true
 			})
-			.then( (stream) => {
-				// Change display mode
-				mode = "camera";
-				switchStreamHelper(stream);
+			.then(stream => {
+				setSharing(false);
+				handleSwitchStreamHelper(stream, videoEnabled, setVideo, VideoChat);
 			});
 	}
-} */
+}

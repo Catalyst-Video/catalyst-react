@@ -7,7 +7,7 @@ export interface VCDataInterface {
 	remoteVideoWrapper: HTMLMediaElement;
 	localVideo: HTMLMediaElement;
 	peerConnections: Map<any, any>;
-	recognition: string;
+	recognition: any;
 	borderColor: string;
 	peerColors: Map<any, any>;
 	localStream: any;

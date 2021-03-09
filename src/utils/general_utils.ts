@@ -15,6 +15,17 @@ export function getBrowserName(): string {
 	return name;
 }
 
+export function isConnected(VideoChat: VCDataInterface) {
+	var connected = false;
+	// No way to 'break' forEach -> we go through all anyway
+	VideoChat.connected.forEach((value: any, key: any, map: any) => {
+		if (value) {
+			connected = true;
+		}
+	});
+	return connected;
+}
+
 export function chatRoomFull(): void {
 	alert(
 		"Chat room is full. Check to ensure you don't have multiple tabs open, or try with a new room link."
