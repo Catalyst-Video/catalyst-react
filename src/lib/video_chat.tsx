@@ -595,7 +595,7 @@ const VideoChat = ({
 				<div className="multi-button">
 					<div className="buttonContainer">
 						<button
-							className="hoverButton tooltip"
+							className="hoverButton tooltip notSelectable"
 							onClick={() => handleMute(audioEnabled, setAudio, VCData)}
 						>
 							<span>{audioEnabled ? "Mute Audio" : "Unmute Audio"}</span>
@@ -608,7 +608,7 @@ const VideoChat = ({
 
 					<div className="buttonContainer">
 						<button
-							className="hoverButton tooltip"
+							className="hoverButton tooltip notSelectable"
 							onClick={() => handlePauseVideo(videoEnabled, setVideo, VCData)}
 						>
 							<span>{videoEnabled ? "Pause Video" : "Unpause Video"}</span>
@@ -618,7 +618,7 @@ const VideoChat = ({
 
 					<div className="buttonContainer">
 						<button
-							className="hoverButton tooltip"
+							className="hoverButton tooltip notSelectable"
 							id="share-button"
 							onClick={() =>
 								handleSharing(
@@ -637,7 +637,7 @@ const VideoChat = ({
 
 					<div className="buttonContainer">
 						<button
-							className="hoverButton tooltip"
+							className="hoverButton tooltip notSelectable"
 							onClick={() => {
 								setHideChat(!hideChat);
 							}}
@@ -649,7 +649,7 @@ const VideoChat = ({
 
 					<div className="buttonContainer">
 						<button
-							className="hoverButton tooltip"
+							className="hoverButton tooltip notSelectable"
 							id="pip-button"
 							onClick={() => {
 								setPicInPic(!picInPic);
@@ -665,7 +665,7 @@ const VideoChat = ({
 
 					<div className="buttonContainer">
 						<button
-							className="hoverButton tooltip"
+							className="hoverButton tooltip notSelectable"
 							onClick={() => {
 								handleRequestToggleCaptions(
 									receivingCaptions,
@@ -687,7 +687,7 @@ const VideoChat = ({
 
 					<div className="buttonContainer">
 						<button
-							className="hoverButton tooltip"
+							className="hoverButton tooltip notSelectable"
 							onClick={() => {
 								window.location.href = "/newcall";
 							}}

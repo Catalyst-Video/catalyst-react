@@ -272,19 +272,24 @@ button:hover {
   margin: 0 auto;
 }
 
-/*.fa-phone-slash {*/
-/*  color: #470000;*/
-/*}*/
 
-/*End buttons*/
+/* util */
+.notSelectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+   -khtml-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
 
 /*Text chat*/
 #entire-chat {
   position: absolute;
   height: 100%;
-  right: 0;
-  /* bottom: 10; */
+  right:  0.1rem;
   width: 400px;
+  bottom: 0.1rem;
   padding: 0;
   margin: 20px;
 }
@@ -425,20 +430,36 @@ button:hover {
   }
 }
 
-/*End text chat*/
 
-/* Begin mobile layout */
 
+  /* Tooltips */
+button.tooltip span {
+  display: none;
+}
+button.tooltip:hover span {
+  z-index: 999;
+  color: white;
+  font-family: "Heebo", sans-serif;
+  font-size: 0.8rem;
+  position: absolute;
+  left: 35px;
+  white-space: nowrap;
+  top: 0px;
+  font-weight: bold;
+  background: #16171a;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+}
+
+
+/*  mobile layout */
 @media (max-width: 640px) {
-  /* @media (min-width: 320px) and (max-width: 480px) { */
-    
-
   html,
   body {
     width: 100%;
     height: 100%;
     font-size: 1em;
-    /* position: fixed !important; */
   }
 
   #header {
@@ -471,11 +492,8 @@ button:hover {
     max-width: 100%;
   }
   #remote-video {
-    /* width: 75vw;
-    height: calc((16/9) * 75vw); */
     width: 100%;
     height: 100%;
-    /* border: 3px solid red; */
   }
   .multi-button {
     position: fixed;
@@ -490,9 +508,7 @@ button:hover {
     z-index: 999;
     border-radius: 10px;
     padding: 0;
-    /* display: flex; */
     flex-direction: row;
-    /* overflow: hidden; */
   }
 
   
@@ -540,7 +556,6 @@ button:hover {
     min-width: 0;
     width: 100%;
     margin: 0;
-    /* line-height: 1.5rem; */
   }
 
   .multi-button button {
@@ -565,19 +580,16 @@ button:hover {
     display: none;
   }
 
+  /* Chat  */
   #entire-chat {
     pointer-events: none;
-
     position: absolute;
     top: 3rem;
     right: 0;
     height: calc(100% - 3rem - 3rem);
     width: 100vw;
-    /* padding: 1rem 0; */
     padding: 0;
-    /* border: 3px solid green; */
     text-align: center;
-    /* background: #16171a; */
   }
 
   #chat-zone {
@@ -586,11 +598,10 @@ button:hover {
     width: 100%;
     height: calc(100% - 2rem);
     margin-left: 0;
-    /* box-shadow: 4px 4px 12px #030506, -4px -4px 12px #292a30; */
-    /* border: 5px solid blue */
     border-radius: 10px;
-    /* background: #16171a; */
   }
+
+
 
   .compose {
     position: absolute;
@@ -672,22 +683,3 @@ video ::-webkit-media-controls-start-playback-button {
 }
 
 /* End mobile layout */
-
-button.tooltip span {
-  display: none;
-}
-button.tooltip:hover span {
-  z-index: 999;
-  color: white;
-  font-family: "Heebo", sans-serif;
-  font-size: 0.8rem;
-  position: absolute;
-  left: 35px;
-  white-space: nowrap;
-  top: 0px;
-  font-weight: bold;
-  background: #16171a;
-  padding: 10px;
-  border-radius: 10px;
-  display: flex;
-}
