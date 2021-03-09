@@ -1,36 +1,38 @@
+import { Socket } from "socket.io-client";
+
 export interface VideoChatData {
 	// videoEnabled: boolean;
 	// audioEnabled: boolean;
 	connected: Map<any, any>;
 	localICECandidates: any;
-	socket: any;
+	socket: Socket;
 	remoteVideoWrapper: HTMLMediaElement;
 	localVideo: HTMLMediaElement;
 	peerConnections: Map<any, any>;
 	recognition: any;
 	borderColor: string;
 	peerColors: Map<any, any>;
-	localStream: any;
-	localAudio: any;
+	localStream: MediaStream;
+	localAudio: MediaStreamTrack;
 
-	requestMediaStream(e?: any): any;
-	onMediaStream(e: MediaStream): any;
-	onMediaStream(e: any, uuid: string): any;
+	requestMediaStream(e?: any): void;
+	onMediaStream(e: MediaStream): void;
+	onMediaStream(e: any, uuid: string): void;
 
-	onAddStream(e: any, uuid: string): any;
-	onLeave(e: any): any;
+	onAddStream(e: any, uuid: string): void;
+	onLeave(e: any): void;
 
-	createOffer(a: any): any;
+	createOffer(uuid: string): any;
 	onOffer(offer: any, uuid: string): any;
 
-	createAnswer(offer: any, a: any): any;
-	onAnswer(answer: any, uuid: string): any;
+	createAnswer(offer: any, uuid: string): void;
+	onAnswer(answer: any, uuid: string): void;
 
-	call(uuid: string, room: any): any;
+	call(uuid: string, room: any): void;
 	establishConnection(uuid: string, func: Function): any;
 
-	onCandidate(candidate: any, uuid: string): any;
-	onIceCandidate(e: any, uuid: string): any;
+	onCandidate(candidate: any, uuid: string): void;
+	onIceCandidate(e: any, uuid: string): void;
 }
 
 export interface DefaultSettings {

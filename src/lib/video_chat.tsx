@@ -21,7 +21,8 @@ import {
 	handlePauseVideo,
 	handleToggleCaptions,
 	handleRequestToggleCaptions,
-	handleSharing
+	handleSharing,
+	handleReceiveCaptions
 } from "../utils/stream_utils";
 // typings
 import { DefaultSettings, VideoChatData } from "../../typings/interfaces";
@@ -163,8 +164,8 @@ const VideoChat = ({
 		recognition: "",
 		borderColor: "",
 		peerColors: new Map(),
-		localAudio: "",
-		localStream: "",
+		localAudio: new MediaStreamTrack(),
+		localStream: new MediaStream(),
 
 		/* Call to getUserMedia (provided by adapter.js for  browser compatibility) asking for access to both the video and audio streams. If the request is accepted callback to the onMediaStream function, otherwise callback to the noMediaStream function. */
 		requestMediaStream: (e?: any) => {
@@ -270,8 +271,13 @@ const VideoChat = ({
 				handleToggleCaptions(sendingCaptions, setSendingCaptions, VCData)
 			);
 			VCData.socket.on("receiveCaptions", (captions: any) => {
-				// TODO: handle receive captions
-				// receiveCaptions(captions)
+				handleReceiveCaptions(
+					captions,
+					receivingCaptions,
+					setReceivingCaptions,
+					setHideCaptions,
+					setCaptionsText
+				);
 			});
 		},
 
@@ -279,7 +285,7 @@ const VideoChat = ({
 			console.log(`call >>> Initiating call with ${uuid}...`);
 			VCData.socket.on(
 				"token",
-				VCData.establishConnection(uuid, (a: Function) => {
+				VCData.establishConnection(uuid, (a: string) => {
 					VCData.createOffer(a);
 				})
 			);
@@ -324,8 +330,7 @@ const VideoChat = ({
 				VCData.localStream.getTracks().forEach((track: any) => {
 					VCData.peerConnections.get(uuid).addTrack(track, VCData.localStream);
 				});
-				// Add general purpose data channel to peer connection,
-				// used for text chats, captions, and toggling sending captions
+				// Add general purpose data channel to peer connection, used for text chats, captions, and toggling sending captions
 				dataChannel.set(
 					uuid,
 					VCData.peerConnections.get(uuid).createDataChannel("chat", {
@@ -348,8 +353,13 @@ const VideoChat = ({
 							setHideChat
 						);
 					} else if (dataType === "cap:") {
-						// TODO: captions
-						// receiveCaptions(cleanedMessage);
+						handleReceiveCaptions(
+							cleanedMessage,
+							receivingCaptions,
+							setReceivingCaptions,
+							setHideCaptions,
+							setCaptionsText
+						);
 					} else if (dataType === "tog:") {
 						setSendingCaptions(!sendingCaptions);
 					} else if (dataType === "clr:") {
@@ -434,7 +444,7 @@ const VideoChat = ({
 			VCData.peerConnections.get(uuid).addIceCandidate(rtcCandidate);
 		},
 		// Create an offer that contains the media capabilities of the browser.
-		createOffer: (uuid: string) => {
+		createOffer: (uuid: string): void => {
 			console.log(`createOffer to ${uuid} >>> Creating offer...`);
 			VCData.peerConnections.get(uuid).createOffer(
 				(offer: any) => {
@@ -442,15 +452,15 @@ const VideoChat = ({
 					VCData.peerConnections.get(uuid).setLocalDescription(offer);
 					VCData.socket.emit("offer", JSON.stringify(offer), sessionKey, uuid);
 				},
-				(err: any) => {
+				(e: any) => {
 					console.log("failed offer creation");
-					console.log(err, true);
+					console.log(e, true);
 				}
 			);
 		},
 
 		/* Create an answer with the media capabilities that the client and peer browsers share. This function is called with the offer from the originating browser, which needs to be parsed into an RTCSessionDescription and added as the remote description to the peerConnection object. Then the answer is created in the same manner as the offer and sent over the socket. */
-		createAnswer: (offer: any, uuid: string) => {
+		createAnswer: (offer: any, uuid: string): void => {
 			console.log("createAnswer");
 			var rtcOffer = new RTCSessionDescription(JSON.parse(offer));
 			console.log(`>>> Creating answer to ${uuid}`);
@@ -473,11 +483,11 @@ const VideoChat = ({
 		},
 
 		// When a browser receives an offer, set up a callback to be run when the ephemeral token is returned from Twilio.
-		onOffer: (offer: any, uuid: string) => {
+		onOffer: (offer: any, uuid: string): void => {
 			console.log("onOffer <<< Received offer");
 			VCData.socket.on(
 				"token",
-				VCData.establishConnection(uuid, (a: any) => {
+				VCData.establishConnection(uuid, (a: string) => {
 					VCData.createAnswer(offer, a);
 				})
 			);
