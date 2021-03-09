@@ -548,7 +548,7 @@ const VideoChat = ({
 	return (
 		<>
 			<div id="arbitrary-data" style={{ display: "none" }}></div>
-			<div id="header">
+			<div id="header" className="notSelectable">
 				<button
 					className="header-btn"
 					style={{ display: "inline" }}
@@ -680,7 +680,7 @@ const VideoChat = ({
 								icon={hideCaptions ? faClosedCaptioning : faAudioDescription}
 							/>
 							<span>
-								{!hideCaptions ? "Closed Captions" : "Hide Closed Captions"}
+								{hideCaptions ? "Closed Captions" : "Hide Closed Captions"}
 							</span>
 						</button>
 					</div>
