@@ -100,12 +100,13 @@ const VideoChat = ({
 
 		// Listen for enter press on chat input
 		const TextInput = document.querySelector(
-			".compose input"
-		) as HTMLInputElement;
+			"textarea.compose"
+		) as HTMLTextAreaElement;
 		TextInput?.addEventListener("keypress", (e: any) => {
 			if (e.keyCode === 13) {
 				e.preventDefault();
 				var msg = TextInput.value;
+				console.log("textarea " + msg);
 				// Send message over data channel, Add message to screen, auto scroll chat down
 				if (msg && msg.length > 0) {
 					// Prevent cross site scripting

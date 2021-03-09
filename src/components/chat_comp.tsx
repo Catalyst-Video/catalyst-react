@@ -10,9 +10,11 @@ const ChatComponent = ({ hideChat }: { hideChat: boolean }) => {
 				</div>
 			</div>
 			<Draggable>
-				<form className="compose">
-					<input type="text" placeholder="Send Message" />
-				</form>
+				<textarea
+					className="compose"
+					placeholder="Send Message"
+					rows={2}
+				></textarea>
 			</Draggable>
 		</div>
 	) : null;

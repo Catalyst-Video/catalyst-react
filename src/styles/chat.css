@@ -294,9 +294,9 @@ button:hover {
   margin: 20px;
 }
 
-.compose {
-  width: 400px;
-  height: 45px;
+textarea.compose {
+  width: 300px;
+  min-height: 45px;
   font-family: "Heebo", sans-serif;
   position: fixed;
   bottom: 0;
@@ -313,18 +313,12 @@ button:hover {
   -ms-overflow-style: none;
   scrollbar-width: none;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  overflow-wrap: break-word;
+  border: none;
+  outline: none;
+
 }
 
-.compose input {
-  /*font-family: inherit;*/
-  font-size: 0.8rem;
-  border: none;
-  width: 100%;
-  resize: none;
-  outline: none;
-  background-color: inherit;
-  color: black;
-}
 
 #chat-zone {
   padding-top: 20px;
@@ -333,7 +327,7 @@ button:hover {
   height: 100%;
   right: 0;
   width: 100%;
-  overflow: scroll;
+  overflow: none !important;
   font-family: "Heebo", sans-serif;
   font-size: 0.8rem;
 }
