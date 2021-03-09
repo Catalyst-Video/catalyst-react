@@ -164,8 +164,8 @@ const VideoChat = ({
 		recognition: "",
 		borderColor: "",
 		peerColors: new Map(),
-		localAudio: new MediaStreamTrack(),
-		localStream: new MediaStream(),
+		localAudio: undefined,
+		localStream: undefined,
 
 		/* Call to getUserMedia (provided by adapter.js for  browser compatibility) asking for access to both the video and audio streams. If the request is accepted callback to the onMediaStream function, otherwise callback to the noMediaStream function. */
 		requestMediaStream: (e?: any) => {
@@ -327,7 +327,7 @@ const VideoChat = ({
 					})
 				);
 				// Add the local video stream to the peerConnection.
-				VCData.localStream.getTracks().forEach((track: any) => {
+				VCData.localStream?.getTracks().forEach((track: any) => {
 					VCData.peerConnections.get(uuid).addTrack(track, VCData.localStream);
 				});
 				// Add general purpose data channel to peer connection, used for text chats, captions, and toggling sending captions

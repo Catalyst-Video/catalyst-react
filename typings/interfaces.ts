@@ -12,8 +12,8 @@ export interface VideoChatData {
 	recognition: any;
 	borderColor: string;
 	peerColors: Map<any, any>;
-	localStream: MediaStream;
-	localAudio: MediaStreamTrack;
+	localStream: MediaStream | undefined;
+	localAudio: MediaStreamTrack | undefined;
 
 	requestMediaStream(e?: any): void;
 	onMediaStream(e: MediaStream): void;
