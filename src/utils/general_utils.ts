@@ -14,7 +14,7 @@ export function setThemeColor(color: string): void {
 			cssVar.themeColor = "#DD6B20";
 			break;
 		case "yellow":
-			cssVar.themeColor = "#ECC94B";
+			cssVar.themeColor = "#FFCE26";
 			break;
 		case "green":
 			cssVar.themeColor = "#38A169";
@@ -23,7 +23,7 @@ export function setThemeColor(color: string): void {
 			cssVar.themeColor = "#319795";
 			break;
 		case "blue":
-			cssVar.themeColor = "#3182CE"; //"#2253ff";
+			cssVar.themeColor = "#3182CE";
 			break;
 		case "indigo":
 			cssVar.themeColor = "#5A67D8";
