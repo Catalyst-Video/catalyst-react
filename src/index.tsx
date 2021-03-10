@@ -15,6 +15,7 @@ ReactDOM.render(
 				hideCaptions: true,
 				hideLogo: false
 			}}
+			themeColor={"indigo"}
 		/>
 	</React.StrictMode>,
 	document.getElementById("root")

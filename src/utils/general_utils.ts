@@ -1,4 +1,40 @@
 import { VideoChatData } from "../../typings/interfaces";
+import { CSSGlobalVariables } from "css-global-variables";
+
+export function setThemeColor(color: string): void {
+	let cssVar = new CSSGlobalVariables();
+	switch (color) {
+		case "pink":
+			cssVar.themeColor = "#D53F8C";
+			break;
+		case "red":
+			cssVar.themeColor = "#E53E3E";
+			break;
+		case "orange":
+			cssVar.themeColor = "#DD6B20";
+			break;
+		case "yellow":
+			cssVar.themeColor = "#ECC94B";
+			break;
+		case "green":
+			cssVar.themeColor = "#38A169";
+			break;
+		case "teal":
+			cssVar.themeColor = "#319795";
+			break;
+		case "blue":
+			cssVar.themeColor = "#3182CE"; //"#2253ff";
+			break;
+		case "indigo":
+			cssVar.themeColor = "#5A67D8";
+			break;
+		case "purple":
+			cssVar.themeColor = "#805AD5";
+			break;
+		default:
+			cssVar.themeColor = color;
+	}
+}
 
 export function getBrowserName(): string {
 	var name = "Unknown";

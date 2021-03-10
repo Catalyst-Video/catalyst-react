@@ -14,7 +14,8 @@ import {
 	hueToColor,
 	handlereceiveMessage,
 	uuidToHue,
-	addMessageToScreen
+	addMessageToScreen,
+	setThemeColor
 } from "../utils/general_utils";
 import {
 	handleMute,
@@ -47,8 +48,7 @@ import {
 import joinSound from "../assets/sound/join.mp3";
 import leaveSound from "../assets/sound/leave.mp3";
 // styles
-import "../styles/chat.css";
-import "../styles/snackbar.css";
+import "../styles/catalyst.css";
 import "react-toastify/dist/ReactToastify.css";
 // packages
 import { ToastContainer, toast } from "react-toastify";
@@ -60,12 +60,14 @@ const VideoChat = ({
 	sessionKey,
 	defaultSettings,
 	customSnackbarMsg,
-	styles
+	styles,
+	themeColor
 }: {
 	sessionKey: string;
 	defaultSettings?: DefaultSettings;
 	customSnackbarMsg?: HTMLElement | Element | string;
 	styles?: Object;
+	themeColor?: string;
 }) => {
 	/* ON LOAD: detect in-app browsers & redirect, set tab title, get webcam */
 	useEffect(() => {
@@ -98,6 +100,8 @@ const VideoChat = ({
 			window.location.href.substring(window.location.href.lastIndexOf("/") + 1);
 		VCData.requestMediaStream();
 		navigator.mediaDevices.ondevicechange = () => window.location.reload();
+
+		setThemeColor(themeColor ? themeColor : "blue");
 
 		// Listen for enter press on chat input
 		const TextInput = document.querySelector(
