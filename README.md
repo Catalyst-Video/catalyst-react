@@ -63,7 +63,7 @@ You can create your own server by following the Catalyst server setup docs [here
 
 ### Theming
 
-You can change the color scheme of Catalyst to your tastes by using the `themeColor` and `styles` optional params. The possible built-in options are the following:
+You can change the color scheme of Catalyst to your tastes by using the `themeColor` and `styles` optional params. The possible built-in options are the [following](https://coolors.co/d53f8c-e53e3e-dd6b20-ffce26-38a169-319795-3182ce-5a67d8-805ad5):
 
 ![image](https://user-images.githubusercontent.com/47064842/110560201-90490b80-8113-11eb-9305-85f11cd15c0d.png)
 - [pink](https://coolors.co/D53F8C)

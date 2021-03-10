@@ -336,7 +336,7 @@ button:hover {
   right:  0.1rem;
   width: 400px;
   bottom: 0.1rem;
-  padding: 0;
+  padding: 0rem;
   margin: 20px;
 }
 
@@ -389,8 +389,12 @@ textarea.compose {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-end;
-  padding: 0 0px 4px;
+  padding-top: 20px;
   margin-bottom: 10px;
+}
+
+.hide-chat {
+  display: none;
 }
 
 .chat-messages {
