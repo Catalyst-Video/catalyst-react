@@ -101,7 +101,7 @@ Catalyst can be seen in action in the following active projects:
 After you have the repo on your local machine, run the following commands to install deps
 
 ```
-npm install
+yarn install
 ```
 
 Once you have everything installed and updated, run the following command to compile a demo version to localhost
