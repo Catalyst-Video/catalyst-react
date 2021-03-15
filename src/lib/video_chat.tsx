@@ -76,6 +76,39 @@ const VideoChat = ({
 }) => {
 	/* ON LOAD: detect in-app browsers & redirect, set tab title, get webcam */
 	useEffect(() => {
+		VCData.requestMediaStream();
+
+		// Listen for enter press on chat input
+		const TextInput = document.querySelector(
+			"textarea.compose"
+		) as HTMLTextAreaElement;
+		TextInput?.addEventListener("keypress", (e: any) => {
+			if (e.keyCode === 13) {
+				e.preventDefault();
+				var msg = TextInput.value;
+				console.log("textarea " + msg);
+				// Send message over data channel, Add message to screen, auto scroll chat down
+				if (msg && msg.length > 0) {
+					// Prevent cross site scripting
+					msg = msg.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+					sendToAllDataChannels("mes:" + msg, dataChannel);
+					addMessageToScreen(msg, themeColor, true);
+					document.getElementById("chat-end")?.scrollIntoView({
+						behavior: "smooth",
+						block: "nearest",
+						inline: "start"
+					});
+					TextInput.value = "";
+				}
+			}
+		});
+	});
+
+	useEffect(() => {
+		setThemeColor(themeColor ? themeColor : "blue");
+	}, [ themeColor]);
+
+	useEffect(() => {
 		var ua: string = navigator.userAgent || navigator.vendor;
 		if (
 			DetectRTC.isMobileDevice &&
@@ -103,38 +136,12 @@ const VideoChat = ({
 		document.title =
 			"Catalyst Video Chat" +
 			window.location.href.substring(window.location.href.lastIndexOf("/") + 1);
-		VCData.requestMediaStream();
 		// TODO: address this
 		navigator.mediaDevices.ondevicechange = () =>
 			console.log(">>> navigator MediaDevices changed: would trigger refresh"); // window.location.reload
+	}, [])
 
-		setThemeColor(themeColor ? themeColor : "blue");
 
-		// Listen for enter press on chat input
-		const TextInput = document.querySelector(
-			"textarea.compose"
-		) as HTMLTextAreaElement;
-		TextInput?.addEventListener("keypress", (e: any) => {
-			if (e.keyCode === 13) {
-				e.preventDefault();
-				var msg = TextInput.value;
-				console.log("textarea " + msg);
-				// Send message over data channel, Add message to screen, auto scroll chat down
-				if (msg && msg.length > 0) {
-					// Prevent cross site scripting
-					msg = msg.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-					sendToAllDataChannels("mes:" + msg, dataChannel);
-					addMessageToScreen(msg, VCData.borderColor, true);
-					document.getElementById("chat-end")?.scrollIntoView({
-						behavior: "smooth",
-						block: "nearest",
-						inline: "start"
-					});
-					TextInput.value = "";
-				}
-			}
-		});
-	});
 
 	/* STATE: track toggleable UI/UX */
 	const [audioEnabled, setAudio] = useState<boolean>(
