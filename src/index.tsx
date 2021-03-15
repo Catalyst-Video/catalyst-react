@@ -6,8 +6,7 @@ ReactDOM.render(
 	<React.StrictMode>
 		{/* DEMO */}
 		<VideoChat
-			sessionKey={"testKey"}
-			// uniqueIdentifier={""}
+			sessionKey="testKey"
 			defaultSettings={{
 				hideChat: true,
 				audioOn: true,
@@ -15,7 +14,8 @@ ReactDOM.render(
 				hideCaptions: true,
 				hideLogo: false
 			}}
-			themeColor={"indigo"}
+			// socketServerAddress="http://localhost:3001"
+			themeColor="indigo"
 		/>
 	</React.StrictMode>,
 	document.getElementById("root")

@@ -53,17 +53,22 @@ import "react-toastify/dist/ReactToastify.css";
 // packages
 import { ToastContainer, toast } from "react-toastify";
 import Draggable from "react-draggable";
-import { io } from "socket.io-client";
+import io from "socket.io-client";
+// import * as io from "socket.io";
 import DetectRTC from "detectrtc";
+
+const DEFAULT_SERVER_ADDRESS = "https://catalyst-video-server.herokuapp.com/";
 
 const VideoChat = ({
 	sessionKey,
 	defaultSettings,
 	customSnackbarMsg,
+	socketServerAddress,
 	styles,
 	themeColor
 }: {
 	sessionKey: string;
+	socketServerAddress?: string;
 	defaultSettings?: DefaultSettings;
 	customSnackbarMsg?: HTMLElement | Element | string;
 	styles?: Object;
@@ -96,10 +101,12 @@ const VideoChat = ({
 			window.location.href = "/browser-not-supported";
 		}
 		document.title =
-			"Catalyst - " +
+			"Catalyst Video Chat" +
 			window.location.href.substring(window.location.href.lastIndexOf("/") + 1);
 		VCData.requestMediaStream();
-		navigator.mediaDevices.ondevicechange = () => window.location.reload();
+		// TODO: address this
+		navigator.mediaDevices.ondevicechange = () =>
+			console.log(">>> navigator MediaDevices changed: would trigger refresh"); // window.location.reload
 
 		setThemeColor(themeColor ? themeColor : "blue");
 
@@ -157,11 +164,9 @@ const VideoChat = ({
 
 	/* VIDEO CHAT DATA: track video/audio streams, peer connections, handle webrtc */
 	var VCData: VideoChatData = {
-		// videoEnabled: true,
-		// audioEnabled: true,
 		connected: new Map(),
 		localICECandidates: {},
-		socket: io(),
+		socket: io(socketServerAddress ?? DEFAULT_SERVER_ADDRESS),
 		remoteVideoWrapper: document.getElementById("wrapper") as HTMLMediaElement,
 		localVideo: document.getElementById("local-video") as HTMLMediaElement,
 		peerConnections: new Map(),
@@ -260,8 +265,9 @@ const VideoChat = ({
 			}
 			// Join the chat room
 			VCData.socket.emit("join", sessionKey, () => {
+				console.log("joined");
 				VCData.borderColor = hueToColor(uuidToHue(VCData.socket.id, VCData));
-				VCData.localVideo.style.border = `3px solid ${VCData.borderColor}`;
+				//TODO: VCData.localVideo.style.border = `3px solid ${VCData.borderColor}`;
 			});
 			// Add listeners to the websocket
 			VCData.socket.on("leave", VCData.onLeave);
@@ -297,12 +303,16 @@ const VideoChat = ({
 		},
 
 		onLeave: (uuid: string) => {
-			console.log("disconnected - UUID " + uuid);
-			(document.getElementById("leave-sound") as HTMLVideoElement)?.play();
+			
 			// Remove video element
-			VCData?.remoteVideoWrapper?.removeChild(
-				document.querySelectorAll(`[uuid="${uuid}"]`)[0]
-			);
+			try {
+				console.log("disconnected - UUID " + uuid);
+				(document.getElementById("leave-sound") as HTMLVideoElement)?.play();
+				VCData?.remoteVideoWrapper?.removeChild(document.querySelectorAll(`[uuid="${uuid}"]`)[0]);
+			} catch (e){
+				console.log(e)
+			}
+			
 			// Delete connection & metadata
 			VCData.connected.delete(uuid);
 			VCData.peerConnections.get(uuid).close(); // This is necessary, because otherwise the RTC connection isn't closed
@@ -367,7 +377,7 @@ const VideoChat = ({
 					} else if (dataType === "tog:") {
 						setSendingCaptions(!sendingCaptions);
 					} else if (dataType === "clr:") {
-						setStreamColor(uuid, VCData);
+						// TODO: setStreamColor(uuid, VCData);
 					} else {
 						// Arbitrary data handling
 						console.log("Received arbitrary data: ", receivedData);
@@ -379,7 +389,7 @@ const VideoChat = ({
 				/* 	Called when dataChannel is successfully opened - Set up callbacks for the connection generating iceCandidates or receiving the remote media stream. Wrapping callback functions to pass in the peer uuids. */
 				dataChannel.get(uuid).onopen = (e: any) => {
 					console.log("dataChannel opened");
-					setStreamColor(uuid, VCData);
+					// TODO: setStreamColor(uuid, VCData);
 				};
 
 				VCData.peerConnections.get(uuid).onicecandidate = (e: any) => {
@@ -401,8 +411,9 @@ const VideoChat = ({
 							console.log("disconnected - UUID " + uuid);
 							break;
 						case "failed":
-							console.log("failed");
-							window.location.reload();
+							console.log(">>> would trigger refresh: failed ICE connection");
+							// TODO: refresh
+							// window.location.reload();
 							break;
 						case "closed":
 							console.log("closed");
@@ -537,7 +548,12 @@ const VideoChat = ({
 					"wrapper"
 				) as HTMLMediaElement;
 			}
-			VCData?.remoteVideoWrapper?.appendChild(node);
+			
+				setCaptionsText(
+					"Session connected successfully"
+				);
+
+			VCData.remoteVideoWrapper.appendChild(node);
 			// Update remote video source
 			VCData.remoteVideoWrapper.srcObject = e.stream;
 			// if (VideoChatData.remoteVideoWrapper?.lastChild !== null) {
@@ -546,9 +562,9 @@ const VideoChat = ({
 			// }
 			toast.dismiss();
 			// Remove the loading gif from video
-			if (VCData.remoteVideoWrapper.lastChild) {
-				VCData.remoteVideoWrapper.style.background = "none";
-			}
+			// TODO: if (VCData.remoteVideoWrapper.lastChild) {
+			// 	VCData.remoteVideoWrapper.style.background = "none";
+			// }
 			// Update connection status
 			VCData.connected.set(uuid, true);
 			setHideCaptions(true);
