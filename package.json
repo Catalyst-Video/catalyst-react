@@ -2,7 +2,7 @@
 	"name": "catalyst-vc-react",
 	"version": "1.0.0",
 	"author": "@GoldinGuy seth@goldinwebdesign.com & @JoeSemrai josephsemrai@gmail.com",
-	"private": true,
+	"private": false,
 	"license": "MIT",
 	"description": "An awesome video-chat react component that can be added to your site in fewer than 5 lines of code",
 	"repository": "https://github.com/Catalyst-Video/catalyst-react",
