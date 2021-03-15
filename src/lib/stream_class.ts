@@ -1,10 +1,12 @@
 /* VIDEO CHAT DATA: track video/audio streams, peer connections, handle webrtc */
 import io, { Socket } from "socket.io-client";
 import { chatRoomFull } from "../utils/general_utils";
+import { toast } from "react-toastify";
+import { VideoChatData } from "../../typings/interfaces";
 
 const DEFAULT_SERVER_ADDRESS = "https://catalyst-video-server.herokuapp.com/";
 
-export default class VCDataStream {
+export default class VCDataStream implements VideoChatData {
 	sessionKey: string;
 	dataChannel: Map<any, any>;
 	connected: Map<any, any>;
@@ -20,14 +22,17 @@ export default class VCDataStream {
 	localAudio: MediaStreamTrack | undefined;
 	sendingCaptions: boolean;
 	receivingCaptions: boolean;
+	seenWelcomeSnackbar: boolean;
 	setLocalVideoText: Function;
 	setCaptionsText: Function;
+	customSnackbarMsg: string | HTMLElement | Element | undefined;
 
 	constructor(
 		key: string,
-		socketServerAddress: string | undefined,
 		setCapText: Function,
-		setVidText: Function
+		setVidText: Function,
+		socketServerAddress?: string,
+		cstMsg?: string | HTMLElement | Element
 	) {
 		this.sessionKey = key;
 		this.dataChannel = new Map();
@@ -48,8 +53,10 @@ export default class VCDataStream {
 		this.localStream = undefined;
 		this.sendingCaptions = false;
 		this.receivingCaptions = false;
+		this.seenWelcomeSnackbar = false;
 		this.setCaptionsText = setCapText;
 		this.setLocalVideoText = setVidText;
+		this.customSnackbarMsg = cstMsg;
 	}
 
 	/* Call to getUserMedia (provided by adapter.js for  browser compatibility) asking for access to both the video and audio streams. If the request is accepted callback to the onMediaStream function, otherwise callback to the noMediaStream function. */
@@ -67,28 +74,19 @@ export default class VCDataStream {
 			.catch(error => {
 				console.log(error);
 				// show initial connect to peer prompt
-				/* TODO: 	toast(
-					() => (
-						<div className="text-center justify-between">
-							Please press allow to enable webcam & audio access
-							<button
-								className="snack-btn"
-								onClick={() => {
-									window.open(
-										"https://help.clipchamp.com/en/articles/1505527-how-do-i-enable-my-webcam-for-recording",
-										"_blank"
-									);
-								}}
+				toast(
+					() =>
+						`Please press allow to enable webcam & audio access <a
+								href="https://help.clipchamp.com/en/articles/1505527-how-do-i-enable-my-webcam-for-recording"
+                                target="_blank"
 							>
 								Directions
-							</button>
-						</div>
-					),
+							</a>`,
 					{
 						autoClose: false,
 						toastId: "webcam/audio_error"
 					}
-				); */
+				);
 				this.setCaptionsText(
 					"Failed to activate your webcam. Check your webcam/privacy settings."
 				);
@@ -103,27 +101,18 @@ export default class VCDataStream {
 	onMediaStream = (stream: MediaStream) => {
 		console.log("onMediaStream");
 		this.localStream = stream;
-		/* TODO: if (!seenWelcomeSnackbar) {
+		if (!this.seenWelcomeSnackbar) {
 			toast(
-				() => (
-					<div className="text-center justify-between">
-						{customSnackbarMsg ? (
-							customSnackbarMsg
-						) : (
-							<>
-								<span>Share your session key </span>
-								<strong>{sessionKey}</strong>
-								<span> with whoever wants to join</span>
-							</>
-						)}
-					</div>
-				),
+				() =>
+					this.customSnackbarMsg
+						? this.customSnackbarMsg
+						: `Share your session key ${this.sessionKey} with whoever wants to join`,
 				{
 					toastId: "peer_prompt"
 				}
 			);
-			setSeenWelcomeSnackbar(true);
-		} */
+			this.seenWelcomeSnackbar = true;
+		}
 
 		/* When a video stream is added to VideoChat, we need to store the local audio track, because the screen sharing MediaStream doesn't have audio by default, which is problematic for peer C who joins while another peer A/B is screen sharing (C won't receive A/Bs audio). */
 		this.localAudio = stream.getAudioTracks()[0];

@@ -1,8 +1,8 @@
 import { Socket } from "socket.io-client";
 
 export interface VideoChatData {
-	// videoEnabled: boolean;
-	// audioEnabled: boolean;
+	sessionKey: string;
+	dataChannel: Map<any, any>;
 	connected: Map<any, any>;
 	localICECandidates: any;
 	socket: Socket;
@@ -14,6 +14,12 @@ export interface VideoChatData {
 	peerColors: Map<any, any>;
 	localStream: MediaStream | undefined;
 	localAudio: MediaStreamTrack | undefined;
+	sendingCaptions: boolean;
+	receivingCaptions: boolean;
+	seenWelcomeSnackbar: boolean;
+	setLocalVideoText: Function;
+	setCaptionsText: Function;
+	customSnackbarMsg: string | HTMLElement | Element | undefined;
 
 	requestMediaStream(e?: any): void;
 	onMediaStream(e: MediaStream): void;

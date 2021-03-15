@@ -8,22 +8,14 @@ import {
 // utils
 import {
 	getBrowserName,
-	chatRoomFull,
 	sendToAllDataChannels,
-	setStreamColor,
-	hueToColor,
-	handlereceiveMessage,
-	uuidToHue,
 	addMessageToScreen,
 	setThemeColor
 } from "../utils/general_utils";
 import {
 	handleMute,
 	handlePauseVideo,
-	handleToggleCaptions,
-	handleRequestToggleCaptions,
-	handleSharing,
-	handleReceiveCaptions
+	handleSharing
 } from "../utils/stream_utils";
 // typings
 import { DefaultSettings, VideoChatData } from "../../typings/interfaces";
@@ -51,12 +43,10 @@ import leaveSound from "../assets/sound/leave.mp3";
 import "../styles/catalyst.css";
 import "react-toastify/dist/ReactToastify.css";
 // packages
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import Draggable from "react-draggable";
 import DetectRTC from "detectrtc";
 import VCDataStream from "./stream_class";
-
-// const DEFAULT_SERVER_ADDRESS = "https://catalyst-video-server.herokuapp.com/";
 
 const VideoChat = ({
 	sessionKey,
@@ -133,11 +123,18 @@ const VideoChat = ({
 	const VCData = useMemo(() => {
 		return new VCDataStream(
 			sessionKey,
-			socketServerAddress,
 			setCaptionsText,
-			setLocalVideoText
+			setLocalVideoText,
+			socketServerAddress,
+			customSnackbarMsg
 		);
-	}, [sessionKey, socketServerAddress, setCaptionsText, setLocalVideoText]);
+	}, [
+		sessionKey,
+		socketServerAddress,
+		setCaptionsText,
+		setLocalVideoText,
+		customSnackbarMsg
+	]);
 
 	/* ON LOAD: detect in-app browsers & redirect, set tab title, get webcam */
 	useEffect(() => {
