@@ -225,9 +225,9 @@ export default class VCDataStream implements VideoChatData {
 				const dataType = receivedData.substring(0, 4);
 				const cleanedMessage = receivedData.slice(4);
 				if (dataType === "mes:") {
-					//TODO:  handlereceiveMessage(
+					// TODO:  handlereceiveMessage(
 					// 	cleanedMessage,
-					// 	hueToColor(VCData.peerColors.get(uuid)),
+					// 	hueToColor(this.peerColors.get(uuid)),
 					// 	hideChat,
 					// 	setHideChat
 					// );
@@ -420,7 +420,7 @@ export default class VCDataStream implements VideoChatData {
 		// 	// @ts-ignore
 		// 	VideoChatData.remoteVideoWrapper.lastChild.srcObject = e.stream;
 		// }
-		// TODO: toast.dismiss();
+		toast.dismiss();
 		// Remove the loading gif from video
 		// TODO: if (VCData.remoteVideoWrapper.lastChild) {
 		// 	VCData.remoteVideoWrapper.style.background = "none";
