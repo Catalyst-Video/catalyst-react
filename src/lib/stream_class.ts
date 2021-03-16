@@ -413,12 +413,13 @@ export default class VCDataStream implements VideoChatData {
 			) as HTMLDivElement;
 		}
 		console.log(e);
-
-		this.remoteVideoWrapper.appendChild(node);
+		if (document.querySelector(`[uuid="${uuid}"]`) === null) {
+			this.remoteVideoWrapper.appendChild(node);
+		}
 		// Update remote video source
 		if (this.remoteVideoWrapper?.lastChild !== null) {
 			let newVid = this.remoteVideoWrapper.lastChild as HTMLVideoElement;
-			newVid.srcObject = e.streams[0];
+			newVid.srcObject = e.streams.slice(-1)[0];
 		}
 
 		toast.dismiss();
