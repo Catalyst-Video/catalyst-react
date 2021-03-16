@@ -373,7 +373,7 @@ export default class VCDataStream implements VideoChatData {
 		console.log(`>>> Creating answer to ${uuid}`);
 		this.peerConnections.get(uuid).setRemoteDescription(rtcOffer);
 		this.peerConnections.get(uuid).createAnswer(
-			(answer: any) => {
+			(answer: Promise<RTCSessionDescription>) => {
 				this.peerConnections.get(uuid).setLocalDescription(answer);
 				this.socket.emit(
 					"answer",
@@ -447,12 +447,7 @@ export default class VCDataStream implements VideoChatData {
 				let newVid = this.remoteVideoWrapper.lastChild as HTMLVideoElement;
 				newVid.srcObject = e.streams.slice(-1)[0];
 			}
-
 			toast.dismiss();
-			// Remove the loading gif from video
-			// TODO: if (VCData.remoteVideoWrapper.lastChild) {
-			// 	VCData.remoteVideoWrapper.style.background = "none";
-			// }
 			// Update connection status
 			this.connected.set(uuid, true);
 			// TODO: setHideCaptions(true);

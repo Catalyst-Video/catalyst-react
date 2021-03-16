@@ -19,18 +19,18 @@ export interface VideoChatData {
 	setCaptionsText: Function;
 	customSnackbarMsg: string | HTMLElement | Element | undefined;
 
-	requestMediaStream(e?: any): void;
+	requestMediaStream(e?: Event): void;
 	onMediaStream(e: MediaStream): void;
-	onMediaStream(e: any, uuid: string): void;
+	onMediaStream(e: MediaStream, uuid: string): void;
 
-	onAddStream(e: any, uuid: string): void;
+	onAddStream(e: RTCTrackEvent, uuid: string): void;
 	onLeave(uuid: string): void;
 
-	createOffer(uuid: string): any;
-	onOffer(offer: any, uuid: string): any;
+	createOffer(uuid: string): void;
+	onOffer(offer: RTCSessionDescription, uuid: string): void;
 
 	createAnswer(offer: RTCSessionDescription, uuid: string): void;
-	onAnswer(answer: any, uuid: string): void;
+	onAnswer(answer: RTCSessionDescription, uuid: string): void;
 
 	call(uuid: string, room: string): void;
 	establishConnection(

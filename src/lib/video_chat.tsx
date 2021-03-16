@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 // components
 import {
 	HeaderComponent,
@@ -6,12 +6,7 @@ import {
 	IncompatibleComponent
 } from "../components/index";
 // utils
-import {
-	getBrowserName,
-	sendToAllDataChannels,
-	addMessageToScreen,
-	setThemeColor
-} from "../utils/general_utils";
+import { getBrowserName, setThemeColor } from "../utils/general_utils";
 import {
 	handleMute,
 	handlePauseVideo,
