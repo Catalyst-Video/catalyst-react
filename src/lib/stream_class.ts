@@ -7,7 +7,7 @@ import {
 	addMessageToScreen
 } from "../utils/general_utils";
 import { toast } from "react-toastify";
-import { VideoChatData } from "../../typings/interfaces";
+import { TwilioToken, VideoChatData } from "../../typings/interfaces";
 
 const DEFAULT_SERVER_ADDRESS = "https://catalyst-video-server.herokuapp.com/";
 
@@ -21,7 +21,6 @@ export default class VCDataStream implements VideoChatData {
 	localVideo: HTMLMediaElement;
 	peerConnections: Map<any, any>;
 	recognition: any;
-	peerColors: Map<any, any>;
 	localStream: MediaStream | undefined;
 	localAudio: MediaStreamTrack | undefined;
 	sendingCaptions: boolean;
@@ -51,7 +50,6 @@ export default class VCDataStream implements VideoChatData {
 		) as HTMLMediaElement;
 		this.peerConnections = new Map();
 		this.recognition = "";
-		this.peerColors = new Map();
 		this.localAudio = undefined;
 		this.localStream = undefined;
 		this.sendingCaptions = false;
@@ -63,7 +61,7 @@ export default class VCDataStream implements VideoChatData {
 	}
 
 	/* Call to getUserMedia (provided by adapter.js for  browser compatibility) asking for access to both the video and audio streams. If the request is accepted callback to the onMediaStream function, otherwise callback to the noMediaStream function. */
-	requestMediaStream = (e?: any) => {
+	requestMediaStream = () => {
 		console.log("requestMediaStream");
 		navigator.mediaDevices
 			.getUserMedia({
@@ -163,7 +161,7 @@ export default class VCDataStream implements VideoChatData {
 				e.preventDefault();
 				var msg = TextInput.value;
 				console.log("textarea " + msg);
-				// Send message over data channel, Add message to screen, auto scroll chat down
+				// Send message over data channel, add message to screen, auto scroll chat down
 				if (msg && msg.length > 0) {
 					// Prevent cross site scripting
 					msg = msg.replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -189,7 +187,7 @@ export default class VCDataStream implements VideoChatData {
 		};
 	};
 
-	call = (uuid: string, room: any) => {
+	call = (uuid: string, room: string) => {
 		console.log(`call >>> Initiating call with ${uuid}...`);
 		this.socket.on(
 			"token",
@@ -223,7 +221,7 @@ export default class VCDataStream implements VideoChatData {
 	};
 
 	establishConnection = (correctUuid: string, callback: Function) => {
-		return (token: any, uuid: string) => {
+		return (token: TwilioToken, uuid: string) => {
 			if (correctUuid !== uuid) {
 				return;
 			}
@@ -240,7 +238,7 @@ export default class VCDataStream implements VideoChatData {
 				})
 			);
 			// Add the local video stream to the peerConnection.
-			this.localStream?.getTracks().forEach((track: any) => {
+			this.localStream?.getTracks().forEach((track: MediaStreamTrack) => {
 				this.peerConnections.get(uuid).addTrack(track, this.localStream);
 			});
 			// Add general purpose data channel to peer connection, used for text chats, captions, and toggling sending captions
@@ -280,20 +278,23 @@ export default class VCDataStream implements VideoChatData {
 				}
 			};
 			/* 	Called when dataChannel is successfully opened - Set up callbacks for the connection generating iceCandidates or receiving the remote media stream. Wrapping callback functions to pass in the peer uuids. */
-			this.dataChannel.get(uuid).onopen = (e: any) => {
+			this.dataChannel.get(uuid).onopen = (e: Event) => {
 				console.log("dataChannel opened");
-				// TODO: setStreamColor(uuid, VCData);
 			};
 
-			this.peerConnections.get(uuid).onicecandidate = (e: any) => {
+			this.peerConnections.get(uuid).onicecandidate = (
+				e: RTCPeerConnectionIceEvent
+			) => {
 				this.onIceCandidate(e, uuid);
 			};
 
-			this.peerConnections.get(uuid).ontrack = (e: any) => {
+			this.peerConnections.get(uuid).ontrack = (e: RTCTrackEvent) => {
 				this.onAddStream(e, uuid);
 			};
 			// Called when there is a change in connection state
-			this.peerConnections.get(uuid).oniceconnectionstatechange = (e: any) => {
+			this.peerConnections.get(uuid).oniceconnectionstatechange = (
+				e: Event
+			) => {
 				switch (this.peerConnections.get(uuid).iceConnectionState) {
 					case "connected":
 						console.log("connected");
@@ -316,13 +317,15 @@ export default class VCDataStream implements VideoChatData {
 	};
 
 	// When the peerConnection generates an ice candidate, send it over the socket to the peer.
-	onIceCandidate = (e: any, uuid: string) => {
+	onIceCandidate = (e: RTCPeerConnectionIceEvent, uuid: string) => {
 		console.log("onIceCandidate");
 		if (e.candidate) {
 			console.log(
+				// @ts-ignore
 				`<<< Received local ICE candidate from STUN/TURN server (${e.candidate.address}) for connection with ${uuid}`
 			);
 			if (this.connected.get(uuid)) {
+				// @ts-ignore
 				console.log(`>>> Sending local ICE candidate (${e.candidate.address})`);
 				this.socket.emit(
 					"candidate",
@@ -337,10 +340,10 @@ export default class VCDataStream implements VideoChatData {
 		}
 	};
 	// When receiving a candidate over the socket, turn it back into a real RTCIceCandidate and add it to the peerConnection.
-	onCandidate = (candidate: any, uuid: string) => {
+	onCandidate = (candidate: RTCIceCandidate, uuid: string) => {
 		this.setCaptionsText("Found other user. Connecting...");
 		var rtcCandidate: RTCIceCandidate = new RTCIceCandidate(
-			JSON.parse(candidate)
+			JSON.parse(candidate.toString())
 		);
 		console.log(
 			`onCandidate <<< Received remote ICE candidate (${rtcCandidate.port} - ${rtcCandidate.relatedAddress})`
@@ -351,7 +354,7 @@ export default class VCDataStream implements VideoChatData {
 	createOffer = (uuid: string): void => {
 		console.log(`createOffer to ${uuid} >>> Creating offer...`);
 		this.peerConnections.get(uuid).createOffer(
-			(offer: any) => {
+			(offer: Promise<RTCSessionDescription>) => {
 				/* If the offer is created successfully, set it as the local description and send it over the socket connection to initiate the peerConnection on the other side. */
 				this.peerConnections.get(uuid).setLocalDescription(offer);
 				this.socket.emit("offer", JSON.stringify(offer), this.sessionKey, uuid);
@@ -364,9 +367,9 @@ export default class VCDataStream implements VideoChatData {
 	};
 
 	/* Create an answer with the media capabilities that the client and peer browsers share. This function is called with the offer from the originating browser, which needs to be parsed into an RTCSessionDescription and added as the remote description to the peerConnection object. Then the answer is created in the same manner as the offer and sent over the socket. */
-	createAnswer = (offer: any, uuid: string): void => {
+	createAnswer = (offer: RTCSessionDescription, uuid: string): void => {
 		console.log("createAnswer");
-		var rtcOffer = new RTCSessionDescription(JSON.parse(offer));
+		var rtcOffer = new RTCSessionDescription(JSON.parse(offer.toString()));
 		console.log(`>>> Creating answer to ${uuid}`);
 		this.peerConnections.get(uuid).setRemoteDescription(rtcOffer);
 		this.peerConnections.get(uuid).createAnswer(
@@ -387,7 +390,7 @@ export default class VCDataStream implements VideoChatData {
 	};
 
 	// When a browser receives an offer, set up a callback to be run when the ephemeral token is returned from Twilio.
-	onOffer = (offer: any, uuid: string): void => {
+	onOffer = (offer: RTCSessionDescription, uuid: string): void => {
 		console.log("onOffer <<< Received offer");
 		this.socket.on(
 			"token",
@@ -399,13 +402,14 @@ export default class VCDataStream implements VideoChatData {
 	};
 
 	// When an answer is received, add it to the peerConnection as the remote description.
-	onAnswer = (answer: any, uuid: string) => {
+	onAnswer = (answer: RTCSessionDescription, uuid: string) => {
 		console.log(`onAnswer <<< Received answer from ${uuid}`);
-		var rtcAnswer = new RTCSessionDescription(JSON.parse(answer));
+		var rtcAnswer = new RTCSessionDescription(JSON.parse(answer.toString()));
 		// Set remote description of RTCSession
 		this.peerConnections.get(uuid).setRemoteDescription(rtcAnswer);
 		// The caller now knows that the callee is ready to accept new ICE candidates, so sending the buffer over
-		this.localICECandidates[uuid].forEach((candidate: any) => {
+		this.localICECandidates[uuid].forEach((candidate: RTCIceCandidate) => {
+			// @ts-ignore
 			console.log(`>>> Sending local ICE candidate (${candidate.address})`);
 			// Send ice candidate over websocket
 			this.socket.emit(
@@ -415,9 +419,6 @@ export default class VCDataStream implements VideoChatData {
 				uuid
 			);
 		});
-		// TODO: determine if we're attempting this
-		// Reset the buffer of local ICE candidates. This is not really needed, but it's good practice
-		// VideoChat.localICECandidates[uuid] = []; // TESTING
 	};
 
 	// Called when a stream is added to the peer connection: Create new <video> node and append remote video source to wrapper div

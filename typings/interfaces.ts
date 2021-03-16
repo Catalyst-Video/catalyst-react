@@ -10,7 +10,6 @@ export interface VideoChatData {
 	localVideo: HTMLMediaElement;
 	peerConnections: Map<any, any>;
 	recognition: any;
-	peerColors: Map<any, any>;
 	localStream: MediaStream | undefined;
 	localAudio: MediaStreamTrack | undefined;
 	sendingCaptions: boolean;
@@ -25,19 +24,22 @@ export interface VideoChatData {
 	onMediaStream(e: any, uuid: string): void;
 
 	onAddStream(e: any, uuid: string): void;
-	onLeave(e: any): void;
+	onLeave(uuid: string): void;
 
 	createOffer(uuid: string): any;
 	onOffer(offer: any, uuid: string): any;
 
-	createAnswer(offer: any, uuid: string): void;
+	createAnswer(offer: RTCSessionDescription, uuid: string): void;
 	onAnswer(answer: any, uuid: string): void;
 
-	call(uuid: string, room: any): void;
-	establishConnection(uuid: string, func: Function): any;
+	call(uuid: string, room: string): void;
+	establishConnection(
+		uuid: string,
+		func: Function
+	): (token: TwilioToken, uuid: string) => void;
 
-	onCandidate(candidate: any, uuid: string): void;
-	onIceCandidate(e: any, uuid: string): void;
+	onCandidate(candidate: RTCIceCandidate, uuid: string): void;
+	onIceCandidate(e: RTCPeerConnectionIceEvent, uuid: string): void;
 }
 
 export interface DefaultSettings {
@@ -46,4 +48,14 @@ export interface DefaultSettings {
 	videoOn?: boolean;
 	hideCaptions?: boolean;
 	hideLogo?: boolean;
+}
+
+export interface TwilioToken {
+	accountSid: string;
+	dateCreated: string;
+	dateUpdated: string;
+	iceServers: RTCIceServer[];
+	password: string;
+	ttl: number;
+	username: string;
 }
