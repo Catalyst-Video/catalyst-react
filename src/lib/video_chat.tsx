@@ -58,7 +58,7 @@ const VideoChat = ({
 	styles?: Object;
 	themeColor?: string;
 }) => {
-	/* STATE: track toggleable UI/UX */
+	const [browserSupported, setBrowserSupported] = useState(true);
 	const [audioEnabled, setAudio] = useState<boolean>(
 		defaultSettings?.audioOn ? defaultSettings.audioOn : true
 	);
@@ -88,28 +88,21 @@ const VideoChat = ({
 				ua.indexOf("Instagram") > -1)
 		) {
 			if (DetectRTC.osName === "iOS") {
-				window.location.href = "/browser-not-supported";
-			} else {
-				window.location.href = "/browser-not-supported";
+				setBrowserSupported(false);
 			}
 		}
 		if (DetectRTC.isMobileDevice) {
 			if (DetectRTC.osName === "iOS" && !DetectRTC.browser.isSafari) {
-				window.location.href = "/browser-not-supported";
+				setBrowserSupported(false);
 			}
 		}
 		const isWebRTCSupported =
 			navigator.getUserMedia || window.RTCPeerConnection;
 		const browserName: string = getBrowserName();
 		if (!isWebRTCSupported || browserName === "MSIE") {
-			window.location.href = "/browser-not-supported";
+			setBrowserSupported(false);
 		}
-		document.title =
-			"Catalyst Video Chat" +
-			window.location.href.substring(window.location.href.lastIndexOf("/") + 1);
-		// TODO: address this
-		navigator.mediaDevices.ondevicechange = () =>
-			console.log(">>> navigator MediaDevices changed: would trigger refresh"); // window.location.reload
+		navigator.mediaDevices.ondevicechange = () => window.location.reload();
 	}, []);
 
 	useEffect(() => {
@@ -128,15 +121,15 @@ const VideoChat = ({
 		VCD?.requestMediaStream();
 	}, [customSnackbarMsg, sessionKey, socketServerAddress]);
 
-	if (window.location.href !== "/browser-not-supported") {
+	if (browserSupported) {
 		return (
 			<>
 				<div id="arbitrary-data" style={{ display: "none" }}></div>
 				<HeaderComponent sessionKey={sessionKey} />
 				<div id="call-section">
-					<Draggable>
+					{/* <Draggable>
 						<div id="remote-video-text">{captionsText}</div>
-					</Draggable>
+					</Draggable> */}
 					<div id="wrapper"></div>
 					<Draggable defaultPosition={{ x: 30, y: 150 }}>
 						<div id="moveable">
@@ -148,7 +141,9 @@ const VideoChat = ({
 					<div className="multi-button">
 						<div className="buttonContainer">
 							<button
-								className="hoverButton tooltip notSelectable"
+								className={`${
+									audioEnabled ? "" : "btn-on"
+								} hoverButton tooltip notSelectable`}
 								onClick={() => {
 									if (VCData) handleMute(audioEnabled, setAudio, VCData);
 								}}
@@ -163,7 +158,9 @@ const VideoChat = ({
 
 						<div className="buttonContainer">
 							<button
-								className="hoverButton tooltip notSelectable"
+								className={`${
+									videoEnabled ? "" : "btn-on"
+								} hoverButton tooltip notSelectable`}
 								onClick={() => {
 									if (VCData)
 										handlePauseVideo(

@@ -88,6 +88,12 @@ a {
   justify-content: center;
 }
 
+.incomp {
+  display: flex;
+  text-align: center;
+  align-self: center;
+}
+
 
  /* header logo  */
 .header-logo {
@@ -229,6 +235,11 @@ a {
   cursor: pointer;
   padding: 7px;
   border-radius: 5px;
+}
+
+.btn-on {
+ /* color: #e53935 !important; */
+ color: var(--themeColor) !important;
 }
 
 button:focus {

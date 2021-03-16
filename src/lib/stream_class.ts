@@ -269,8 +269,6 @@ export default class VCDataStream implements VideoChatData {
 				} else if (dataType === "tog:") {
 					this.sendingCaptions = !this.sendingCaptions;
 					// setSendingCaptions(!sendingCaptions);
-				} else if (dataType === "clr:") {
-					// TODO: setStreamColor(uuid, VCData);
 				} else {
 					// Arbitrary data handling
 					console.log("Received arbitrary data: ", receivedData);
