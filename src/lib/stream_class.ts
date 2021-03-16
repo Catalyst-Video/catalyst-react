@@ -1,6 +1,11 @@
 /* VIDEO CHAT DATA: track video/audio streams, peer connections, handle webrtc */
 import io, { Socket } from "socket.io-client";
-import { chatRoomFull, handlereceiveMessage } from "../utils/general_utils";
+import {
+	chatRoomFull,
+	handlereceiveMessage,
+	sendToAllDataChannels,
+	addMessageToScreen
+} from "../utils/general_utils";
 import { toast } from "react-toastify";
 import { VideoChatData } from "../../typings/interfaces";
 
@@ -149,6 +154,39 @@ export default class VCDataStream implements VideoChatData {
 			// );
 			console.log(captions);
 		});
+
+		const TextInput = document.querySelector(
+			"textarea.compose"
+		) as HTMLTextAreaElement;
+		TextInput?.addEventListener("keypress", (e: any) => {
+			if (e.keyCode === 13) {
+				e.preventDefault();
+				var msg = TextInput.value;
+				console.log("textarea " + msg);
+				// Send message over data channel, Add message to screen, auto scroll chat down
+				if (msg && msg.length > 0) {
+					// Prevent cross site scripting
+					msg = msg.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+					sendToAllDataChannels("mes:" + msg, this.dataChannel);
+					addMessageToScreen(msg, true);
+					document.getElementById("chat-end")?.scrollIntoView({
+						behavior: "smooth",
+						block: "nearest",
+						inline: "start"
+					});
+					TextInput.value = "";
+				}
+			}
+		});
+
+		/* POST MESSAGING - forward post messaging from one parent to the other */
+		window.onmessage = (e: MessageEvent) => {
+			try {
+				if (JSON.parse(e.data).type === "arbitraryData") {
+					sendToAllDataChannels(e.data, this.dataChannel);
+				}
+			} catch (e) {}
+		};
 	};
 
 	call = (uuid: string, room: any) => {
@@ -221,9 +259,7 @@ export default class VCDataStream implements VideoChatData {
 				const dataType = receivedData.substring(0, 4);
 				const cleanedMessage = receivedData.slice(4);
 				if (dataType === "mes:") {
-				    handlereceiveMessage(
-						cleanedMessage
-					);
+					handlereceiveMessage(cleanedMessage);
 				} else if (dataType === "cap:") {
 					// TODO: handleReceiveCaptions(
 					// 	cleanedMessage,

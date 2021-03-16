@@ -149,42 +149,42 @@ const VideoChat = ({
 	// 	customSnackbarMsg
 	// ]);
 
-	/* ON LOAD: detect in-app browsers & redirect, set tab title, get webcam */
-	useEffect(() => {
-		// Listen for enter press on chat input
-		const TextInput = document.querySelector(
-			"textarea.compose"
-		) as HTMLTextAreaElement;
-		TextInput?.addEventListener("keypress", (e: any) => {
-			if (e.keyCode === 13) {
-				e.preventDefault();
-				var msg = TextInput.value;
-				console.log("textarea " + msg);
-				// Send message over data channel, Add message to screen, auto scroll chat down
-				if (msg && msg.length > 0) {
-					// Prevent cross site scripting
-					msg = msg.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-					sendToAllDataChannels("mes:" + msg, VCData?.dataChannel);
-					addMessageToScreen(msg, true);
-					document.getElementById("chat-end")?.scrollIntoView({
-						behavior: "smooth",
-						block: "nearest",
-						inline: "start"
-					});
-					TextInput.value = "";
-				}
-			}
-		});
+	// /* ON LOAD: detect in-app browsers & redirect, set tab title, get webcam */
+	// useEffect(() => {
+	// 	// Listen for enter press on chat input
+	// 	const TextInput = document.querySelector(
+	// 		"textarea.compose"
+	// 	) as HTMLTextAreaElement;
+	// 	TextInput?.addEventListener("keypress", (e: any) => {
+	// 		if (e.keyCode === 13) {
+	// 			e.preventDefault();
+	// 			var msg = TextInput.value;
+	// 			console.log("textarea " + msg);
+	// 			// Send message over data channel, Add message to screen, auto scroll chat down
+	// 			if (msg && msg.length > 0) {
+	// 				// Prevent cross site scripting
+	// 				msg = msg.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+	// 				sendToAllDataChannels("mes:" + msg, VCData?.dataChannel);
+	// 				addMessageToScreen(msg, true);
+	// 				document.getElementById("chat-end")?.scrollIntoView({
+	// 					behavior: "smooth",
+	// 					block: "nearest",
+	// 					inline: "start"
+	// 				});
+	// 				TextInput.value = "";
+	// 			}
+	// 		}
+	// 	});
 
-		/* POST MESSAGING - forward post messaging from one parent to the other */
-		window.onmessage = (e: MessageEvent) => {
-			try {
-				if (JSON.parse(e.data).type === "arbitraryData") {
-					sendToAllDataChannels(e.data, VCData?.dataChannel);
-				}
-			} catch (e) {}
-		};
-	}, [VCData]);
+	// 	/* POST MESSAGING - forward post messaging from one parent to the other */
+	// 	window.onmessage = (e: MessageEvent) => {
+	// 		try {
+	// 			if (JSON.parse(e.data).type === "arbitraryData") {
+	// 				sendToAllDataChannels(e.data, VCData?.dataChannel);
+	// 			}
+	// 		} catch (e) {}
+	// 	};
+	// }, [VCData]);
 
 	if (window.location.href !== "/browser-not-supported") {
 		return (
@@ -242,7 +242,9 @@ const VideoChat = ({
 								className="hoverButton tooltip notSelectable"
 								id="share-button"
 								onClick={
-									() => {}
+									() => {
+										alert("Enable Screen Share");
+									}
 									// handleSharing(
 									// 	VCData,
 									// 	sharing,
@@ -276,6 +278,7 @@ const VideoChat = ({
 								className="hoverButton tooltip notSelectable"
 								id="pip-button"
 								onClick={() => {
+									alert("Enable Pic in Pic");
 									setPicInPic(!picInPic);
 								}}
 							>
@@ -291,6 +294,7 @@ const VideoChat = ({
 							<button
 								className="hoverButton tooltip notSelectable"
 								onClick={() => {
+									alert("Enable Captions");
 									// handleRequestToggleCaptions(
 									// 	receivingCaptions,
 									// 	setReceivingCaptions,
@@ -313,7 +317,7 @@ const VideoChat = ({
 							<button
 								className="hoverButton tooltip notSelectable"
 								onClick={() => {
-									window.location.href = "/newcall";
+									alert("End Call");
 								}}
 							>
 								<FontAwesomeIcon icon={faPhoneSlash} />
