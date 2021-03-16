@@ -16,7 +16,6 @@ export default class VCDataStream implements VideoChatData {
 	localVideo: HTMLMediaElement;
 	peerConnections: Map<any, any>;
 	recognition: any;
-	borderColor: string;
 	peerColors: Map<any, any>;
 	localStream: MediaStream | undefined;
 	localAudio: MediaStreamTrack | undefined;
@@ -47,7 +46,6 @@ export default class VCDataStream implements VideoChatData {
 		) as HTMLMediaElement;
 		this.peerConnections = new Map();
 		this.recognition = "";
-		this.borderColor = "";
 		this.peerColors = new Map();
 		this.localAudio = undefined;
 		this.localStream = undefined;
