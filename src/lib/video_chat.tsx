@@ -224,7 +224,7 @@ const VideoChat = ({
 						<div className="buttonContainer">
 							<button
 								className="hoverButton tooltip notSelectable"
-								// onClick={() => handlePauseVideo(videoEnabled, setVideo, VCData)}
+								onClick={() => {if(VCData) handlePauseVideo(videoEnabled, setVideo, VCData, setLocalVideoText)}}
 							>
 								<span>{videoEnabled ? "Pause Video" : "Unpause Video"}</span>
 								<FontAwesomeIcon icon={videoEnabled ? faPause : faPlay} />

@@ -25,10 +25,16 @@ export function handleMute(
 export function handlePauseVideo(
 	videoEnabled: boolean,
 	setVideo: Function,
-	VCData: VideoChatData
+	VCData: VideoChatData,
+	setLocalVideoText: Function
 ) {
 	var videoTrack: any;
 	setVideo(!videoEnabled);
+	if (videoEnabled) {
+		setLocalVideoText("Video Paused");
+	} else {
+		setLocalVideoText("Drag Me");
+	}
 	VCData.peerConnections.forEach((value: any, key: any, map: any) => {
 		console.log("pausing video for ", key);
 		value.getSenders().find((s: any) => {
@@ -38,7 +44,7 @@ export function handlePauseVideo(
 			}
 			return videoTrack;
 		});
-		videoTrack.enabled = videoEnabled;
+		videoTrack.enabled = !videoEnabled;
 	});
 }
 
@@ -47,7 +53,8 @@ export function handleSwitchStreamHelper(
 	stream: any,
 	videoEnabled: boolean,
 	setVideo: Function,
-	VCData: VideoChatData
+	VCData: VideoChatData,
+	setLocalVideoText: Function
 ) {
 	// Get current video track
 	let videoTrack = stream.getVideoTracks()[0];
@@ -90,7 +97,7 @@ export function handleSwitchStreamHelper(
 	VCData.localVideo.srcObject = stream;
 	// Unpause video on swap
 	if (!videoEnabled) {
-		handlePauseVideo(videoEnabled, setVideo, VCData);
+		handlePauseVideo(videoEnabled, setVideo, VCData, setLocalVideoText);
 	}
 }
 
@@ -271,7 +278,8 @@ export function handleSharing(
 	sharing: boolean,
 	setSharing: Function,
 	videoEnabled: boolean,
-	setVideo: Function
+	setVideo: Function,
+	setLocalVideoText: Function
 ) {
 	// Handle swap video before video call is connected by checking that there's at least one peer connected
 	if (!isConnected(VCData)) {
@@ -300,7 +308,13 @@ export function handleSharing(
 					stream.addTrack(stream.getAudioTracks()[0]);
 				}
 				console.log(stream);
-				handleSwitchStreamHelper(stream, videoEnabled, setVideo, VCData);
+				handleSwitchStreamHelper(
+					stream,
+					videoEnabled,
+					setVideo,
+					VCData,
+					setLocalVideoText
+				);
 			})
 			.catch((e: any) => {
 				console.log("Error sharing screen" + e);
@@ -318,7 +332,13 @@ export function handleSharing(
 			})
 			.then(stream => {
 				setSharing(false);
-				handleSwitchStreamHelper(stream, videoEnabled, setVideo, VCData);
+				handleSwitchStreamHelper(
+					stream,
+					videoEnabled,
+					setVideo,
+					VCData,
+					setLocalVideoText
+				);
 			});
 	}
 }
