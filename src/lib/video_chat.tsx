@@ -151,17 +151,6 @@ const VideoChat = ({
 
 	/* ON LOAD: detect in-app browsers & redirect, set tab title, get webcam */
 	useEffect(() => {
-		/* POST MESSAGING - forward post messaging from one parent to the other */
-		window.onmessage = (e: MessageEvent) => {
-			try {
-				if (JSON.parse(e.data).type === "arbitraryData") {
-					sendToAllDataChannels(e.data, VCData?.dataChannel);
-				}
-			} catch (e) {}
-		};
-
-		// VCData?.requestMediaStream();
-
 		// Listen for enter press on chat input
 		const TextInput = document.querySelector(
 			"textarea.compose"
@@ -176,7 +165,7 @@ const VideoChat = ({
 					// Prevent cross site scripting
 					msg = msg.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 					sendToAllDataChannels("mes:" + msg, VCData?.dataChannel);
-					addMessageToScreen(msg, themeColor, true);
+					addMessageToScreen(msg, true);
 					document.getElementById("chat-end")?.scrollIntoView({
 						behavior: "smooth",
 						block: "nearest",
@@ -186,7 +175,16 @@ const VideoChat = ({
 				}
 			}
 		});
-	});
+
+		/* POST MESSAGING - forward post messaging from one parent to the other */
+		window.onmessage = (e: MessageEvent) => {
+			try {
+				if (JSON.parse(e.data).type === "arbitraryData") {
+					sendToAllDataChannels(e.data, VCData?.dataChannel);
+				}
+			} catch (e) {}
+		};
+	}, [VCData]);
 
 	if (window.location.href !== "/browser-not-supported") {
 		return (
@@ -224,7 +222,15 @@ const VideoChat = ({
 						<div className="buttonContainer">
 							<button
 								className="hoverButton tooltip notSelectable"
-								onClick={() => {if(VCData) handlePauseVideo(videoEnabled, setVideo, VCData, setLocalVideoText)}}
+								onClick={() => {
+									if (VCData)
+										handlePauseVideo(
+											videoEnabled,
+											setVideo,
+											VCData,
+											setLocalVideoText
+										);
+								}}
 							>
 								<span>{videoEnabled ? "Pause Video" : "Unpause Video"}</span>
 								<FontAwesomeIcon icon={videoEnabled ? faPause : faPlay} />

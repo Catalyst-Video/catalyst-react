@@ -1,6 +1,6 @@
 /* VIDEO CHAT DATA: track video/audio streams, peer connections, handle webrtc */
 import io, { Socket } from "socket.io-client";
-import { chatRoomFull } from "../utils/general_utils";
+import { chatRoomFull, handlereceiveMessage } from "../utils/general_utils";
 import { toast } from "react-toastify";
 import { VideoChatData } from "../../typings/interfaces";
 
@@ -128,8 +128,6 @@ export default class VCDataStream implements VideoChatData {
 		// Join the chat room
 		this.socket.emit("join", this.sessionKey, () => {
 			console.log("joined");
-			//TODO: this.borderColor = hueToColor(uuidToHue(this.socket.id, this));
-			//TODO: VCData.localVideo.style.border = `3px solid ${VCData.borderColor}`;
 		});
 		// Add listeners to the websocket
 		this.socket.on("leave", this.onLeave);
@@ -223,12 +221,9 @@ export default class VCDataStream implements VideoChatData {
 				const dataType = receivedData.substring(0, 4);
 				const cleanedMessage = receivedData.slice(4);
 				if (dataType === "mes:") {
-					// TODO:  handlereceiveMessage(
-					// 	cleanedMessage,
-					// 	hueToColor(this.peerColors.get(uuid)),
-					// 	hideChat,
-					// 	setHideChat
-					// );
+				    handlereceiveMessage(
+						cleanedMessage
+					);
 				} else if (dataType === "cap:") {
 					// TODO: handleReceiveCaptions(
 					// 	cleanedMessage,
@@ -245,8 +240,6 @@ export default class VCDataStream implements VideoChatData {
 				} else {
 					// Arbitrary data handling
 					console.log("Received arbitrary data: ", receivedData);
-					// TODO: determine whether to add arbitrary data to DOM
-					// document.getElementById("arbitrary-data")?.append(receivedData);
 					window.top.postMessage(receivedData, "*");
 				}
 			};

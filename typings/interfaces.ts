@@ -10,7 +10,6 @@ export interface VideoChatData {
 	localVideo: HTMLMediaElement;
 	peerConnections: Map<any, any>;
 	recognition: any;
-	// borderColor: string;
 	peerColors: Map<any, any>;
 	localStream: MediaStream | undefined;
 	localAudio: MediaStreamTrack | undefined;

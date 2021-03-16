@@ -72,30 +72,30 @@ export function chatRoomFull(): void {
 export function sendToAllDataChannels(message: string, dataChannel: any) {
 	console.log("Sending" + message);
 	// key is UUID, value is dataChannel object
-	dataChannel.forEach((value: any, key: any, map: any) => {
+	dataChannel?.forEach((value: any, key: any, map: any) => {
 		value.send(message);
 	});
 }
 
 export function handlereceiveMessage(
-	msg: any,
-	color: any,
-	hideChat: boolean,
-	setHideChat: Function
+	msg: any
+	// color: any,
+	// hideChat: boolean,
+	// setHideChat: Function
 ) {
 	// Called when a message is received over the dataChannel, adds message to screen - auto scrolls chat down
-	addMessageToScreen(msg, color, false);
+	addMessageToScreen(msg, false);
 	document
 		.getElementById("chat-end")
 		?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
-	if (hideChat) {
-		setHideChat(false);
-	}
+	// if (hideChat) {
+	// 	setHideChat(false);
+	// }
 }
 
 export function addMessageToScreen(
 	msg: any,
-	border: any,
+	// border: any,
 	isOwnMessage: boolean
 ) {
 	if (msg.length > 0) {
@@ -104,7 +104,7 @@ export function addMessageToScreen(
 				.querySelector(".chat-messages")
 				?.insertAdjacentHTML(
 					"beforeend",
-					`<div class="message-item customer cssanimation fadeInBottom"><div class="message-bloc" style="--bloc-color: ${border}"><div class="message">` +
+					`<div class="message-item customer cssanimation fadeInBottom"><div class="message-bloc" style="border: 3px solid var(--themeColor"><div class="message">` +
 						msg +
 						"</div></div></div>"
 				);
@@ -113,7 +113,7 @@ export function addMessageToScreen(
 				.querySelector(".chat-messages")
 				?.insertAdjacentHTML(
 					"beforeend",
-					`<div class="message-item moderator cssanimation fadeInBottom"><div class="message-bloc" style="--bloc-color: ${border}"><div class="message">` +
+					`<div class="message-item moderator cssanimation fadeInBottom"><div class="message-bloc" style="border: 3px solid var(--themeColor"><div class="message">` +
 						msg +
 						"</div></div></div>"
 				);
