@@ -12,7 +12,7 @@ export default class VCDataStream implements VideoChatData {
 	connected: Map<any, any>;
 	localICECandidates: any;
 	socket: Socket;
-	remoteVideoWrapper: HTMLMediaElement;
+	remoteVideoWrapper: HTMLDivElement;
 	localVideo: HTMLMediaElement;
 	peerConnections: Map<any, any>;
 	recognition: any;
@@ -41,7 +41,7 @@ export default class VCDataStream implements VideoChatData {
 		this.socket = io(socketServerAddress ?? DEFAULT_SERVER_ADDRESS);
 		this.remoteVideoWrapper = document.getElementById(
 			"wrapper"
-		) as HTMLMediaElement;
+		) as HTMLDivElement;
 		this.localVideo = document.getElementById(
 			"local-video"
 		) as HTMLMediaElement;
@@ -180,7 +180,7 @@ export default class VCDataStream implements VideoChatData {
 
 		// Delete connection & metadata
 		this.connected.delete(uuid);
-		this.peerConnections.get(uuid).close(); // This is necessary, because otherwise the RTC connection isn't closed
+		this.peerConnections.get(uuid)?.close(); // This is necessary, because otherwise the RTC connection isn't closed
 		this.peerConnections.delete(uuid);
 		this.dataChannel.delete(uuid);
 		if (this.peerConnections.size === 0) {
@@ -261,7 +261,8 @@ export default class VCDataStream implements VideoChatData {
 			this.peerConnections.get(uuid).onicecandidate = (e: any) => {
 				this.onIceCandidate(e, uuid);
 			};
-			this.peerConnections.get(uuid).onAddStream = (e: any) => {
+
+			this.peerConnections.get(uuid).ontrack = (e: any) => {
 				this.onAddStream(e, uuid);
 			};
 			// Called when there is a change in connection state
@@ -276,8 +277,7 @@ export default class VCDataStream implements VideoChatData {
 						break;
 					case "failed":
 						console.log(">>> would trigger refresh: failed ICE connection");
-						// TODO: refresh
-						// window.location.reload();
+						window.location.reload();
 						break;
 					case "closed":
 						console.log("closed");
@@ -311,7 +311,7 @@ export default class VCDataStream implements VideoChatData {
 	};
 	// When receiving a candidate over the socket, turn it back into a real RTCIceCandidate and add it to the peerConnection.
 	onCandidate = (candidate: any, uuid: string) => {
-		this.setCaptionsText("Found other user... connecting");
+		this.setCaptionsText("Found other user. Connecting...");
 		var rtcCandidate: RTCIceCandidate = new RTCIceCandidate(
 			JSON.parse(candidate)
 		);
@@ -394,10 +394,12 @@ export default class VCDataStream implements VideoChatData {
 	};
 
 	// Called when a stream is added to the peer connection: Create new <video> node and append remote video source to wrapper div
-	onAddStream = (e: any, uuid: string) => {
+	onAddStream = (e: RTCTrackEvent, uuid: string) => {
 		console.log(
 			"onAddStream <<< Received new stream from remote. Adding it..."
 		);
+		this.setCaptionsText("Session connected successfully");
+
 		console.log("onAddStream <<< Playing join sound...");
 		(document.getElementById("join-sound") as HTMLVideoElement)?.play();
 		var node = document.createElement("video");
@@ -408,18 +410,17 @@ export default class VCDataStream implements VideoChatData {
 		if (!this.remoteVideoWrapper) {
 			this.remoteVideoWrapper = document.getElementById(
 				"wrapper"
-			) as HTMLMediaElement;
+			) as HTMLDivElement;
 		}
-
-		this.setCaptionsText("Session connected successfully");
+		console.log(e);
 
 		this.remoteVideoWrapper.appendChild(node);
 		// Update remote video source
-		this.remoteVideoWrapper.srcObject = e.stream;
-		// if (VideoChatData.remoteVideoWrapper?.lastChild !== null) {
-		// 	// @ts-ignore
-		// 	VideoChatData.remoteVideoWrapper.lastChild.srcObject = e.stream;
-		// }
+		if (this.remoteVideoWrapper?.lastChild !== null) {
+			let newVid = this.remoteVideoWrapper.lastChild as HTMLVideoElement;
+			newVid.srcObject = e.streams[0];
+		}
+
 		toast.dismiss();
 		// Remove the loading gif from video
 		// TODO: if (VCData.remoteVideoWrapper.lastChild) {

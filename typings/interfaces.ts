@@ -6,7 +6,7 @@ export interface VideoChatData {
 	connected: Map<any, any>;
 	localICECandidates: any;
 	socket: Socket;
-	remoteVideoWrapper: HTMLMediaElement;
+	remoteVideoWrapper: HTMLElement;
 	localVideo: HTMLMediaElement;
 	peerConnections: Map<any, any>;
 	recognition: any;

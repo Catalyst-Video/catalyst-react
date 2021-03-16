@@ -82,6 +82,7 @@ const VideoChat = ({
 		"Room ready. Waiting for others to join..."
 	);
 	const [localVideoText, setLocalVideoText] = useState("No webcam input");
+	const [VCData, setVCData] = useState<VideoChatData>();
 
 	useEffect(() => {
 		var ua: string = navigator.userAgent || navigator.vendor;
@@ -120,21 +121,33 @@ const VideoChat = ({
 		setThemeColor(themeColor ? themeColor : "blue");
 	}, [themeColor]);
 
-	const VCData = useMemo(() => {
-		return new VCDataStream(
+	useEffect(() => {
+		const VCD = new VCDataStream(
 			sessionKey,
 			setCaptionsText,
 			setLocalVideoText,
 			socketServerAddress,
 			customSnackbarMsg
 		);
-	}, [
-		sessionKey,
-		socketServerAddress,
-		setCaptionsText,
-		setLocalVideoText,
-		customSnackbarMsg
-	]);
+		setVCData(VCD);
+		VCD?.requestMediaStream();
+	}, [customSnackbarMsg, sessionKey, socketServerAddress]);
+
+	// const VCData = useMemo(() => {
+	// 	return new VCDataStream(
+	// 		sessionKey,
+	// 		setCaptionsText,
+	// 		setLocalVideoText,
+	// 		socketServerAddress,
+	// 		customSnackbarMsg
+	// 	);
+	// }, [
+	// 	sessionKey,
+	// 	socketServerAddress,
+	// 	setCaptionsText,
+	// 	setLocalVideoText,
+	// 	customSnackbarMsg
+	// ]);
 
 	/* ON LOAD: detect in-app browsers & redirect, set tab title, get webcam */
 	useEffect(() => {
@@ -142,12 +155,12 @@ const VideoChat = ({
 		window.onmessage = (e: MessageEvent) => {
 			try {
 				if (JSON.parse(e.data).type === "arbitraryData") {
-					sendToAllDataChannels(e.data, VCData.dataChannel);
+					sendToAllDataChannels(e.data, VCData?.dataChannel);
 				}
 			} catch (e) {}
 		};
 
-		VCData.requestMediaStream();
+		// VCData?.requestMediaStream();
 
 		// Listen for enter press on chat input
 		const TextInput = document.querySelector(
@@ -162,7 +175,7 @@ const VideoChat = ({
 				if (msg && msg.length > 0) {
 					// Prevent cross site scripting
 					msg = msg.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-					sendToAllDataChannels("mes:" + msg, VCData.dataChannel);
+					sendToAllDataChannels("mes:" + msg, VCData?.dataChannel);
 					addMessageToScreen(msg, themeColor, true);
 					document.getElementById("chat-end")?.scrollIntoView({
 						behavior: "smooth",
@@ -196,7 +209,7 @@ const VideoChat = ({
 						<div className="buttonContainer">
 							<button
 								className="hoverButton tooltip notSelectable"
-								onClick={() => handleMute(audioEnabled, setAudio, VCData)}
+								// onClick={() => handleMute(audioEnabled, setAudio, VCData)}
 							>
 								<span>{audioEnabled ? "Mute Audio" : "Unmute Audio"}</span>
 
@@ -209,7 +222,7 @@ const VideoChat = ({
 						<div className="buttonContainer">
 							<button
 								className="hoverButton tooltip notSelectable"
-								onClick={() => handlePauseVideo(videoEnabled, setVideo, VCData)}
+								// onClick={() => handlePauseVideo(videoEnabled, setVideo, VCData)}
 							>
 								<span>{videoEnabled ? "Pause Video" : "Unpause Video"}</span>
 								<FontAwesomeIcon icon={videoEnabled ? faPause : faPlay} />
@@ -220,14 +233,15 @@ const VideoChat = ({
 							<button
 								className="hoverButton tooltip notSelectable"
 								id="share-button"
-								onClick={() =>
-									handleSharing(
-										VCData,
-										sharing,
-										setSharing,
-										videoEnabled,
-										setVideo
-									)
+								onClick={
+									() => {}
+									// handleSharing(
+									// 	VCData,
+									// 	sharing,
+									// 	setSharing,
+									// 	videoEnabled,
+									// 	setVideo
+									// )
 								}
 							>
 								<span>{!sharing ? "Share Screen" : "Stop Sharing Screen"}</span>
