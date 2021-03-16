@@ -5,25 +5,21 @@ import { isConnected, sendToAllDataChannels } from "./general_utils";
 export function handleMute(
 	audioEnabled: boolean,
 	setAudio: Function,
-	VCData: VideoChatData | undefined
+	VCData: VideoChatData
 ): void {
 	var audioTrack: any;
 	setAudio(!audioEnabled);
-	try {
-		VCData?.peerConnections.forEach((value: any, key: any, map: any) => {
-			value.getSenders().find((s: any) => {
-				if (s.track.kind === "audio") {
-					audioTrack = s.track;
-				}
-				return audioTrack;
-			});
-			if (audioTrack) {
-				audioTrack.enabled = audioEnabled;
+	VCData.peerConnections.forEach((value: any, key: any, map: any) => {
+		value.getSenders().find((s: any) => {
+			if (s.track.kind === "audio") {
+				audioTrack = s.track;
 			}
+			return audioTrack;
 		});
-	} catch (e) {
-		console.log(e);
-	}
+		if (audioTrack) {
+			audioTrack.enabled = !audioEnabled;
+		}
+	});
 }
 
 export function handlePauseVideo(

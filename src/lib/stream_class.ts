@@ -395,40 +395,39 @@ export default class VCDataStream implements VideoChatData {
 
 	// Called when a stream is added to the peer connection: Create new <video> node and append remote video source to wrapper div
 	onAddStream = (e: RTCTrackEvent, uuid: string) => {
-		console.log(
-			"onAddStream <<< Received new stream from remote. Adding it..."
-		);
-		this.setCaptionsText("Session connected successfully");
-
-		console.log("onAddStream <<< Playing join sound...");
-		(document.getElementById("join-sound") as HTMLVideoElement)?.play();
-		var node = document.createElement("video");
-		node.setAttribute("autoplay", "");
-		node.setAttribute("playsinline", "");
-		node.setAttribute("id", "remote-video");
-		node.setAttribute("uuid", uuid);
-		if (!this.remoteVideoWrapper) {
-			this.remoteVideoWrapper = document.getElementById(
-				"wrapper"
-			) as HTMLDivElement;
-		}
-		console.log(e);
 		if (document.querySelector(`[uuid="${uuid}"]`) === null) {
-			this.remoteVideoWrapper.appendChild(node);
-		}
-		// Update remote video source
-		if (this.remoteVideoWrapper?.lastChild !== null) {
-			let newVid = this.remoteVideoWrapper.lastChild as HTMLVideoElement;
-			newVid.srcObject = e.streams.slice(-1)[0];
-		}
+			console.log(
+				"onAddStream <<< Received new stream from remote. Adding it..."
+			);
+			this.setCaptionsText("Session connected successfully");
 
-		toast.dismiss();
-		// Remove the loading gif from video
-		// TODO: if (VCData.remoteVideoWrapper.lastChild) {
-		// 	VCData.remoteVideoWrapper.style.background = "none";
-		// }
-		// Update connection status
-		this.connected.set(uuid, true);
-		// TODO: setHideCaptions(true);
+			console.log("onAddStream <<< Playing join sound...");
+			(document.getElementById("join-sound") as HTMLVideoElement)?.play();
+			var node = document.createElement("video");
+			node.setAttribute("autoplay", "");
+			node.setAttribute("playsinline", "");
+			node.setAttribute("id", "remote-video");
+			node.setAttribute("uuid", uuid);
+			if (!this.remoteVideoWrapper) {
+				this.remoteVideoWrapper = document.getElementById(
+					"wrapper"
+				) as HTMLDivElement;
+			}
+			this.remoteVideoWrapper.appendChild(node);
+			// Update remote video source
+			if (this.remoteVideoWrapper?.lastChild !== null) {
+				let newVid = this.remoteVideoWrapper.lastChild as HTMLVideoElement;
+				newVid.srcObject = e.streams.slice(-1)[0];
+			}
+
+			toast.dismiss();
+			// Remove the loading gif from video
+			// TODO: if (VCData.remoteVideoWrapper.lastChild) {
+			// 	VCData.remoteVideoWrapper.style.background = "none";
+			// }
+			// Update connection status
+			this.connected.set(uuid, true);
+			// TODO: setHideCaptions(true);
+		}
 	};
 }

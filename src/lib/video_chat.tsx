@@ -209,7 +209,9 @@ const VideoChat = ({
 						<div className="buttonContainer">
 							<button
 								className="hoverButton tooltip notSelectable"
-								onClick={() => handleMute(audioEnabled, setAudio, VCData)}
+								onClick={() => {
+									if (VCData) handleMute(audioEnabled, setAudio, VCData);
+								}}
 							>
 								<span>{audioEnabled ? "Mute Audio" : "Unmute Audio"}</span>
 
