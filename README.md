@@ -7,7 +7,9 @@
 | Param        | Description                                                                                                 | Sample Type                             | Default Value                             | Required |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- | -------------------------------------- | -------- |
 | `sessionKey` | Unique session identifier - peers with the same `sessionKey` are connected                                                                    |  `string` | `"UNDEFINED"` |  Yes      |
+| `catalystUUID` | Unique project identifier - keeps video calls from different projects from overlapping                                                          |  `UUID` | `"4d39df3f-f67b-4217-b832-57d4ffa2b217"` |  Yes      |
 | `defaultSettings`          | Settings for the default instance of Catalyst                                                                                   | ```{ hideChat?: boolean; audioOn?: boolean; videoOn?: boolean; hideCaptions?: boolean; hideLogo?: boolean; }```                              | ```{ hideChat: true, audioOn: true, videoOn: true, hideCaptions: true, hideLogo: false }```  | Optional      |
+| `disabledSettings`          | Disable any of Catalyst's wide array of video options                                                    | ```{ disableMute?: boolean; disablePauseVideo?: boolean; disableScreenShare?: boolean; disableChat?: boolean; disablePicInPic?: boolean; disableCaptions?: boolean; disableEndCall?: boolean; }```                              |```{ disableMute?: false, disablePauseVideo?: false, disableScreenShare?: false, disableChat?: false, disablePicInPic?: false, disableCaptions?: false, disableEndCall?: false }```  | Optional      |
 | `customSnackbarMsg`  | Displays message in snackbar popup on session start | `HTMLElement` or `Element` or `string`                              | `Share your session key {sessionKey} with whoever wants to join `                                | Optional |
 | `themeColor`  | Alters Catalyst theme to use a particular color. Comes with a multitude of built-in options, or you can set a custom `hexadecimal` color of your choice. | `string`  | `blue` | Optional |
 
@@ -33,16 +35,17 @@ import { VideoChat } from "catalyst-vc-react"
 If you want to access the utils or interfaces within the package, use
 
 ```typescript
-import { VCDataInterface } from "catalyst-vc-react/interfaces"
+import { InterfaceName } from "catalyst-vc-react/interfaces"
 
-import { Utils } from "catalyst-vc-react/utils";
+import { UtilName } from "catalyst-vc-react/utils";
 ```
 
 ### Implementation
 
 ```tsx
 	<VideoChat
-			sessionKey={"testKey"}
+			sessionKey="testKey"
+			catalystUUID=""
 			defaultSettings={{
 				hideChat: true,
 				audioOn: true,
@@ -50,16 +53,17 @@ import { Utils } from "catalyst-vc-react/utils";
 				hideCaptions: true,
 				hideLogo: false
 			}}
+			
 		/>
 ```
 
 Above is a simplistic example of a `VideoChat` component being embedded in a project. The rooms are paired by the `sessionKey` attribute: two users looking at a version of this component with the same sessionKey will enter a video chat session.
 
-This will use Catalyst's demo signaling server by default, allowing you to see a functioning version of video chat in your projects immediately. This server has the following usage quotas:
-```
-<Insert Quotas here>
-```
-You can create your own server by following the Catalyst server setup docs [here](https://linktoserversetupdocs)
+This will use Catalyst's [demo signaling server](https://github.com/Catalyst-Video/catalyst-server) by default, allowing you to see a functioning version of video chat in your projects immediately.
+
+Behind the scenes, the session key is appended to the `catalystUUID` parameter to ensure two projects both using the demo server do not You can use this [UUID Generator](https://www.uuidgenerator.net/) to create your `catalystUUID`.
+
+The demo signaling server does not currently have quotas, but be respectful in your usage. You can create your own server by following the Catalyst server setup docs [here](https://linktoserversetupdocs)
 
 ### Theming
 

@@ -2,6 +2,7 @@ import { Socket } from "socket.io-client";
 
 export interface VideoChatData {
 	sessionKey: string;
+	sessionName: string;
 	dataChannel: Map<any, any>;
 	connected: Map<any, any>;
 	localICECandidates: Record<string, RTCIceCandidate[]>;
@@ -50,6 +51,15 @@ export interface DefaultSettings {
 	hideLogo?: boolean;
 }
 
+export interface DisabledSettings {
+	disableMute?: boolean;
+	disablePauseVideo?: boolean;
+	disableScreenShare?: boolean;
+	disableChat?: boolean;
+	disablePicInPic?: boolean;
+	disableCaptions?: boolean;
+	disableEndCall?: boolean;
+}
 export interface TwilioToken {
 	accountSid: string;
 	dateCreated: string;

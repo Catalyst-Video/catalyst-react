@@ -7,6 +7,7 @@ ReactDOM.render(
 		{/* DEMO */}
 		<VideoChat
 			sessionKey="testKey"
+			catalystUUID="4d39df3f-f67b-4217-b832-57d4ffa2b217"
 			defaultSettings={{
 				hideChat: true,
 				audioOn: true,
@@ -15,7 +16,7 @@ ReactDOM.render(
 				hideLogo: false
 			}}
 			// socketServerAddress="http://localhost:3001"
-			themeColor="indigo"
+			// themeColor="indigo"
 		/>
 	</React.StrictMode>,
 	document.getElementById("root")

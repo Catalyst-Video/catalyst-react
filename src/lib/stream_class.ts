@@ -13,6 +13,7 @@ const DEFAULT_SERVER_ADDRESS = "https://catalyst-video-server.herokuapp.com/";
 
 export default class VCDataStream implements VideoChatData {
 	sessionKey: string;
+	sessionName: string;
 	dataChannel: Map<any, any>;
 	connected: Map<string, boolean>;
 	localICECandidates: Record<string, RTCIceCandidate[]>;
@@ -31,13 +32,15 @@ export default class VCDataStream implements VideoChatData {
 	customSnackbarMsg: string | HTMLElement | Element | undefined;
 
 	constructor(
-		key: string,
+		name: string,
+		catalystUUID: string,
 		setCapText: Function,
 		setVidText: Function,
 		socketServerAddress?: string,
 		cstMsg?: string | HTMLElement | Element
 	) {
-		this.sessionKey = key;
+		this.sessionName = name;
+		this.sessionKey = catalystUUID + name;
 		this.dataChannel = new Map();
 		this.connected = new Map();
 		this.localICECandidates = {};
@@ -107,7 +110,7 @@ export default class VCDataStream implements VideoChatData {
 				() =>
 					this.customSnackbarMsg
 						? this.customSnackbarMsg
-						: `Share your session key ${this.sessionKey} with whoever wants to join`,
+						: `Share your session key ${this.sessionName} with whoever wants to join`,
 				{
 					toastId: "peer_prompt"
 				}
@@ -290,6 +293,7 @@ export default class VCDataStream implements VideoChatData {
 
 			this.peerConnections.get(uuid)!.ontrack = (e: RTCTrackEvent) => {
 				this.onAddStream(e, uuid);
+				this.setCaptionsText("Session connected successfully");
 			};
 			// Called when there is a change in connection state
 			this.peerConnections.get(uuid)!.oniceconnectionstatechange = (
@@ -341,7 +345,9 @@ export default class VCDataStream implements VideoChatData {
 	};
 	// When receiving a candidate over the socket, turn it back into a real RTCIceCandidate and add it to the peerConnection.
 	onCandidate = (candidate: RTCIceCandidate, uuid: string) => {
-		this.setCaptionsText("Found other user. Connecting...");
+		if (this.peerConnections.size === 0) {
+			this.setCaptionsText("Found other user. Connecting...");
+		}
 		var rtcCandidate: RTCIceCandidate = new RTCIceCandidate(
 			JSON.parse(candidate.toString())
 		);

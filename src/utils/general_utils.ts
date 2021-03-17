@@ -23,7 +23,7 @@ export function setThemeColor(color: string): void {
 			cssVar.themeColor = "#319795";
 			break;
 		case "blue":
-			cssVar.themeColor = "#3182CE";
+			cssVar.themeColor = "#3f83f8";
 			break;
 		case "indigo":
 			cssVar.themeColor = "#5A67D8";
