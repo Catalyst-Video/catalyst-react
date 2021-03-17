@@ -8,12 +8,16 @@ import {
 } from "../utils/general_utils";
 import { toast } from "react-toastify";
 import { TwilioToken, VideoChatData } from "../../typings/interfaces";
+import {
+	displayVideoErrorMessage,
+	displayWelcomeMessage
+} from "../utils/stream_utils";
 
 const DEFAULT_SERVER_ADDRESS = "https://catalyst-video-server.herokuapp.com/";
 
 export default class VCDataStream implements VideoChatData {
 	sessionKey: string;
-	sessionName: string;
+	roomName: string;
 	dataChannel: Map<string, RTCDataChannel>;
 	connected: Map<string, boolean>;
 	localICECandidates: Record<string, RTCIceCandidate[]>;
@@ -39,7 +43,7 @@ export default class VCDataStream implements VideoChatData {
 		socketServerAddress?: string,
 		cstMsg?: string | HTMLElement | Element
 	) {
-		this.sessionName = name;
+		this.roomName = name;
 		this.sessionKey = catalystUUID + name;
 		this.dataChannel = new Map();
 		this.connected = new Map();
@@ -77,20 +81,7 @@ export default class VCDataStream implements VideoChatData {
 			})
 			.catch(error => {
 				console.log(error);
-				// show initial connect to peer prompt
-				toast(
-					() =>
-						`Please press allow to enable webcam & audio access <a
-								href="https://help.clipchamp.com/en/articles/1505527-how-do-i-enable-my-webcam-for-recording"
-                                target="_blank"
-							>
-								Directions
-							</a>`,
-					{
-						autoClose: false,
-						toastId: "webcam/audio_error"
-					}
-				);
+				displayVideoErrorMessage();
 				this.setCaptionsText(
 					"Failed to activate your webcam. Check your webcam/privacy settings."
 				);
@@ -106,15 +97,7 @@ export default class VCDataStream implements VideoChatData {
 		console.log("onMediaStream");
 		this.localStream = stream;
 		if (!this.seenWelcomeSnackbar) {
-			toast(
-				() =>
-					this.customSnackbarMsg
-						? this.customSnackbarMsg
-						: `Share your session key ${this.sessionName} with whoever wants to join`,
-				{
-					toastId: "peer_prompt"
-				}
-			);
+			displayWelcomeMessage(this.customSnackbarMsg, this.roomName);
 			this.seenWelcomeSnackbar = true;
 		}
 

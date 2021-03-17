@@ -2,6 +2,55 @@ import { toast } from "react-toastify";
 import { VideoChatData } from "../../typings/interfaces";
 import { isConnected, sendToAllDataChannels } from "./general_utils";
 
+export function displayWelcomeMessage(
+	customSnackbarMsg: string | HTMLElement | Element | undefined,
+	sessionKey: string
+) {
+	toast(
+		() => (
+			<div className="text-center justify-between">
+				{customSnackbarMsg ? (
+					customSnackbarMsg
+				) : (
+					<>
+						<span>Share your session key </span>
+						<strong>{sessionKey}</strong>
+						<span> with whoever wants to join</span>
+					</>
+				)}
+			</div>
+		),
+		{
+			toastId: "peer_prompt"
+		}
+	);
+}
+
+export function displayVideoErrorMessage() {
+	toast(
+		() => (
+			<div className="text-center justify-between">
+				Please press allow to enable webcam & audio access
+				<button
+					className="snack-btn"
+					onClick={() => {
+						window.open(
+							"https://help.clipchamp.com/en/articles/1505527-how-do-i-enable-my-webcam-for-recording",
+							"_blank"
+						);
+					}}
+				>
+					Directions
+				</button>
+			</div>
+		),
+		{
+			autoClose: false,
+			toastId: "webcam/audio_error"
+		}
+	);
+}
+
 export function handleMute(
 	audioEnabled: boolean,
 	setAudio: Function,
@@ -120,10 +169,11 @@ export function handleRequestToggleCaptions(
 		setReceivingCaptions(false);
 	} else {
 		toast(
-			() =>
-				`<div className="text-center justify-between">
+			() => (
+				<div className="text-center justify-between">
 					Experimental: The user speaking must be using a Chromium browser.
-				</div>`,
+				</div>
+			),
 			{
 				toastId: "captions_start"
 			}
@@ -289,22 +339,12 @@ export function handleSharing(
 		return;
 	}
 	if (!sharing) {
-		toast(
-			() =>
-				`<div className="text-center justify-between">
-				Please allow screen share. Click the middle of the picture above and then press share.
-				</div>`,
-			{
-				toastId: "screen_share"
-			}
-		);
-		// Request screen share, note: we can request to capture audio for screen sharing video content.
 		navigator.mediaDevices
 			.getDisplayMedia({
 				video: true,
 				audio: true
 			})
-			.then((stream: any) => {
+			.then((stream: MediaStream) => {
 				setSharing(true);
 				if (stream.getAudioTracks()[0]) {
 					stream.addTrack(stream.getAudioTracks()[0]);
@@ -317,15 +357,28 @@ export function handleSharing(
 					VCData,
 					setLocalVideoText
 				);
+				setLocalVideoText("Sharing Screen");
 			})
-			.catch((e: any) => {
+			.catch((e: Event) => {
+				// Request screen share, note: we can request to capture audio for screen sharing video content.
+				toast(
+					() => (
+						<div className="text-center justify-between">
+							Please allow screen share. Click the middle of the picture above
+							and then press share.
+						</div>
+					),
+					{
+						toastId: "screen_share"
+					}
+				);
 				console.log("Error sharing screen" + e);
 			});
 	} else {
 		// Stop the screen share video track. (We don't want to stop the audio track obviously.)
 		(VCData.localVideo?.srcObject as MediaStream)
 			?.getVideoTracks()
-			.forEach((track: any) => track.stop());
+			.forEach((track: MediaStreamTrack) => track.stop());
 		// Get webcam input
 		navigator.mediaDevices
 			.getUserMedia({
@@ -341,6 +394,7 @@ export function handleSharing(
 					VCData,
 					setLocalVideoText
 				);
+				setLocalVideoText("Drag Me");
 			});
 	}
 }

@@ -109,7 +109,7 @@ export function addMessageToScreen(
 				.querySelector(".chat-messages")
 				?.insertAdjacentHTML(
 					"beforeend",
-					`<div class="message-item customer cssanimation fadeInBottom"><div class="message-bloc" style="border: 3px solid var(--themeColor"><div class="message">` +
+					`<div class="message-item customer cssanimation fadeInBottom"><div class="message-bloc" style="border: 3px solid var(--themeColor)"><div class="message">` +
 						msg +
 						"</div></div></div>"
 				);
@@ -118,7 +118,7 @@ export function addMessageToScreen(
 				.querySelector(".chat-messages")
 				?.insertAdjacentHTML(
 					"beforeend",
-					`<div class="message-item moderator cssanimation fadeInBottom"><div class="message-bloc" style="border: 3px solid var(--themeColor"><div class="message">` +
+					`<div class="message-item moderator cssanimation fadeInBottom"><div class="message-bloc" style="border: 3px solid var(--themeColor)"><div class="message">` +
 						msg +
 						"</div></div></div>"
 				);

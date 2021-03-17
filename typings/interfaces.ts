@@ -2,7 +2,7 @@ import { Socket } from "socket.io-client";
 
 export interface VideoChatData {
 	sessionKey: string;
-	sessionName: string;
+	roomName: string;
 	dataChannel: Map<string, RTCDataChannel>;
 	connected: Map<string, boolean>;
 	localICECandidates: Record<string, RTCIceCandidate[]>;
