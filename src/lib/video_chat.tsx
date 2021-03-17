@@ -200,18 +200,17 @@ const VideoChat = ({
 							<button
 								className="hoverButton tooltip notSelectable"
 								id="share-button"
-								onClick={
-									() => {
-										alert("Enable Screen Share");
-									}
-									// handleSharing(
-									// 	VCData,
-									// 	sharing,
-									// 	setSharing,
-									// 	videoEnabled,
-									// 	setVideo
-									// )
-								}
+								onClick={() => {
+									if (VCData)
+										handleSharing(
+											VCData,
+											sharing,
+											setSharing,
+											videoEnabled,
+											setVideo,
+											setLocalVideoText
+										);
+								}}
 							>
 								<span>{!sharing ? "Share Screen" : "Stop Sharing Screen"}</span>
 								<FontAwesomeIcon icon={!sharing ? faDesktop : faVideo} />
