@@ -52,13 +52,13 @@ export interface DefaultSettings {
 }
 
 export interface DisabledSettings {
-	disableMute?: boolean;
-	disablePauseVideo?: boolean;
-	disableScreenShare?: boolean;
-	disableChat?: boolean;
-	disablePicInPic?: boolean;
-	disableCaptions?: boolean;
-	disableEndCall?: boolean;
+	mute?: boolean;
+	pausevideo?: boolean;
+	screenshare?: boolean;
+	chat?: boolean;
+	picinpic?: boolean;
+	captions?: boolean;
+	endcall?: boolean;
 }
 export interface TwilioToken {
 	accountSid: string;

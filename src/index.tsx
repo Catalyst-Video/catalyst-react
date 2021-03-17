@@ -15,15 +15,15 @@ ReactDOM.render(
 				hideCaptions: true,
 				hideLogo: false
 			}}
-			disabledSettings={{
-				disableMute: false,
-				disablePauseVideo: false,
-				disableScreenShare: false,
-				disableChat: false,
-				disablePicInPic: false,
-				disableCaptions: false,
-				disableEndCall: false
-			}}
+			// disabledSettings={{
+			// 	disableMute: false,
+			// 	disablePauseVideo: false,
+			// 	disableScreenShare: false,
+			// 	disableChat: false,
+			// 	disablePicInPic: true,
+			// 	disableCaptions: true,
+			// 	disableEndCall: false
+			// }}
 			// socketServerAddress="http://localhost:3001"
 			// themeColor="indigo"
 		/>

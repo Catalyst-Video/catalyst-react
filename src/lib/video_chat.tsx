@@ -150,7 +150,7 @@ const VideoChat = ({
 					<div className="multi-button">
 						<div
 							className={`buttonContainer ${
-								disabledSettings?.disableMute ? "none" : ""
+								disabledSettings?.mute ? "none" : ""
 							}`}
 						>
 							<button
@@ -171,7 +171,7 @@ const VideoChat = ({
 
 						<div
 							className={`buttonContainer ${
-								disabledSettings?.disablePauseVideo ? "none" : ""
+								disabledSettings?.pausevideo ? "none" : ""
 							}`}
 						>
 							<button
@@ -195,7 +195,7 @@ const VideoChat = ({
 
 						<div
 							className={`buttonContainer ${
-								disabledSettings?.disableScreenShare ? "none" : ""
+								disabledSettings?.screenshare ? "none" : ""
 							}`}
 						>
 							<button
@@ -221,7 +221,7 @@ const VideoChat = ({
 
 						<div
 							className={`buttonContainer ${
-								disabledSettings?.disableChat ? "none" : ""
+								disabledSettings?.chat ? "none" : ""
 							}`}
 						>
 							<button
@@ -239,7 +239,7 @@ const VideoChat = ({
 
 						<div
 							className={`buttonContainer ${
-								disabledSettings?.disablePicInPic ? "none" : ""
+								disabledSettings?.picinpic ? "none" : ""
 							}`}
 						>
 							<button
@@ -260,7 +260,7 @@ const VideoChat = ({
 
 						<div
 							className={`buttonContainer ${
-								disabledSettings?.disableCaptions ? "none" : ""
+								disabledSettings?.captions ? "none" : ""
 							}`}
 						>
 							<button
@@ -287,7 +287,7 @@ const VideoChat = ({
 
 						<div
 							className={`buttonContainer ${
-								disabledSettings?.disableEndCall ? "none" : ""
+								disabledSettings?.endcall ? "none" : ""
 							}`}
 						>
 							<button
