@@ -134,76 +134,76 @@ export function handleRequestToggleCaptions(
 	sendToAllDataChannels("tog:", dataChannel);
 }
 
-export function handleToggleCaptions(
-	sendingCaptions: boolean,
-	setSendingCaptions: Function,
-	VCData: VideoChatData
-) {
-	if (sendingCaptions) {
-		setSendingCaptions(false);
-		VCData.recognition.stop();
-	} else {
-		setSendingCaptions(true);
-		sendingCaptions = true;
-	}
-}
+// export function handleToggleCaptions(
+// 	sendingCaptions: boolean,
+// 	setSendingCaptions: Function,
+// 	VCData: VideoChatData
+// ) {
+// 	if (sendingCaptions) {
+// 		setSendingCaptions(false);
+// 		VCData.recognition.stop();
+// 	} else {
+// 		setSendingCaptions(true);
+// 		sendingCaptions = true;
+// 	}
+// }
 
-export function handleStartSpeech(
-	VCData: VideoChatData,
-	sendingCaptions: boolean,
-	setSendingCaptions: Function,
-	dataChannel: Map<any, any>
-) {
-	try {
-		var SpeechRecognition = window.SpeechRecognition;
-		VCData.recognition = new SpeechRecognition();
-	} catch (e) {
-		setSendingCaptions(false);
-		console.log(e);
-		console.log("error importing speech library");
-		// Alert other user that they cannon use live captions
-		sendToAllDataChannels("cap:notusingchrome", dataChannel);
-		return;
-	}
-	VCData.recognition.continuous = true;
-	// Show results that aren't final
-	VCData.recognition.interimResults = true;
-	// var finalTranscript: any;
-	VCData.recognition.onresult = (e: any) => {
-		let interimTranscript = "";
-		for (let i = e.resultIndex, len = e.results.length; i < len; i++) {
-			var transcript = e.results[i][0].transcript;
-			console.log(transcript);
-			if (e.results[i].isFinal) {
-				// finalTranscript += transcript;
-			} else {
-				interimTranscript += transcript;
-				var charsToKeep = interimTranscript.length % 100;
-				// Send captions over data chanel, subtracting as many complete 100 char slices from start
-				sendToAllDataChannels(
-					"cap:" +
-						interimTranscript.substring(interimTranscript.length - charsToKeep),
-					dataChannel
-				);
-			}
-		}
-	};
-	VCData.recognition.onend = function () {
-		console.log("on speech recording end");
-		// Restart speech recognition if user has not stopped it
-		if (sendingCaptions) {
-			handleStartSpeech(
-				VCData,
-				sendingCaptions,
-				setSendingCaptions,
-				dataChannel
-			);
-		} else {
-			VCData.recognition.stop();
-		}
-	};
-	VCData.recognition.start();
-}
+// export function handleStartSpeech(
+// 	VCData: VideoChatData,
+// 	sendingCaptions: boolean,
+// 	setSendingCaptions: Function,
+// 	dataChannel: Map<any, any>
+// ) {
+// 	try {
+// 		var SpeechRecognition = window.SpeechRecognition;
+// 		VCData.recognition = new SpeechRecognition();
+// 	} catch (e) {
+// 		setSendingCaptions(false);
+// 		console.log(e);
+// 		console.log("error importing speech library");
+// 		// Alert other user that they cannon use live captions
+// 		sendToAllDataChannels("cap:notusingchrome", dataChannel);
+// 		return;
+// 	}
+// 	VCData.recognition.continuous = true;
+// 	// Show results that aren't final
+// 	VCData.recognition.interimResults = true;
+// 	// var finalTranscript: any;
+// 	VCData.recognition.onresult = (e: any) => {
+// 		let interimTranscript = "";
+// 		for (let i = e.resultIndex, len = e.results.length; i < len; i++) {
+// 			var transcript = e.results[i][0].transcript;
+// 			console.log(transcript);
+// 			if (e.results[i].isFinal) {
+// 				// finalTranscript += transcript;
+// 			} else {
+// 				interimTranscript += transcript;
+// 				var charsToKeep = interimTranscript.length % 100;
+// 				// Send captions over data chanel, subtracting as many complete 100 char slices from start
+// 				sendToAllDataChannels(
+// 					"cap:" +
+// 						interimTranscript.substring(interimTranscript.length - charsToKeep),
+// 					dataChannel
+// 				);
+// 			}
+// 		}
+// 	};
+// 	VCData.recognition.onend = function () {
+// 		console.log("on speech recording end");
+// 		// Restart speech recognition if user has not stopped it
+// 		if (sendingCaptions) {
+// 			handleStartSpeech(
+// 				VCData,
+// 				sendingCaptions,
+// 				setSendingCaptions,
+// 				dataChannel
+// 			);
+// 		} else {
+// 			VCData.recognition.stop();
+// 		}
+// 	};
+// 	VCData.recognition.start();
+// }
 
 export function handleReceiveCaptions(
 	captions: any,

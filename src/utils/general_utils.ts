@@ -69,10 +69,13 @@ export function chatRoomFull(): void {
 	window.location.href = "/newcall";
 }
 
-export function sendToAllDataChannels(message: string, dataChannel: any) {
+export function sendToAllDataChannels(
+	message: string,
+	dataChannel: Map<any, any>
+) {
 	console.log("Sending" + message);
 	// key is UUID, value is dataChannel object
-	dataChannel?.forEach((value: any, key: any, map: any) => {
+	dataChannel?.forEach((value: any, key: string, map: Map<any, any>) => {
 		value.send(message);
 	});
 }
@@ -120,39 +123,3 @@ export function addMessageToScreen(
 		}
 	}
 }
-
-// Using uuid to generate random, unique pastel color
-// export function uuidToHue(uuid: string, VCData: VideoChatData) {
-// 	var hash = 0;
-// 	for (var i = 0; i < uuid.length; i++) {
-// 		hash = uuid.charCodeAt(i) + ((hash << 5) - hash);
-// 		hash = hash & hash;
-// 	}
-// 	var hue = Math.abs(hash % 360);
-// 	// Ensure color is not similar to other colors
-// 	var availColors = Array.from({ length: 6 }, (x, i) => i * 60);
-// 	VCData.peerColors.forEach((value: any, key: any, map: any) => {
-// 		availColors[Math.floor(value / 60)] = -1;
-// 	});
-// 	if (availColors[Math.floor(hue / 60)] === -1) {
-// 		for (var j = 0; j < availColors.length; j++) {
-// 			if (availColors[j] != null) {
-// 				hue = (hue % 60) + availColors[j];
-// 				availColors[j] = -1;
-// 				break;
-// 			}
-// 		}
-// 	}
-// 	VCData.peerColors.set(uuid, hue);
-// 	return hue;
-// }
-
-export function hueToColor(hue: any) {
-	return `hsl(${hue},100%,70%)`;
-}
-// Sets the border color of UUID's stream
-// export function setStreamColor(uuid: string, VCData: VideoChatData) {
-// 	const hue = uuidToHue(uuid, VCData);
-// 	let elem = document.querySelectorAll(`[uuid="${uuid}"]`)[0] as HTMLElement;
-// 	elem.style.border = `3px solid ${hueToColor(hue)}`;
-// }

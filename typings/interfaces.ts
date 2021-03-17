@@ -4,12 +4,12 @@ export interface VideoChatData {
 	sessionKey: string;
 	dataChannel: Map<any, any>;
 	connected: Map<any, any>;
-	localICECandidates: any;
+	localICECandidates: Record<string, RTCIceCandidate[]>;
 	socket: Socket;
+	// recognition: SpeechRecognition;
 	remoteVideoWrapper: HTMLElement;
 	localVideo: HTMLMediaElement;
 	peerConnections: Map<any, any>;
-	recognition: any;
 	localStream: MediaStream | undefined;
 	localAudio: MediaStreamTrack | undefined;
 	sendingCaptions: boolean;

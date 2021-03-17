@@ -127,9 +127,9 @@ const VideoChat = ({
 				<div id="arbitrary-data" style={{ display: "none" }}></div>
 				<HeaderComponent sessionKey={sessionKey} />
 				<div id="call-section">
-					{/* <Draggable>
+					<Draggable>
 						<div id="remote-video-text">{captionsText}</div>
-					</Draggable> */}
+					</Draggable>
 					<div id="wrapper"></div>
 					<Draggable defaultPosition={{ x: 30, y: 150 }}>
 						<div id="moveable">

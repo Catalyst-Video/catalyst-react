@@ -14,13 +14,13 @@ const DEFAULT_SERVER_ADDRESS = "https://catalyst-video-server.herokuapp.com/";
 export default class VCDataStream implements VideoChatData {
 	sessionKey: string;
 	dataChannel: Map<any, any>;
-	connected: Map<any, any>;
-	localICECandidates: any;
+	connected: Map<string, boolean>;
+	localICECandidates: Record<string, RTCIceCandidate[]>;
 	socket: Socket;
 	remoteVideoWrapper: HTMLDivElement;
 	localVideo: HTMLMediaElement;
-	peerConnections: Map<any, any>;
-	recognition: any;
+	// recognition: SpeechRecognition;
+	peerConnections: Map<string, RTCPeerConnection>;
 	localStream: MediaStream | undefined;
 	localAudio: MediaStreamTrack | undefined;
 	sendingCaptions: boolean;
@@ -49,7 +49,6 @@ export default class VCDataStream implements VideoChatData {
 			"local-video"
 		) as HTMLMediaElement;
 		this.peerConnections = new Map();
-		this.recognition = "";
 		this.localAudio = undefined;
 		this.localStream = undefined;
 		this.sendingCaptions = false;
@@ -58,6 +57,7 @@ export default class VCDataStream implements VideoChatData {
 		this.setCaptionsText = setCapText;
 		this.setLocalVideoText = setVidText;
 		this.customSnackbarMsg = cstMsg;
+		// this.recognition = {};
 	}
 
 	/* Call to getUserMedia (provided by adapter.js for  browser compatibility) asking for access to both the video and audio streams. If the request is accepted callback to the onMediaStream function, otherwise callback to the noMediaStream function. */
@@ -239,12 +239,14 @@ export default class VCDataStream implements VideoChatData {
 			);
 			// Add the local video stream to the peerConnection.
 			this.localStream?.getTracks().forEach((track: MediaStreamTrack) => {
-				this.peerConnections.get(uuid).addTrack(track, this.localStream);
+				this.peerConnections
+					.get(uuid)
+					?.addTrack(track, this.localStream as MediaStream);
 			});
 			// Add general purpose data channel to peer connection, used for text chats, captions, and toggling sending captions
 			this.dataChannel.set(
 				uuid,
-				this.peerConnections.get(uuid).createDataChannel("chat", {
+				this.peerConnections.get(uuid)?.createDataChannel("chat", {
 					negotiated: true,
 					// both peers must have same id
 					id: 0
@@ -279,21 +281,21 @@ export default class VCDataStream implements VideoChatData {
 			this.dataChannel.get(uuid).onopen = (e: Event) => {
 				console.log("dataChannel opened");
 			};
+			if (this.peerConnections.get(uuid) !== undefined)
+				this.peerConnections.get(uuid)!.onicecandidate = (
+					e: RTCPeerConnectionIceEvent
+				) => {
+					this.onIceCandidate(e, uuid);
+				};
 
-			this.peerConnections.get(uuid).onicecandidate = (
-				e: RTCPeerConnectionIceEvent
-			) => {
-				this.onIceCandidate(e, uuid);
-			};
-
-			this.peerConnections.get(uuid).ontrack = (e: RTCTrackEvent) => {
+			this.peerConnections.get(uuid)!.ontrack = (e: RTCTrackEvent) => {
 				this.onAddStream(e, uuid);
 			};
 			// Called when there is a change in connection state
-			this.peerConnections.get(uuid).oniceconnectionstatechange = (
+			this.peerConnections.get(uuid)!.oniceconnectionstatechange = (
 				e: Event
 			) => {
-				switch (this.peerConnections.get(uuid).iceConnectionState) {
+				switch (this.peerConnections.get(uuid)?.iceConnectionState) {
 					case "connected":
 						console.log("connected");
 						break;
@@ -346,22 +348,23 @@ export default class VCDataStream implements VideoChatData {
 		console.log(
 			`onCandidate <<< Received remote ICE candidate (${rtcCandidate.port} - ${rtcCandidate.relatedAddress})`
 		);
-		this.peerConnections.get(uuid).addIceCandidate(rtcCandidate);
+		this.peerConnections.get(uuid)?.addIceCandidate(rtcCandidate);
 	};
 	// Create an offer that contains the media capabilities of the browser.
 	createOffer = (uuid: string): void => {
 		console.log(`createOffer to ${uuid} >>> Creating offer...`);
-		this.peerConnections.get(uuid).createOffer(
-			(offer: Promise<RTCSessionDescription>) => {
+		this.peerConnections
+			.get(uuid)
+			?.createOffer()
+			.then((offer: RTCSessionDescriptionInit) => {
 				/* If the offer is created successfully, set it as the local description and send it over the socket connection to initiate the peerConnection on the other side. */
-				this.peerConnections.get(uuid).setLocalDescription(offer);
+				this.peerConnections.get(uuid)?.setLocalDescription(offer);
 				this.socket.emit("offer", JSON.stringify(offer), this.sessionKey, uuid);
-			},
-			(e: any) => {
+			})
+			.catch((err: any) => {
 				console.log("failed offer creation");
-				console.log(e, true);
-			}
-		);
+				// console.log(err, true);
+			});
 	};
 
 	/* Create an answer with the media capabilities that the client and peer browsers share. This function is called with the offer from the originating browser, which needs to be parsed into an RTCSessionDescription and added as the remote description to the peerConnection object. Then the answer is created in the same manner as the offer and sent over the socket. */
@@ -369,22 +372,23 @@ export default class VCDataStream implements VideoChatData {
 		console.log("createAnswer");
 		var rtcOffer = new RTCSessionDescription(JSON.parse(offer.toString()));
 		console.log(`>>> Creating answer to ${uuid}`);
-		this.peerConnections.get(uuid).setRemoteDescription(rtcOffer);
-		this.peerConnections.get(uuid).createAnswer(
-			(answer: Promise<RTCSessionDescription>) => {
-				this.peerConnections.get(uuid).setLocalDescription(answer);
+		this.peerConnections.get(uuid)?.setRemoteDescription(rtcOffer);
+		this.peerConnections
+			.get(uuid)
+			?.createAnswer()
+			.then((answer: RTCSessionDescriptionInit) => {
+				this.peerConnections.get(uuid)?.setLocalDescription(answer);
 				this.socket.emit(
 					"answer",
 					JSON.stringify(answer),
 					this.sessionKey,
 					uuid
 				);
-			},
-			(err: any) => {
+			})
+			.catch((err: any) => {
 				console.log("Failed answer creation.");
 				console.log(err, true);
-			}
-		);
+			});
 	};
 
 	// When a browser receives an offer, set up a callback to be run when the ephemeral token is returned from Twilio.
@@ -404,7 +408,7 @@ export default class VCDataStream implements VideoChatData {
 		console.log(`onAnswer <<< Received answer from ${uuid}`);
 		var rtcAnswer = new RTCSessionDescription(JSON.parse(answer.toString()));
 		// Set remote description of RTCSession
-		this.peerConnections.get(uuid).setRemoteDescription(rtcAnswer);
+		this.peerConnections.get(uuid)?.setRemoteDescription(rtcAnswer);
 		// The caller now knows that the callee is ready to accept new ICE candidates, so sending the buffer over
 		this.localICECandidates[uuid].forEach((candidate: RTCIceCandidate) => {
 			// @ts-ignore
@@ -425,7 +429,7 @@ export default class VCDataStream implements VideoChatData {
 			console.log(
 				"onAddStream <<< Received new stream from remote. Adding it..."
 			);
-			this.setCaptionsText("Session connected successfully");
+			// this.setCaptionsText("Session connected successfully");
 
 			console.log("onAddStream <<< Playing join sound...");
 			(document.getElementById("join-sound") as HTMLVideoElement)?.play();
