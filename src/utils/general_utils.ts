@@ -71,13 +71,15 @@ export function chatRoomFull(): void {
 
 export function sendToAllDataChannels(
 	message: string,
-	dataChannel: Map<any, any>
+	dataChannel: Map<string, RTCDataChannel>
 ) {
 	console.log("Sending" + message);
 	// key is UUID, value is dataChannel object
-	dataChannel?.forEach((value: any, key: string, map: Map<any, any>) => {
-		value.send(message);
-	});
+	dataChannel?.forEach(
+		(value: RTCDataChannel, key: string, map: Map<string, RTCDataChannel>) => {
+			value.send(message);
+		}
+	);
 }
 
 export function handlereceiveMessage(

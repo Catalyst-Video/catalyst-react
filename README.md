@@ -80,7 +80,7 @@ You can change the color scheme of Catalyst to your tastes by using the `themeCo
 - [indigo](https://coolors.co/5A67D8)
 - [purple](https://coolors.co/805AD5)
 
-They can be used in the format `themeColor={"blue"}`. You can also set any `hexidecimal` color by simply passing it in the format `#ColorCode`. For example, `#456789`.
+They can be used in the format `themeColor="blue"`. You can also set any `hexidecimal` color by simply passing it in the format `#ColorCode`. For example, `#456789`.
 ### Examples
 
 ```typescript

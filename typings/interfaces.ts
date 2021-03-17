@@ -3,14 +3,13 @@ import { Socket } from "socket.io-client";
 export interface VideoChatData {
 	sessionKey: string;
 	sessionName: string;
-	dataChannel: Map<any, any>;
-	connected: Map<any, any>;
+	dataChannel: Map<string, RTCDataChannel>;
+	connected: Map<string, boolean>;
 	localICECandidates: Record<string, RTCIceCandidate[]>;
 	socket: Socket;
-	// recognition: SpeechRecognition;
-	remoteVideoWrapper: HTMLElement;
+	remoteVideoWrapper: HTMLDivElement;
 	localVideo: HTMLMediaElement;
-	peerConnections: Map<any, any>;
+	peerConnections: Map<string, RTCPeerConnection>;
 	localStream: MediaStream | undefined;
 	localAudio: MediaStreamTrack | undefined;
 	sendingCaptions: boolean;
@@ -19,6 +18,7 @@ export interface VideoChatData {
 	setLocalVideoText: Function;
 	setCaptionsText: Function;
 	customSnackbarMsg: string | HTMLElement | Element | undefined;
+	// recognition: SpeechRecognition;
 
 	requestMediaStream(e?: Event): void;
 	onMediaStream(e: MediaStream): void;

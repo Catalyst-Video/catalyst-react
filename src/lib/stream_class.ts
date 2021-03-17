@@ -14,7 +14,7 @@ const DEFAULT_SERVER_ADDRESS = "https://catalyst-video-server.herokuapp.com/";
 export default class VCDataStream implements VideoChatData {
 	sessionKey: string;
 	sessionName: string;
-	dataChannel: Map<any, any>;
+	dataChannel: Map<string, RTCDataChannel>;
 	connected: Map<string, boolean>;
 	localICECandidates: Record<string, RTCIceCandidate[]>;
 	socket: Socket;
@@ -253,10 +253,10 @@ export default class VCDataStream implements VideoChatData {
 					negotiated: true,
 					// both peers must have same id
 					id: 0
-				})
+				}) as RTCDataChannel
 			);
 			// Handle different dataChannel types
-			this.dataChannel.get(uuid).onmessage = (e: MessageEvent) => {
+			this.dataChannel.get(uuid)!.onmessage = (e: MessageEvent) => {
 				const receivedData = e.data;
 				// First 4 chars represent data type
 				const dataType = receivedData.substring(0, 4);
@@ -281,7 +281,7 @@ export default class VCDataStream implements VideoChatData {
 				}
 			};
 			/* 	Called when dataChannel is successfully opened - Set up callbacks for the connection generating iceCandidates or receiving the remote media stream. Wrapping callback functions to pass in the peer uuids. */
-			this.dataChannel.get(uuid).onopen = (e: Event) => {
+			this.dataChannel.get(uuid)!.onopen = (e: Event) => {
 				console.log("dataChannel opened");
 			};
 			if (this.peerConnections.get(uuid) !== undefined)

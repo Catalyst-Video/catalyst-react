@@ -64,33 +64,35 @@ export function handleSwitchStreamHelper(
 		// TODO: swap();
 	};
 	// Swap video for every peer connection
-	VCData.connected.forEach((value: any, key: any, map: any) => {
-		// check if connected before swapping video channel
-		if (VCData.connected.get(key)) {
-			const sender = VCData.peerConnections
-				.get(key)
-				.getSenders()
-				.find((s: any) => {
-					return s.track.kind === videoTrack.kind;
-				});
-			sender.replaceTrack(videoTrack);
-			// Replace audio track if sharing screen with audio
-			if (stream.getAudioTracks()[0]) {
-				console.log("Audio track is", audioTrack);
-				const sender2 = VCData.peerConnections
-					.get(key)
-					.getSenders()
+	VCData.connected.forEach(
+		(value: boolean, key: string, map: Map<string, boolean>) => {
+			// check if connected before swapping video channel
+			if (VCData.connected.get(key)) {
+				const sender = VCData.peerConnections
+					?.get(key)
+					?.getSenders()
 					.find((s: any) => {
-						if (s.track.kind === audioTrack.kind) {
-							console.log("Found matching track: ", s.track);
-						}
-						return s.track.kind === audioTrack.kind;
+						return s.track.kind === videoTrack.kind;
 					});
-				// add track instead of replacing
-				sender2.replaceTrack(audioTrack);
+				if (sender) sender.replaceTrack(videoTrack);
+				// Replace audio track if sharing screen with audio
+				if (stream.getAudioTracks()[0]) {
+					console.log("Audio track is", audioTrack);
+					const sender2 = VCData.peerConnections
+						?.get(key)
+						?.getSenders()
+						.find((s: any) => {
+							if (s.track.kind === audioTrack.kind) {
+								console.log("Found matching track: ", s.track);
+							}
+							return s.track.kind === audioTrack.kind;
+						});
+					// add track instead of replacing
+					if (sender2) sender2.replaceTrack(audioTrack);
+				}
 			}
 		}
-	});
+	);
 	// Update local video stream
 	VCData.localStream = stream;
 	// Update local video object
@@ -106,7 +108,7 @@ export function handleRequestToggleCaptions(
 	setReceivingCaptions: Function,
 	VCData: VideoChatData,
 	setCaptionsText: Function,
-	dataChannel: Map<any, any>
+	dataChannel: Map<string, RTCDataChannel>
 ) {
 	// Handle requesting captions before connected
 	if (!isConnected(VCData)) {
