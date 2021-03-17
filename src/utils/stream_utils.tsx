@@ -190,6 +190,35 @@ export function handleRequestToggleCaptions(
 	sendToAllDataChannels("tog:", dataChannel);
 }
 
+export function handleReceiveCaptions(
+	captions: any,
+	receivingCaptions: boolean,
+	setReceivingCaptions: Function,
+	setHideCaptions: Function,
+	setCaptionsText: Function
+): void {
+	if (receivingCaptions) {
+		setCaptionsText("");
+		setReceivingCaptions(false);
+		setHideCaptions(false);
+	} else {
+		setCaptionsText("");
+		setHideCaptions(true);
+		setReceivingCaptions(true);
+	}
+	// Other user is not using chrome
+	if (captions === "notusingchrome") {
+		alert(
+			"Other caller must be using chrome for this feature to work. Live Captions disabled."
+		);
+		setCaptionsText("");
+		setHideCaptions(true);
+		setCaptionsText("Start Live Captions");
+		return;
+	}
+	setCaptionsText(captions);
+}
+
 // export function handleToggleCaptions(
 // 	sendingCaptions: boolean,
 // 	setSendingCaptions: Function,
@@ -260,35 +289,6 @@ export function handleRequestToggleCaptions(
 // 	};
 // 	VCData.recognition.start();
 // }
-
-export function handleReceiveCaptions(
-	captions: any,
-	receivingCaptions: boolean,
-	setReceivingCaptions: Function,
-	setHideCaptions: Function,
-	setCaptionsText: Function
-): void {
-	if (receivingCaptions) {
-		setCaptionsText("");
-		setReceivingCaptions(false);
-		setHideCaptions(false);
-	} else {
-		setCaptionsText("");
-		setHideCaptions(true);
-		setReceivingCaptions(true);
-	}
-	// Other user is not using chrome
-	if (captions === "notusingchrome") {
-		alert(
-			"Other caller must be using chrome for this feature to work. Live Captions disabled."
-		);
-		setCaptionsText("");
-		setHideCaptions(true);
-		setCaptionsText("Start Live Captions");
-		return;
-	}
-	setCaptionsText(captions);
-}
 
 // export function togglePictureInPicture(VCData: VideoChatData) {
 // 	if (
