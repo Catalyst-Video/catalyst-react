@@ -301,9 +301,14 @@ export function handlePictureInPicture(
 	) {
 		var video = VCData.remoteVideoWrapper.lastChild as HTMLVideoElement;
 		if (video) {
+			video.addEventListener("enterpictureinpicture", setPicInPic(true), false);
+			video.addEventListener(
+				"leavepictureinpicture ",
+				setPicInPic(false),
+				false
+			);
 			// @ts-ignore
 			if (document && document.pictureInPictureElement && video) {
-				setPicInPic(false);
 				// @ts-ignore
 				document.exitPictureInPicture().catch((e: string) => {
 					logger("Error exiting pip." + e);
@@ -314,21 +319,17 @@ export function handlePictureInPicture(
 					case "inline":
 						// @ts-ignore
 						video?.webkitSetPresentationMode("picture-in-picture");
-						setPicInPic(true);
 						break;
 					case "picture-in-picture":
 						// @ts-ignore
 						video?.webkitSetPresentationMode("inline");
-						setPicInPic(false);
 						break;
 					default:
-						setPicInPic(true);
 						// @ts-ignore
 						video.requestPictureInPicture().catch((e: string) => {
 							alert(
 								"You must be connected to another person to enter picture in picture."
 							);
-							setPicInPic(false);
 						});
 				}
 			}

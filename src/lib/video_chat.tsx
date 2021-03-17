@@ -54,6 +54,7 @@ const VideoChat = ({
 	socketServerAddress,
 	defaults,
 	disabled,
+	onEndCall,
 	customSnackbarMsg,
 	themeColor
 }: {
@@ -62,6 +63,7 @@ const VideoChat = ({
 	socketServerAddress?: string;
 	defaults?: DefaultSettings;
 	disabled?: DisabledSettings;
+	onEndCall?: Function;
 	customSnackbarMsg?: HTMLElement | Element | string;
 	themeColor?: string;
 }) => {
@@ -239,15 +241,22 @@ const VideoChat = ({
 						>
 							<button
 								className={`${
-									!picInPic ? "" : "btn-on"
+									// @ts-ignore
+									!picInPic || Document.pictureInPictureElement ? "" : "btn-on"
 								} hoverButton tooltip notSelectable`}
 								id="pip-button"
 								onClick={() => {
 									if (VCData) handlePictureInPicture(VCData, setPicInPic);
 								}}
 							>
-								<span>{!picInPic ? "Picture in Picture" : "Normal View"}</span>
-
+								<span>
+									{
+										// @ts-ignore
+										!picInPic || Document.pictureInPictureElement
+											? "Picture in Picture"
+											: "Normal View"
+									}
+								</span>
 								<FontAwesomeIcon icon={faExternalLinkAlt} />
 							</button>
 						</div>
@@ -260,7 +269,7 @@ const VideoChat = ({
 									hideCaptions ? "" : "btn-on"
 								} hoverButton tooltip notSelectable`}
 								onClick={() => {
-									alert("Enable Captions");
+									alert("Toggle Captions");
 									// handleRequestToggleCaptions(
 									// 	receivingCaptions,
 									// 	setReceivingCaptions,
@@ -282,9 +291,9 @@ const VideoChat = ({
 						>
 							<button
 								className="hoverButton tooltip notSelectable"
-								onClick={() => {
-									alert("End Call");
-								}}
+								onClick={() => 
+									onEndCall ? onEndCall : console.log("call ended")
+								}
 							>
 								<FontAwesomeIcon icon={faPhoneSlash} />
 								<span>End Call</span>
