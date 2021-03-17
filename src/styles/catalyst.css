@@ -190,7 +190,7 @@ a {
   box-shadow: 0 0 0 2px var(--themeColor);
   border-radius: 10px;
   /* TODO: opacity  */
-  opacity: 0.8;
+  /* opacity: 0.8; */
   padding: 10px;
 }
 

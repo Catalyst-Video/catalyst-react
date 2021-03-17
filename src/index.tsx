@@ -14,15 +14,15 @@ ReactDOM.render(
 				hideChatArea: true,
 				hideCaptionsArea: false
 			}}
-			disabled={{
-				mute: false,
-				pausevideo: false,
-				screenshare: true,
-				chat: false,
-				picinpic: true,
-				captions: true,
-				endcall: false
-			}}
+			// disabled={{
+			// 	mute: false,
+			// 	pausevideo: false,
+			// 	screenshare: true,
+			// 	chat: false,
+			// 	picinpic: true,
+			// 	captions: true,
+			// 	endcall: false
+			// }}
 			// socketServerAddress="http://localhost:3001"
 			// themeColor="indigo"
 		/>

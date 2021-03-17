@@ -137,7 +137,7 @@ const VideoChat = ({
 					<Draggable>
 						<div
 							id="remote-video-text"
-							className={defaults?.hideChatArea ? "none" : ""}
+							className={`${hideCaptions ? "none" : ""}`}
 						>
 							{captionsText}
 						</div>
