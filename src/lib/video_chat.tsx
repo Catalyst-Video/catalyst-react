@@ -10,6 +10,7 @@ import { getBrowserName, setThemeColor } from "../utils/general_utils";
 import {
 	handleMute,
 	handlePauseVideo,
+	handlePictureInPicture,
 	handleSharing
 } from "../utils/stream_utils";
 // typings
@@ -198,7 +199,9 @@ const VideoChat = ({
 							}`}
 						>
 							<button
-								className="hoverButton tooltip notSelectable"
+								className={`${
+									!sharing ? "" : "btn-on"
+								} hoverButton tooltip notSelectable`}
 								id="share-button"
 								onClick={() => {
 									if (VCData)
@@ -213,21 +216,21 @@ const VideoChat = ({
 								}}
 							>
 								<span>{!sharing ? "Share Screen" : "Stop Sharing Screen"}</span>
-								<FontAwesomeIcon icon={!sharing ? faDesktop : faVideo} />
+								<FontAwesomeIcon icon={faDesktop} />
 							</button>
 						</div>
 
 						<div className={`buttonContainer ${disabled?.chat ? "none" : ""}`}>
 							<button
-								className="hoverButton tooltip notSelectable"
+								className={`${
+									hideChat ? "" : "btn-on"
+								} hoverButton tooltip notSelectable`}
 								onClick={() => {
 									setHideChat(!hideChat);
 								}}
 							>
 								<span>{!hideChat ? "Hide Chat" : "Show Chat"}</span>
-								<FontAwesomeIcon
-									icon={!hideChat ? faComment : faCommentSlash}
-								/>
+								<FontAwesomeIcon icon={faComment} />
 							</button>
 						</div>
 
@@ -235,18 +238,17 @@ const VideoChat = ({
 							className={`buttonContainer ${disabled?.picinpic ? "none" : ""}`}
 						>
 							<button
-								className="hoverButton tooltip notSelectable"
+								className={`${
+									!picInPic ? "" : "btn-on"
+								} hoverButton tooltip notSelectable`}
 								id="pip-button"
 								onClick={() => {
-									alert("Enable Pic in Pic");
-									setPicInPic(!picInPic);
+									if (VCData) handlePictureInPicture(VCData, setPicInPic);
 								}}
 							>
 								<span>{!picInPic ? "Picture in Picture" : "Normal View"}</span>
 
-								<FontAwesomeIcon
-									icon={!picInPic ? faExternalLinkAlt : faExternalLinkSquareAlt}
-								/>
+								<FontAwesomeIcon icon={faExternalLinkAlt} />
 							</button>
 						</div>
 
@@ -254,7 +256,9 @@ const VideoChat = ({
 							className={`buttonContainer ${disabled?.captions ? "none" : ""}`}
 						>
 							<button
-								className="hoverButton tooltip notSelectable"
+								className={`${
+									hideCaptions ? "" : "btn-on"
+								} hoverButton tooltip notSelectable`}
 								onClick={() => {
 									alert("Enable Captions");
 									// handleRequestToggleCaptions(
@@ -266,9 +270,7 @@ const VideoChat = ({
 									// );
 								}}
 							>
-								<FontAwesomeIcon
-									icon={hideCaptions ? faClosedCaptioning : faAudioDescription}
-								/>
+								<FontAwesomeIcon icon={faClosedCaptioning} />
 								<span>
 									{hideCaptions ? "Closed Captions" : "Hide Closed Captions"}
 								</span>

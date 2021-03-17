@@ -290,44 +290,55 @@ export function handleReceiveCaptions(
 // 	VCData.recognition.start();
 // }
 
-// export function togglePictureInPicture(VCData: VideoChatData) {
-// 	if (
-// 		"pictureInPictureEnabled" in document
-// 		// || (VideoChat.remoteVideoWrapper.lastChild as HTMLVideoElement).webkitSetPresentationMode
-// 	) {
-// 		var video = VCData.remoteVideoWrapper.lastChild as HTMLMediaElement;
-// 		if (document && document.pictureInPictureElement && video !== null) {
-// 			document.exitPictureInPicture().catch((e: string) => {
-// 				logger("Error exiting pip." + e);
-// 			});
-// 		} else if (
-// 			video.webkitPresentationMode === "inline"
-// 		) {
-// 			video?.webkitSetPresentationMode(
-// 				"picture-in-picture"
-// 			);
-// 		} else if (
-// 			video.webkitPresentationMode ===
-// 			"picture-in-picture"
-// 		) {
-// 			video.webkitSetPresentationMode(
-// 				"inline"
-// 			);
-// 		} else {
-// 			video
-// 				.requestPictureInPicture()
-// 				.catch((e: string) => {
-// 					alert(
-// 						"You must be connected to another person to enter picture in picture."
-// 					);
-// 				});
-// 		}
-// 	} else {
-// 		alert(
-// 			"Picture in picture is not supported in your browser. Consider using Chrome or Safari."
-// 		);
-// 	}
-// }
+export function handlePictureInPicture(
+	VCData: VideoChatData,
+	setPicInPic: Function
+): void {
+	if (
+		"pictureInPictureEnabled" in document ||
+		// @ts-ignore
+		VCData.remoteVideoWrapper.lastChild.webkitSetPresentationMode
+	) {
+		var video = VCData.remoteVideoWrapper.lastChild as HTMLVideoElement;
+		if (video) {
+			// @ts-ignore
+			if (document && document.pictureInPictureElement && video) {
+				setPicInPic(false);
+				// @ts-ignore
+				document.exitPictureInPicture().catch((e: string) => {
+					logger("Error exiting pip." + e);
+				});
+			} else {
+				// @ts-ignore
+				switch (video?.webkitPresentationMode) {
+					case "inline":
+						// @ts-ignore
+						video?.webkitSetPresentationMode("picture-in-picture");
+						setPicInPic(true);
+						break;
+					case "picture-in-picture":
+						// @ts-ignore
+						video?.webkitSetPresentationMode("inline");
+						setPicInPic(false);
+						break;
+					default:
+						setPicInPic(true);
+						// @ts-ignore
+						video.requestPictureInPicture().catch((e: string) => {
+							alert(
+								"You must be connected to another person to enter picture in picture."
+							);
+							setPicInPic(false);
+						});
+				}
+			}
+		}
+	} else {
+		alert(
+			"Picture in picture is not supported in your browser. Consider using Chrome, Edge, or Safari."
+		);
+	}
+}
 
 export function handleSharing(
 	VCData: VideoChatData,

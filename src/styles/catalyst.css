@@ -562,6 +562,14 @@ button.tooltip:hover span {
     height: 100%;
     border: 3px solid var(--themeColor);
   }
+
+  #remote-video:picture-in-picture {
+    width: 100%;
+    height: 100%;
+    border: 3px solid var(--themeColor) !important;
+  }
+
+
   .multi-button {
     position: fixed;
     left: 0;
