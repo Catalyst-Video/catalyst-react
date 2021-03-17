@@ -12,15 +12,15 @@ ReactDOM.render(
 				audioOn: true,
 				videoOn: true,
 				hideChatArea: true,
-				hideCaptionsArea: true
+				hideCaptionsArea: false
 			}}
 			disabled={{
 				mute: false,
 				pausevideo: false,
-				screenshare: false,
+				screenshare: true,
 				chat: false,
-				picinpic: false,
-				captions: false,
+				picinpic: true,
+				captions: true,
 				endcall: false
 			}}
 			// socketServerAddress="http://localhost:3001"

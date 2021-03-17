@@ -54,8 +54,7 @@ const VideoChat = ({
 	defaults,
 	disabled,
 	customSnackbarMsg,
-	themeColor,
-	styles
+	themeColor
 }: {
 	sessionKey: string;
 	catalystUUID: string;
@@ -64,7 +63,6 @@ const VideoChat = ({
 	disabled?: DisabledSettings;
 	customSnackbarMsg?: HTMLElement | Element | string;
 	themeColor?: string;
-	styles?: Object;
 }) => {
 	const [browserSupported, setBrowserSupported] = useState(true);
 	const [audioEnabled, setAudio] = useState<boolean>(
@@ -79,7 +77,7 @@ const VideoChat = ({
 		defaults?.hideChatArea ? defaults.hideChatArea : true
 	);
 	const [hideCaptions, setHideCaptions] = useState<boolean>(
-		defaults?.hideCaptionsArea ? defaults.hideCaptionsArea : true
+		defaults?.hideCaptionsArea ? defaults.hideCaptionsArea : false
 	);
 	const [captionsText, setCaptionsText] = useState(
 		"Room ready. Waiting for others to join..."
@@ -133,11 +131,16 @@ const VideoChat = ({
 	if (browserSupported) {
 		return (
 			<>
-				<div id="arbitrary-data" style={{ display: "none" }}></div>
+				<div id="arbitrary-data" className="none"></div>
 				<HeaderComponent sessionKey={sessionKey} />
 				<div id="call-section">
 					<Draggable>
-						<div id="remote-video-text">{captionsText}</div>
+						<div
+							id="remote-video-text"
+							className={defaults?.hideChatArea ? "none" : ""}
+						>
+							{captionsText}
+						</div>
 					</Draggable>
 					<div id="wrapper"></div>
 					<Draggable defaultPosition={{ x: 30, y: 150 }}>
