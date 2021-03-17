@@ -1,6 +1,12 @@
 import { VideoChatData } from "../../typings/interfaces";
 import { CSSGlobalVariables } from "css-global-variables";
 
+export function logger(data: string): void {
+	if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
+		console.log(data);
+	}
+}
+
 export function setThemeColor(color: string): void {
 	let cssVar = new CSSGlobalVariables();
 	switch (color) {
@@ -51,14 +57,16 @@ export function getBrowserName(): string {
 	return name;
 }
 
-export function isConnected(VCData: VideoChatData) {
+export function isConnected(VCData: VideoChatData): boolean {
 	var connected = false;
 	// No way to 'break' forEach -> we go through all anyway
-	VCData.connected.forEach((value: any, key: any, map: any) => {
-		if (value) {
-			connected = true;
+	VCData.connected.forEach(
+		(value: boolean, key: string, map: Map<string, boolean>) => {
+			if (value) {
+				connected = true;
+			}
 		}
-	});
+	);
 	return connected;
 }
 
@@ -73,7 +81,7 @@ export function sendToAllDataChannels(
 	message: string,
 	dataChannel: Map<string, RTCDataChannel>
 ) {
-	console.log("Sending" + message);
+	logger("Sending" + message);
 	// key is UUID, value is dataChannel object
 	dataChannel?.forEach(
 		(value: RTCDataChannel, key: string, map: Map<string, RTCDataChannel>) => {
@@ -87,7 +95,7 @@ export function handlereceiveMessage(
 	// color: any,
 	// hideChat: boolean,
 	// setHideChat: Function
-) {
+): void {
 	// Called when a message is received over the dataChannel, adds message to screen - auto scrolls chat down
 	addMessageToScreen(msg, false);
 	document
@@ -99,10 +107,10 @@ export function handlereceiveMessage(
 }
 
 export function addMessageToScreen(
-	msg: any,
+	msg: string,
 	// border: any,
 	isOwnMessage: boolean
-) {
+): void {
 	if (msg.length > 0) {
 		if (isOwnMessage) {
 			document

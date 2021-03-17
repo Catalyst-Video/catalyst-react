@@ -1,11 +1,11 @@
 import { toast } from "react-toastify";
 import { VideoChatData } from "../../typings/interfaces";
-import { isConnected, sendToAllDataChannels } from "./general_utils";
+import { isConnected, logger, sendToAllDataChannels } from "./general_utils";
 
 export function displayWelcomeMessage(
 	customSnackbarMsg: string | HTMLElement | Element | undefined,
 	sessionKey: string
-) {
+): void {
 	toast(
 		() => (
 			<div className="text-center justify-between">
@@ -26,7 +26,7 @@ export function displayWelcomeMessage(
 	);
 }
 
-export function displayVideoErrorMessage() {
+export function displayVideoErrorMessage(): void {
 	toast(
 		() => (
 			<div className="text-center justify-between">
@@ -49,6 +49,10 @@ export function displayVideoErrorMessage() {
 			toastId: "webcam/audio_error"
 		}
 	);
+}
+
+export function closeAllMessages(): void {
+	toast.dismiss();
 }
 
 export function handleMute(
@@ -76,7 +80,7 @@ export function handlePauseVideo(
 	setVideo: Function,
 	VCData: VideoChatData,
 	setLocalVideoText: Function
-) {
+): void {
 	var videoTrack: any;
 	setVideo(!videoEnabled);
 	if (videoEnabled) {
@@ -85,10 +89,10 @@ export function handlePauseVideo(
 		setLocalVideoText("Drag Me");
 	}
 	VCData.peerConnections.forEach((value: any, key: any, map: any) => {
-		console.log("pausing video for ", key);
+		logger("pausing video for " + key.toString());
 		value.getSenders().find((s: any) => {
 			if (s.track.kind === "video") {
-				console.log("found video track");
+				logger("found video track");
 				videoTrack = s.track;
 			}
 			return videoTrack;
@@ -104,7 +108,7 @@ export function handleSwitchStreamHelper(
 	setVideo: Function,
 	VCData: VideoChatData,
 	setLocalVideoText: Function
-) {
+): void {
 	// Get current video track
 	let videoTrack = stream.getVideoTracks()[0];
 	let audioTrack = stream.getAudioTracks()[0];
@@ -126,13 +130,13 @@ export function handleSwitchStreamHelper(
 				if (sender) sender.replaceTrack(videoTrack);
 				// Replace audio track if sharing screen with audio
 				if (stream.getAudioTracks()[0]) {
-					console.log("Audio track is", audioTrack);
+					logger("Audio track is" + audioTrack.toString());
 					const sender2 = VCData.peerConnections
 						?.get(key)
 						?.getSenders()
 						.find((s: any) => {
 							if (s.track.kind === audioTrack.kind) {
-								console.log("Found matching track: ", s.track);
+								logger("Found matching track: " + s.track.toString());
 							}
 							return s.track.kind === audioTrack.kind;
 						});
@@ -158,7 +162,7 @@ export function handleRequestToggleCaptions(
 	VCData: VideoChatData,
 	setCaptionsText: Function,
 	dataChannel: Map<string, RTCDataChannel>
-) {
+): void {
 	// Handle requesting captions before connected
 	if (!isConnected(VCData)) {
 		alert("You must be connected to a peer to use Live Captions");
@@ -211,8 +215,8 @@ export function handleRequestToggleCaptions(
 // 		VCData.recognition = new SpeechRecognition();
 // 	} catch (e) {
 // 		setSendingCaptions(false);
-// 		console.log(e);
-// 		console.log("error importing speech library");
+// 		logger(e);
+// 		logger("error importing speech library");
 // 		// Alert other user that they cannon use live captions
 // 		sendToAllDataChannels("cap:notusingchrome", dataChannel);
 // 		return;
@@ -225,7 +229,7 @@ export function handleRequestToggleCaptions(
 // 		let interimTranscript = "";
 // 		for (let i = e.resultIndex, len = e.results.length; i < len; i++) {
 // 			var transcript = e.results[i][0].transcript;
-// 			console.log(transcript);
+// 			logger(transcript);
 // 			if (e.results[i].isFinal) {
 // 				// finalTranscript += transcript;
 // 			} else {
@@ -241,7 +245,7 @@ export function handleRequestToggleCaptions(
 // 		}
 // 	};
 // 	VCData.recognition.onend = function () {
-// 		console.log("on speech recording end");
+// 		logger("on speech recording end");
 // 		// Restart speech recognition if user has not stopped it
 // 		if (sendingCaptions) {
 // 			handleStartSpeech(
@@ -263,7 +267,7 @@ export function handleReceiveCaptions(
 	setReceivingCaptions: Function,
 	setHideCaptions: Function,
 	setCaptionsText: Function
-) {
+): void {
 	if (receivingCaptions) {
 		setCaptionsText("");
 		setReceivingCaptions(false);
@@ -294,7 +298,7 @@ export function handleReceiveCaptions(
 // 		var video = VCData.remoteVideoWrapper.lastChild as HTMLMediaElement;
 // 		if (document && document.pictureInPictureElement && video !== null) {
 // 			document.exitPictureInPicture().catch((e: string) => {
-// 				console.log("Error exiting pip." + e);
+// 				logger("Error exiting pip." + e);
 // 			});
 // 		} else if (
 // 			video.webkitPresentationMode === "inline"
@@ -332,7 +336,7 @@ export function handleSharing(
 	videoEnabled: boolean,
 	setVideo: Function,
 	setLocalVideoText: Function
-) {
+): void {
 	// Handle swap video before video call is connected by checking that there's at least one peer connected
 	if (!isConnected(VCData)) {
 		alert("You must join a call before you can share your screen.");
@@ -349,7 +353,7 @@ export function handleSharing(
 				if (stream.getAudioTracks()[0]) {
 					stream.addTrack(stream.getAudioTracks()[0]);
 				}
-				console.log(stream);
+				logger(stream.toString());
 				handleSwitchStreamHelper(
 					stream,
 					videoEnabled,
@@ -372,7 +376,7 @@ export function handleSharing(
 						toastId: "screen_share"
 					}
 				);
-				console.log("Error sharing screen" + e);
+				logger("Error sharing screen" + e);
 			});
 	} else {
 		// Stop the screen share video track. (We don't want to stop the audio track obviously.)

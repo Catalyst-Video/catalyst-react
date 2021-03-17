@@ -4,11 +4,12 @@ import {
 	chatRoomFull,
 	handlereceiveMessage,
 	sendToAllDataChannels,
-	addMessageToScreen
+	addMessageToScreen,
+	logger
 } from "../utils/general_utils";
-import { toast } from "react-toastify";
 import { TwilioToken, VideoChatData } from "../../typings/interfaces";
 import {
+	closeAllMessages,
 	displayVideoErrorMessage,
 	displayWelcomeMessage
 } from "../utils/stream_utils";
@@ -16,7 +17,7 @@ import {
 const DEFAULT_SERVER_ADDRESS = "https://catalyst-video-server.herokuapp.com/";
 
 export default class VCDataStream implements VideoChatData {
-	sessionKey: string;
+	sessionId: string;
 	roomName: string;
 	dataChannel: Map<string, RTCDataChannel>;
 	connected: Map<string, boolean>;
@@ -44,7 +45,7 @@ export default class VCDataStream implements VideoChatData {
 		cstMsg?: string | HTMLElement | Element
 	) {
 		this.roomName = name;
-		this.sessionKey = catalystUUID + name;
+		this.sessionId = catalystUUID + name;
 		this.dataChannel = new Map();
 		this.connected = new Map();
 		this.localICECandidates = {};
@@ -69,7 +70,7 @@ export default class VCDataStream implements VideoChatData {
 
 	/* Call to getUserMedia (provided by adapter.js for  browser compatibility) asking for access to both the video and audio streams. If the request is accepted callback to the onMediaStream function, otherwise callback to the noMediaStream function. */
 	requestMediaStream = () => {
-		console.log("requestMediaStream");
+		logger("requestMediaStream");
 		navigator.mediaDevices
 			.getUserMedia({
 				video: true,
@@ -80,12 +81,12 @@ export default class VCDataStream implements VideoChatData {
 				this.setLocalVideoText("Drag Me");
 			})
 			.catch(error => {
-				console.log(error);
+				logger(error);
 				displayVideoErrorMessage();
 				this.setCaptionsText(
 					"Failed to activate your webcam. Check your webcam/privacy settings."
 				);
-				console.log(
+				logger(
 					"Failed to get local webcam video, check webcam privacy settings"
 				);
 				// Keep trying to get user media
@@ -94,7 +95,7 @@ export default class VCDataStream implements VideoChatData {
 	};
 
 	onMediaStream = (stream: MediaStream) => {
-		console.log("onMediaStream");
+		logger("onMediaStream");
 		this.localStream = stream;
 		if (!this.seenWelcomeSnackbar) {
 			displayWelcomeMessage(this.customSnackbarMsg, this.roomName);
@@ -115,8 +116,8 @@ export default class VCDataStream implements VideoChatData {
 			this.localVideo.srcObject = stream;
 		}
 		// Join the chat room
-		this.socket.emit("join", this.sessionKey, () => {
-			console.log("joined");
+		this.socket.emit("join", this.sessionId, () => {
+			logger("joined");
 		});
 		// Add listeners to the websocket
 		this.socket.on("leave", this.onLeave);
@@ -136,7 +137,7 @@ export default class VCDataStream implements VideoChatData {
 			// 	setHideCaptions,
 			// 	setCaptionsText
 			// );
-			console.log(captions);
+			logger(captions);
 		});
 
 		const TextInput = document.querySelector(
@@ -146,7 +147,7 @@ export default class VCDataStream implements VideoChatData {
 			if (e.keyCode === 13) {
 				e.preventDefault();
 				var msg = TextInput.value;
-				console.log("textarea " + msg);
+				logger("textarea " + msg);
 				// Send message over data channel, add message to screen, auto scroll chat down
 				if (msg && msg.length > 0) {
 					// Prevent cross site scripting
@@ -174,26 +175,26 @@ export default class VCDataStream implements VideoChatData {
 	};
 
 	call = (uuid: string, room: string) => {
-		console.log(`call >>> Initiating call with ${uuid}...`);
+		logger(`call >>> Initiating call with ${uuid}...`);
 		this.socket.on(
 			"token",
 			this.establishConnection(uuid, (a: string) => {
 				this.createOffer(a);
 			})
 		);
-		this.socket.emit("token", this.sessionKey, uuid);
+		this.socket.emit("token", this.sessionId, uuid);
 	};
 
 	onLeave = (uuid: string) => {
 		// Remove video element
 		try {
-			console.log("disconnected - UUID " + uuid);
+			logger("disconnected - UUID " + uuid);
 			(document.getElementById("leave-sound") as HTMLVideoElement)?.play();
 			this?.remoteVideoWrapper?.removeChild(
 				document.querySelectorAll(`[uuid="${uuid}"]`)[0]
 			);
 		} catch (e) {
-			console.log(e);
+			logger(e);
 		}
 
 		// Delete connection & metadata
@@ -211,7 +212,7 @@ export default class VCDataStream implements VideoChatData {
 			if (correctUuid !== uuid) {
 				return;
 			}
-			console.log(`<<< Received token, connecting to ${uuid}`);
+			logger(`<<< Received token, connecting to ${uuid}`);
 			// Initialize localICEcandidates for peer uuid to empty array
 			this.localICECandidates[uuid] = [];
 			// Initialize connection status with peer uuid to false
@@ -259,13 +260,13 @@ export default class VCDataStream implements VideoChatData {
 					// setSendingCaptions(!sendingCaptions);
 				} else {
 					// Arbitrary data handling
-					console.log("Received arbitrary data: ", receivedData);
+					logger("Received arbitrary data: " + receivedData.toString());
 					window.top.postMessage(receivedData, "*");
 				}
 			};
 			/* 	Called when dataChannel is successfully opened - Set up callbacks for the connection generating iceCandidates or receiving the remote media stream. Wrapping callback functions to pass in the peer uuids. */
 			this.dataChannel.get(uuid)!.onopen = (e: Event) => {
-				console.log("dataChannel opened");
+				logger("dataChannel opened");
 			};
 			if (this.peerConnections.get(uuid) !== undefined)
 				this.peerConnections.get(uuid)!.onicecandidate = (
@@ -284,18 +285,18 @@ export default class VCDataStream implements VideoChatData {
 			) => {
 				switch (this.peerConnections.get(uuid)?.iceConnectionState) {
 					case "connected":
-						console.log("connected");
+						logger("connected");
 						break;
 					case "disconnected":
 						// Disconnects are handled server-side
-						console.log("disconnected - UUID " + uuid);
+						logger("disconnected - UUID " + uuid);
 						break;
 					case "failed":
-						console.log(">>> would trigger refresh: failed ICE connection");
+						logger(">>> would trigger refresh: failed ICE connection");
 						window.location.reload();
 						break;
 					case "closed":
-						console.log("closed");
+						logger("closed");
 						break;
 				}
 			};
@@ -305,19 +306,19 @@ export default class VCDataStream implements VideoChatData {
 
 	// When the peerConnection generates an ice candidate, send it over the socket to the peer.
 	onIceCandidate = (e: RTCPeerConnectionIceEvent, uuid: string) => {
-		console.log("onIceCandidate");
+		logger("onIceCandidate");
 		if (e.candidate) {
-			console.log(
+			logger(
 				// @ts-ignore
 				`<<< Received local ICE candidate from STUN/TURN server (${e.candidate.address}) for connection with ${uuid}`
 			);
 			if (this.connected.get(uuid)) {
 				// @ts-ignore
-				console.log(`>>> Sending local ICE candidate (${e.candidate.address})`);
+				logger(`>>> Sending local ICE candidate (${e.candidate.address})`);
 				this.socket.emit(
 					"candidate",
 					JSON.stringify(e.candidate),
-					this.sessionKey,
+					this.sessionId,
 					uuid
 				);
 			} else {
@@ -334,33 +335,33 @@ export default class VCDataStream implements VideoChatData {
 		var rtcCandidate: RTCIceCandidate = new RTCIceCandidate(
 			JSON.parse(candidate.toString())
 		);
-		console.log(
+		logger(
 			`onCandidate <<< Received remote ICE candidate (${rtcCandidate.port} - ${rtcCandidate.relatedAddress})`
 		);
 		this.peerConnections.get(uuid)?.addIceCandidate(rtcCandidate);
 	};
 	// Create an offer that contains the media capabilities of the browser.
 	createOffer = (uuid: string): void => {
-		console.log(`createOffer to ${uuid} >>> Creating offer...`);
+		logger(`createOffer to ${uuid} >>> Creating offer...`);
 		this.peerConnections
 			.get(uuid)
 			?.createOffer()
 			.then((offer: RTCSessionDescriptionInit) => {
 				/* If the offer is created successfully, set it as the local description and send it over the socket connection to initiate the peerConnection on the other side. */
 				this.peerConnections.get(uuid)?.setLocalDescription(offer);
-				this.socket.emit("offer", JSON.stringify(offer), this.sessionKey, uuid);
+				this.socket.emit("offer", JSON.stringify(offer), this.sessionId, uuid);
 			})
 			.catch((err: any) => {
-				console.log("failed offer creation");
-				// console.log(err, true);
+				logger("failed offer creation");
+				// logger(err, true);
 			});
 	};
 
 	/* Create an answer with the media capabilities that the client and peer browsers share. This function is called with the offer from the originating browser, which needs to be parsed into an RTCSessionDescription and added as the remote description to the peerConnection object. Then the answer is created in the same manner as the offer and sent over the socket. */
 	createAnswer = (offer: RTCSessionDescription, uuid: string): void => {
-		console.log("createAnswer");
+		logger("createAnswer");
 		var rtcOffer = new RTCSessionDescription(JSON.parse(offer.toString()));
-		console.log(`>>> Creating answer to ${uuid}`);
+		logger(`>>> Creating answer to ${uuid}`);
 		this.peerConnections.get(uuid)?.setRemoteDescription(rtcOffer);
 		this.peerConnections
 			.get(uuid)
@@ -370,43 +371,42 @@ export default class VCDataStream implements VideoChatData {
 				this.socket.emit(
 					"answer",
 					JSON.stringify(answer),
-					this.sessionKey,
+					this.sessionId,
 					uuid
 				);
 			})
 			.catch((err: any) => {
-				console.log("Failed answer creation.");
-				console.log(err, true);
+				logger("Failed answer creation. " + err.toString());
 			});
 	};
 
 	// When a browser receives an offer, set up a callback to be run when the ephemeral token is returned from Twilio.
 	onOffer = (offer: RTCSessionDescription, uuid: string): void => {
-		console.log("onOffer <<< Received offer");
+		logger("onOffer <<< Received offer");
 		this.socket.on(
 			"token",
 			this.establishConnection(uuid, (a: string) => {
 				this.createAnswer(offer, a);
 			})
 		);
-		this.socket.emit("token", this.sessionKey, uuid);
+		this.socket.emit("token", this.sessionId, uuid);
 	};
 
 	// When an answer is received, add it to the peerConnection as the remote description.
 	onAnswer = (answer: RTCSessionDescription, uuid: string) => {
-		console.log(`onAnswer <<< Received answer from ${uuid}`);
+		logger(`onAnswer <<< Received answer from ${uuid}`);
 		var rtcAnswer = new RTCSessionDescription(JSON.parse(answer.toString()));
 		// Set remote description of RTCSession
 		this.peerConnections.get(uuid)?.setRemoteDescription(rtcAnswer);
 		// The caller now knows that the callee is ready to accept new ICE candidates, so sending the buffer over
 		this.localICECandidates[uuid].forEach((candidate: RTCIceCandidate) => {
 			// @ts-ignore
-			console.log(`>>> Sending local ICE candidate (${candidate.address})`);
+			logger(`>>> Sending local ICE candidate (${candidate.address})`);
 			// Send ice candidate over websocket
 			this.socket.emit(
 				"candidate",
 				JSON.stringify(candidate),
-				this.sessionKey,
+				this.sessionId,
 				uuid
 			);
 		});
@@ -415,12 +415,10 @@ export default class VCDataStream implements VideoChatData {
 	// Called when a stream is added to the peer connection: Create new <video> node and append remote video source to wrapper div
 	onAddStream = (e: RTCTrackEvent, uuid: string) => {
 		if (document.querySelector(`[uuid="${uuid}"]`) === null) {
-			console.log(
-				"onAddStream <<< Received new stream from remote. Adding it..."
-			);
+			logger("onAddStream <<< Received new stream from remote. Adding it...");
 			// this.setCaptionsText("Session connected successfully");
 
-			console.log("onAddStream <<< Playing join sound...");
+			logger("onAddStream <<< Playing join sound...");
 			(document.getElementById("join-sound") as HTMLVideoElement)?.play();
 			var node = document.createElement("video");
 			node.setAttribute("autoplay", "");
@@ -438,7 +436,7 @@ export default class VCDataStream implements VideoChatData {
 				let newVid = this.remoteVideoWrapper.lastChild as HTMLVideoElement;
 				newVid.srcObject = e.streams.slice(-1)[0];
 			}
-			toast.dismiss();
+			closeAllMessages();
 			// Update connection status
 			this.connected.set(uuid, true);
 			// TODO: setHideCaptions(true);
