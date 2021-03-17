@@ -44,11 +44,10 @@ export interface VideoChatData {
 }
 
 export interface DefaultSettings {
-	hideChat?: boolean;
 	audioOn?: boolean;
 	videoOn?: boolean;
-	hideCaptions?: boolean;
-	hideLogo?: boolean;
+	hideChatArea?: boolean;
+	hideCaptionsArea?: boolean;
 }
 
 export interface DisabledSettings {

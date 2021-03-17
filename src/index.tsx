@@ -8,22 +8,21 @@ ReactDOM.render(
 		<VideoChat
 			sessionKey="testKey"
 			catalystUUID="4d39df3f-f67b-4217-b832-57d4ffa2b217"
-			defaultSettings={{
-				hideChat: true,
+			defaults={{
 				audioOn: true,
 				videoOn: true,
-				hideCaptions: true,
-				hideLogo: false
+				hideChatArea: true,
+				hideCaptionsArea: true
 			}}
-			// disabledSettings={{
-			// 	disableMute: false,
-			// 	disablePauseVideo: false,
-			// 	disableScreenShare: false,
-			// 	disableChat: false,
-			// 	disablePicInPic: true,
-			// 	disableCaptions: true,
-			// 	disableEndCall: false
-			// }}
+			disabled={{
+				mute: false,
+				pausevideo: false,
+				screenshare: false,
+				chat: false,
+				picinpic: false,
+				captions: false,
+				endcall: false
+			}}
 			// socketServerAddress="http://localhost:3001"
 			// themeColor="indigo"
 		/>

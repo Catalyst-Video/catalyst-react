@@ -51,8 +51,8 @@ const VideoChat = ({
 	sessionKey,
 	catalystUUID,
 	socketServerAddress,
-	defaultSettings,
-	disabledSettings,
+	defaults,
+	disabled,
 	customSnackbarMsg,
 	themeColor,
 	styles
@@ -60,26 +60,26 @@ const VideoChat = ({
 	sessionKey: string;
 	catalystUUID: string;
 	socketServerAddress?: string;
-	defaultSettings?: DefaultSettings;
-	disabledSettings?: DisabledSettings;
+	defaults?: DefaultSettings;
+	disabled?: DisabledSettings;
 	customSnackbarMsg?: HTMLElement | Element | string;
 	themeColor?: string;
 	styles?: Object;
 }) => {
 	const [browserSupported, setBrowserSupported] = useState(true);
 	const [audioEnabled, setAudio] = useState<boolean>(
-		defaultSettings?.audioOn ? defaultSettings.audioOn : true
+		defaults?.audioOn ? defaults.audioOn : true
 	);
 	const [videoEnabled, setVideo] = useState<boolean>(
-		defaultSettings?.videoOn ? defaultSettings.videoOn : true
+		defaults?.videoOn ? defaults.videoOn : true
 	);
 	const [sharing, setSharing] = useState(false);
 	const [picInPic, setPicInPic] = useState(false);
 	const [hideChat, setHideChat] = useState<boolean>(
-		defaultSettings?.hideChat ? defaultSettings.hideChat : true
+		defaults?.hideChatArea ? defaults.hideChatArea : true
 	);
 	const [hideCaptions, setHideCaptions] = useState<boolean>(
-		defaultSettings?.hideCaptions ? defaultSettings.hideCaptions : true
+		defaults?.hideCaptionsArea ? defaults.hideCaptionsArea : true
 	);
 	const [captionsText, setCaptionsText] = useState(
 		"Room ready. Waiting for others to join..."
@@ -148,11 +148,7 @@ const VideoChat = ({
 					</Draggable>
 
 					<div className="multi-button">
-						<div
-							className={`buttonContainer ${
-								disabledSettings?.mute ? "none" : ""
-							}`}
-						>
+						<div className={`buttonContainer ${disabled?.mute ? "none" : ""}`}>
 							<button
 								className={`${
 									audioEnabled ? "" : "btn-on"
@@ -171,7 +167,7 @@ const VideoChat = ({
 
 						<div
 							className={`buttonContainer ${
-								disabledSettings?.pausevideo ? "none" : ""
+								disabled?.pausevideo ? "none" : ""
 							}`}
 						>
 							<button
@@ -195,7 +191,7 @@ const VideoChat = ({
 
 						<div
 							className={`buttonContainer ${
-								disabledSettings?.screenshare ? "none" : ""
+								disabled?.screenshare ? "none" : ""
 							}`}
 						>
 							<button
@@ -219,11 +215,7 @@ const VideoChat = ({
 							</button>
 						</div>
 
-						<div
-							className={`buttonContainer ${
-								disabledSettings?.chat ? "none" : ""
-							}`}
-						>
+						<div className={`buttonContainer ${disabled?.chat ? "none" : ""}`}>
 							<button
 								className="hoverButton tooltip notSelectable"
 								onClick={() => {
@@ -238,9 +230,7 @@ const VideoChat = ({
 						</div>
 
 						<div
-							className={`buttonContainer ${
-								disabledSettings?.picinpic ? "none" : ""
-							}`}
+							className={`buttonContainer ${disabled?.picinpic ? "none" : ""}`}
 						>
 							<button
 								className="hoverButton tooltip notSelectable"
@@ -259,9 +249,7 @@ const VideoChat = ({
 						</div>
 
 						<div
-							className={`buttonContainer ${
-								disabledSettings?.captions ? "none" : ""
-							}`}
+							className={`buttonContainer ${disabled?.captions ? "none" : ""}`}
 						>
 							<button
 								className="hoverButton tooltip notSelectable"
@@ -286,9 +274,7 @@ const VideoChat = ({
 						</div>
 
 						<div
-							className={`buttonContainer ${
-								disabledSettings?.endcall ? "none" : ""
-							}`}
+							className={`buttonContainer ${disabled?.endcall ? "none" : ""}`}
 						>
 							<button
 								className="hoverButton tooltip notSelectable"
