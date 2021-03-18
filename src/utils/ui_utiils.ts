@@ -1,4 +1,3 @@
-// Area:
 export function Area(
 	Increment: number,
 	Count: number,
@@ -21,9 +20,7 @@ export function Area(
 	else return Increment;
 }
 
-// Dish:
 export function Wrapper(): void {
-	// variables:
 	let Margin = 2;
 	let Wrapper = document.getElementById("wrapper");
 	let Width = 0;
@@ -36,7 +33,7 @@ export function Wrapper(): void {
 	console.log(RemoteVideos);
 	let max = 0;
 
-	// loop (i recommend you optimize this)
+	// loop TODO: needs to be optimized
 	let i = 1;
 	while (i < 5000) {
 		let w = Area(i, RemoteVideos.length, Width, Height, Margin);
@@ -47,12 +44,10 @@ export function Wrapper(): void {
 		i++;
 	}
 
-	// set styles
 	max = max - Margin * 2;
 	setWidth(max, Margin);
 }
 
-// Set Width and Margin
 export function setWidth(width: number, margin: number): void {
 	let RemoteVideos = document.querySelectorAll(
 		"#remote-video"
