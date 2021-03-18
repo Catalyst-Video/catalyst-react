@@ -2,59 +2,6 @@ import { toast } from "react-toastify";
 import { VideoChatData } from "../../typings/interfaces";
 import { isConnected, logger, sendToAllDataChannels } from "./general_utils";
 
-export function displayWelcomeMessage(
-	customSnackbarMsg: string | HTMLElement | Element | undefined,
-	sessionKey: string
-): void {
-	toast(
-		() => (
-			<div className="text-center justify-between">
-				{customSnackbarMsg ? (
-					customSnackbarMsg
-				) : (
-					<>
-						<span>Share your session key </span>
-						<strong>{sessionKey}</strong>
-						<span> with whoever wants to join</span>
-					</>
-				)}
-			</div>
-		),
-		{
-			toastId: "peer_prompt"
-		}
-	);
-}
-
-export function displayVideoErrorMessage(): void {
-	toast(
-		() => (
-			<div className="text-center justify-between">
-				Please press allow to enable webcam & audio access
-				<button
-					className="snack-btn"
-					onClick={() => {
-						window.open(
-							"https://help.clipchamp.com/en/articles/1505527-how-do-i-enable-my-webcam-for-recording",
-							"_blank"
-						);
-					}}
-				>
-					Directions
-				</button>
-			</div>
-		),
-		{
-			autoClose: false,
-			toastId: "webcam/audio_error"
-		}
-	);
-}
-
-export function closeAllMessages(): void {
-	toast.dismiss();
-}
-
 export function handleMute(
 	audioEnabled: boolean,
 	setAudio: Function,

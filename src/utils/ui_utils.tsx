@@ -1,3 +1,58 @@
+import { toast } from "react-toastify";
+
+export function displayWelcomeMessage(
+	customSnackbarMsg: string | HTMLElement | Element | undefined,
+	sessionKey: string
+): void {
+	toast(
+		() => (
+			<div className="text-center justify-between">
+				{customSnackbarMsg ? (
+					customSnackbarMsg
+				) : (
+					<>
+						<span>Share your session key </span>
+						<strong>{sessionKey}</strong>
+						<span> with whoever wants to join</span>
+					</>
+				)}
+			</div>
+		),
+		{
+			toastId: "peer_prompt"
+		}
+	);
+}
+
+export function displayVideoErrorMessage(): void {
+	toast(
+		() => (
+			<div className="text-center justify-between">
+				Please press allow to enable webcam & audio access
+				<button
+					className="snack-btn"
+					onClick={() => {
+						window.open(
+							"https://help.clipchamp.com/en/articles/1505527-how-do-i-enable-my-webcam-for-recording",
+							"_blank"
+						);
+					}}
+				>
+					Directions
+				</button>
+			</div>
+		),
+		{
+			autoClose: false,
+			toastId: "webcam/audio_error"
+		}
+	);
+}
+
+export function closeAllMessages(): void {
+	toast.dismiss();
+}
+
 export function Area(
 	Increment: number,
 	Count: number,
@@ -20,7 +75,7 @@ export function Area(
 	else return Increment;
 }
 
-export function Wrapper(): void {
+export function ResizeWrapper(): void {
 	let Margin = 2;
 	let Wrapper = document.getElementById("wrapper");
 	let Width = 0;
@@ -30,7 +85,7 @@ export function Wrapper(): void {
 		Height = Wrapper.offsetHeight - Margin * 2;
 	}
 	let RemoteVideos = document.querySelectorAll("#remote-video");
-	console.log(RemoteVideos);
+	// console.log(RemoteVideos);
 	let max = 0;
 
 	// loop TODO: needs to be optimized

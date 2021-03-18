@@ -44,7 +44,7 @@ import { ToastContainer } from "react-toastify";
 import Draggable from "react-draggable";
 import DetectRTC from "detectrtc";
 import VCDataStream from "./stream_class";
-import { Wrapper } from "../utils/ui_utiils";
+import { ResizeWrapper } from "../utils/ui_utils";
 
 const VideoChat = ({
 	sessionKey,
@@ -115,8 +115,8 @@ const VideoChat = ({
 		window.addEventListener(
 			"load",
 			(e: Event) => {
-				Wrapper();
-				window.onresize = Wrapper;
+				ResizeWrapper();
+				window.onresize = ResizeWrapper;
 			},
 			false
 		);

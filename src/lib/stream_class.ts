@@ -8,12 +8,13 @@ import {
 	logger
 } from "../utils/general_utils";
 import { TwilioToken, VideoChatData } from "../../typings/interfaces";
+
 import {
 	closeAllMessages,
 	displayVideoErrorMessage,
-	displayWelcomeMessage
-} from "../utils/stream_utils";
-import { Wrapper } from "../utils/ui_utiils";
+	displayWelcomeMessage,
+	ResizeWrapper
+} from "../utils/ui_utils";
 
 const DEFAULT_SERVER_ADDRESS = "https://catalyst-video-server.herokuapp.com/";
 
@@ -194,7 +195,7 @@ export default class VCDataStream implements VideoChatData {
 			this?.remoteVideoWrapper?.removeChild(
 				document.querySelectorAll(`[uuid="${uuid}"]`)[0]
 			);
-			Wrapper();
+			ResizeWrapper();
 		} catch (e) {
 			logger(e);
 		}
@@ -434,7 +435,7 @@ export default class VCDataStream implements VideoChatData {
 				) as HTMLDivElement;
 			}
 			this.remoteVideoWrapper.appendChild(node);
-			Wrapper();
+			ResizeWrapper();
 			// Update remote video source
 			if (this.remoteVideoWrapper?.lastChild !== null) {
 				let newVid = this.remoteVideoWrapper.lastChild as HTMLVideoElement;
