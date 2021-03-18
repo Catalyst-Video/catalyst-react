@@ -2,7 +2,7 @@
 
 THIS PACKAGE IS IN DEVELOPMENT. IT WILL BE READY FOR USE SOON
 
-📷💬 An open-source React component that allows developers to quickly and easily add Zoom-like video chat to their web applications. Built using WebRTC, using Typescript. A functioning build be enabled in minutes with as few as five lines of code.
+📷💬 An open-source React component that allows developers to quickly and easily add Zoom-like video chat to their web applications. Built using WebRTC and Typescript. A functioning build be enabled in minutes with as few as five lines of code.
 ## Functionality & Params
 
 | Param        | Description                                                                                                 |  Type                             | Example Value                             | Required |
