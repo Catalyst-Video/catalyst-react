@@ -1,64 +1,88 @@
 {
-	"name": "catalyst-vc-react",
-	"version": "1.0.2",
-	"author": "@GoldinGuy seth@goldinwebdesign.com & @JoeSemrai josephsemrai@gmail.com",
-	"private": false,
-	"license": "GNU AGP3",
-	"description": "An awesome video-chat react component that can be added to your site in fewer than 5 lines of code",
-	"repository": "https://github.com/Catalyst-Video/catalyst-react",
-	"bugs": "https://github.com/Catalyst-Video/catalyst-react/issues",
-	"keywords": [
-		"video chat",
-		"react video chat",
-		"react",
-		"webrtc"
-	],
-	"main": "src/lib/video_chat.tsx",
-	"peerDependencies": {
-		"react": ">=15.0.1",
-		"react-dom": ">=15.0.1"
-	},
-	"devDependencies": {
-		"react": ">=15.0.1",
-		"react-dom": ">=15.0.1"
-	},
-	"dependencies": {
-		"@fortawesome/fontawesome-svg-core": "^1.2.34",
-		"@fortawesome/free-solid-svg-icons": "^5.15.2",
-		"@fortawesome/react-fontawesome": "^0.1.14",
-		"@types/react": "^17.0.0",
-		"@types/react-dom": "^17.0.0",
-		"@types/react-router": "^5.1.12",
-		"css-global-variables": "^3.0.2",
-		"detectrtc": "^1.4.1",
-		"react-draggable": "^4.4.3",
-		"react-scripts": "4.0.3",
-		"react-toastify": "^7.0.3",
-		"socket.io-client": "^2.3.1",
-		"typescript": "^4.1.2"
-	},
-	"scripts": {
-		"start": "react-scripts start",
-		"build": "react-scripts build",
-		"test": "react-scripts test",
-		"eject": "react-scripts eject"
-	},
-	"eslintConfig": {
-		"extends": [
-			"react-app",
-			"react-app/jest"
-		]
-	},
-	"browserslist": {
-		"production": [
-			">0.2%",
-			"not dead",
-			"not op_mini all"
-		],
-		"development": [
-			"last 1 chrome version",
-			"last 1 firefox version",
-			"last 1 safari version"
-		]
-	}
+  "name": "catalyst-vc-react",
+  "version": "1.0.5",
+  "author": "@GoldinGuy seth@goldin.io & @JoeSemrai josephsemrai@gmail.com",
+  "private": false,
+  "license": "GNU AGP3",
+  "description": "An awesome video-chat react component that can be added to your site in fewer than 5 lines of code",
+  "repository": "https://github.com/Catalyst-Video/catalyst-react",
+  "bugs": "https://github.com/Catalyst-Video/catalyst-react/issues",
+  "keywords": [
+    "video chat",
+    "react video chat",
+    "react",
+    "webrtc"
+  ],
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test --passWithNoTests",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
+  },
+  "peerDependencies": {
+    "react": ">=16"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.34",
+    "@fortawesome/free-solid-svg-icons": "^5.15.2",
+    "@fortawesome/react-fontawesome": "^0.1.14",
+    "@types/css-global-variables": "^3.0.0",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/react-router": "^5.1.12",
+    "css-global-variables": "^3.0.2",
+    "detectrtc": "^1.4.1",
+    "react-draggable": "^4.4.3",
+    "react-scripts": "4.0.3",
+    "react-toastify": "^7.0.3",
+    "socket.io-client": "^2.3.1",
+    "typescript": "^4.1.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "module": "dist/catalyst-vc-react.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/catalyst-vc-react.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/catalyst-vc-react.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^4.10.1",
+    "@types/react": "^17.0.3",
+    "@types/react-dom": "^17.0.2",
+    "@types/socket.io-client": "^1.4.36",
+    "husky": "^5.1.3",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "size-limit": "^4.10.1",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.1.0",
+    "typescript": "^4.2.3"
+  }
 }

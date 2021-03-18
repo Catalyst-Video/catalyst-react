@@ -1,4 +1,4 @@
-import { VideoChatData } from "../../typings/interfaces";
+import { VideoChatData } from "../typings/interfaces";
 import { CSSGlobalVariables } from "css-global-variables";
 
 export function logger(data: string): void {
