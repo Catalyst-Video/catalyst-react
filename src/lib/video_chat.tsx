@@ -22,19 +22,15 @@ import {
 // icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-	faAudioDescription,
 	faClosedCaptioning,
 	faComment,
-	faCommentSlash,
 	faDesktop,
 	faExternalLinkAlt,
-	faExternalLinkSquareAlt,
 	faMicrophone,
 	faMicrophoneSlash,
 	faPause,
 	faPhoneSlash,
-	faPlay,
-	faVideo
+	faPlay
 } from "@fortawesome/free-solid-svg-icons";
 // assets
 import joinSound from "../assets/sound/join.mp3";
@@ -42,11 +38,13 @@ import leaveSound from "../assets/sound/leave.mp3";
 // styles
 import "../styles/catalyst.css";
 import "react-toastify/dist/ReactToastify.css";
+import "../styles/video_grid.css";
 // packages
 import { ToastContainer } from "react-toastify";
 import Draggable from "react-draggable";
 import DetectRTC from "detectrtc";
 import VCDataStream from "./stream_class";
+import { Wrapper } from "../utils/ui_utiils";
 
 const VideoChat = ({
 	sessionKey,
@@ -112,6 +110,16 @@ const VideoChat = ({
 			setBrowserSupported(false);
 		}
 		navigator.mediaDevices.ondevicechange = () => window.location.reload();
+
+		// Load and Resize Event
+		window.addEventListener(
+			"load",
+			(e: Event) => {
+				Wrapper();
+				window.onresize = Wrapper;
+			},
+			false
+		);
 	}, []);
 
 	useEffect(() => {
@@ -147,7 +155,7 @@ const VideoChat = ({
 					</Draggable>
 					<div id="wrapper"></div>
 					<Draggable defaultPosition={{ x: 30, y: 150 }}>
-						<div id="moveable">
+						<div id="moveable" className="video-1">
 							<p id="local-video-text">{localVideoText}</p>
 							<video id="local-video" autoPlay muted playsInline></video>
 						</div>
@@ -242,7 +250,7 @@ const VideoChat = ({
 							<button
 								className={`${
 									// @ts-ignore
-									!picInPic || Document.pictureInPictureElement ? "" : "btn-on"
+									!picInPic || !Document.pictureInPictureElement ? "" : "btn-on"
 								} hoverButton tooltip notSelectable`}
 								id="pip-button"
 								onClick={() => {
@@ -252,7 +260,7 @@ const VideoChat = ({
 								<span>
 									{
 										// @ts-ignore
-										!picInPic || Document.pictureInPictureElement
+										!picInPic || !Document.pictureInPictureElement
 											? "Picture in Picture"
 											: "Normal View"
 									}
@@ -291,7 +299,7 @@ const VideoChat = ({
 						>
 							<button
 								className="hoverButton tooltip notSelectable"
-								onClick={() => 
+								onClick={() =>
 									onEndCall ? onEndCall : console.log("call ended")
 								}
 							>

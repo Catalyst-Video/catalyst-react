@@ -5,7 +5,7 @@ THIS PACKAGE IS IN DEVELOPMENT. IT WILL BE READY FOR USE SOON
 📷💬 An open-source React component that allows developers to quickly and easily add Zoom-like video chat to their web applications. Built using WebRTC, using Typescript. A functioning build be enabled in minutes with as few as five lines of code.
 ## Functionality & Params
 
-| Param        | Description                                                                                                 | Sample Type                             | Default Value                             | Required |
+| Param        | Description                                                                                                 |  Type                             | Example Value                             | Required |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- | -------------------------------------- | -------- |
 | `sessionKey` | Unique session identifier - peers with the same `sessionKey` are connected                                                                    |  `string` | `"UNDEFINED"` |  Yes      |
 | `catalystUUID` | Unique project identifier - keeps video calls from different projects from overlapping                                                          |  `UUID` | `"4d39df3f-f67b-4217-b832-57d4ffa2b217"` |  Yes      |

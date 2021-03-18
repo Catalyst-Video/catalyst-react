@@ -13,6 +13,7 @@ import {
 	displayVideoErrorMessage,
 	displayWelcomeMessage
 } from "../utils/stream_utils";
+import { Wrapper } from "../utils/ui_utiils";
 
 const DEFAULT_SERVER_ADDRESS = "https://catalyst-video-server.herokuapp.com/";
 
@@ -193,6 +194,7 @@ export default class VCDataStream implements VideoChatData {
 			this?.remoteVideoWrapper?.removeChild(
 				document.querySelectorAll(`[uuid="${uuid}"]`)[0]
 			);
+			Wrapper();
 		} catch (e) {
 			logger(e);
 		}
@@ -425,12 +427,14 @@ export default class VCDataStream implements VideoChatData {
 			node.setAttribute("playsinline", "");
 			node.setAttribute("id", "remote-video");
 			node.setAttribute("uuid", uuid);
+			node.setAttribute("className", "RemoteVideo");
 			if (!this.remoteVideoWrapper) {
 				this.remoteVideoWrapper = document.getElementById(
 					"wrapper"
 				) as HTMLDivElement;
 			}
 			this.remoteVideoWrapper.appendChild(node);
+			Wrapper();
 			// Update remote video source
 			if (this.remoteVideoWrapper?.lastChild !== null) {
 				let newVid = this.remoteVideoWrapper.lastChild as HTMLVideoElement;

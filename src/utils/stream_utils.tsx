@@ -327,16 +327,16 @@ export function handlePictureInPicture(
 					default:
 						// @ts-ignore
 						video.requestPictureInPicture().catch((e: string) => {
-							alert(
-								"You must be connected to another person to enter picture in picture."
-							);
+							alert("You must join a call to enter picture in picture.");
 						});
 				}
 			}
+		} else {
+			alert("You must join a call to enter picture in picture.");
 		}
 	} else {
 		alert(
-			"Picture in picture is not supported in your browser. Consider using Chrome, Edge, or Safari."
+			"Your browser does not support Picture in Picture. Consider using Chrome, Edge, or Safari."
 		);
 	}
 }
