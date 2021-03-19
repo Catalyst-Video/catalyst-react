@@ -1,6 +1,6 @@
 # Catalyst Video Chat React Component
 
-THIS PACKAGE IS IN DEVELOPMENT. IT WILL BE READY FOR USE SOON
+This package is currently in development. If you experience issues, let us know on [github](https://github.com/Catalyst-Video/catalyst-react/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
 
 📷💬 An open-source React component that allows developers to quickly and easily add Zoom-like video chat to their web applications. Built using WebRTC and Typescript. A functioning build be enabled in minutes with as few as five lines of code.
 ## Functionality & Params
@@ -21,11 +21,11 @@ THIS PACKAGE IS IN DEVELOPMENT. IT WILL BE READY FOR USE SOON
 
 Install this package in any of your projects by running 
 ```
-npm install catalyst-vc-react
+npm i catalyst-vc-react
 ```
 or 
 ```
-yarn install catalyst-vc-react
+yarn add catalyst-vc-react
 ```
 
 ### Importing
@@ -46,16 +46,8 @@ import { UtilName } from "catalyst-vc-react/utils";
 
 ```tsx
 	<VideoChat
-			sessionKey="testKey"
-			catalystUUID=""
-			defaultSettings={{
-				hideChat: true,
-				audioOn: true,
-				videoOn: true,
-				hideCaptions: true,
-				hideLogo: false
-			}}
-			
+			sessionKey="ENTER_SESSION_KEY_HERE"
+			catalystUUID="ENTER_UUID_HERE"
 		/>
 ```
 
@@ -85,8 +77,24 @@ You can change the color scheme of Catalyst to your tastes by using the `themeCo
 They can be used in the format `themeColor="blue"`. You can also set any `hexidecimal` color by simply passing it in the format `#ColorCode`. For example, `#456789`.
 ### Examples
 
-```typescript
-<Further examples of component in use>
+```tsx
+	<VideoChat
+			sessionKey="ENTER_SESSION_KEY_HERE"
+			catalystUUID="ENTER_UUID_HERE"
+			defaults={{
+				hideChat: true,
+				audioOn: true,
+				videoOn: true,
+				hideCaptions: false,
+			}}
+			disabled={{ 
+				screenshare: true, 
+				chat: true, 
+				picinpic: false
+			}}
+			onEndCall={ENTER_FUNCTION_HERE}
+			themeColor="indigo"
+		/>
 ```
 
 Catalyst can be seen in action in the following active projects:
@@ -110,11 +118,13 @@ After you have the repo on your local machine, run the following commands to ins
 npm install
 ```
 
-Once you have everything installed and updated, run the following command to compile a demo version to localhost
+Once you have everything installed and updated, run the following command to begin the compilation process w/ [tsdx](https://tsdx.io/)
 
 ```
 npm start
 ```
+Then run `npm start` again in the `/example` directory and navigate to `localhost:1234` to begin testing
+
 ## Meta
 
 Created by [@GoldinGuy](https://github.com/GoldinGuy) and [@JoeSemrai](https://github.com/JosephSemrai)
