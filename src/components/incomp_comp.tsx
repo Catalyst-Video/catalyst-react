@@ -1,9 +1,11 @@
+import React from "react";
+
 const IncompatibleComponent = () => {
 	return (
-		<h1 className="incomp">
+		<div className="incomp">
 			Your browser is not supported. Try updating your browser or using a
 			different one.
-		</h1>
+		</div>
 	);
 };
 export default IncompatibleComponent;
