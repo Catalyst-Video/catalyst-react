@@ -1,11 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Thing } from '../src';
+import VideoChat from '../src/index';
+// import { render, fireEvent } from '@testing-library/react';
 
-describe('it', () => {
+describe('testMount', () => {
   it('renders without crashing', () => {
     const div = document.createElement('div');
-    ReactDOM.render(<Thing />, div);
+    ReactDOM.render(<VideoChat sessionKey="test" catalystUUID="test" />, div);
     ReactDOM.unmountComponentAtNode(div);
   });
 });
