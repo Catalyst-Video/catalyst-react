@@ -17,6 +17,7 @@ const App = () => {
           hideCaptions: true,
           hideLogo: false,
         }}
+        themeColor="indigo"
       />
     </div>
   );

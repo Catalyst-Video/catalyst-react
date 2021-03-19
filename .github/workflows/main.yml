@@ -1,7 +1,5 @@
 name: CI
 on: [push]
-env:
-     CI: false
 jobs:
   build:
     name: Build, lint, and test on Node ${{ matrix.node }} and ${{ matrix.os }}
@@ -27,8 +25,8 @@ jobs:
       - name: Lint
         run: yarn lint
 
-      - name: Test
-        run: yarn test --ci --coverage --maxWorkers=2
+      # - name: Test
+      #   run: yarn test --ci --coverage --maxWorkers=2
 
       - name: Build
         run: yarn build
