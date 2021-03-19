@@ -24,10 +24,9 @@ export default class VCDataStream implements VideoChatData {
   dataChannel: Map<string, RTCDataChannel>;
   connected: Map<string, boolean>;
   localICECandidates: Record<string, RTCIceCandidate[]>;
-  socket: typeof Socket;
+  socket: any;
   remoteVideoWrapper: HTMLDivElement;
   localVideo: HTMLMediaElement;
-  // recognition: SpeechRecognition;
   peerConnections: Map<string, RTCPeerConnection>;
   localStream: MediaStream | undefined;
   localAudio: MediaStreamTrack | undefined;
@@ -37,6 +36,7 @@ export default class VCDataStream implements VideoChatData {
   setLocalVideoText: Function;
   setCaptionsText: Function;
   customSnackbarMsg: string | HTMLElement | Element | undefined;
+  // recognition: SpeechRecognition;
 
   constructor(
     name: string,

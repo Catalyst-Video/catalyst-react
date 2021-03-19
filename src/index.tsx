@@ -33,9 +33,9 @@ import {
   faPlay,
 } from '@fortawesome/free-solid-svg-icons';
 // styles
-import CatStyles from './styles/catalyst.module.css';
+import './styles/catalyst.css';
 import 'react-toastify/dist/ReactToastify.css';
-import GridStyles from './styles/video_grid.module.css';
+import './styles/video_grid.css';
 // packages
 import { ToastContainer } from 'react-toastify';
 import Draggable from 'react-draggable';
@@ -301,14 +301,14 @@ const VideoChat = ({
                 <FontAwesomeIcon icon={faPhoneSlash} />
                 <span>End Call</span>
               </button>
-              <audio
+              {/* <audio
                 id="join-sound"
                 src={require('./assets/sound/join.mp3')}
               ></audio>
               <audio
                 id="leave-sound"
                 src={require('./assets/sound/leave.mp3')}
-              ></audio>
+              ></audio> */}
             </div>
           </div>
         </div>
