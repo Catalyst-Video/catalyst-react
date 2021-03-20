@@ -58,6 +58,7 @@ const VideoChat = ({
   disabled,
   onEndCall,
   cstmSnackbarMsg,
+  cstmOptionBtns,
   themeColor,
 }: {
   sessionKey: string;
@@ -67,6 +68,7 @@ const VideoChat = ({
   disabled?: DisabledSettings;
   onEndCall?: Function;
   cstmSnackbarMsg?: HTMLElement | Element | string;
+  cstmOptionBtns: HTMLButtonElement[];
   themeColor?: string;
 }) => {
   const fsHandle = useFullScreenHandle();
@@ -315,6 +317,10 @@ const VideoChat = ({
                 </span>
               </button>
             </div>
+
+            {cstmOptionBtns.map((component, index) => (
+              <React.Fragment key={index}>{component}</React.Fragment>
+            ))}
 
             <div
               className={`buttonContainer ${disabled?.endcall ? 'none' : ''}`}
