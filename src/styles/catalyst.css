@@ -171,7 +171,7 @@ a {
   text-align: center;
   box-shadow: 0 0 0 2px var(--themeColor);
   border-radius: 10px;
-  padding: 10px;
+  padding: 20px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -540,7 +540,7 @@ button.tooltip:hover span {
   } */
 
   #room-text {
-   width: 85%;
+   width: 90%;
 }
 
 
