@@ -6,11 +6,14 @@ import {
   IncompatibleComponent,
 } from './components/index';
 // utils
+import VCDataStream from './stream_class';
+import { ResizeWrapper } from './utils/ui_utils';
 import { getBrowserName, setThemeColor } from './utils/general_utils';
 import {
   handleMute,
   handlePauseVideo,
   handlePictureInPicture,
+  handleRequestToggleCaptions,
   handleSharing,
 } from './utils/stream_utils';
 // typings
@@ -24,7 +27,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faClosedCaptioning,
   faComment,
+  faCompress,
   faDesktop,
+  faExpand,
   faExternalLinkAlt,
   faMicrophone,
   faMicrophoneSlash,
@@ -32,7 +37,10 @@ import {
   faPhoneSlash,
   faPlay,
 } from '@fortawesome/free-solid-svg-icons';
-// styles
+// assets
+const joinSound = require('./assets/sound/join.mp3');
+const leaveSound = require('./assets/sound/leave.mp3');
+
 import './styles/catalyst.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './styles/video_grid.css';
@@ -40,28 +48,31 @@ import './styles/video_grid.css';
 import { ToastContainer } from 'react-toastify';
 import Draggable from 'react-draggable';
 import DetectRTC from 'detectrtc';
-import VCDataStream from './stream_class';
-import { ResizeWrapper } from './utils/ui_utils';
+import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 
 const VideoChat = ({
   sessionKey,
   catalystUUID,
-  socketServerAddress,
+  cstmServerAddress,
   defaults,
   disabled,
   onEndCall,
-  customSnackbarMsg,
+  cstmSnackbarMsg,
+  cstmOptionBtns,
   themeColor,
 }: {
   sessionKey: string;
   catalystUUID: string;
-  socketServerAddress?: string;
+  cstmServerAddress?: string;
   defaults?: DefaultSettings;
   disabled?: DisabledSettings;
   onEndCall?: Function;
-  customSnackbarMsg?: HTMLElement | Element | string;
+  cstmSnackbarMsg?: HTMLElement | Element | string;
+  cstmOptionBtns: HTMLButtonElement[];
   themeColor?: string;
 }) => {
+  const fsHandle = useFullScreenHandle();
+
   const [browserSupported, setBrowserSupported] = useState(true);
   const [audioEnabled, setAudio] = useState<boolean>(
     defaults?.audioOn ? defaults.audioOn : true
@@ -71,14 +82,12 @@ const VideoChat = ({
   );
   const [sharing, setSharing] = useState(false);
   const [picInPic, setPicInPic] = useState(false);
-  const [hideChat, setHideChat] = useState<boolean>(
-    defaults?.hideChatArea ? defaults.hideChatArea : true
+  const [showChat, setShowChat] = useState<boolean>(
+    defaults?.showChatArea ? defaults.showChatArea : false
   );
-  const [hideCaptions, setHideCaptions] = useState<boolean>(
-    defaults?.hideCaptionsArea ? defaults.hideCaptionsArea : false
-  );
+
   const [captionsText, setCaptionsText] = useState(
-    'Room ready. Waiting for others to join...'
+    defaults?.showCaptionsArea ? '' : 'CLOSED CAPTIONS'
   );
   const [localVideoText, setLocalVideoText] = useState('No webcam input');
   const [VCData, setVCData] = useState<VideoChatData>();
@@ -129,27 +138,25 @@ const VideoChat = ({
       catalystUUID,
       setCaptionsText,
       setLocalVideoText,
-      socketServerAddress,
-      customSnackbarMsg
+      cstmServerAddress,
+      cstmSnackbarMsg
     );
     setVCData(VCD);
     VCD?.requestMediaStream();
-  }, [sessionKey, catalystUUID, socketServerAddress, customSnackbarMsg]);
+  }, [sessionKey, catalystUUID, cstmServerAddress, cstmSnackbarMsg]);
 
   if (browserSupported) {
     return (
-      <>
+      <FullScreen handle={fsHandle}>
         <div id="arbitrary-data" className="none"></div>
-        <HeaderComponent sessionKey={sessionKey} />
+        <HeaderComponent VCData={VCData} />
         <div id="call-section">
-          <Draggable>
-            <div
-              id="remote-video-text"
-              className={`${hideCaptions ? 'none' : ''}`}
-            >
-              {captionsText}
-            </div>
-          </Draggable>
+          <div
+            id="remote-video-text"
+            className={`${captionsText === 'CLOSED CAPTIONS' ? 'none' : ''}`}
+          >
+            {captionsText}
+          </div>
           <div id="wrapper"></div>
           <Draggable defaultPosition={{ x: 30, y: 150 }}>
             <div id="moveable" className="video-1">
@@ -230,14 +237,40 @@ const VideoChat = ({
             <div className={`buttonContainer ${disabled?.chat ? 'none' : ''}`}>
               <button
                 className={`${
-                  hideChat ? '' : 'btn-on'
+                  !showChat ? '' : 'btn-on'
                 } hoverButton tooltip notSelectable`}
                 onClick={() => {
-                  setHideChat(!hideChat);
+                  setShowChat(!showChat);
                 }}
               >
-                <span>{!hideChat ? 'Hide Chat' : 'Show Chat'}</span>
+                <span>{showChat ? 'Hide Chat' : 'Show Chat'}</span>
                 <FontAwesomeIcon icon={faComment} />
+              </button>
+            </div>
+
+            <div
+              className={`buttonContainer ${
+                disabled?.pausevideo ? 'none' : ''
+              }`}
+            >
+              <button
+                className={`${
+                  !fsHandle.active ? '' : 'btn-on'
+                } hoverButton tooltip notSelectable`}
+                onClick={() => {
+                  if (fsHandle.active) {
+                    fsHandle.exit();
+                  } else {
+                    fsHandle.enter();
+                  }
+                }}
+              >
+                <span>
+                  {!fsHandle.active ? 'Enter Full Screen' : 'Exit Full Screen'}
+                </span>
+                <FontAwesomeIcon
+                  icon={!fsHandle.active ? faExpand : faCompress}
+                />
               </button>
             </div>
 
@@ -269,25 +302,25 @@ const VideoChat = ({
             >
               <button
                 className={`${
-                  hideCaptions ? '' : 'btn-on'
+                  captionsText === 'CLOSED CAPTIONS' ? '' : 'btn-on'
                 } hoverButton tooltip notSelectable`}
                 onClick={() => {
-                  alert('Toggle Captions');
-                  // handleRequestToggleCaptions(
-                  // 	receivingCaptions,
-                  // 	setReceivingCaptions,
-                  // 	VCData,
-                  // 	setCaptionsText,
-                  // 	dataChannel
-                  // );
+                  if (VCData)
+                    handleRequestToggleCaptions(VCData, setCaptionsText);
                 }}
               >
                 <FontAwesomeIcon icon={faClosedCaptioning} />
                 <span>
-                  {hideCaptions ? 'Closed Captions' : 'Hide Closed Captions'}
+                  {captionsText === 'CLOSED CAPTIONS'
+                    ? 'Closed Captions'
+                    : 'Hide Closed Captions'}
                 </span>
               </button>
             </div>
+
+            {cstmOptionBtns.map((component, index) => (
+              <React.Fragment key={index}>{component}</React.Fragment>
+            ))}
 
             <div
               className={`buttonContainer ${disabled?.endcall ? 'none' : ''}`}
@@ -301,19 +334,12 @@ const VideoChat = ({
                 <FontAwesomeIcon icon={faPhoneSlash} />
                 <span>End Call</span>
               </button>
-              {/* <audio
-                id="join-sound"
-                src={require('./assets/sound/join.mp3')}
-              ></audio>
-              <audio
-                id="leave-sound"
-                src={require('./assets/sound/leave.mp3')}
-              ></audio> */}
+              <audio id="join-sound" src={joinSound}></audio>
+              <audio id="leave-sound" src={leaveSound}></audio>
             </div>
           </div>
         </div>
-
-        <ChatComponent hideChat={hideChat} />
+        <ChatComponent showChat={showChat} />
         <ToastContainer
           position="top-center"
           autoClose={50000}
@@ -326,7 +352,7 @@ const VideoChat = ({
           pauseOnHover
           limit={2}
         />
-      </>
+      </FullScreen>
     );
   } else {
     return <IncompatibleComponent />;

@@ -2,17 +2,19 @@
 
 This package is currently in development. If you experience issues, let us know on [github](https://github.com/Catalyst-Video/catalyst-react/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
 
-📷💬 An open-source React component that allows developers to quickly and easily add Zoom-like video chat to their web applications. Built using WebRTC and Typescript. A functioning build be enabled in minutes with as few as five lines of code.
+📷💬 An open-source React component that allows developers to quickly and easily add Zoom-like video chat to their web applications. Built using WebRTC and Typescript. A functioning build be enabled in minutes with a few lines of code.
 ## Functionality & Params
 
 | Param        | Description                                                                                                 |  Type                             | Example Value                             | Required |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- | -------------------------------------- | -------- |
 | `sessionKey` | Unique session identifier - peers with the same `sessionKey` are connected                                                                    |  `string` | `"UNDEFINED"` |  Yes      |
-| `catalystUUID` | Unique project identifier - keeps video calls from different projects from overlapping                                                          |  `UUID` | `"4d39df3f-f67b-4217-b832-57d4ffa2b217"` |  Yes      |
-| `defaults`          | Settings for the default instance of Catalyst                                                                                   | ```{audioOn?: boolean; videoOn?: boolean; hideChatArea?: boolean; hideCaptionsArea?: boolean; }```                              | ```{ audioOn: true, videoOn: true, hideCaptionsArea: true,  hideCaptionsArea: true }```  | Optional      |
+| `catalystUUID` | Unique project identifier - keeps video calls from different projects from overlapping                                                          |  `string` | `"4d39df3f-f67b-4217-b832-57d4ffa2b217"` |  Yes      |
+| `cstmServerAddress` | Domain for your signaling server. Uses the Catalyst Demo one by default                                                                   |  `string` | `"https://catalyst-video-server.herokuapp.com/"` |  Optional    |
+| `defaults`          | Settings for the default instance of Catalyst                                                                                   | ```{audioOn?: boolean; videoOn?: boolean; showChatArea?: boolean; showCaptionsArea?: boolean; }```                              | ```{ audioOn: true, videoOn: true, showCaptionsArea: true,  showCaptionsArea: true }```  | Optional      |
 | `disabled`          | Disable any of Catalyst's wide array of video options                                                    | ```{ mute?: boolean; pausevideo?: boolean; screenshare?: boolean; chat?: boolean; picinpic?: boolean; captions?: boolean; endcall?: boolean; }```                              |```{ mute: false, pausevideo: false, screenshare: false, chat: false, picinpic: false, captions: false, endcall: false }```  | Optional      |
 | `onEndCall`  | Function triggered when user clicks the "end call" button | `Function`  | `console.log("call ended")` | Optional |
-| `customSnackbarMsg`  | Displays message in snackbar popup on session start | `HTMLElement` or `Element` or `string`                              | `Share your session key {sessionKey} with whoever wants to join `                                | Optional |
+| `cstmSnackbarMsg`  | Displays message in snackbar popup on session start | `HTMLElement` or `Element` or `string`                              | `Share your session key {sessionKey} with whoever wants to join `                                | Optional |
+| `cstmOptionBtns`  | React elements that will be displayed in the Video Chat toolbar | `HTMLElement[]` | `[<div className="buttonContainer"><button className="hoverButton tooltip notSelectable" onClick={() => console.log('do something')}><FontAwesomeIcon icon={faSync} /><span>Do Something</span></button></div>,]`                                | Optional |
 | `themeColor`  | Alters Catalyst theme to use a particular color. Comes with a multitude of built-in options, or you can set a custom `hexadecimal` color of your choice. | `string`  | `blue` | Optional |
 
 ## Usage
@@ -37,9 +39,9 @@ import { VideoChat } from "catalyst-vc-react"
 If you want to access the utils or interfaces within the package, use
 
 ```typescript
-import { InterfaceName } from "catalyst-vc-react/interfaces"
+import { InterfaceName } from "catalyst-vc-react/dist/typings";
 
-import { UtilName } from "catalyst-vc-react/utils";
+import { UtilName } from "catalyst-vc-react/dist/utils";
 ```
 
 ### Implementation
@@ -55,7 +57,7 @@ Above is a simplistic example of a `VideoChat` component being embedded in a pro
 
 This will use Catalyst's [demo signaling server](https://github.com/Catalyst-Video/catalyst-server) by default, allowing you to see a functioning version of video chat in your projects immediately.
 
-Behind the scenes, the session key is appended to the `catalystUUID` parameter to ensure two projects both using the demo server do not You can use this [UUID Generator](https://www.uuidgenerator.net/) to create your `catalystUUID`.
+Behind the scenes, the session key is appended to the `catalystUUID` parameter to ensure two projects both using the demo server do not overlap. You can use this [UUID Generator](https://www.uuidgenerator.net/) to create your `catalystUUID`.
 
 The demo signaling server does not currently have quotas, but be respectful in your usage. You can create your own server by following the Catalyst server setup docs [here](https://linktoserversetupdocs)
 
@@ -74,18 +76,19 @@ You can change the color scheme of Catalyst to your tastes by using the `themeCo
 - [indigo](https://coolors.co/5A67D8)
 - [purple](https://coolors.co/805AD5)
 
-They can be used in the format `themeColor="blue"`. You can also set any `hexidecimal` color by simply passing it in the format `#ColorCode`. For example, `#456789`.
+They can be used in the format `themeColor="blue"`. You can also set any `hexidecimal` color by simply passing it in the format `#ColorCode`. For example, `themeColor="#456789"`.
 ### Examples
 
+With chat enabled by default, a function triggered on end call, and Indigo color scheme
 ```tsx
 	<VideoChat
 			sessionKey="ENTER_SESSION_KEY_HERE"
 			catalystUUID="ENTER_UUID_HERE"
 			defaults={{
-				hideChat: true,
 				audioOn: true,
 				videoOn: true,
-				hideCaptions: false,
+				showChatArea: true,
+				showCaptionsArea: false,
 			}}
 			disabled={{ 
 				screenshare: true, 
@@ -94,6 +97,26 @@ They can be used in the format `themeColor="blue"`. You can also set any `hexide
 			}}
 			onEndCall={ENTER_FUNCTION_HERE}
 			themeColor="indigo"
+		/>
+```
+With a custom button on the video chat toolbar, a custom welcome message, and a Red color scheme
+```tsx
+	<VideoChat
+			sessionKey="ENTER_SESSION_KEY_HERE"
+			catalystUUID="ENTER_UUID_HERE"
+			cstmOptionBtns={[
+				<div className="buttonContainer">
+					<button
+					className="hoverButton tooltip notSelectable"
+					onClick={() => console.log('do something')}
+					>
+					<FontAwesomeIcon icon={faSync} />
+					<span>Do Something</span>
+					</button>
+				</div>,
+			]}
+			cstmSnackbarMsg="custom welcome message"
+			themeColor="red"
 		/>
 ```
 

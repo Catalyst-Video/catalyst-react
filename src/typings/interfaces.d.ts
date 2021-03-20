@@ -15,8 +15,8 @@ export interface VideoChatData {
   seenWelcomeSnackbar: boolean;
   setLocalVideoText: Function;
   setCaptionsText: Function;
-  customSnackbarMsg: string | HTMLElement | Element | undefined;
-  // recognition: SpeechRecognition;
+  cstmSnackbarMsg: string | HTMLElement | Element | undefined;
+  recognition: SpeechRecognition | undefined;
 
   requestMediaStream(e?: Event): void;
   onMediaStream(e: MediaStream): void;
@@ -44,8 +44,8 @@ export interface VideoChatData {
 export interface DefaultSettings {
   audioOn?: boolean;
   videoOn?: boolean;
-  hideChatArea?: boolean;
-  hideCaptionsArea?: boolean;
+  showChatArea?: boolean;
+  showCaptionsArea?: boolean;
 }
 
 export interface DisabledSettings {

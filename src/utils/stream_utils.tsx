@@ -105,25 +105,23 @@ export function handleSwitchStreamHelper(
 }
 
 export function handleRequestToggleCaptions(
-  receivingCaptions: boolean,
-  setReceivingCaptions: Function,
   VCData: VideoChatData,
-  setCaptionsText: Function,
-  dataChannel: Map<string, RTCDataChannel>
+  setCaptionsText: Function
 ): void {
   // Handle requesting captions before connected
   if (!isConnected(VCData)) {
-    alert('You must be connected to a peer to use Live Captions');
+    alert('You must join a call to use Live Captions');
     return;
   }
-  if (receivingCaptions) {
-    setCaptionsText('Start Live Captions');
-    setReceivingCaptions(false);
+  if (VCData.receivingCaptions) {
+    setCaptionsText('CLOSED CAPTIONS');
+    VCData.receivingCaptions = false;
   } else {
     toast(
       () => (
         <div className="text-center justify-between">
-          Experimental: The user speaking must be using a Chromium browser.
+          <strong>Experimental:</strong> The user speaking must be using a
+          Chromium browser
         </div>
       ),
       {
@@ -131,112 +129,109 @@ export function handleRequestToggleCaptions(
       }
     );
 
-    setCaptionsText('End Live Captions');
-    setReceivingCaptions(true);
+    setCaptionsText('Captions Enabled');
+    VCData.receivingCaptions = true;
   }
   // Send request to get captions over data channel
-  sendToAllDataChannels('tog:', dataChannel);
+  sendToAllDataChannels('tog:', VCData.dataChannel);
 }
 
 export function handleReceiveCaptions(
-  captions: any,
-  receivingCaptions: boolean,
-  setReceivingCaptions: Function,
-  setHideCaptions: Function,
+  captions: string,
+  VCData: VideoChatData,
   setCaptionsText: Function
 ): void {
-  if (receivingCaptions) {
-    setCaptionsText('');
-    setReceivingCaptions(false);
-    setHideCaptions(false);
-  } else {
-    setCaptionsText('');
-    setHideCaptions(true);
-    setReceivingCaptions(true);
+  if (VCData.receivingCaptions) {
+    setCaptionsText(captions);
   }
   // Other user is not using chrome
   if (captions === 'notusingchrome') {
     alert(
       'Other caller must be using chrome for this feature to work. Live Captions disabled.'
     );
-    setCaptionsText('');
-    setHideCaptions(true);
-    setCaptionsText('Start Live Captions');
-    return;
+    setCaptionsText('CLOSED CAPTIONS');
   }
-  setCaptionsText(captions);
 }
 
-// export function handleToggleCaptions(
-// 	sendingCaptions: boolean,
-// 	setSendingCaptions: Function,
-// 	VCData: VideoChatData
-// ) {
-// 	if (sendingCaptions) {
-// 		setSendingCaptions(false);
-// 		VCData.recognition.stop();
-// 	} else {
-// 		setSendingCaptions(true);
-// 		sendingCaptions = true;
-// 	}
+// export function handleReceiveCaptions(
+//   captions: any,
+//   VCData: VideoChatData,
+//   // setHideCaptions: Function,
+//   setCaptionsText: Function
+// ): void {
+//   if (VCData.receivingCaptions) {
+//     setCaptionsText('');
+//     VCData.receivingCaptions = false;
+//   } else {
+//     setCaptionsText('CLOSED CAPTIONS');
+//     VCData.receivingCaptions = true;
+//   }
+//   // Other user is not using chrome
+//   if (captions === 'notusingchrome') {
+//     alert(
+//       'Other caller must be using chrome for this feature to work. Live Captions disabled.'
+//     );
+//     setCaptionsText('CLOSED CAPTIONS');
+//     return;
+//   }
+//   setCaptionsText(captions);
 // }
 
-// export function handleStartSpeech(
-// 	VCData: VideoChatData,
-// 	sendingCaptions: boolean,
-// 	setSendingCaptions: Function,
-// 	dataChannel: Map<any, any>
-// ) {
-// 	try {
-// 		var SpeechRecognition = window.SpeechRecognition;
-// 		VCData.recognition = new SpeechRecognition();
-// 	} catch (e) {
-// 		setSendingCaptions(false);
-// 		logger(e);
-// 		logger("error importing speech library");
-// 		// Alert other user that they cannon use live captions
-// 		sendToAllDataChannels("cap:notusingchrome", dataChannel);
-// 		return;
-// 	}
-// 	VCData.recognition.continuous = true;
-// 	// Show results that aren't final
-// 	VCData.recognition.interimResults = true;
-// 	// var finalTranscript: any;
-// 	VCData.recognition.onresult = (e: any) => {
-// 		let interimTranscript = "";
-// 		for (let i = e.resultIndex, len = e.results.length; i < len; i++) {
-// 			var transcript = e.results[i][0].transcript;
-// 			logger(transcript);
-// 			if (e.results[i].isFinal) {
-// 				// finalTranscript += transcript;
-// 			} else {
-// 				interimTranscript += transcript;
-// 				var charsToKeep = interimTranscript.length % 100;
-// 				// Send captions over data chanel, subtracting as many complete 100 char slices from start
-// 				sendToAllDataChannels(
-// 					"cap:" +
-// 						interimTranscript.substring(interimTranscript.length - charsToKeep),
-// 					dataChannel
-// 				);
-// 			}
-// 		}
-// 	};
-// 	VCData.recognition.onend = function () {
-// 		logger("on speech recording end");
-// 		// Restart speech recognition if user has not stopped it
-// 		if (sendingCaptions) {
-// 			handleStartSpeech(
-// 				VCData,
-// 				sendingCaptions,
-// 				setSendingCaptions,
-// 				dataChannel
-// 			);
-// 		} else {
-// 			VCData.recognition.stop();
-// 		}
-// 	};
-// 	VCData.recognition.start();
-// }
+export function handleToggleCaptions(VCData: VideoChatData) {
+  if (VCData.sendingCaptions && VCData.recognition) {
+    VCData.sendingCaptions = false;
+    VCData.recognition.stop();
+  } else {
+    VCData.sendingCaptions = true;
+    handleStartSpeech(VCData);
+  }
+}
+
+export function handleStartSpeech(VCData: VideoChatData) {
+  try {
+    var SpeechRecognition = window.SpeechRecognition;
+    VCData.recognition = new SpeechRecognition();
+  } catch (e) {
+    VCData.sendingCaptions = false;
+    logger('error importing speech library' + e);
+    // Alert other user that they cannon use live captions
+    sendToAllDataChannels('cap:notusingchrome', VCData.dataChannel);
+    return;
+  }
+  VCData.recognition.continuous = true;
+  // Show results that aren't final
+  VCData.recognition.interimResults = true;
+  // var finalTranscript: any;
+  VCData.recognition.onresult = (e: any) => {
+    let interimTranscript = '';
+    for (let i = e.resultIndex, len = e.results.length; i < len; i++) {
+      var transcript = e.results[i][0].transcript;
+      logger(transcript);
+      if (e.results[i].isFinal) {
+        // finalTranscript += transcript;
+      } else {
+        interimTranscript += transcript;
+        var charsToKeep = interimTranscript.length % 100;
+        // Send captions over data chanel, subtracting as many complete 100 char slices from start
+        sendToAllDataChannels(
+          'cap:' +
+            interimTranscript.substring(interimTranscript.length - charsToKeep),
+          VCData.dataChannel
+        );
+      }
+    }
+  };
+  VCData.recognition.onend = function() {
+    logger('on speech recording end');
+    // Restart speech recognition if user has not stopped it
+    if (VCData.sendingCaptions) {
+      handleStartSpeech(VCData);
+    } else if (VCData.recognition) {
+      VCData.recognition.stop();
+    }
+  };
+  VCData.recognition.start();
+}
 
 export function handlePictureInPicture(
   VCData: VideoChatData,

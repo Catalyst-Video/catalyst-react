@@ -1,6 +1,6 @@
 {
   "name": "catalyst-vc-react",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "author": "@GoldinGuy seth@goldin.io & @JoeSemrai josephsemrai@gmail.com",
   "private": false,
   "license": "AGPL-3.0-only",
@@ -38,6 +38,7 @@
     "css-global-variables": "^3.0.2",
     "detectrtc": "^1.4.1",
     "react-draggable": "^4.4.3",
+    "react-full-screen": "^1.0.1",
     "react-scripts": "4.0.3",
     "react-toastify": "^7.0.3",
     "socket.io-client": "^2.3.1"
@@ -55,8 +56,10 @@
     "identity-obj-proxy": "^3.0.0",
     "jest-environment-jsdom-fifteen": "^1.0.2",
     "lint": "^0.7.0",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0",
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-import-file": "^1.0.1",
     "rollup-plugin-postcss": "^4.0.0",
     "size-limit": "^4.10.1",
     "tsdx": "^0.14.1",
