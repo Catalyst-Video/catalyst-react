@@ -33,7 +33,10 @@ import {
   faPhoneSlash,
   faPlay,
 } from '@fortawesome/free-solid-svg-icons';
-// styles
+// assets
+const joinSound = require('./assets/sound/join.mp3');
+const leaveSound = require('./assets/sound/leave.mp3');
+
 import './styles/catalyst.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './styles/video_grid.css';
@@ -294,6 +297,8 @@ const VideoChat = ({
                 <FontAwesomeIcon icon={faPhoneSlash} />
                 <span>End Call</span>
               </button>
+              <audio id="join-sound" src={joinSound}></audio>
+              <audio id="leave-sound" src={leaveSound}></audio>
               {/* <audio
                 id="join-sound"
                 src={require('./assets/sound/join.mp3')}
