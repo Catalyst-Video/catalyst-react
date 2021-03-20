@@ -53,6 +53,11 @@ body {
   overflow: hidden;
 }
 
+.fullscreen-enabled {
+  background: #f3f5fd !important;
+
+}
+
 video {
   background: #16171a;
 }

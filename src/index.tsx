@@ -6,6 +6,8 @@ import {
   IncompatibleComponent,
 } from './components/index';
 // utils
+import VCDataStream from './stream_class';
+import { ResizeWrapper } from './utils/ui_utils';
 import { getBrowserName, setThemeColor } from './utils/general_utils';
 import {
   handleMute,
@@ -25,7 +27,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faClosedCaptioning,
   faComment,
+  faCompress,
   faDesktop,
+  faExpand,
   faExternalLinkAlt,
   faMicrophone,
   faMicrophoneSlash,
@@ -44,8 +48,7 @@ import './styles/video_grid.css';
 import { ToastContainer } from 'react-toastify';
 import Draggable from 'react-draggable';
 import DetectRTC from 'detectrtc';
-import VCDataStream from './stream_class';
-import { ResizeWrapper } from './utils/ui_utils';
+import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 
 const VideoChat = ({
   sessionKey,
@@ -66,6 +69,8 @@ const VideoChat = ({
   cstmSnackbarMsg?: HTMLElement | Element | string;
   themeColor?: string;
 }) => {
+  const fsHandle = useFullScreenHandle();
+
   const [browserSupported, setBrowserSupported] = useState(true);
   const [audioEnabled, setAudio] = useState<boolean>(
     defaults?.audioOn ? defaults.audioOn : true
@@ -140,7 +145,7 @@ const VideoChat = ({
 
   if (browserSupported) {
     return (
-      <>
+      <FullScreen handle={fsHandle}>
         <div id="arbitrary-data" className="none"></div>
         <HeaderComponent VCData={VCData} />
         <div id="call-section">
@@ -242,6 +247,32 @@ const VideoChat = ({
             </div>
 
             <div
+              className={`buttonContainer ${
+                disabled?.pausevideo ? 'none' : ''
+              }`}
+            >
+              <button
+                className={`${
+                  !fsHandle.active ? '' : 'btn-on'
+                } hoverButton tooltip notSelectable`}
+                onClick={() => {
+                  if (fsHandle.active) {
+                    fsHandle.exit();
+                  } else {
+                    fsHandle.enter();
+                  }
+                }}
+              >
+                <span>
+                  {!fsHandle.active ? 'Enter Full Screen' : 'Exit Full Screen'}
+                </span>
+                <FontAwesomeIcon
+                  icon={!fsHandle.active ? faExpand : faCompress}
+                />
+              </button>
+            </div>
+
+            <div
               className={`buttonContainer ${disabled?.picinpic ? 'none' : ''}`}
             >
               <button
@@ -299,14 +330,6 @@ const VideoChat = ({
               </button>
               <audio id="join-sound" src={joinSound}></audio>
               <audio id="leave-sound" src={leaveSound}></audio>
-              {/* <audio
-                id="join-sound"
-                src={require('./assets/sound/join.mp3')}
-              ></audio>
-              <audio
-                id="leave-sound"
-                src={require('./assets/sound/leave.mp3')}
-              ></audio> */}
             </div>
           </div>
         </div>
@@ -323,7 +346,7 @@ const VideoChat = ({
           pauseOnHover
           limit={2}
         />
-      </>
+      </FullScreen>
     );
   } else {
     return <IncompatibleComponent />;

@@ -35,20 +35,4 @@ module.exports = {
     );
     return config;
   },
-  // module: {
-  //   rules: [
-  //     {
-  //       test: /\.(png|jpg|gif|mp3)$/i,
-  //       use: [
-  //         {
-  //           loader: 'url-loader',
-  //           options: {
-  //             limit: 8192,
-  //           },
-  //         },
-  //       ],
-  //       type: 'asset',
-  //     },
-  //   ],
-  // },
 };
