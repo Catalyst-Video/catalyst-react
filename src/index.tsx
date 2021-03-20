@@ -140,7 +140,6 @@ const VideoChat = ({
       <>
         <div id="arbitrary-data" className="none"></div>
         <HeaderComponent VCData={VCData} />
-        {/* <RoomEmpty VCData={VCData} /> */}
         <div id="call-section">
           <div
             id="remote-video-text"
@@ -327,11 +326,3 @@ const VideoChat = ({
 };
 
 export default VideoChat;
-
-const RoomEmpty = ({ VCData }: { VCData: VideoChatData | undefined }) => {
-  return VCData?.peerConnections.size === 0 ? (
-    <div id="room-text" className={`notSelectable`}>
-      Room ready. Waiting for others to join
-    </div>
-  ) : null;
-};
