@@ -72,12 +72,12 @@ const VideoChat = ({
   );
   const [sharing, setSharing] = useState(false);
   const [picInPic, setPicInPic] = useState(false);
-  const [hideChat, setHideChat] = useState<boolean>(
-    defaults?.hideChatArea ? defaults.hideChatArea : true
+  const [showChat, setShowChat] = useState<boolean>(
+    defaults?.showChatArea ? defaults.showChatArea : false
   );
 
   const [captionsText, setCaptionsText] = useState(
-    defaults?.hideCaptionsArea ? 'CLOSED CAPTIONS' : ''
+    defaults?.showCaptionsArea ? '' : 'CLOSED CAPTIONS'
   );
   const [localVideoText, setLocalVideoText] = useState('No webcam input');
   const [VCData, setVCData] = useState<VideoChatData>();
@@ -228,13 +228,13 @@ const VideoChat = ({
             <div className={`buttonContainer ${disabled?.chat ? 'none' : ''}`}>
               <button
                 className={`${
-                  hideChat ? '' : 'btn-on'
+                  !showChat ? '' : 'btn-on'
                 } hoverButton tooltip notSelectable`}
                 onClick={() => {
-                  setHideChat(!hideChat);
+                  setShowChat(!showChat);
                 }}
               >
-                <span>{!hideChat ? 'Hide Chat' : 'Show Chat'}</span>
+                <span>{showChat ? 'Hide Chat' : 'Show Chat'}</span>
                 <FontAwesomeIcon icon={faComment} />
               </button>
             </div>
@@ -306,7 +306,7 @@ const VideoChat = ({
             </div>
           </div>
         </div>
-        <ChatComponent hideChat={hideChat} />
+        <ChatComponent showChat={showChat} />
         <ToastContainer
           position="top-center"
           autoClose={50000}

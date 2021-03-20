@@ -44,8 +44,8 @@ export interface VideoChatData {
 export interface DefaultSettings {
   audioOn?: boolean;
   videoOn?: boolean;
-  hideChatArea?: boolean;
-  hideCaptionsArea?: boolean;
+  showChatArea?: boolean;
+  showCaptionsArea?: boolean;
 }
 
 export interface DisabledSettings {

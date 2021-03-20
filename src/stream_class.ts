@@ -106,6 +106,12 @@ export default class VCDataStream implements VideoChatData {
     if (!this.seenWelcomeSnackbar) {
       displayWelcomeMessage(this.cstmSnackbarMsg, this.roomName);
       this.seenWelcomeSnackbar = true;
+      if (this.peerConnections.size === 0) {
+        this.setCaptionsText('Room ready. Waiting for others to join...');
+        setTimeout(() => {
+          this.setCaptionsText('CLOSED CAPTIONS');
+        }, 10000);
+      }
     }
 
     /* When a video stream is added to VideoChat, we need to store the local audio track, because the screen sharing MediaStream doesn't have audio by default, which is problematic for peer C who joins while another peer A/B is screen sharing (C won't receive A/Bs audio). */
@@ -203,6 +209,12 @@ export default class VCDataStream implements VideoChatData {
     this.peerConnections.get(uuid)?.close(); // necessary b/c otherwise the RTC connection isn't closed
     this.peerConnections.delete(uuid);
     this.dataChannel.delete(uuid);
+    if (this.peerConnections.size === 0) {
+      this.setCaptionsText('Room ready. Waiting for others to join...');
+      setTimeout(() => {
+        this.setCaptionsText('CLOSED CAPTIONS');
+      }, 5000);
+    }
   };
 
   establishConnection = (correctUuid: string, callback: Function) => {
@@ -269,6 +281,10 @@ export default class VCDataStream implements VideoChatData {
 
       this.peerConnections.get(uuid)!.ontrack = (e: RTCTrackEvent) => {
         this.onAddStream(e, uuid);
+        this.setCaptionsText('Session connected successfully');
+        setTimeout(() => {
+          this.setCaptionsText('CLOSED CAPTIONS');
+        }, 5000);
       };
       // Called when there is a change in connection state
       this.peerConnections.get(uuid)!.oniceconnectionstatechange = (
@@ -320,6 +336,12 @@ export default class VCDataStream implements VideoChatData {
   };
   // When receiving a candidate over the socket, turn it back into a real RTCIceCandidate and add it to the peerConnection.
   onCandidate = (candidate: RTCIceCandidate, uuid: string) => {
+    if (this.peerConnections.size === 0) {
+      this.setCaptionsText('Found other user. Connecting...');
+      setTimeout(() => {
+        this.setCaptionsText('CLOSED CAPTIONS');
+      }, 5000);
+    }
     var rtcCandidate: RTCIceCandidate = new RTCIceCandidate(
       JSON.parse(candidate.toString())
     );

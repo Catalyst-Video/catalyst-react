@@ -13,8 +13,8 @@ const App = () => {
         defaults={{
           audioOn: true,
           videoOn: true,
-          hideCaptionsArea: true,
-          hideChatArea: true,
+          showCaptionsArea: false,
+          showChatArea: false,
         }}
         themeColor="indigo"
       />
