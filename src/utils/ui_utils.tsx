@@ -2,14 +2,14 @@ import { toast } from 'react-toastify';
 import React from 'react';
 
 export function displayWelcomeMessage(
-  customSnackbarMsg: string | HTMLElement | Element | undefined,
+  cstmSnackbarMsg: string | HTMLElement | Element | undefined,
   sessionKey: string
 ): void {
   toast(
     () => (
       <div className="text-center justify-between">
-        {customSnackbarMsg ? (
-          customSnackbarMsg
+        {cstmSnackbarMsg ? (
+          cstmSnackbarMsg
         ) : (
           <>
             <span>Share your session key </span>

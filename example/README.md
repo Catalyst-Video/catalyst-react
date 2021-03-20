@@ -12,7 +12,7 @@ THIS PACKAGE IS IN DEVELOPMENT. IT WILL BE READY FOR USE SOON
 | `defaults`          | Settings for the default instance of Catalyst                                                                                   | ```{audioOn?: boolean; videoOn?: boolean; hideChatArea?: boolean; hideCaptionsArea?: boolean; }```                              | ```{ audioOn: true, videoOn: true, hideCaptionsArea: true,  hideCaptionsArea: true }```  | Optional      |
 | `disabled`          | Disable any of Catalyst's wide array of video options                                                    | ```{ mute?: boolean; pausevideo?: boolean; screenshare?: boolean; chat?: boolean; picinpic?: boolean; captions?: boolean; endcall?: boolean; }```                              |```{ mute: false, pausevideo: false, screenshare: false, chat: false, picinpic: false, captions: false, endcall: false }```  | Optional      |
 | `onEndCall`  | Function triggered when user clicks the "end call" button | `Function`  | `console.log("call ended")` | Optional |
-| `customSnackbarMsg`  | Displays message in snackbar popup on session start | `HTMLElement` or `Element` or `string`                              | `Share your session key {sessionKey} with whoever wants to join `                                | Optional |
+| `cstmSnackbarMsg`  | Displays message in snackbar popup on session start | `HTMLElement` or `Element` or `string`                              | `Share your session key {sessionKey} with whoever wants to join `                                | Optional |
 | `themeColor`  | Alters Catalyst theme to use a particular color. Comes with a multitude of built-in options, or you can set a custom `hexadecimal` color of your choice. | `string`  | `blue` | Optional |
 
 ## Usage

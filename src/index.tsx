@@ -47,20 +47,20 @@ import { ResizeWrapper } from './utils/ui_utils';
 const VideoChat = ({
   sessionKey,
   catalystUUID,
-  socketServerAddress,
+  cstmServerAddress,
   defaults,
   disabled,
   onEndCall,
-  customSnackbarMsg,
+  cstmSnackbarMsg,
   themeColor,
 }: {
   sessionKey: string;
   catalystUUID: string;
-  socketServerAddress?: string;
+  cstmServerAddress?: string;
   defaults?: DefaultSettings;
   disabled?: DisabledSettings;
   onEndCall?: Function;
-  customSnackbarMsg?: HTMLElement | Element | string;
+  cstmSnackbarMsg?: HTMLElement | Element | string;
   themeColor?: string;
 }) => {
   const [browserSupported, setBrowserSupported] = useState(true);
@@ -128,12 +128,12 @@ const VideoChat = ({
       catalystUUID,
       setCaptionsText,
       setLocalVideoText,
-      socketServerAddress,
-      customSnackbarMsg
+      cstmServerAddress,
+      cstmSnackbarMsg
     );
     setVCData(VCD);
     VCD?.requestMediaStream();
-  }, [sessionKey, catalystUUID, socketServerAddress, customSnackbarMsg]);
+  }, [sessionKey, catalystUUID, cstmServerAddress, cstmSnackbarMsg]);
 
   if (browserSupported) {
     return (

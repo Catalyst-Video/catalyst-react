@@ -39,7 +39,7 @@ export default class VCDataStream implements VideoChatData {
   seenWelcomeSnackbar: boolean;
   setLocalVideoText: Function;
   setCaptionsText: Function;
-  customSnackbarMsg: string | HTMLElement | Element | undefined;
+  cstmSnackbarMsg: string | HTMLElement | Element | undefined;
   recognition: SpeechRecognition;
 
   constructor(
@@ -47,7 +47,7 @@ export default class VCDataStream implements VideoChatData {
     catalystUUID: string,
     setCapText: Function,
     setVidText: Function,
-    socketServerAddress?: string,
+    cstmServerAddress?: string,
     cstMsg?: string | HTMLElement | Element
   ) {
     this.roomName = name;
@@ -55,7 +55,7 @@ export default class VCDataStream implements VideoChatData {
     this.dataChannel = new Map();
     this.connected = new Map();
     this.localICECandidates = {};
-    this.socket = io(socketServerAddress ?? DEFAULT_SERVER_ADDRESS);
+    this.socket = io(cstmServerAddress ?? DEFAULT_SERVER_ADDRESS);
     this.remoteVideoWrapper = document.getElementById(
       'wrapper'
     ) as HTMLDivElement;
@@ -70,7 +70,7 @@ export default class VCDataStream implements VideoChatData {
     this.seenWelcomeSnackbar = false;
     this.setCaptionsText = setCapText;
     this.setLocalVideoText = setVidText;
-    this.customSnackbarMsg = cstMsg;
+    this.cstmSnackbarMsg = cstMsg;
     this.recognition = new SpeechRecognition();
   }
 
@@ -104,7 +104,7 @@ export default class VCDataStream implements VideoChatData {
     logger('onMediaStream');
     this.localStream = stream;
     if (!this.seenWelcomeSnackbar) {
-      displayWelcomeMessage(this.customSnackbarMsg, this.roomName);
+      displayWelcomeMessage(this.cstmSnackbarMsg, this.roomName);
       this.seenWelcomeSnackbar = true;
     }
 
@@ -133,8 +133,8 @@ export default class VCDataStream implements VideoChatData {
     // Set up listeners on the socket
     this.socket.on('candidate', this.onCandidate);
     this.socket.on('answer', this.onAnswer);
-    this.socket.on('requestToggleCaptions', () => {});
-    handleToggleCaptions(this);
+    this.socket.on('requestToggleCaptions', () => handleToggleCaptions(this));
+
     this.socket.on('receiveCaptions', (captions: any) => {
       handleReceiveCaptions(captions, this, this.setCaptionsText);
       logger(captions);

@@ -115,7 +115,7 @@ export function handleRequestToggleCaptions(
   }
   if (VCData.receivingCaptions) {
     setCaptionsText('Start Live Captions');
-    // VCData.receivingCaptions = false;
+    VCData.receivingCaptions = false;
   } else {
     toast(
       () => (
@@ -130,7 +130,7 @@ export function handleRequestToggleCaptions(
     );
 
     setCaptionsText('End Live Captions');
-    // VCData.receivingCaptions = true;
+    VCData.receivingCaptions = true;
   }
   // Send request to get captions over data channel
   sendToAllDataChannels('tog:', VCData.dataChannel);
