@@ -171,12 +171,12 @@ a {
   text-align: center;
   box-shadow: 0 0 0 2px var(--themeColor);
   border-radius: 10px;
-  padding: 20px;
+  padding: 25px 20px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, 0);
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 /* caption text */
@@ -189,15 +189,14 @@ a {
   width: 400px;
   margin-left: -200px;
   z-index: 1;
-  color: black;
+  color: #fff;
   font-family: "Heebo", sans-serif;
   font-size: 1.2rem;
   font-weight: bold;
   text-align: center;
-  background: #fff;
-  box-shadow: 0 0 0 2px var(--themeColor);
+  background-color:rgba(0, 0, 0, 0.4);
+  /* box-shadow: 0 0 0 2px var(--themeColor); */
   border-radius: 10px;
-
   padding: 10px;
 }
 
@@ -511,33 +510,6 @@ button.tooltip:hover span {
     margin: 0;
     line-height: 2rem;
   }
-  /* #wrapper {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 0;
-    margin: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, calc(-50% - 3rem));
-    max-height: 90%;
-    max-width: 100%;
-  }
-  #remote-video {
-    width: 100%;
-    height: 100%;
-    border: 3px solid var(--themeColor);
-  }
-
-  #remote-video:picture-in-picture {
-    width: 100%;
-    height: 100%;
-    border: 3px solid var(--themeColor) !important;
-  } */
 
   #room-text {
    width: 90%;

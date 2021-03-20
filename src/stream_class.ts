@@ -15,6 +15,10 @@ import {
   displayWelcomeMessage,
   ResizeWrapper,
 } from './utils/ui_utils';
+import {
+  handleReceiveCaptions,
+  handleToggleCaptions,
+} from './utils/stream_utils';
 
 const DEFAULT_SERVER_ADDRESS = 'https://catalyst-video-server.herokuapp.com/';
 
@@ -36,7 +40,7 @@ export default class VCDataStream implements VideoChatData {
   setLocalVideoText: Function;
   setCaptionsText: Function;
   customSnackbarMsg: string | HTMLElement | Element | undefined;
-  // recognition: SpeechRecognition;
+  recognition: SpeechRecognition;
 
   constructor(
     name: string,
@@ -67,7 +71,7 @@ export default class VCDataStream implements VideoChatData {
     this.setCaptionsText = setCapText;
     this.setLocalVideoText = setVidText;
     this.customSnackbarMsg = cstMsg;
-    // this.recognition = {};
+    this.recognition = new SpeechRecognition();
   }
 
   /* Call to getUserMedia (provided by adapter.js for  browser compatibility) asking for access to both the video and audio streams. If the request is accepted callback to the onMediaStream function, otherwise callback to the noMediaStream function. */
@@ -130,15 +134,9 @@ export default class VCDataStream implements VideoChatData {
     this.socket.on('candidate', this.onCandidate);
     this.socket.on('answer', this.onAnswer);
     this.socket.on('requestToggleCaptions', () => {});
-    // TODO: handleToggleCaptions(this);
+    handleToggleCaptions(this);
     this.socket.on('receiveCaptions', (captions: any) => {
-      // TODO: handleReceiveCaptions(
-      // 	captions,
-      // 	receivingCaptions,
-      // 	setReceivingCaptions,
-      // 	setHideCaptions,
-      // 	setCaptionsText
-      // );
+      handleReceiveCaptions(captions, this, this.setCaptionsText);
       logger(captions);
     });
 
@@ -202,12 +200,9 @@ export default class VCDataStream implements VideoChatData {
 
     // Delete connection & metadata
     this.connected.delete(uuid);
-    this.peerConnections.get(uuid)?.close(); // This is necessary, because otherwise the RTC connection isn't closed
+    this.peerConnections.get(uuid)?.close(); // necessary b/c otherwise the RTC connection isn't closed
     this.peerConnections.delete(uuid);
     this.dataChannel.delete(uuid);
-    if (this.peerConnections.size === 0) {
-      this.setCaptionsText('Room ready. Waiting for others to join...');
-    }
   };
 
   establishConnection = (correctUuid: string, callback: Function) => {
@@ -251,16 +246,9 @@ export default class VCDataStream implements VideoChatData {
         if (dataType === 'mes:') {
           handlereceiveMessage(cleanedMessage);
         } else if (dataType === 'cap:') {
-          // TODO: handleReceiveCaptions(
-          // 	cleanedMessage,
-          // 	receivingCaptions,
-          // 	setReceivingCaptions,
-          // 	setHideCaptions,
-          // 	setCaptionsText
-          // );
+          handleReceiveCaptions(cleanedMessage, this, this.setCaptionsText);
         } else if (dataType === 'tog:') {
           this.sendingCaptions = !this.sendingCaptions;
-          // setSendingCaptions(!sendingCaptions);
         } else {
           // Arbitrary data handling
           logger('Received arbitrary data: ' + receivedData.toString());
@@ -280,7 +268,6 @@ export default class VCDataStream implements VideoChatData {
 
       this.peerConnections.get(uuid)!.ontrack = (e: RTCTrackEvent) => {
         this.onAddStream(e, uuid);
-        this.setCaptionsText('Session connected successfully');
       };
       // Called when there is a change in connection state
       this.peerConnections.get(uuid)!.oniceconnectionstatechange = (
@@ -332,9 +319,6 @@ export default class VCDataStream implements VideoChatData {
   };
   // When receiving a candidate over the socket, turn it back into a real RTCIceCandidate and add it to the peerConnection.
   onCandidate = (candidate: RTCIceCandidate, uuid: string) => {
-    if (this.peerConnections.size === 0) {
-      this.setCaptionsText('Found other user. Connecting...');
-    }
     var rtcCandidate: RTCIceCandidate = new RTCIceCandidate(
       JSON.parse(candidate.toString())
     );
@@ -405,7 +389,7 @@ export default class VCDataStream implements VideoChatData {
     this.localICECandidates[uuid].forEach((candidate: RTCIceCandidate) => {
       // @ts-ignore
       logger(`>>> Sending local ICE candidate (${candidate.address})`);
-      // Send ice candidate over websocket
+      // Send ICE candidate over websocket
       this.socket.emit(
         'candidate',
         JSON.stringify(candidate),
@@ -419,7 +403,6 @@ export default class VCDataStream implements VideoChatData {
   onAddStream = (e: RTCTrackEvent, uuid: string) => {
     if (document.querySelector(`[uuid="${uuid}"]`) === null) {
       logger('onAddStream <<< Received new stream from remote. Adding it...');
-      // this.setCaptionsText("Session connected successfully");
 
       logger('onAddStream <<< Playing join sound...');
       (document.getElementById('join-sound') as HTMLVideoElement)?.play();
@@ -442,9 +425,8 @@ export default class VCDataStream implements VideoChatData {
         newVid.srcObject = e.streams.slice(-1)[0];
       }
       closeAllMessages();
-      // Update connection status
       this.connected.set(uuid, true);
-      // TODO: setHideCaptions(true);
+      this.setCaptionsText('CLOSED CAPTIONS');
     }
   };
 }

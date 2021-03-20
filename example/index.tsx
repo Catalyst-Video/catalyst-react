@@ -11,11 +11,10 @@ const App = () => {
         sessionKey="testKey"
         catalystUUID="demo"
         defaults={{
-          hideChat: true,
           audioOn: true,
           videoOn: true,
-          hideCaptions: true,
-          hideLogo: false,
+          hideCaptionsArea: true,
+          hideChatArea: true,
         }}
         themeColor="indigo"
       />

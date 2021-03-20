@@ -11,6 +11,7 @@ import {
   handleMute,
   handlePauseVideo,
   handlePictureInPicture,
+  handleRequestToggleCaptions,
   handleSharing,
 } from './utils/stream_utils';
 // typings
@@ -74,11 +75,9 @@ const VideoChat = ({
   const [hideChat, setHideChat] = useState<boolean>(
     defaults?.hideChatArea ? defaults.hideChatArea : true
   );
-  const [hideCaptions, setHideCaptions] = useState<boolean>(
-    defaults?.hideCaptionsArea ? defaults.hideCaptionsArea : false
-  );
+
   const [captionsText, setCaptionsText] = useState(
-    'Room ready. Waiting for others to join...'
+    defaults?.hideCaptionsArea ? 'CLOSED CAPTIONS' : ''
   );
   const [localVideoText, setLocalVideoText] = useState('No webcam input');
   const [VCData, setVCData] = useState<VideoChatData>();
@@ -145,20 +144,20 @@ const VideoChat = ({
           id="room-text"
           className={`${
             VCData && VCData.peerConnections.size === 0 ? '' : 'none'
-          }`}
+          } notSelectable`}
         >
           Room ready. Waiting for others to join
         </div>
 
         <div id="call-section">
-          <Draggable>
-            <div
-              id="remote-video-text"
-              className={`${hideCaptions ? 'none' : ''}`}
-            >
-              {captionsText}
-            </div>
-          </Draggable>
+          {/* <Draggable> */}
+          <div
+            id="remote-video-text"
+            className={`${captionsText === 'CLOSED CAPTIONS' ? 'none' : ''}`}
+          >
+            {captionsText}
+          </div>
+          {/* </Draggable> */}
           <div id="wrapper"></div>
           <Draggable defaultPosition={{ x: 30, y: 150 }}>
             <div id="moveable" className="video-1">
@@ -278,22 +277,18 @@ const VideoChat = ({
             >
               <button
                 className={`${
-                  hideCaptions ? '' : 'btn-on'
+                  captionsText === 'CLOSED CAPTIONS' ? '' : 'btn-on'
                 } hoverButton tooltip notSelectable`}
                 onClick={() => {
-                  alert('Toggle Captions');
-                  // handleRequestToggleCaptions(
-                  // 	receivingCaptions,
-                  // 	setReceivingCaptions,
-                  // 	VCData,
-                  // 	setCaptionsText,
-                  // 	dataChannel
-                  // );
+                  if (VCData)
+                    handleRequestToggleCaptions(VCData, setCaptionsText);
                 }}
               >
                 <FontAwesomeIcon icon={faClosedCaptioning} />
                 <span>
-                  {hideCaptions ? 'Closed Captions' : 'Hide Closed Captions'}
+                  {captionsText === 'CLOSED CAPTIONS'
+                    ? 'Closed Captions'
+                    : 'Hide Closed Captions'}
                 </span>
               </button>
             </div>

@@ -16,7 +16,7 @@ export interface VideoChatData {
   setLocalVideoText: Function;
   setCaptionsText: Function;
   customSnackbarMsg: string | HTMLElement | Element | undefined;
-  // recognition: SpeechRecognition;
+  recognition: SpeechRecognition;
 
   requestMediaStream(e?: Event): void;
   onMediaStream(e: MediaStream): void;
