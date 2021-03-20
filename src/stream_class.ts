@@ -40,7 +40,7 @@ export default class VCDataStream implements VideoChatData {
   setLocalVideoText: Function;
   setCaptionsText: Function;
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;
-  recognition: SpeechRecognition;
+  recognition: SpeechRecognition | undefined;
 
   constructor(
     name: string,
@@ -71,7 +71,7 @@ export default class VCDataStream implements VideoChatData {
     this.setCaptionsText = setCapText;
     this.setLocalVideoText = setVidText;
     this.cstmSnackbarMsg = cstMsg;
-    this.recognition = new SpeechRecognition();
+    this.recognition = undefined;
   }
 
   /* Call to getUserMedia (provided by adapter.js for  browser compatibility) asking for access to both the video and audio streams. If the request is accepted callback to the onMediaStream function, otherwise callback to the noMediaStream function. */
@@ -228,6 +228,7 @@ export default class VCDataStream implements VideoChatData {
           .get(uuid)
           ?.addTrack(track, this.localStream as MediaStream);
       });
+
       // Add general purpose data channel to peer connection, used for text chats, captions, and toggling sending captions
       this.dataChannel.set(
         uuid,

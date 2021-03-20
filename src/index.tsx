@@ -140,24 +140,14 @@ const VideoChat = ({
       <>
         <div id="arbitrary-data" className="none"></div>
         <HeaderComponent VCData={VCData} />
-        <div
-          id="room-text"
-          className={`${
-            VCData && VCData.peerConnections.size === 0 ? '' : 'none'
-          } notSelectable`}
-        >
-          Room ready. Waiting for others to join
-        </div>
-
+        {/* <RoomEmpty VCData={VCData} /> */}
         <div id="call-section">
-          {/* <Draggable> */}
           <div
             id="remote-video-text"
             className={`${captionsText === 'CLOSED CAPTIONS' ? 'none' : ''}`}
           >
             {captionsText}
           </div>
-          {/* </Draggable> */}
           <div id="wrapper"></div>
           <Draggable defaultPosition={{ x: 30, y: 150 }}>
             <div id="moveable" className="video-1">
@@ -316,7 +306,6 @@ const VideoChat = ({
             </div>
           </div>
         </div>
-
         <ChatComponent hideChat={hideChat} />
         <ToastContainer
           position="top-center"
@@ -338,3 +327,11 @@ const VideoChat = ({
 };
 
 export default VideoChat;
+
+const RoomEmpty = ({ VCData }: { VCData: VideoChatData | undefined }) => {
+  return VCData?.peerConnections.size === 0 ? (
+    <div id="room-text" className={`notSelectable`}>
+      Room ready. Waiting for others to join
+    </div>
+  ) : null;
+};

@@ -114,7 +114,7 @@ export function handleRequestToggleCaptions(
     return;
   }
   if (VCData.receivingCaptions) {
-    setCaptionsText('Start Live Captions');
+    setCaptionsText('CLOSED CAPTIONS');
     VCData.receivingCaptions = false;
   } else {
     toast(
@@ -129,7 +129,7 @@ export function handleRequestToggleCaptions(
       }
     );
 
-    setCaptionsText('End Live Captions');
+    setCaptionsText('Captions Enabled');
     VCData.receivingCaptions = true;
   }
   // Send request to get captions over data channel
@@ -178,7 +178,7 @@ export function handleReceiveCaptions(
 // }
 
 export function handleToggleCaptions(VCData: VideoChatData) {
-  if (VCData.sendingCaptions) {
+  if (VCData.sendingCaptions && VCData.recognition) {
     VCData.sendingCaptions = false;
     VCData.recognition.stop();
   } else {
@@ -226,7 +226,7 @@ export function handleStartSpeech(VCData: VideoChatData) {
     // Restart speech recognition if user has not stopped it
     if (VCData.sendingCaptions) {
       handleStartSpeech(VCData);
-    } else {
+    } else if (VCData.recognition) {
       VCData.recognition.stop();
     }
   };

@@ -31,7 +31,7 @@ const HeaderComponent = ({ VCData }: { VCData: VideoChatData | undefined }) => {
               className="session-details-close"
             />
           </span>
-          Room Name:<i> {VCData.roomName}</i>
+          Room:<i> {VCData.roomName}</i>
           <br />
           UUID:{' '}
           <i>
