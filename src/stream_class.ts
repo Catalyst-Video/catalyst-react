@@ -16,6 +16,7 @@ import {
   ResizeWrapper,
 } from './utils/ui_utils';
 import {
+  handlePictureInPicture,
   handleReceiveCaptions,
   handleToggleCaptions,
 } from './utils/stream_utils';
@@ -37,6 +38,7 @@ export default class VCDataStream implements VideoChatData {
   sendingCaptions: boolean;
   receivingCaptions: boolean;
   seenWelcomeSnackbar: boolean;
+  picInPic: string;
   setLocalVideoText: Function;
   setCaptionsText: Function;
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;
@@ -48,7 +50,8 @@ export default class VCDataStream implements VideoChatData {
     setCapText: Function,
     setVidText: Function,
     cstmServerAddress?: string,
-    cstMsg?: string | HTMLElement | Element
+    cstMsg?: string | HTMLElement | Element,
+    picInPic?: string
   ) {
     this.roomName = name;
     this.sessionId = catalystUUID + name;
@@ -65,6 +68,7 @@ export default class VCDataStream implements VideoChatData {
     this.peerConnections = new Map();
     this.localAudio = undefined;
     this.localStream = undefined;
+    this.picInPic = picInPic ? picInPic : 'dblclick';
     this.sendingCaptions = false;
     this.receivingCaptions = false;
     this.seenWelcomeSnackbar = false;
@@ -446,10 +450,16 @@ export default class VCDataStream implements VideoChatData {
       if (this.remoteVideoWrapper?.lastChild !== null) {
         let newVid = this.remoteVideoWrapper.lastChild as HTMLVideoElement;
         newVid.srcObject = e.streams.slice(-1)[0];
+
+        if (this.picInPic !== 'disabled') {
+          newVid.addEventListener(this.picInPic, () => {
+            handlePictureInPicture(this, newVid);
+          });
+        }
+        closeAllMessages();
+        this.connected.set(uuid, true);
+        this.setCaptionsText('CLOSED CAPTIONS');
       }
-      closeAllMessages();
-      this.connected.set(uuid, true);
-      this.setCaptionsText('CLOSED CAPTIONS');
     }
   };
 }

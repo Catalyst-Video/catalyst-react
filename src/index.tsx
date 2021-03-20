@@ -19,7 +19,7 @@ import {
 // typings
 import {
   DefaultSettings,
-  DisabledSettings,
+  HiddenSettings,
   VideoChatData,
 } from './typings/interfaces';
 // icons
@@ -30,7 +30,6 @@ import {
   faCompress,
   faDesktop,
   faExpand,
-  faExternalLinkAlt,
   faMicrophone,
   faMicrophoneSlash,
   faPause,
@@ -55,7 +54,8 @@ const VideoChat = ({
   catalystUUID,
   cstmServerAddress,
   defaults,
-  disabled,
+  hidden,
+  picInPic,
   onEndCall,
   cstmSnackbarMsg,
   cstmOptionBtns,
@@ -65,10 +65,11 @@ const VideoChat = ({
   catalystUUID: string;
   cstmServerAddress?: string;
   defaults?: DefaultSettings;
-  disabled?: DisabledSettings;
+  hidden?: HiddenSettings;
+  picInPic?: string;
   onEndCall?: Function;
   cstmSnackbarMsg?: HTMLElement | Element | string;
-  cstmOptionBtns: HTMLButtonElement[];
+  cstmOptionBtns: Element[];
   themeColor?: string;
 }) => {
   const fsHandle = useFullScreenHandle();
@@ -81,7 +82,6 @@ const VideoChat = ({
     defaults?.videoOn ? defaults.videoOn : true
   );
   const [sharing, setSharing] = useState(false);
-  const [picInPic, setPicInPic] = useState(false);
   const [showChat, setShowChat] = useState<boolean>(
     defaults?.showChatArea ? defaults.showChatArea : false
   );
@@ -139,11 +139,12 @@ const VideoChat = ({
       setCaptionsText,
       setLocalVideoText,
       cstmServerAddress,
-      cstmSnackbarMsg
+      cstmSnackbarMsg,
+      picInPic
     );
     setVCData(VCD);
     VCD?.requestMediaStream();
-  }, [sessionKey, catalystUUID, cstmServerAddress, cstmSnackbarMsg]);
+  }, [sessionKey, catalystUUID, cstmServerAddress, cstmSnackbarMsg, picInPic]);
 
   if (browserSupported) {
     return (
@@ -166,7 +167,7 @@ const VideoChat = ({
           </Draggable>
 
           <div className="multi-button">
-            <div className={`buttonContainer ${disabled?.mute ? 'none' : ''}`}>
+            <div className={`buttonContainer ${hidden?.mute ? 'none' : ''}`}>
               <button
                 className={`${
                   audioEnabled ? '' : 'btn-on'
@@ -184,9 +185,7 @@ const VideoChat = ({
             </div>
 
             <div
-              className={`buttonContainer ${
-                disabled?.pausevideo ? 'none' : ''
-              }`}
+              className={`buttonContainer ${hidden?.pausevideo ? 'none' : ''}`}
             >
               <button
                 className={`${
@@ -208,50 +207,7 @@ const VideoChat = ({
             </div>
 
             <div
-              className={`buttonContainer ${
-                disabled?.screenshare ? 'none' : ''
-              }`}
-            >
-              <button
-                className={`${
-                  !sharing ? '' : 'btn-on'
-                } hoverButton tooltip notSelectable`}
-                id="share-button"
-                onClick={() => {
-                  if (VCData)
-                    handleSharing(
-                      VCData,
-                      sharing,
-                      setSharing,
-                      videoEnabled,
-                      setVideo,
-                      setLocalVideoText
-                    );
-                }}
-              >
-                <span>{!sharing ? 'Share Screen' : 'Stop Sharing Screen'}</span>
-                <FontAwesomeIcon icon={faDesktop} />
-              </button>
-            </div>
-
-            <div className={`buttonContainer ${disabled?.chat ? 'none' : ''}`}>
-              <button
-                className={`${
-                  !showChat ? '' : 'btn-on'
-                } hoverButton tooltip notSelectable`}
-                onClick={() => {
-                  setShowChat(!showChat);
-                }}
-              >
-                <span>{showChat ? 'Hide Chat' : 'Show Chat'}</span>
-                <FontAwesomeIcon icon={faComment} />
-              </button>
-            </div>
-
-            <div
-              className={`buttonContainer ${
-                disabled?.pausevideo ? 'none' : ''
-              }`}
+              className={`buttonContainer ${hidden?.pausevideo ? 'none' : ''}`}
             >
               <button
                 className={`${
@@ -275,30 +231,46 @@ const VideoChat = ({
             </div>
 
             <div
-              className={`buttonContainer ${disabled?.picinpic ? 'none' : ''}`}
+              className={`buttonContainer ${hidden?.screenshare ? 'none' : ''}`}
             >
               <button
                 className={`${
-                  // @ts-ignore
-                  !picInPic || !Document.pictureInPictureElement ? '' : 'btn-on'
+                  !sharing ? '' : 'btn-on'
                 } hoverButton tooltip notSelectable`}
-                id="pip-button"
+                id="share-button"
                 onClick={() => {
-                  if (VCData) handlePictureInPicture(VCData, setPicInPic);
+                  if (VCData)
+                    handleSharing(
+                      VCData,
+                      sharing,
+                      setSharing,
+                      videoEnabled,
+                      setVideo,
+                      setLocalVideoText
+                    );
                 }}
               >
-                <span>
-                  {// @ts-ignore
-                  !picInPic || !Document.pictureInPictureElement
-                    ? 'Picture in Picture'
-                    : 'Normal View'}
-                </span>
-                <FontAwesomeIcon icon={faExternalLinkAlt} />
+                <span>{!sharing ? 'Share Screen' : 'Stop Sharing Screen'}</span>
+                <FontAwesomeIcon icon={faDesktop} />
+              </button>
+            </div>
+
+            <div className={`buttonContainer ${hidden?.chat ? 'none' : ''}`}>
+              <button
+                className={`${
+                  !showChat ? '' : 'btn-on'
+                } hoverButton tooltip notSelectable`}
+                onClick={() => {
+                  setShowChat(!showChat);
+                }}
+              >
+                <span>{showChat ? 'Hide Chat' : 'Show Chat'}</span>
+                <FontAwesomeIcon icon={faComment} />
               </button>
             </div>
 
             <div
-              className={`buttonContainer ${disabled?.captions ? 'none' : ''}`}
+              className={`buttonContainer ${hidden?.captions ? 'none' : ''}`}
             >
               <button
                 className={`${
@@ -322,9 +294,7 @@ const VideoChat = ({
               <React.Fragment key={index}>{component}</React.Fragment>
             ))}
 
-            <div
-              className={`buttonContainer ${disabled?.endcall ? 'none' : ''}`}
-            >
+            <div className={`buttonContainer ${hidden?.endcall ? 'none' : ''}`}>
               <button
                 className="hoverButton tooltip notSelectable"
                 onClick={() =>

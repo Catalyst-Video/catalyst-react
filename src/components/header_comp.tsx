@@ -41,8 +41,7 @@ const HeaderComponent = ({ VCData }: { VCData: VideoChatData | undefined }) => {
             )}
           </i>
           <br />
-          Connected:
-          {/* {VCData.socket} */}
+          {/* Connected:
           {Object.keys(VCData.localICECandidates).forEach(key => {
             {
               VCData.localICECandidates[key].forEach(candidate => {
@@ -57,7 +56,7 @@ const HeaderComponent = ({ VCData }: { VCData: VideoChatData | undefined }) => {
                 );
               });
             }
-          })}
+          })} */}
         </button>
       )}
     </div>

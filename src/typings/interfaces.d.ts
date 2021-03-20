@@ -10,6 +10,7 @@ export interface VideoChatData {
   peerConnections: Map<string, RTCPeerConnection>;
   localStream: MediaStream | undefined;
   localAudio: MediaStreamTrack | undefined;
+  picInPic: string;
   sendingCaptions: boolean;
   receivingCaptions: boolean;
   seenWelcomeSnackbar: boolean;
@@ -48,12 +49,11 @@ export interface DefaultSettings {
   showCaptionsArea?: boolean;
 }
 
-export interface DisabledSettings {
+export interface HiddenSettings {
   mute?: boolean;
   pausevideo?: boolean;
   screenshare?: boolean;
   chat?: boolean;
-  picinpic?: boolean;
   captions?: boolean;
   endcall?: boolean;
 }

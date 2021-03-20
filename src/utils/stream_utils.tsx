@@ -235,21 +235,21 @@ export function handleStartSpeech(VCData: VideoChatData) {
 
 export function handlePictureInPicture(
   VCData: VideoChatData,
-  setPicInPic: Function
+  video: HTMLVideoElement
 ): void {
   if (
     'pictureInPictureEnabled' in document ||
     // @ts-ignore
     VCData.remoteVideoWrapper.lastChild.webkitSetPresentationMode
   ) {
-    var video = VCData.remoteVideoWrapper.lastChild as HTMLVideoElement;
+    // var video = VCData.remoteVideoWrapper.lastChild as HTMLVideoElement;
     if (video) {
-      video.addEventListener('enterpictureinpicture', setPicInPic(true), false);
-      video.addEventListener(
-        'leavepictureinpicture ',
-        setPicInPic(false),
-        false
-      );
+      // video.addEventListener('enterpictureinpicture', setPicInPic(true), false);
+      // video.addEventListener(
+      //   'leavepictureinpicture ',
+      //   setPicInPic(false),
+      //   false
+      // );
       // @ts-ignore
       if (document && document.pictureInPictureElement && video) {
         // @ts-ignore
@@ -323,8 +323,18 @@ export function handleSharing(
         toast(
           () => (
             <div className="text-center justify-between">
-              Please allow screen share. Click the middle of the picture above
-              and then press share.
+              Please press allow to enable webcam & audio access
+              <button
+                className="snack-btn"
+                onClick={() => {
+                  window.open(
+                    'https://help.clipchamp.com/en/articles/1505527-how-do-i-enable-my-webcam-for-recording',
+                    '_blank'
+                  );
+                }}
+              >
+                Directions
+              </button>
             </div>
           ),
           {

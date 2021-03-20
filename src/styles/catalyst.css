@@ -234,7 +234,7 @@ button:hover {
   position: absolute;
   left: 50%;
   transform: translate(-50%, 0);
-  bottom: calc(7.5vh - 40px);
+  bottom: 1vh;
   border-radius: 10px;
   background: rgba(255, 255, 255, 1);
   backdrop-filter: blur(6px);

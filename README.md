@@ -11,10 +11,11 @@ This package is currently in development. If you experience issues, let us know 
 | `catalystUUID` | Unique project identifier - keeps video calls from different projects from overlapping                                                          |  `string` | `"4d39df3f-f67b-4217-b832-57d4ffa2b217"` |  Yes      |
 | `cstmServerAddress` | Domain for your signaling server. Uses the Catalyst Demo one by default                                                                   |  `string` | `"https://catalyst-video-server.herokuapp.com/"` |  Optional    |
 | `defaults`          | Settings for the default instance of Catalyst                                                                                   | ```{audioOn?: boolean; videoOn?: boolean; showChatArea?: boolean; showCaptionsArea?: boolean; }```                              | ```{ audioOn: true, videoOn: true, showCaptionsArea: true,  showCaptionsArea: true }```  | Optional      |
-| `disabled`          | Disable any of Catalyst's wide array of video options                                                    | ```{ mute?: boolean; pausevideo?: boolean; screenshare?: boolean; chat?: boolean; picinpic?: boolean; captions?: boolean; endcall?: boolean; }```                              |```{ mute: false, pausevideo: false, screenshare: false, chat: false, picinpic: false, captions: false, endcall: false }```  | Optional      |
+| `hidden`          | Hide any of Catalyst's wide array of video options                                                    | ```{ mute?: boolean; pausevideo?: boolean; screenshare?: boolean; chat?: boolean; captions?: boolean; endcall?: boolean; }```                              |```{ mute: false, pausevideo: false, screenshare: false, chat: false, captions: false, endcall: false }```  | Optional      |
+| `picInPic`          | Enter Picture In Picture mode after clicking, double clicking, or not at all                   | ```string```                              |`click`, `dblclick`, `disabled`  | Optional      |
 | `onEndCall`  | Function triggered when user clicks the "end call" button | `Function`  | `console.log("call ended")` | Optional |
 | `cstmSnackbarMsg`  | Displays message in snackbar popup on session start | `HTMLElement` or `Element` or `string`                              | `Share your session key {sessionKey} with whoever wants to join `                                | Optional |
-| `cstmOptionBtns`  | React elements that will be displayed in the Video Chat toolbar | `HTMLElement[]` | `[<div className="buttonContainer"><button className="hoverButton tooltip notSelectable" onClick={() => console.log('do something')}><FontAwesomeIcon icon={faSync} /><span>Do Something</span></button></div>,]`                                | Optional |
+| `cstmOptionBtns`  | React elements that will be displayed in the Video Chat toolbar | `Element[]` | `[<div className="buttonContainer"><button className="hoverButton tooltip notSelectable" onClick={() => console.log('do something')}><FontAwesomeIcon icon={faSync} /><span>Do Something</span></button></div>,]`                                | Optional |
 | `themeColor`  | Alters Catalyst theme to use a particular color. Comes with a multitude of built-in options, or you can set a custom `hexadecimal` color of your choice. | `string`  | `blue` | Optional |
 
 ## Usage
@@ -90,10 +91,9 @@ With chat enabled by default, a function triggered on end call, and Indigo color
 				showChatArea: true,
 				showCaptionsArea: false,
 			}}
-			disabled={{ 
+			hidden={{ 
 				screenshare: true, 
 				chat: true, 
-				picinpic: false
 			}}
 			onEndCall={ENTER_FUNCTION_HERE}
 			themeColor="indigo"
