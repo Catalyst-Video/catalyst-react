@@ -70,7 +70,9 @@ video {
   font-weight: 600;
   font-size: 1rem;
   white-space: nowrap;
+  position: relative;
   float: left;
+  z-index: 1;
 }
 
 #header p,
@@ -144,6 +146,7 @@ a {
   z-index: 101;
   position: absolute;
   color: white;
+  opacity: 0.6;
   font-family: "Heebo", sans-serif;
   white-space: nowrap;
   top: 50%;
@@ -151,35 +154,30 @@ a {
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   font-weight: bold;
-  background: rgba(0, 0, 0, 0.12);
+  /* background: rgba(0, 0, 0, 0.12);
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 5px; */
 }
 
-/* video wrapper  */
-/* TODO: improve grid w/ more than 3 people */
-/* #wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
+#room-text {
   margin: 0;
+  max-height: 300px;
+  width: 40%;
+  z-index: 1;
+  color: black;
+  font-family: "Heebo", sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 0 0 2px var(--themeColor);
+  border-radius: 10px;
+  padding: 10px;
   position: absolute;
   top: 50%;
   left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  width: 100%;
-  max-height: 100%;
-  max-width: 100%;
+  transform: translate(-50%, 0);
+  opacity: 0.6;
 }
-
-video#wrapper {
-   box-sizing: border-box;
-   flex: 1 0 250px;
-} */
 
 /* caption text */
 #remote-video-text {
@@ -202,39 +200,6 @@ video#wrapper {
 
   padding: 10px;
 }
-/* 
-#remote-video:first-child:nth-last-child(1) {
-  width: min(calc(80vh * 4 / 3), 80vw);
-  max-height: 80vh;
-}
-
-#remote-video:first-child:nth-last-child(2),
-#remote-video:first-child:nth-last-child(2) ~ #remote-video {
-  max-height: 40vh;
-}
-
-#remote-video:first-child:nth-last-child(3),
-#remote-video:first-child:nth-last-child(3) ~ #remote-video {
-  max-height: 40vh;
-}
-
-#remote-video:first-child:nth-last-child(4),
-#remote-video:first-child:nth-last-child(4) ~ #remote-video {
-  max-height: 40vh;
-}
-
-#remote-video {
-  padding: 0;
-  margin: 10px;
-  width: auto;
-  border-radius: 10px;
-  color: var(--themeColor);
-  border: 3px solid var(--themeColor);
-  background-size: 400px auto;
-  background-repeat: no-repeat;
-  background-position: center center;
-} */
-
 
 /* buttons */
 .multi-button button {
@@ -574,6 +539,10 @@ button.tooltip:hover span {
     border: 3px solid var(--themeColor) !important;
   } */
 
+  #room-text {
+   width: 85%;
+}
+
 
   .multi-button {
     position: fixed;
@@ -748,7 +717,7 @@ button.tooltip:hover span {
 	background: white;
 	border-radius: 10px;
 	padding: 25px;
-	z-index: 20px;
+	z-index: 20;
 	position: fixed;
 	top: 0.5rem;
 	left: 0.5rem;
@@ -758,6 +727,7 @@ button.tooltip:hover span {
   cursor: pointer; 
   backdrop-filter: blur(6px);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05);
+  
 }
 
 .session-details-close {

@@ -140,7 +140,16 @@ const VideoChat = ({
     return (
       <>
         <div id="arbitrary-data" className="none"></div>
-        <HeaderComponent sessionKey={sessionKey} />
+        <HeaderComponent VCData={VCData} />
+        <div
+          id="room-text"
+          className={`${
+            VCData && VCData.peerConnections.size === 0 ? '' : 'none'
+          }`}
+        >
+          Room ready. Waiting for others to join
+        </div>
+
         <div id="call-section">
           <Draggable>
             <div

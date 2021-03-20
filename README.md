@@ -2,7 +2,7 @@
 
 This package is currently in development. If you experience issues, let us know on [github](https://github.com/Catalyst-Video/catalyst-react/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
 
-📷💬 An open-source React component that allows developers to quickly and easily add Zoom-like video chat to their web applications. Built using WebRTC and Typescript. A functioning build be enabled in minutes with as few as five lines of code.
+📷💬 An open-source React component that allows developers to quickly and easily add Zoom-like video chat to their web applications. Built using WebRTC and Typescript. A functioning build be enabled in minutes with a few lines of code.
 ## Functionality & Params
 
 | Param        | Description                                                                                                 |  Type                             | Example Value                             | Required |
@@ -55,7 +55,7 @@ Above is a simplistic example of a `VideoChat` component being embedded in a pro
 
 This will use Catalyst's [demo signaling server](https://github.com/Catalyst-Video/catalyst-server) by default, allowing you to see a functioning version of video chat in your projects immediately.
 
-Behind the scenes, the session key is appended to the `catalystUUID` parameter to ensure two projects both using the demo server do not You can use this [UUID Generator](https://www.uuidgenerator.net/) to create your `catalystUUID`.
+Behind the scenes, the session key is appended to the `catalystUUID` parameter to ensure two projects both using the demo server do not overlap. You can use this [UUID Generator](https://www.uuidgenerator.net/) to create your `catalystUUID`.
 
 The demo signaling server does not currently have quotas, but be respectful in your usage. You can create your own server by following the Catalyst server setup docs [here](https://linktoserversetupdocs)
 
@@ -74,7 +74,7 @@ You can change the color scheme of Catalyst to your tastes by using the `themeCo
 - [indigo](https://coolors.co/5A67D8)
 - [purple](https://coolors.co/805AD5)
 
-They can be used in the format `themeColor="blue"`. You can also set any `hexidecimal` color by simply passing it in the format `#ColorCode`. For example, `#456789`.
+They can be used in the format `themeColor="blue"`. You can also set any `hexidecimal` color by simply passing it in the format `#ColorCode`. For example, `themeColor="#456789"`.
 ### Examples
 
 ```tsx
