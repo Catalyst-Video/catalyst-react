@@ -14,6 +14,7 @@ This package is currently in development. If you experience issues, let us know 
 | `disabled`          | Disable any of Catalyst's wide array of video options                                                    | ```{ mute?: boolean; pausevideo?: boolean; screenshare?: boolean; chat?: boolean; picinpic?: boolean; captions?: boolean; endcall?: boolean; }```                              |```{ mute: false, pausevideo: false, screenshare: false, chat: false, picinpic: false, captions: false, endcall: false }```  | Optional      |
 | `onEndCall`  | Function triggered when user clicks the "end call" button | `Function`  | `console.log("call ended")` | Optional |
 | `cstmSnackbarMsg`  | Displays message in snackbar popup on session start | `HTMLElement` or `Element` or `string`                              | `Share your session key {sessionKey} with whoever wants to join `                                | Optional |
+| `cstmOptionBtns`  | React elements that will be displayed in the Video Chat toolbar | `HTMLElement[]` | `[<div className="buttonContainer"><button className="hoverButton tooltip notSelectable" onClick={() => console.log('do something')}><FontAwesomeIcon icon={faSync} /><span>Do Something</span></button></div>,]`                                | Optional |
 | `themeColor`  | Alters Catalyst theme to use a particular color. Comes with a multitude of built-in options, or you can set a custom `hexadecimal` color of your choice. | `string`  | `blue` | Optional |
 
 ## Usage
@@ -38,9 +39,9 @@ import { VideoChat } from "catalyst-vc-react"
 If you want to access the utils or interfaces within the package, use
 
 ```typescript
-import { InterfaceName } from "catalyst-vc-react/interfaces"
+import { InterfaceName } from "catalyst-vc-react/dist/typings";
 
-import { UtilName } from "catalyst-vc-react/utils";
+import { UtilName } from "catalyst-vc-react/dist/utils";
 ```
 
 ### Implementation
@@ -78,15 +79,16 @@ You can change the color scheme of Catalyst to your tastes by using the `themeCo
 They can be used in the format `themeColor="blue"`. You can also set any `hexidecimal` color by simply passing it in the format `#ColorCode`. For example, `themeColor="#456789"`.
 ### Examples
 
+With chat enabled by default, a function triggered on end call, and Indigo color scheme
 ```tsx
 	<VideoChat
 			sessionKey="ENTER_SESSION_KEY_HERE"
 			catalystUUID="ENTER_UUID_HERE"
 			defaults={{
-				hideChat: true,
 				audioOn: true,
 				videoOn: true,
-				hideCaptions: false,
+				showChatArea: true,
+				showCaptionsArea: false,
 			}}
 			disabled={{ 
 				screenshare: true, 
@@ -95,6 +97,26 @@ They can be used in the format `themeColor="blue"`. You can also set any `hexide
 			}}
 			onEndCall={ENTER_FUNCTION_HERE}
 			themeColor="indigo"
+		/>
+```
+With a custom button on the video chat toolbar, a custom welcome message, and a Red color scheme
+```tsx
+	<VideoChat
+			sessionKey="ENTER_SESSION_KEY_HERE"
+			catalystUUID="ENTER_UUID_HERE"
+			cstmOptionBtns={[
+				<div className="buttonContainer">
+					<button
+					className="hoverButton tooltip notSelectable"
+					onClick={() => console.log('do something')}
+					>
+					<FontAwesomeIcon icon={faSync} />
+					<span>Do Something</span>
+					</button>
+				</div>,
+			]}
+			cstmSnackbarMsg="custom welcome message"
+			themeColor="red"
 		/>
 ```
 
