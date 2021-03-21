@@ -153,30 +153,6 @@ export function handleReceiveCaptions(
   }
 }
 
-// export function handleReceiveCaptions(
-//   captions: any,
-//   VCData: VideoChatData,
-//   // setHideCaptions: Function,
-//   setCaptionsText: Function
-// ): void {
-//   if (VCData.receivingCaptions) {
-//     setCaptionsText('');
-//     VCData.receivingCaptions = false;
-//   } else {
-//     setCaptionsText('CLOSED CAPTIONS');
-//     VCData.receivingCaptions = true;
-//   }
-//   // Other user is not using chrome
-//   if (captions === 'notusingchrome') {
-//     alert(
-//       'Other caller must be using chrome for this feature to work. Live Captions disabled.'
-//     );
-//     setCaptionsText('CLOSED CAPTIONS');
-//     return;
-//   }
-//   setCaptionsText(captions);
-// }
-
 export function handleToggleCaptions(VCData: VideoChatData) {
   if (VCData.sendingCaptions && VCData.recognition) {
     VCData.sendingCaptions = false;

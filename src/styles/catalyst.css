@@ -36,7 +36,7 @@
 }
 
 /* body & video  */
-body {
+body .catalyst-body {
   background: #f3f5fd;
   margin: 0;
   padding: 0;
@@ -51,6 +51,13 @@ body {
   -moz-animation-duration: 0.3s;
   animation-duration: 0.3s;
   overflow: hidden;
+  height:  100%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
 }
 
 .fullscreen-enabled {
