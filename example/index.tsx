@@ -18,18 +18,18 @@ const App = () => {
           showCaptionsArea: false,
           showChatArea: false,
         }}
-        themeColor="indigo"
-        cstmOptionBtns={[
-          <div className="buttonContainer">
-            <button
-              className="hoverButton tooltip notSelectable"
-              onClick={() => console.log('call ended')}
-            >
-              <FontAwesomeIcon icon={faSync} />
-              <span>Synchronize</span>
-            </button>
-          </div>,
-        ]}
+        // themeColor="indigo"
+        // cstmOptionBtns={[
+        //   <div className="buttonContainer">
+        //     <button
+        //       className="hoverButton tooltip notSelectable"
+        //       onClick={() => console.log('call ended')}
+        //     >
+        //       <FontAwesomeIcon icon={faSync} />
+        //       <span>Synchronize</span>
+        //     </button>
+        //   </div>,
+        // ]}
       />
     </div>
   );
