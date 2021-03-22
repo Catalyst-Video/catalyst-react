@@ -11,7 +11,7 @@ const App = () => {
     <div>
       <VideoChat
         sessionKey="testKey"
-        catalystUUID="demo"
+        uniqueAppId="demo"
         defaults={{
           audioOn: true,
           videoOn: true,

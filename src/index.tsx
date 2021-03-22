@@ -12,8 +12,6 @@ import { getBrowserName, setThemeColor } from './utils/general_utils';
 import {
   handleMute,
   handlePauseVideo,
-  handlePictureInPicture,
-  handleRequestToggleCaptions,
   handleSharing,
 } from './utils/stream_utils';
 // typings
@@ -25,7 +23,7 @@ import {
 // icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faClosedCaptioning,
+  // faClosedCaptioning,
   faComment,
   faCompress,
   faDesktop,
@@ -51,7 +49,7 @@ import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 
 const VideoChat = ({
   sessionKey,
-  catalystUUID,
+  uniqueAppId,
   cstmServerAddress,
   defaults,
   hidden,
@@ -62,7 +60,7 @@ const VideoChat = ({
   themeColor,
 }: {
   sessionKey: string;
-  catalystUUID: string;
+  uniqueAppId: string;
   cstmServerAddress?: string;
   defaults?: DefaultSettings;
   hidden?: HiddenSettings;
@@ -85,9 +83,9 @@ const VideoChat = ({
   const [showChat, setShowChat] = useState<boolean>(
     defaults?.showChatArea ? defaults.showChatArea : false
   );
-
   const [captionsText, setCaptionsText] = useState(
-    defaults?.showCaptionsArea ? '' : 'CLOSED CAPTIONS'
+    'HIDDEN CAPTIONS'
+    // TODO: Captions defaults?.showCaptionsArea ? '' : 'HIDDEN CAPTIONS'
   );
   const [localVideoText, setLocalVideoText] = useState('No webcam input');
   const [VCData, setVCData] = useState<VideoChatData>();
@@ -135,7 +133,7 @@ const VideoChat = ({
   useEffect(() => {
     const VCD = new VCDataStream(
       sessionKey,
-      catalystUUID,
+      uniqueAppId,
       setCaptionsText,
       setLocalVideoText,
       cstmServerAddress,
@@ -144,7 +142,7 @@ const VideoChat = ({
     );
     setVCData(VCD);
     VCD?.requestMediaStream();
-  }, [sessionKey, catalystUUID, cstmServerAddress, cstmSnackbarMsg, picInPic]);
+  }, [sessionKey, uniqueAppId, cstmServerAddress, cstmSnackbarMsg, picInPic]);
 
   if (browserSupported) {
     return (
@@ -155,7 +153,7 @@ const VideoChat = ({
           <div id="call-section">
             <div
               id="remote-video-text"
-              className={`${captionsText === 'CLOSED CAPTIONS' ? 'none' : ''}`}
+              className={`${captionsText === 'HIDDEN CAPTIONS' ? 'none' : ''}`}
             >
               {captionsText}
             </div>
@@ -280,12 +278,14 @@ const VideoChat = ({
                 </button>
               </div>
 
+              {/* TODO: Captions
+              
               <div
                 className={`buttonContainer ${hidden?.captions ? 'none' : ''}`}
               >
                 <button
                   className={`${
-                    captionsText === 'CLOSED CAPTIONS' ? '' : 'btn-on'
+                    captionsText === 'HIDDEN CAPTIONS' ? '' : 'btn-on'
                   } hoverButton tooltip notSelectable`}
                   onClick={() => {
                     if (VCData)
@@ -294,12 +294,12 @@ const VideoChat = ({
                 >
                   <FontAwesomeIcon icon={faClosedCaptioning} />
                   <span>
-                    {captionsText === 'CLOSED CAPTIONS'
-                      ? 'Closed Captions'
-                      : 'Hide Closed Captions'}
+                    {captionsText === 'HIDDEN CAPTIONS'
+                      ? 'HIDDEN CAPTIONS'
+                      : 'Hide HIDDEN CAPTIONS'}
                   </span>
                 </button>
-              </div>
+              </div> */}
 
               {cstmOptionBtns?.map((component, idx) => (
                 <React.Fragment key={idx}>{component}</React.Fragment>

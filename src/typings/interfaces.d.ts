@@ -11,13 +11,14 @@ export interface VideoChatData {
   localStream: MediaStream | undefined;
   localAudio: MediaStreamTrack | undefined;
   picInPic: string;
-  sendingCaptions: boolean;
-  receivingCaptions: boolean;
   seenWelcomeSnackbar: boolean;
   setLocalVideoText: Function;
   setCaptionsText: Function;
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;
-  recognition: SpeechRecognition | undefined;
+  /* TODO: Captions
+  sendingCaptions: boolean;
+  receivingCaptions: boolean;
+  recognition: SpeechRecognition | undefined;*/
 
   requestMediaStream(e?: Event): void;
   onMediaStream(e: MediaStream): void;
@@ -46,7 +47,7 @@ export interface DefaultSettings {
   audioOn?: boolean;
   videoOn?: boolean;
   showChatArea?: boolean;
-  showCaptionsArea?: boolean;
+  // TODO: showCaptionsArea?: boolean;
 }
 
 export interface HiddenSettings {
@@ -54,7 +55,7 @@ export interface HiddenSettings {
   pausevideo?: boolean;
   screenshare?: boolean;
   chat?: boolean;
-  captions?: boolean;
+  // TODO: captions?: boolean;
   endcall?: boolean;
 }
 export interface TwilioToken {

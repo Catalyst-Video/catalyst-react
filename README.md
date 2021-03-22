@@ -24,7 +24,7 @@ import { VideoChat } from "catalyst-vc-react"
 ```tsx
 	<VideoChat
 			sessionKey="ENTER_SESSION_KEY_HERE"
-			catalystUUID="ENTER_UUID_HERE"
+			uniqueAppId="ENTER_UUID_HERE"
 		/>
 ```
 ## Params
@@ -32,7 +32,7 @@ import { VideoChat } from "catalyst-vc-react"
 | Param        | Description                                                                                                 |  Type                             | Example Value                             | Required |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- | -------------------------------------- | -------- |
 | `sessionKey` | Unique session identifier - peers with the same `sessionKey` are connected                                                                    |  `string` | `"UNDEFINED"` |  Yes      |
-| `catalystUUID` | Unique project identifier - keeps video calls from different projects from overlapping                                                          |  `string` | `"4d39df3f-f67b-4217-b832-57d4ffa2b217"` |  Yes      |
+| `uniqueAppId` | Unique project identifier - keeps video calls from different projects from overlapping                                                          |  `string` | `"4d39df3f-f67b-4217-b832-57d4ffa2b217"` |  Yes      |
 | `cstmServerAddress` | Domain for your signaling server. Uses the Catalyst Demo one by default                                                                   |  `string` | `"https://catalyst-video-server.herokuapp.com/"` |  Optional    |
 | `defaults`          | Settings for the default instance of Catalyst                                                                                   | ```{audioOn?: boolean; videoOn?: boolean; showChatArea?: boolean; showCaptionsArea?: boolean; }```                              | ```{ audioOn: true, videoOn: true, showCaptionsArea: true,  showCaptionsArea: true }```  | Optional      |
 | `hidden`          | Hide any of Catalyst's wide array of video options                                                    | ```{ mute?: boolean; pausevideo?: boolean; screenshare?: boolean; chat?: boolean; captions?: boolean; endcall?: boolean; }```                              |```{ mute: false, pausevideo: false, screenshare: false, chat: false, captions: false, endcall: false }```  | Optional      |
