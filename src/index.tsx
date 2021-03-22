@@ -54,6 +54,9 @@ const VideoChat = ({
   defaults,
   hidden,
   picInPic,
+  onStartCall,
+  onAddPeer,
+  onRemovePeer,
   onEndCall,
   cstmSnackbarMsg,
   cstmOptionBtns,
@@ -65,6 +68,9 @@ const VideoChat = ({
   defaults?: DefaultSettings;
   hidden?: HiddenSettings;
   picInPic?: string;
+  onStartCall?: Function;
+  onAddPeer?: Function;
+  onRemovePeer?: Function;
   onEndCall?: Function;
   cstmSnackbarMsg?: HTMLElement | Element | string;
   cstmOptionBtns?: Element[];
@@ -138,10 +144,15 @@ const VideoChat = ({
       setLocalVideoText,
       cstmServerAddress,
       cstmSnackbarMsg,
-      picInPic
+      picInPic,
+      onAddPeer,
+      onRemovePeer
     );
     setVCData(VCD);
     VCD?.requestMediaStream();
+    if (onStartCall) {
+      onStartCall();
+    }
   }, [sessionKey, uniqueAppId, cstmServerAddress, cstmSnackbarMsg, picInPic]);
 
   if (browserSupported) {
@@ -316,7 +327,7 @@ const VideoChat = ({
                 <button
                   className="hoverButton tooltip ct-not-selectable"
                   onClick={() =>
-                    onEndCall ? onEndCall : console.log('call ended')
+                    onEndCall ? onEndCall() : console.log('call ended')
                   }
                 >
                   <FontAwesomeIcon icon={faPhoneSlash} />

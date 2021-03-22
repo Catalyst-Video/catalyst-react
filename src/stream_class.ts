@@ -36,6 +36,8 @@ export default class VCDataStream implements VideoChatData {
   setLocalVideoText: Function;
   setCaptionsText: Function;
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;
+  onAddPeer: Function | undefined;
+  onRemovePeer: Function | undefined;
 
   /*  TODO: Captions
   sendingCaptions: boolean;
@@ -50,7 +52,9 @@ export default class VCDataStream implements VideoChatData {
     setVidText: Function,
     cstmServerAddress?: string,
     cstMsg?: string | HTMLElement | Element,
-    picInPic?: string
+    picInPic?: string,
+    onAddPeer?: Function,
+    onRemovePeer?: Function
   ) {
     this.roomName = name;
     this.sessionId = uniqueAppId + name;
@@ -72,7 +76,8 @@ export default class VCDataStream implements VideoChatData {
     this.setCaptionsText = setCapText;
     this.setLocalVideoText = setVidText;
     this.cstmSnackbarMsg = cstMsg;
-
+    this.onAddPeer = onAddPeer ? onAddPeer : undefined;
+    this.onRemovePeer = onRemovePeer ? onRemovePeer : undefined;
     /*  TODO: Captions
     this.sendingCaptions = false;
     this.receivingCaptions = false;
@@ -205,12 +210,14 @@ export default class VCDataStream implements VideoChatData {
     } catch (e) {
       logger(e);
     }
-
     // Delete connection & metadata
     this.connected.delete(uuid);
     this.peerConnections.get(uuid)?.close(); // necessary b/c otherwise the RTC connection isn't closed
     this.peerConnections.delete(uuid);
     this.dataChannel.delete(uuid);
+    if (this.onRemovePeer) {
+      this.onRemovePeer();
+    }
     if (this.peerConnections.size === 0) {
       this.setCaptionsText('Room ready. Waiting for others to join...');
       /*   TODO: determine if this is desireable 
@@ -455,6 +462,9 @@ export default class VCDataStream implements VideoChatData {
           newVid.addEventListener(this.picInPic, () => {
             handlePictureInPicture(this, newVid);
           });
+        }
+        if (this.onAddPeer) {
+          this.onAddPeer();
         }
         closeAllMessages();
         this.connected.set(uuid, true);
