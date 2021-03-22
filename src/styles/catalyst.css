@@ -167,9 +167,6 @@ a {
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   font-weight: bold;
-  /* background: rgba(0, 0, 0, 0.12);
-  padding: 10px;
-  border-radius: 5px; */
 }
 
 #catalyst #room-text {
@@ -583,7 +580,6 @@ a {
   }
 
   /* snackbar  */
-
 #catalyst .Toastify__toast-container {
   width: 90% !important;
   left: 5%;
