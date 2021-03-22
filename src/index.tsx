@@ -146,13 +146,12 @@ const VideoChat = ({
 
   if (browserSupported) {
     return (
-      <div className="catalyst-body">
+      <div id="catalyst" className="ct-body">
         <FullScreen handle={fsHandle}>
-          <div id="arbitrary-data" className="none"></div>
           <HeaderComponent VCData={VCData} />
-          <div id="call-section">
+          <div id="ct-call-section">
             <div
-              id="captions-text"
+              id="ct-captions-text"
               className={`${captionsText === 'HIDDEN CAPTIONS' ? 'none' : ''}`}
             >
               {captionsText}
@@ -166,11 +165,13 @@ const VideoChat = ({
             </Draggable>
 
             <div className="multi-button">
-              <div className={`buttonContainer ${hidden?.mute ? 'none' : ''}`}>
+              <div
+                className={`ct-button-container ${hidden?.mute ? 'none' : ''}`}
+              >
                 <button
                   className={`${
                     audioEnabled ? '' : 'btn-on'
-                  } hoverButton tooltip notSelectable`}
+                  } hoverButton tooltip ct-not-selectable`}
                   onClick={() => {
                     if (VCData) handleMute(audioEnabled, setAudio, VCData);
                   }}
@@ -184,14 +185,14 @@ const VideoChat = ({
               </div>
 
               <div
-                className={`buttonContainer ${
+                className={`ct-button-container ${
                   hidden?.pausevideo ? 'none' : ''
                 }`}
               >
                 <button
                   className={`${
                     videoEnabled ? '' : 'btn-on'
-                  } hoverButton tooltip notSelectable`}
+                  } hoverButton tooltip ct-not-selectable`}
                   onClick={() => {
                     if (VCData)
                       handlePauseVideo(
@@ -208,14 +209,14 @@ const VideoChat = ({
               </div>
 
               <div
-                className={`buttonContainer ${
+                className={`ct-button-container ${
                   hidden?.pausevideo ? 'none' : ''
                 }`}
               >
                 <button
                   className={`${
                     !fsHandle.active ? '' : 'btn-on'
-                  } hoverButton tooltip notSelectable`}
+                  } hoverButton tooltip ct-not-selectable`}
                   onClick={() => {
                     if (fsHandle.active) {
                       fsHandle.exit();
@@ -235,11 +236,13 @@ const VideoChat = ({
                 </button>
               </div>
 
-              <div className={`buttonContainer ${hidden?.chat ? 'none' : ''}`}>
+              <div
+                className={`ct-button-container ${hidden?.chat ? 'none' : ''}`}
+              >
                 <button
                   className={`${
                     !showChat ? '' : 'btn-on'
-                  } hoverButton tooltip notSelectable`}
+                  } hoverButton tooltip ct-not-selectable`}
                   onClick={() => {
                     setShowChat(!showChat);
                   }}
@@ -250,14 +253,14 @@ const VideoChat = ({
               </div>
 
               <div
-                className={`buttonContainer ${
+                className={`ct-button-container ${
                   hidden?.screenshare ? 'none' : ''
                 }`}
               >
                 <button
                   className={`${
                     !sharing ? '' : 'btn-on'
-                  } hoverButton tooltip notSelectable`}
+                  } hoverButton tooltip ct-not-selectable`}
                   id="share-button"
                   onClick={() => {
                     if (VCData)
@@ -281,12 +284,12 @@ const VideoChat = ({
               {/* TODO: Captions
               
               <div
-                className={`buttonContainer ${hidden?.captions ? 'none' : ''}`}
+                className={`ct-button-container ${hidden?.captions ? 'none' : ''}`}
               >
                 <button
                   className={`${
                     captionsText === 'HIDDEN CAPTIONS' ? '' : 'btn-on'
-                  } hoverButton tooltip notSelectable`}
+                  } hoverButton tooltip ct-not-selectable`}
                   onClick={() => {
                     if (VCData)
                       handleRequestToggleCaptions(VCData, setCaptionsText);
@@ -306,10 +309,12 @@ const VideoChat = ({
               ))}
 
               <div
-                className={`buttonContainer ${hidden?.endcall ? 'none' : ''}`}
+                className={`ct-button-container ${
+                  hidden?.endcall ? 'none' : ''
+                }`}
               >
                 <button
-                  className="hoverButton tooltip notSelectable"
+                  className="hoverButton tooltip ct-not-selectable"
                   onClick={() =>
                     onEndCall ? onEndCall : console.log('call ended')
                   }

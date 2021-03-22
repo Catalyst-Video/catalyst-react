@@ -5,7 +5,7 @@
   --themeColor: #2253ff; 
 }
 
-* {
+#catalyst {
   box-sizing: border-box;
 }
 
@@ -36,7 +36,7 @@
 }
 
 /* body & video  */
-body .catalyst-body {
+body .ct-body {
   background: #f3f5fd;
   margin: 0;
   padding: 0;
@@ -52,12 +52,13 @@ body .catalyst-body {
   animation-duration: 0.3s;
   overflow: hidden;
   height:  100%;
+  width: 100%;
+  max-height: 100vh;
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
-  width: 100%;
 }
 
 .fullscreen-enabled {
@@ -65,17 +66,17 @@ body .catalyst-body {
 
 }
 
-video {
+#catalyst video {
   background: #16171a;
 }
 
-.none {
+#catalyst .none {
   display: none !important;
 }
 
 
-/* header  */
-#header {
+/* ct-header  */
+#catalyst #ct-header {
   color: white;
   padding: 20px;
   font-family: "Fira Sans", sans-serif;
@@ -87,19 +88,19 @@ video {
   z-index: 1;
 }
 
-#header p,
+#catalyst #ct-header p,
 img {
   float: left;
   padding: 7px;
 }
 
-#header,
+#catalyst #ct-header,
 a {
   color: white;
   text-decoration: none;
 }
 
-#permanent-header {
+#catalyst #permanent-ct-header {
   width: 100%;
   height: 50px;
   background-color: black;
@@ -110,38 +111,38 @@ a {
   justify-content: center;
 }
 
-.incomp {
+#catalyst .incomp {
   display: flex;
   text-align: center;
   align-self: center;
 }
 
 
- /* header logo  */
-.header-logo {
+ /* ct-header logo  */
+#catalyst .ct-header-logo {
   fill: var(--themeColor);
 }
 
-.fullscreen {
+#catalyst .fullscreen {
   width: 100%;
   height: 100%;
 }
 
-#support-link {
+#catalyst #support-link {
   color: var(--themeColor);
   text-decoration: underline;
   font-weight: bold;
 }
 
 /* draggable local video */
-#moveable {
+#catalyst #moveable {
   z-index: 100;
   position: absolute;
   width: 15%;
   cursor: move;
 }
 
-#local-video {
+#catalyst #local-video {
   width: 100%;
   height: auto;
   min-width: 100px;
@@ -154,7 +155,7 @@ a {
 }
 
 /*Text inside local video*/
-#moveable p {
+#catalyst #moveable p {
   z-index: 101;
   position: absolute;
   color: white;
@@ -171,7 +172,7 @@ a {
   border-radius: 5px; */
 }
 
-#room-text {
+#catalyst #room-text {
   margin: 0;
   max-height: 300px;
   width: 40%;
@@ -191,7 +192,7 @@ a {
   opacity: 0.5;
 }
 
-#captions-text {
+#catalyst #ct-captions-text {
   margin: 0;
   position: absolute;
   max-height: 300px;
@@ -211,7 +212,7 @@ a {
 }
 
 /* buttons */
-.multi-button button {
+#catalyst .multi-button button {
   border: none;
   font-size: 1.5rem;
   transition: all 0.3s ease-in-out;
@@ -222,20 +223,20 @@ a {
   border-radius: 5px;
 }
 
-.btn-on {
+#catalyst .btn-on {
  /* color: #e53935 !important; */
  color: var(--themeColor) !important;
 }
 
-button:focus {
+#catalyst button:focus {
   outline: none;
 }
 
-button:hover {
+#catalyst button:hover {
   color: var(--themeColor);
 }
 
-.multi-button {
+ #catalyst .multi-button {
   position: absolute;
   left: 50%;
   transform: translate(-50%, 0);
@@ -251,64 +252,49 @@ button:hover {
   /* width: 500px; */
 }
 
-.buttonContainer {
+#catalyst .ct-button-container {
   position: relative;
   margin: 0 auto;
   padding-left: 1rem;
   padding-right: 1rem;
 }
 
-.HoverState {
-  z-index: 999;
-  color: white;
-  font-family: "Heebo", sans-serif;
-  font-size: 0.8rem;
-  position: absolute;
-  left: 35px;
-  white-space: nowrap;
-  top: 0px;
-  font-weight: bold;
-  background: #16171a;
-  padding: 10px;
-  border-radius: 10px;
-}
-
 
 /* snackbar  */
-.Toastify__progress-bar--default {
+#catalyst .Toastify__progress-bar--default {
   color:  var(--themeColor) !important;
   background: var(--themeColor) !important;
 }
 
-.Toastify__close-button:hover, .Toastify__close-button:focus {
+#catalyst .Toastify__close-button:hover, .Toastify__close-button:focus {
   border: none !important;
   outline: none !important;
 }
 
-.Toastify__toast-container {
+#catalyst .Toastify__toast-container {
   width: 30rem !important;
   border-radius: 20px !important;
 }
 
-.text-center {
+#catalyst .text-center {
   text-align: center !important;
 }
-.Toastify__toast {
+#catalyst .Toastify__toast {
   border-radius: 10px !important;
 
 }
 
-.Toastify__toast .Toastify__toast-body {
+#catalyst .Toastify__toast .Toastify__toast-body {
   text-align: center !important;
   justify-content: space-between !important;
 
 }
 
-.justify-between {
+#catalyst .justify-between {
   justify-content: space-between !important;
 }
 
-.snack-btn {
+#catalyst .snack-btn {
   margin-top: 0.5rem;
   margin-left: 1.5rem;
 	background: var(--themeColor);
@@ -330,7 +316,7 @@ button:hover {
 
 
 /* chat */
-#entire-chat {
+#catalyst #entire-chat {
   position: absolute;
   height: 100%;
   right:  0.1rem;
@@ -340,7 +326,7 @@ button:hover {
   margin: 20px;
 }
 
-textarea.compose {
+#catalyst textarea.compose {
   width: 300px;
   min-height: 45px;
   font-family: "Heebo", sans-serif;
@@ -365,7 +351,7 @@ textarea.compose {
 
 }
 
-#chat-zone {
+#catalyst #chat-zone {
   padding-top: 20px;
   box-sizing: border-box;
   position: absolute;
@@ -377,13 +363,13 @@ textarea.compose {
   font-size: 0.8rem;
 }
 
-#chat-zone::-webkit-scrollbar {
+#catalyst #chat-zone::-webkit-scrollbar {
   width: 0 !important;
    background: transparent !important; 
 }
 
 
-#chat-zone .chat-messages .message-item {
+#catalyst #chat-zone .chat-messages .message-item {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -393,23 +379,23 @@ textarea.compose {
   margin-bottom: 10px;
 }
 
-.hide-chat {
+#catalyst .hide-chat {
   display: none;
 }
 
-.chat-messages {
+#catalyst .chat-messages {
   width: 100%;
   overflow-x: hidden;
   padding-bottom: 80px;
   overflow: -moz-scrollbars-none;
 }
 
-#chat-zone .chat-messages .message-item.customer {
+#catalyst #chat-zone .chat-messages .message-item.customer {
   padding-left: 40px;
 }
 
 /* received messages */
-#chat-zone .message-item.moderator .message-bloc {
+#catalyst #chat-zone .message-item.moderator .message-bloc {
   background-color: white;
   color: black;
   position: relative;
@@ -426,7 +412,7 @@ textarea.compose {
 }
 
 /* sent messages */
-#chat-zone .message-item.customer .message-bloc {
+#catalyst #chat-zone .message-item.customer .message-bloc {
   background-color: white;
   color: black;
   border-style: solid;
@@ -436,11 +422,11 @@ textarea.compose {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 
-#chat-zone .chat-messages .message-item.customer .message-bloc {
+#catalyst #chat-zone .chat-messages .message-item.customer .message-bloc {
   margin-left: auto;
 }
 
-#chat-zone .chat-messages .message-item .message-bloc {
+#catalyst #chat-zone .chat-messages .message-item .message-bloc {
   position: relative;
   display: flex;
   align-items: center;
@@ -449,20 +435,20 @@ textarea.compose {
   max-width: 100%;
 }
 
-.message {
+#catalyst .message {
   word-break: break-all;
 }
 
-.message a {
+#catalyst .message a {
   text-decoration: underline;
 }
 
-.cssanimation {
+#catalyst .cssanimation {
   animation-duration: 1s;
   animation-fill-mode: both;
 }
 
-.fadeInBottom {
+#catalyst .fadeInBottom {
   animation-name: fadeInBottom;
 }
 @keyframes fadeInBottom {
@@ -476,12 +462,11 @@ textarea.compose {
 }
 
 
-
 /* tooltips */
-button.tooltip span {
+#catalyst button.tooltip span {
   display: none;
 }
-button.tooltip:hover span {
+#catalyst button.tooltip:hover span {
   z-index: 999;
   color: white;
   font-family: "Heebo", sans-serif;
@@ -501,32 +486,33 @@ button.tooltip:hover span {
 /* mobile layout */
 @media (max-width: 640px) {
   html,
-  body {
+  body #catalyst .catalyst-body {
     width: 100%;
     height: 100%;
+    max-height: 100vh;
     font-size: 1em;
   }
 
-  #header {
+  #catalyst #ct-header {
     z-index: 5;
   }
 
-  #header img {
+  #catalyst #ct-header img {
     width: auto;
     height: 2rem;
   }
 
-  #header p {
+  #catalyst #ct-header p {
     margin: 0;
     line-height: 2rem;
   }
 
-  #room-text {
+  #catalyst #room-text {
    width: 90%;
 }
 
 
-  .multi-button {
+  #catalyst .multi-button {
     position: fixed;
     left: 0;
     top: initial;
@@ -536,7 +522,7 @@ button.tooltip:hover span {
     margin: 0 10vw;
     -ms-transform: translate(0%, 0%);
     transform: translate(0%, 0%);
-    z-index: 999;
+    z-index: 10;
     border-radius: 10px;
     padding: 0;
     flex-direction: row;
@@ -544,7 +530,7 @@ button.tooltip:hover span {
 
   
 /* text inside local video */
-#moveable p {
+#catalyst #moveable p {
   z-index: 101;
   position: absolute;
   color: white;
@@ -557,14 +543,13 @@ button.tooltip:hover span {
   border-radius: 5px;
 }
 
-#captions-text {
+ #catalyst #ct-captions-text {
     width: 90%;
     left: 0px;
     margin-left: 5%;
 }
 
-
-  .buttonContainer {
+  #catalyst .ct-button-container {
     position: relative;
     height: 100%;
     font-size: 3rem;
@@ -576,7 +561,7 @@ button.tooltip:hover span {
     margin: 0;
   }
 
-  .multi-button button {
+  #catalyst .multi-button button {
     position: relative;
     width: 100%;
     border: none;
@@ -584,52 +569,29 @@ button.tooltip:hover span {
     transition: all 0.3s ease-in-out;
     color: gray;
     background: transparent;
+    bottom: 0;
     cursor: pointer;
     padding: 7px;
     border-radius: 5px;
   }
 
-  .HoverState {
-    display: none !important;
-  }
 
-  .buttonContainer:nth-child(3),
-  .buttonContainer:nth-child(5) {
+
+ #catalyst .ct-button-container:nth-child(3),
+ #catalyst .ct-button-container:nth-child(5) {
     display: none;
   }
 
-
   /* snackbar  */
-.Toastify__progress-bar--default {
-  color:  var(--themeColor) !important;
-  background:var(--themeColor)!important;
-}
 
-.Toastify__close-button:hover, .Toastify__close-button:focus {
-  border: none !important;
-  outline: none !important;
+#catalyst .Toastify__toast-container {
+  width: 90% !important;
+  left: 5%;
+  top: 4%;
 }
-
-.Toastify__toast-container {
-  width: 15rem !important;
-}
-
-.text-center {
-  text-align: center !important;
-}
-
-.Toastify__toast .Toastify__toast-body {
-  text-align: center !important;
-  justify-content: space-between !important;
-}
-
-.justify-between {
-  justify-content: space-between !important;
-}
-
 
   /* chat  */
-  #entire-chat {
+ #catalyst #entire-chat {
     pointer-events: none;
     position: absolute;
     top: 3rem;
@@ -640,7 +602,7 @@ button.tooltip:hover span {
     text-align: center;
   }
 
-  #chat-zone {
+ #catalyst #chat-zone {
     position: relative;
     padding-top: 20px;
     width: 100%;
@@ -649,7 +611,7 @@ button.tooltip:hover span {
     border-radius: 10px;
   }
 
-  .compose {
+  #catalyst .compose {
     position: absolute;
     font-size: 0.8rem;
     left: 10%;
@@ -662,19 +624,19 @@ button.tooltip:hover span {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   }
 
-  .compose input {
+  #catalyst .compose input {
     width: 90%;
     height: 2rem;
     line-height: 2rem;
   }
 
-  .compose input::placeholder {
+ #catalyst .compose input::placeholder {
     color: gray;
     font-weight: bold;
   }
 }
 
-.header-btn {
+#catalyst .ct-header-btn {
   border: none !important;
   outline: none !important;
   background: none;
@@ -682,7 +644,7 @@ button.tooltip:hover span {
   
 }
 
-.session-details-btn {
+#catalyst .session-details-btn {
 	background: white;
 	border-radius: 10px;
 	padding: 25px;
@@ -699,38 +661,38 @@ button.tooltip:hover span {
   
 }
 
-.session-details-close {
+#catalyst .session-details-close {
  position: absolute;
  right: 0.75rem;
  top:  0.75rem;
  cursor: pointer; 
 }
 
-.session-details-title {
+#catalyst .session-details-title {
   display: flex;
   margin-bottom: 5px;
 }
 
 /* Hide video controls on mobile
 TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away after you press pause then play again */
-video ::-webkit-media-controls-panel {
+#catalyst video ::-webkit-media-controls-panel {
   display: none !important;
   -webkit-appearance: none;
 }
 
-video ::--webkit-media-controls-play-button {
+#catalyst video ::--webkit-media-controls-play-button {
   display: none !important;
   -webkit-appearance: none;
 }
 
-video ::-webkit-media-controls-start-playback-button {
+#catalyst video ::-webkit-media-controls-start-playback-button {
   display: none !important;
   -webkit-appearance: none;
 }
 
 
 /* util */
-.notSelectable {
+#catalyst .ct-not-selectable {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
    -khtml-user-select: none;

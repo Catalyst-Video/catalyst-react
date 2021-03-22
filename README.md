@@ -4,11 +4,12 @@ This package is currently in development. If you experience issues, let us know 
 
 📷💬 An open-source component that allows developers to quickly and easily add Zoom-like video chat to their web applications. Built using WebRTC, React, and Typescript. A functioning build be enabled in minutes with a few lines of code.
 
-Check out the full Catalyst docs [here](https://)!
+Check out the full [Catalyst documentation](https://docs.catalyst.chat/)!
 
 ## Quick Start
 
 #### Installation
+Catalyst can be installed using either [`npm`](https://www.npmjs.com/package/catalyst-vc-react) or `yarn`
 
 ```
 npm i catalyst-vc-react
@@ -39,7 +40,7 @@ import { VideoChat } from "catalyst-vc-react"
 | `picInPic`          | Enter Picture In Picture mode after clicking, double clicking, or not at all                   | ```string```                              |`click`, `dblclick`, `disabled`  | Optional      |
 | `onEndCall`  | Function triggered when user clicks the "end call" button | `Function`  | `console.log("call ended")` | Optional |
 | `cstmSnackbarMsg`  | Displays message in snackbar popup on session start | `HTMLElement` or `Element` or `string`                              | `Share your session key {sessionKey} with whoever wants to join `                                | Optional |
-| `cstmOptionBtns`  | React elements that will be displayed in the Video Chat toolbar | `Element[]` | `[<div className="buttonContainer"><button className="hoverButton tooltip notSelectable" onClick={() => console.log('do something')}><FontAwesomeIcon icon={faSync} /><span>Do Something</span></button></div>,]`                                | Optional |
+| `cstmOptionBtns`  | React elements that will be displayed in the Video Chat toolbar | `Element[]` | `[<div className="ct-button-container"><button className="hoverButton tooltip ct-not-selectable" onClick={() => console.log('do something')}><FontAwesomeIcon icon={faSync} /><span>Do Something</span></button></div>,]`                                | Optional |
 | `themeColor`  | Alters Catalyst theme to use a particular color. Comes with a multitude of built-in options, or you can set a custom `hexadecimal` color of your choice. | `string`  | `blue` | Optional |
 
 

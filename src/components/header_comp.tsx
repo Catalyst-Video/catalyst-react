@@ -8,9 +8,9 @@ const HeaderComponent = ({ VCData }: { VCData: VideoChatData | undefined }) => {
 
   return (
     <div className="show-top">
-      <div id="header" className="notSelectable">
+      <div id="ct-header" className="ct-not-selectable">
         <button
-          className="header-btn"
+          className="ct-header-btn"
           style={{ display: 'inline' }}
           onClick={() => setShowSessionDetails(!showSessionDetails)}
         >
@@ -73,11 +73,11 @@ const HeaderImg = () => {
       height="48"
       viewBox="0 0 2327.000000 813.000000"
       preserveAspectRatio="xMidYMid meet"
-      className="header-logo"
+      className="ct-header-logo"
     >
       <g
         transform="translate(0.000000,813.000000) scale(0.100000,-0.100000)"
-        className="header-logo"
+        className="ct-header-logo"
         stroke="none"
       >
         <path
