@@ -34,12 +34,12 @@ export function displayVideoErrorMessage(): void {
           className="snack-btn"
           onClick={() => {
             window.open(
-              'https://help.clipchamp.com/en/articles/1505527-how-do-i-enable-my-webcam-for-recording',
+              'https://docs.catalyst.chat/docs-permissions',
               '_blank'
             );
           }}
         >
-          Directions
+          Help & Directions
         </button>
       </div>
     ),
