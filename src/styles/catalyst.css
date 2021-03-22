@@ -191,8 +191,7 @@ a {
   opacity: 0.5;
 }
 
-/* caption text */
-#remote-video-text {
+#captions-text {
   margin: 0;
   position: absolute;
   max-height: 300px;
@@ -207,7 +206,6 @@ a {
   font-weight: bold;
   text-align: center;
   background-color:rgba(0, 0, 0, 0.4);
-  /* box-shadow: 0 0 0 2px var(--themeColor); */
   border-radius: 10px;
   padding: 10px;
 }
@@ -559,25 +557,12 @@ button.tooltip:hover span {
   border-radius: 5px;
 }
 
-#remote-video-text {
-  margin: 0;
-  position: absolute;
-  max-height: 300px;
-  top: calc(80%);
-  left: 50%;
-  width: 80vw;
-  margin-left: -200px;
-  z-index: 1;
-  color: black;
-  font-family: "Heebo", sans-serif;
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-align: center;
-  background: #fff;
-  box-shadow: 0 0 0 2px var(--themeColor);
-  border-radius: 10px;
-  padding: 10px;
+#captions-text {
+    width: 90%;
+    left: 0px;
+    margin-left: 5%;
 }
+
 
   .buttonContainer {
     position: relative;

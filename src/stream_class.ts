@@ -113,9 +113,6 @@ export default class VCDataStream implements VideoChatData {
       this.seenWelcomeSnackbar = true;
       if (this.peerConnections.size === 0) {
         this.setCaptionsText('Room ready. Waiting for others to join...');
-        setTimeout(() => {
-          this.setCaptionsText('HIDDEN CAPTIONS');
-        }, 10000);
       }
     }
 

@@ -10,7 +10,7 @@ const App = () => {
   return (
     <div>
       <VideoChat
-        sessionKey="testKey"
+        sessionKey="testingGround"
         uniqueAppId="demo"
         defaults={{
           audioOn: true,

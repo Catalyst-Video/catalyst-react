@@ -152,7 +152,7 @@ const VideoChat = ({
           <HeaderComponent VCData={VCData} />
           <div id="call-section">
             <div
-              id="remote-video-text"
+              id="captions-text"
               className={`${captionsText === 'HIDDEN CAPTIONS' ? 'none' : ''}`}
             >
               {captionsText}
@@ -235,6 +235,20 @@ const VideoChat = ({
                 </button>
               </div>
 
+              <div className={`buttonContainer ${hidden?.chat ? 'none' : ''}`}>
+                <button
+                  className={`${
+                    !showChat ? '' : 'btn-on'
+                  } hoverButton tooltip notSelectable`}
+                  onClick={() => {
+                    setShowChat(!showChat);
+                  }}
+                >
+                  <span>{showChat ? 'Hide Chat' : 'Show Chat'}</span>
+                  <FontAwesomeIcon icon={faComment} />
+                </button>
+              </div>
+
               <div
                 className={`buttonContainer ${
                   hidden?.screenshare ? 'none' : ''
@@ -261,20 +275,6 @@ const VideoChat = ({
                     {!sharing ? 'Share Screen' : 'Stop Sharing Screen'}
                   </span>
                   <FontAwesomeIcon icon={faDesktop} />
-                </button>
-              </div>
-
-              <div className={`buttonContainer ${hidden?.chat ? 'none' : ''}`}>
-                <button
-                  className={`${
-                    !showChat ? '' : 'btn-on'
-                  } hoverButton tooltip notSelectable`}
-                  onClick={() => {
-                    setShowChat(!showChat);
-                  }}
-                >
-                  <span>{showChat ? 'Hide Chat' : 'Show Chat'}</span>
-                  <FontAwesomeIcon icon={faComment} />
                 </button>
               </div>
 
