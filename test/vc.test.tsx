@@ -6,7 +6,7 @@ import VideoChat from '../src/index';
 describe('testMount', () => {
   it('renders without crashing', () => {
     const div = document.createElement('div');
-    ReactDOM.render(<VideoChat sessionKey="test" catalystUUID="test" />, div);
+    ReactDOM.render(<VideoChat sessionKey="test" uniqueAppId="test" />, div);
     ReactDOM.unmountComponentAtNode(div);
   });
 });

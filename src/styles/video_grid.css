@@ -24,6 +24,19 @@
         animation: show 0.4s ease;
     }
 
+    #wrapper video:after {
+        color: #aaa;
+        font-size: 13px;
+        font-family: Arial, Helvetica, sans-serif;
+        position: absolute;
+        bottom: 20px;
+        right: 23px;
+        font-weight: 100;
+        content: "4:3";
+        display: block;
+        z-index: 10;
+    }
+
 /* Animation */
     @keyframes show {
         0% {

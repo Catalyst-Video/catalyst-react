@@ -1,5 +1,5 @@
 /* VIDEO CHAT DATA: track video/audio streams, peer connections, handle webrtc */
-import io, { Socket } from 'socket.io-client';
+import io from 'socket.io-client';
 import {
   chatRoomFull,
   handlereceiveMessage,
@@ -15,10 +15,7 @@ import {
   displayWelcomeMessage,
   ResizeWrapper,
 } from './utils/ui_utils';
-import {
-  handleReceiveCaptions,
-  handleToggleCaptions,
-} from './utils/stream_utils';
+import { handlePictureInPicture } from './utils/stream_utils';
 
 const DEFAULT_SERVER_ADDRESS = 'https://catalyst-video-server.herokuapp.com/';
 
@@ -34,24 +31,33 @@ export default class VCDataStream implements VideoChatData {
   peerConnections: Map<string, RTCPeerConnection>;
   localStream: MediaStream | undefined;
   localAudio: MediaStreamTrack | undefined;
-  sendingCaptions: boolean;
-  receivingCaptions: boolean;
   seenWelcomeSnackbar: boolean;
+  picInPic: string;
   setLocalVideoText: Function;
   setCaptionsText: Function;
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;
-  recognition: SpeechRecognition | undefined;
+  onAddPeer: Function | undefined;
+  onRemovePeer: Function | undefined;
+
+  /*  TODO: Captions
+  sendingCaptions: boolean;
+  receivingCaptions: boolean;
+  recognition: SpeechRecognition | undefined; 
+  */
 
   constructor(
     name: string,
-    catalystUUID: string,
+    uniqueAppId: string,
     setCapText: Function,
     setVidText: Function,
     cstmServerAddress?: string,
-    cstMsg?: string | HTMLElement | Element
+    cstMsg?: string | HTMLElement | Element,
+    picInPic?: string,
+    onAddPeer?: Function,
+    onRemovePeer?: Function
   ) {
     this.roomName = name;
-    this.sessionId = catalystUUID + name;
+    this.sessionId = uniqueAppId + name;
     this.dataChannel = new Map();
     this.connected = new Map();
     this.localICECandidates = {};
@@ -65,13 +71,17 @@ export default class VCDataStream implements VideoChatData {
     this.peerConnections = new Map();
     this.localAudio = undefined;
     this.localStream = undefined;
-    this.sendingCaptions = false;
-    this.receivingCaptions = false;
+    this.picInPic = picInPic ? picInPic : 'dblclick';
     this.seenWelcomeSnackbar = false;
     this.setCaptionsText = setCapText;
     this.setLocalVideoText = setVidText;
     this.cstmSnackbarMsg = cstMsg;
-    this.recognition = undefined;
+    this.onAddPeer = onAddPeer ? onAddPeer : undefined;
+    this.onRemovePeer = onRemovePeer ? onRemovePeer : undefined;
+    /*  TODO: Captions
+    this.sendingCaptions = false;
+    this.receivingCaptions = false;
+    this.recognition = undefined; */
   }
 
   /* Call to getUserMedia (provided by adapter.js for  browser compatibility) asking for access to both the video and audio streams. If the request is accepted callback to the onMediaStream function, otherwise callback to the noMediaStream function. */
@@ -108,9 +118,6 @@ export default class VCDataStream implements VideoChatData {
       this.seenWelcomeSnackbar = true;
       if (this.peerConnections.size === 0) {
         this.setCaptionsText('Room ready. Waiting for others to join...');
-        setTimeout(() => {
-          this.setCaptionsText('CLOSED CAPTIONS');
-        }, 10000);
       }
     }
 
@@ -139,12 +146,12 @@ export default class VCDataStream implements VideoChatData {
     // Set up listeners on the socket
     this.socket.on('candidate', this.onCandidate);
     this.socket.on('answer', this.onAnswer);
-    this.socket.on('requestToggleCaptions', () => handleToggleCaptions(this));
+    /* TODO: captions   this.socket.on('requestToggleCaptions', () => handleToggleCaptions(this));
 
     this.socket.on('receiveCaptions', (captions: any) => {
       handleReceiveCaptions(captions, this, this.setCaptionsText);
       logger(captions);
-    });
+    }); */
 
     const TextInput = document.querySelector(
       'textarea.compose'
@@ -203,17 +210,20 @@ export default class VCDataStream implements VideoChatData {
     } catch (e) {
       logger(e);
     }
-
     // Delete connection & metadata
     this.connected.delete(uuid);
     this.peerConnections.get(uuid)?.close(); // necessary b/c otherwise the RTC connection isn't closed
     this.peerConnections.delete(uuid);
     this.dataChannel.delete(uuid);
+    if (this.onRemovePeer) {
+      this.onRemovePeer();
+    }
     if (this.peerConnections.size === 0) {
       this.setCaptionsText('Room ready. Waiting for others to join...');
+      /*   TODO: determine if this is desireable 
       setTimeout(() => {
-        this.setCaptionsText('CLOSED CAPTIONS');
-      }, 5000);
+        this.setCaptionsText('HIDDEN CAPTIONS');
+      }, 5000); */
     }
   };
 
@@ -258,10 +268,11 @@ export default class VCDataStream implements VideoChatData {
         const cleanedMessage = receivedData.slice(4);
         if (dataType === 'mes:') {
           handlereceiveMessage(cleanedMessage);
+          /* TODO: Captions 
         } else if (dataType === 'cap:') {
           handleReceiveCaptions(cleanedMessage, this, this.setCaptionsText);
         } else if (dataType === 'tog:') {
-          this.sendingCaptions = !this.sendingCaptions;
+          this.sendingCaptions = !this.sendingCaptions; */
         } else {
           // Arbitrary data handling
           logger('Received arbitrary data: ' + receivedData.toString());
@@ -283,7 +294,7 @@ export default class VCDataStream implements VideoChatData {
         this.onAddStream(e, uuid);
         this.setCaptionsText('Session connected successfully');
         setTimeout(() => {
-          this.setCaptionsText('CLOSED CAPTIONS');
+          this.setCaptionsText('HIDDEN CAPTIONS');
         }, 5000);
       };
       // Called when there is a change in connection state
@@ -339,7 +350,7 @@ export default class VCDataStream implements VideoChatData {
     if (this.peerConnections.size === 0) {
       this.setCaptionsText('Found other user. Connecting...');
       setTimeout(() => {
-        this.setCaptionsText('CLOSED CAPTIONS');
+        this.setCaptionsText('HIDDEN CAPTIONS');
       }, 5000);
     }
     var rtcCandidate: RTCIceCandidate = new RTCIceCandidate(
@@ -446,10 +457,19 @@ export default class VCDataStream implements VideoChatData {
       if (this.remoteVideoWrapper?.lastChild !== null) {
         let newVid = this.remoteVideoWrapper.lastChild as HTMLVideoElement;
         newVid.srcObject = e.streams.slice(-1)[0];
+
+        if (this.picInPic !== 'disabled') {
+          newVid.addEventListener(this.picInPic, () => {
+            handlePictureInPicture(this, newVid);
+          });
+        }
+        if (this.onAddPeer) {
+          this.onAddPeer();
+        }
+        closeAllMessages();
+        this.connected.set(uuid, true);
+        this.setCaptionsText('HIDDEN CAPTIONS');
       }
-      closeAllMessages();
-      this.connected.set(uuid, true);
-      this.setCaptionsText('CLOSED CAPTIONS');
     }
   };
 }

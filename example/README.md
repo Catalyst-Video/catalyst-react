@@ -8,7 +8,7 @@ THIS PACKAGE IS IN DEVELOPMENT. IT WILL BE READY FOR USE SOON
 | Param        | Description                                                                                                 |  Type                             | Example Value                             | Required |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- | -------------------------------------- | -------- |
 | `sessionKey` | Unique session identifier - peers with the same `sessionKey` are connected                                                                    |  `string` | `"UNDEFINED"` |  Yes      |
-| `catalystUUID` | Unique project identifier - keeps video calls from different projects from overlapping                                                          |  `UUID` | `"4d39df3f-f67b-4217-b832-57d4ffa2b217"` |  Yes      |
+| `uniqueAppId` | Unique project identifier - keeps video calls from different projects from overlapping                                                          |  `UUID` | `"4d39df3f-f67b-4217-b832-57d4ffa2b217"` |  Yes      |
 | `defaults`          | Settings for the default instance of Catalyst                                                                                   | ```{audioOn?: boolean; videoOn?: boolean; showChatArea?: boolean; showCaptionsArea?: boolean; }```                              | ```{ audioOn: true, videoOn: true, showCaptionsArea: true,  showCaptionsArea: true }```  | Optional      |
 | `disabled`          | Disable any of Catalyst's wide array of video options                                                    | ```{ mute?: boolean; pausevideo?: boolean; screenshare?: boolean; chat?: boolean; picinpic?: boolean; captions?: boolean; endcall?: boolean; }```                              |```{ mute: false, pausevideo: false, screenshare: false, chat: false, picinpic: false, captions: false, endcall: false }```  | Optional      |
 | `onEndCall`  | Function triggered when user clicks the "end call" button | `Function`  | `console.log("call ended")` | Optional |
@@ -47,7 +47,7 @@ import { UtilName } from "catalyst-vc-react/utils";
 ```tsx
 	<VideoChat
 			sessionKey="testKey"
-			catalystUUID=""
+			uniqueAppId=""
 			defaultSettings={{
 				hideChat: true,
 				audioOn: true,
@@ -63,7 +63,7 @@ Above is a simplistic example of a `VideoChat` component being embedded in a pro
 
 This will use Catalyst's [demo signaling server](https://github.com/Catalyst-Video/catalyst-server) by default, allowing you to see a functioning version of video chat in your projects immediately.
 
-Behind the scenes, the session key is appended to the `catalystUUID` parameter to ensure two projects both using the demo server do not You can use this [UUID Generator](https://www.uuidgenerator.net/) to create your `catalystUUID`.
+Behind the scenes, the session key is appended to the `uniqueAppId` parameter to ensure two projects both using the demo server do not You can use this [UUID Generator](https://www.uuidgenerator.net/) to create your `uniqueAppId`.
 
 The demo signaling server does not currently have quotas, but be respectful in your usage. You can create your own server by following the Catalyst server setup docs [here](https://linktoserversetupdocs)
 

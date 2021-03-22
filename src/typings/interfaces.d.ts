@@ -10,13 +10,15 @@ export interface VideoChatData {
   peerConnections: Map<string, RTCPeerConnection>;
   localStream: MediaStream | undefined;
   localAudio: MediaStreamTrack | undefined;
-  sendingCaptions: boolean;
-  receivingCaptions: boolean;
+  picInPic: string;
   seenWelcomeSnackbar: boolean;
   setLocalVideoText: Function;
   setCaptionsText: Function;
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;
-  recognition: SpeechRecognition | undefined;
+  /* TODO: Captions
+  sendingCaptions: boolean;
+  receivingCaptions: boolean;
+  recognition: SpeechRecognition | undefined;*/
 
   requestMediaStream(e?: Event): void;
   onMediaStream(e: MediaStream): void;
@@ -45,16 +47,15 @@ export interface DefaultSettings {
   audioOn?: boolean;
   videoOn?: boolean;
   showChatArea?: boolean;
-  showCaptionsArea?: boolean;
+  // TODO: showCaptionsArea?: boolean;
 }
 
-export interface DisabledSettings {
+export interface HiddenSettings {
   mute?: boolean;
   pausevideo?: boolean;
   screenshare?: boolean;
   chat?: boolean;
-  picinpic?: boolean;
-  captions?: boolean;
+  // TODO: captions?: boolean;
   endcall?: boolean;
 }
 export interface TwilioToken {

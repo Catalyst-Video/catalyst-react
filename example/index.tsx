@@ -10,26 +10,31 @@ const App = () => {
   return (
     <div>
       <VideoChat
-        sessionKey="testKey"
-        catalystUUID="demo"
+        sessionKey="testingGround"
+        uniqueAppId="demo"
         defaults={{
           audioOn: true,
           videoOn: true,
           showCaptionsArea: false,
           showChatArea: false,
         }}
-        themeColor="indigo"
-        cstmOptionBtns={[
-          <div className="buttonContainer">
-            <button
-              className="hoverButton tooltip notSelectable"
-              onClick={() => console.log('call ended')}
-            >
-              <FontAwesomeIcon icon={faSync} />
-              <span>Synchronize</span>
-            </button>
-          </div>,
-        ]}
+        onAddPeer={() => console.log('peer added')}
+        onStartCall={() => console.log('on start call')}
+        onRemovePeer={() => console.log('on remove peer')}
+        onEndCall={() => console.log('on end call')}
+
+        // themeColor="indigo"
+        // cstmOptionBtns={[
+        //   <div className="ct-button-container">
+        //     <button
+        //       className="hoverButton tooltip ct-not-selectable"
+        //       onClick={() => console.log('call ended')}
+        //     >
+        //       <FontAwesomeIcon icon={faSync} />
+        //       <span>Synchronize</span>
+        //     </button>
+        //   </div>,
+        // ]}
       />
     </div>
   );

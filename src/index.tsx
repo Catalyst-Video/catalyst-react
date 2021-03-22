@@ -12,25 +12,22 @@ import { getBrowserName, setThemeColor } from './utils/general_utils';
 import {
   handleMute,
   handlePauseVideo,
-  handlePictureInPicture,
-  handleRequestToggleCaptions,
   handleSharing,
 } from './utils/stream_utils';
 // typings
 import {
   DefaultSettings,
-  DisabledSettings,
+  HiddenSettings,
   VideoChatData,
 } from './typings/interfaces';
 // icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faClosedCaptioning,
+  // faClosedCaptioning,
   faComment,
   faCompress,
   faDesktop,
   faExpand,
-  faExternalLinkAlt,
   faMicrophone,
   faMicrophoneSlash,
   faPause,
@@ -52,23 +49,31 @@ import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 
 const VideoChat = ({
   sessionKey,
-  catalystUUID,
+  uniqueAppId,
   cstmServerAddress,
   defaults,
-  disabled,
+  hidden,
+  picInPic,
+  onStartCall,
+  onAddPeer,
+  onRemovePeer,
   onEndCall,
   cstmSnackbarMsg,
   cstmOptionBtns,
   themeColor,
 }: {
   sessionKey: string;
-  catalystUUID: string;
+  uniqueAppId: string;
   cstmServerAddress?: string;
   defaults?: DefaultSettings;
-  disabled?: DisabledSettings;
+  hidden?: HiddenSettings;
+  picInPic?: string;
+  onStartCall?: Function;
+  onAddPeer?: Function;
+  onRemovePeer?: Function;
   onEndCall?: Function;
   cstmSnackbarMsg?: HTMLElement | Element | string;
-  cstmOptionBtns: HTMLButtonElement[];
+  cstmOptionBtns?: Element[];
   themeColor?: string;
 }) => {
   const fsHandle = useFullScreenHandle();
@@ -81,13 +86,12 @@ const VideoChat = ({
     defaults?.videoOn ? defaults.videoOn : true
   );
   const [sharing, setSharing] = useState(false);
-  const [picInPic, setPicInPic] = useState(false);
   const [showChat, setShowChat] = useState<boolean>(
     defaults?.showChatArea ? defaults.showChatArea : false
   );
-
   const [captionsText, setCaptionsText] = useState(
-    defaults?.showCaptionsArea ? '' : 'CLOSED CAPTIONS'
+    'HIDDEN CAPTIONS'
+    // TODO: Captions defaults?.showCaptionsArea ? '' : 'HIDDEN CAPTIONS'
   );
   const [localVideoText, setLocalVideoText] = useState('No webcam input');
   const [VCData, setVCData] = useState<VideoChatData>();
@@ -135,224 +139,220 @@ const VideoChat = ({
   useEffect(() => {
     const VCD = new VCDataStream(
       sessionKey,
-      catalystUUID,
+      uniqueAppId,
       setCaptionsText,
       setLocalVideoText,
       cstmServerAddress,
-      cstmSnackbarMsg
+      cstmSnackbarMsg,
+      picInPic,
+      onAddPeer,
+      onRemovePeer
     );
     setVCData(VCD);
     VCD?.requestMediaStream();
-  }, [sessionKey, catalystUUID, cstmServerAddress, cstmSnackbarMsg]);
+    if (onStartCall) {
+      onStartCall();
+    }
+  }, [sessionKey, uniqueAppId, cstmServerAddress, cstmSnackbarMsg, picInPic]);
 
   if (browserSupported) {
     return (
-      <FullScreen handle={fsHandle}>
-        <div id="arbitrary-data" className="none"></div>
-        <HeaderComponent VCData={VCData} />
-        <div id="call-section">
-          <div
-            id="remote-video-text"
-            className={`${captionsText === 'CLOSED CAPTIONS' ? 'none' : ''}`}
-          >
-            {captionsText}
-          </div>
-          <div id="wrapper"></div>
-          <Draggable defaultPosition={{ x: 30, y: 150 }}>
-            <div id="moveable" className="video-1">
-              <p id="local-video-text">{localVideoText}</p>
-              <video id="local-video" autoPlay muted playsInline></video>
-            </div>
-          </Draggable>
-
-          <div className="multi-button">
-            <div className={`buttonContainer ${disabled?.mute ? 'none' : ''}`}>
-              <button
-                className={`${
-                  audioEnabled ? '' : 'btn-on'
-                } hoverButton tooltip notSelectable`}
-                onClick={() => {
-                  if (VCData) handleMute(audioEnabled, setAudio, VCData);
-                }}
-              >
-                <span>{audioEnabled ? 'Mute Audio' : 'Unmute Audio'}</span>
-
-                <FontAwesomeIcon
-                  icon={audioEnabled ? faMicrophone : faMicrophoneSlash}
-                />
-              </button>
-            </div>
-
+      <div id="catalyst" className="ct-body">
+        <FullScreen handle={fsHandle}>
+          <HeaderComponent VCData={VCData} />
+          <div id="ct-call-section">
             <div
-              className={`buttonContainer ${
-                disabled?.pausevideo ? 'none' : ''
-              }`}
+              id="ct-captions-text"
+              className={`${captionsText === 'HIDDEN CAPTIONS' ? 'none' : ''}`}
             >
-              <button
-                className={`${
-                  videoEnabled ? '' : 'btn-on'
-                } hoverButton tooltip notSelectable`}
-                onClick={() => {
-                  if (VCData)
-                    handlePauseVideo(
-                      videoEnabled,
-                      setVideo,
-                      VCData,
-                      setLocalVideoText
-                    );
-                }}
-              >
-                <span>{videoEnabled ? 'Pause Video' : 'Unpause Video'}</span>
-                <FontAwesomeIcon icon={videoEnabled ? faPause : faPlay} />
-              </button>
+              {captionsText}
             </div>
+            <div id="wrapper"></div>
+            <Draggable defaultPosition={{ x: 30, y: 150 }}>
+              <div id="moveable" className="video-1">
+                <p id="local-video-text">{localVideoText}</p>
+                <video id="local-video" autoPlay muted playsInline></video>
+              </div>
+            </Draggable>
 
-            <div
-              className={`buttonContainer ${
-                disabled?.screenshare ? 'none' : ''
-              }`}
-            >
-              <button
-                className={`${
-                  !sharing ? '' : 'btn-on'
-                } hoverButton tooltip notSelectable`}
-                id="share-button"
-                onClick={() => {
-                  if (VCData)
-                    handleSharing(
-                      VCData,
-                      sharing,
-                      setSharing,
-                      videoEnabled,
-                      setVideo,
-                      setLocalVideoText
-                    );
-                }}
+            <div className="multi-button">
+              <div
+                className={`ct-button-container ${hidden?.mute ? 'none' : ''}`}
               >
-                <span>{!sharing ? 'Share Screen' : 'Stop Sharing Screen'}</span>
-                <FontAwesomeIcon icon={faDesktop} />
-              </button>
-            </div>
+                <button
+                  className={`${
+                    audioEnabled ? '' : 'btn-on'
+                  } hoverButton tooltip ct-not-selectable`}
+                  onClick={() => {
+                    if (VCData) handleMute(audioEnabled, setAudio, VCData);
+                  }}
+                >
+                  <span>{audioEnabled ? 'Mute Audio' : 'Unmute Audio'}</span>
 
-            <div className={`buttonContainer ${disabled?.chat ? 'none' : ''}`}>
-              <button
-                className={`${
-                  !showChat ? '' : 'btn-on'
-                } hoverButton tooltip notSelectable`}
-                onClick={() => {
-                  setShowChat(!showChat);
-                }}
+                  <FontAwesomeIcon
+                    icon={audioEnabled ? faMicrophone : faMicrophoneSlash}
+                  />
+                </button>
+              </div>
+
+              <div
+                className={`ct-button-container ${
+                  hidden?.pausevideo ? 'none' : ''
+                }`}
               >
-                <span>{showChat ? 'Hide Chat' : 'Show Chat'}</span>
-                <FontAwesomeIcon icon={faComment} />
-              </button>
-            </div>
+                <button
+                  className={`${
+                    videoEnabled ? '' : 'btn-on'
+                  } hoverButton tooltip ct-not-selectable`}
+                  onClick={() => {
+                    if (VCData)
+                      handlePauseVideo(
+                        videoEnabled,
+                        setVideo,
+                        VCData,
+                        setLocalVideoText
+                      );
+                  }}
+                >
+                  <span>{videoEnabled ? 'Pause Video' : 'Unpause Video'}</span>
+                  <FontAwesomeIcon icon={videoEnabled ? faPause : faPlay} />
+                </button>
+              </div>
 
-            <div
-              className={`buttonContainer ${
-                disabled?.pausevideo ? 'none' : ''
-              }`}
-            >
-              <button
-                className={`${
-                  !fsHandle.active ? '' : 'btn-on'
-                } hoverButton tooltip notSelectable`}
-                onClick={() => {
-                  if (fsHandle.active) {
-                    fsHandle.exit();
-                  } else {
-                    fsHandle.enter();
+              <div
+                className={`ct-button-container ${
+                  hidden?.pausevideo ? 'none' : ''
+                }`}
+              >
+                <button
+                  className={`${
+                    !fsHandle.active ? '' : 'btn-on'
+                  } hoverButton tooltip ct-not-selectable`}
+                  onClick={() => {
+                    if (fsHandle.active) {
+                      fsHandle.exit();
+                    } else {
+                      fsHandle.enter();
+                    }
+                  }}
+                >
+                  <span>
+                    {!fsHandle.active
+                      ? 'Enter Full Screen'
+                      : 'Exit Full Screen'}
+                  </span>
+                  <FontAwesomeIcon
+                    icon={!fsHandle.active ? faExpand : faCompress}
+                  />
+                </button>
+              </div>
+
+              <div
+                className={`ct-button-container ${hidden?.chat ? 'none' : ''}`}
+              >
+                <button
+                  className={`${
+                    !showChat ? '' : 'btn-on'
+                  } hoverButton tooltip ct-not-selectable`}
+                  onClick={() => {
+                    setShowChat(!showChat);
+                  }}
+                >
+                  <span>{showChat ? 'Hide Chat' : 'Show Chat'}</span>
+                  <FontAwesomeIcon icon={faComment} />
+                </button>
+              </div>
+
+              <div
+                className={`ct-button-container ${
+                  hidden?.screenshare ? 'none' : ''
+                }`}
+              >
+                <button
+                  className={`${
+                    !sharing ? '' : 'btn-on'
+                  } hoverButton tooltip ct-not-selectable`}
+                  id="share-button"
+                  onClick={() => {
+                    if (VCData)
+                      handleSharing(
+                        VCData,
+                        sharing,
+                        setSharing,
+                        videoEnabled,
+                        setVideo,
+                        setLocalVideoText
+                      );
+                  }}
+                >
+                  <span>
+                    {!sharing ? 'Share Screen' : 'Stop Sharing Screen'}
+                  </span>
+                  <FontAwesomeIcon icon={faDesktop} />
+                </button>
+              </div>
+
+              {/* TODO: Captions
+              
+              <div
+                className={`ct-button-container ${hidden?.captions ? 'none' : ''}`}
+              >
+                <button
+                  className={`${
+                    captionsText === 'HIDDEN CAPTIONS' ? '' : 'btn-on'
+                  } hoverButton tooltip ct-not-selectable`}
+                  onClick={() => {
+                    if (VCData)
+                      handleRequestToggleCaptions(VCData, setCaptionsText);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faClosedCaptioning} />
+                  <span>
+                    {captionsText === 'HIDDEN CAPTIONS'
+                      ? 'HIDDEN CAPTIONS'
+                      : 'Hide HIDDEN CAPTIONS'}
+                  </span>
+                </button>
+              </div> */}
+
+              {cstmOptionBtns?.map((component, idx) => (
+                <React.Fragment key={idx}>{component}</React.Fragment>
+              ))}
+
+              <div
+                className={`ct-button-container ${
+                  hidden?.endcall ? 'none' : ''
+                }`}
+              >
+                <button
+                  className="hoverButton tooltip ct-not-selectable"
+                  onClick={() =>
+                    onEndCall ? onEndCall() : console.log('call ended')
                   }
-                }}
-              >
-                <span>
-                  {!fsHandle.active ? 'Enter Full Screen' : 'Exit Full Screen'}
-                </span>
-                <FontAwesomeIcon
-                  icon={!fsHandle.active ? faExpand : faCompress}
-                />
-              </button>
-            </div>
-
-            <div
-              className={`buttonContainer ${disabled?.picinpic ? 'none' : ''}`}
-            >
-              <button
-                className={`${
-                  // @ts-ignore
-                  !picInPic || !Document.pictureInPictureElement ? '' : 'btn-on'
-                } hoverButton tooltip notSelectable`}
-                id="pip-button"
-                onClick={() => {
-                  if (VCData) handlePictureInPicture(VCData, setPicInPic);
-                }}
-              >
-                <span>
-                  {// @ts-ignore
-                  !picInPic || !Document.pictureInPictureElement
-                    ? 'Picture in Picture'
-                    : 'Normal View'}
-                </span>
-                <FontAwesomeIcon icon={faExternalLinkAlt} />
-              </button>
-            </div>
-
-            <div
-              className={`buttonContainer ${disabled?.captions ? 'none' : ''}`}
-            >
-              <button
-                className={`${
-                  captionsText === 'CLOSED CAPTIONS' ? '' : 'btn-on'
-                } hoverButton tooltip notSelectable`}
-                onClick={() => {
-                  if (VCData)
-                    handleRequestToggleCaptions(VCData, setCaptionsText);
-                }}
-              >
-                <FontAwesomeIcon icon={faClosedCaptioning} />
-                <span>
-                  {captionsText === 'CLOSED CAPTIONS'
-                    ? 'Closed Captions'
-                    : 'Hide Closed Captions'}
-                </span>
-              </button>
-            </div>
-
-            {cstmOptionBtns.map((component, index) => (
-              <React.Fragment key={index}>{component}</React.Fragment>
-            ))}
-
-            <div
-              className={`buttonContainer ${disabled?.endcall ? 'none' : ''}`}
-            >
-              <button
-                className="hoverButton tooltip notSelectable"
-                onClick={() =>
-                  onEndCall ? onEndCall : console.log('call ended')
-                }
-              >
-                <FontAwesomeIcon icon={faPhoneSlash} />
-                <span>End Call</span>
-              </button>
-              <audio id="join-sound" src={joinSound}></audio>
-              <audio id="leave-sound" src={leaveSound}></audio>
+                >
+                  <FontAwesomeIcon icon={faPhoneSlash} />
+                  <span>End Call</span>
+                </button>
+                <audio id="join-sound" src={joinSound}></audio>
+                <audio id="leave-sound" src={leaveSound}></audio>
+              </div>
             </div>
           </div>
-        </div>
-        <ChatComponent showChat={showChat} />
-        <ToastContainer
-          position="top-center"
-          autoClose={50000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          limit={2}
-        />
-      </FullScreen>
+          <ChatComponent showChat={showChat} />
+          <ToastContainer
+            position="top-center"
+            autoClose={50000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            limit={2}
+          />
+        </FullScreen>
+      </div>
     );
   } else {
     return <IncompatibleComponent />;

@@ -104,152 +104,23 @@ export function handleSwitchStreamHelper(
   }
 }
 
-export function handleRequestToggleCaptions(
-  VCData: VideoChatData,
-  setCaptionsText: Function
-): void {
-  // Handle requesting captions before connected
-  if (!isConnected(VCData)) {
-    alert('You must join a call to use Live Captions');
-    return;
-  }
-  if (VCData.receivingCaptions) {
-    setCaptionsText('CLOSED CAPTIONS');
-    VCData.receivingCaptions = false;
-  } else {
-    toast(
-      () => (
-        <div className="text-center justify-between">
-          <strong>Experimental:</strong> The user speaking must be using a
-          Chromium browser
-        </div>
-      ),
-      {
-        toastId: 'captions_start',
-      }
-    );
-
-    setCaptionsText('Captions Enabled');
-    VCData.receivingCaptions = true;
-  }
-  // Send request to get captions over data channel
-  sendToAllDataChannels('tog:', VCData.dataChannel);
-}
-
-export function handleReceiveCaptions(
-  captions: string,
-  VCData: VideoChatData,
-  setCaptionsText: Function
-): void {
-  if (VCData.receivingCaptions) {
-    setCaptionsText(captions);
-  }
-  // Other user is not using chrome
-  if (captions === 'notusingchrome') {
-    alert(
-      'Other caller must be using chrome for this feature to work. Live Captions disabled.'
-    );
-    setCaptionsText('CLOSED CAPTIONS');
-  }
-}
-
-// export function handleReceiveCaptions(
-//   captions: any,
-//   VCData: VideoChatData,
-//   // setHideCaptions: Function,
-//   setCaptionsText: Function
-// ): void {
-//   if (VCData.receivingCaptions) {
-//     setCaptionsText('');
-//     VCData.receivingCaptions = false;
-//   } else {
-//     setCaptionsText('CLOSED CAPTIONS');
-//     VCData.receivingCaptions = true;
-//   }
-//   // Other user is not using chrome
-//   if (captions === 'notusingchrome') {
-//     alert(
-//       'Other caller must be using chrome for this feature to work. Live Captions disabled.'
-//     );
-//     setCaptionsText('CLOSED CAPTIONS');
-//     return;
-//   }
-//   setCaptionsText(captions);
-// }
-
-export function handleToggleCaptions(VCData: VideoChatData) {
-  if (VCData.sendingCaptions && VCData.recognition) {
-    VCData.sendingCaptions = false;
-    VCData.recognition.stop();
-  } else {
-    VCData.sendingCaptions = true;
-    handleStartSpeech(VCData);
-  }
-}
-
-export function handleStartSpeech(VCData: VideoChatData) {
-  try {
-    var SpeechRecognition = window.SpeechRecognition;
-    VCData.recognition = new SpeechRecognition();
-  } catch (e) {
-    VCData.sendingCaptions = false;
-    logger('error importing speech library' + e);
-    // Alert other user that they cannon use live captions
-    sendToAllDataChannels('cap:notusingchrome', VCData.dataChannel);
-    return;
-  }
-  VCData.recognition.continuous = true;
-  // Show results that aren't final
-  VCData.recognition.interimResults = true;
-  // var finalTranscript: any;
-  VCData.recognition.onresult = (e: any) => {
-    let interimTranscript = '';
-    for (let i = e.resultIndex, len = e.results.length; i < len; i++) {
-      var transcript = e.results[i][0].transcript;
-      logger(transcript);
-      if (e.results[i].isFinal) {
-        // finalTranscript += transcript;
-      } else {
-        interimTranscript += transcript;
-        var charsToKeep = interimTranscript.length % 100;
-        // Send captions over data chanel, subtracting as many complete 100 char slices from start
-        sendToAllDataChannels(
-          'cap:' +
-            interimTranscript.substring(interimTranscript.length - charsToKeep),
-          VCData.dataChannel
-        );
-      }
-    }
-  };
-  VCData.recognition.onend = function() {
-    logger('on speech recording end');
-    // Restart speech recognition if user has not stopped it
-    if (VCData.sendingCaptions) {
-      handleStartSpeech(VCData);
-    } else if (VCData.recognition) {
-      VCData.recognition.stop();
-    }
-  };
-  VCData.recognition.start();
-}
-
 export function handlePictureInPicture(
   VCData: VideoChatData,
-  setPicInPic: Function
+  video: HTMLVideoElement
 ): void {
   if (
     'pictureInPictureEnabled' in document ||
     // @ts-ignore
     VCData.remoteVideoWrapper.lastChild.webkitSetPresentationMode
   ) {
-    var video = VCData.remoteVideoWrapper.lastChild as HTMLVideoElement;
+    // var video = VCData.remoteVideoWrapper.lastChild as HTMLVideoElement;
     if (video) {
-      video.addEventListener('enterpictureinpicture', setPicInPic(true), false);
-      video.addEventListener(
-        'leavepictureinpicture ',
-        setPicInPic(false),
-        false
-      );
+      // video.addEventListener('enterpictureinpicture', setPicInPic(true), false);
+      // video.addEventListener(
+      //   'leavepictureinpicture ',
+      //   setPicInPic(false),
+      //   false
+      // );
       // @ts-ignore
       if (document && document.pictureInPictureElement && video) {
         // @ts-ignore
@@ -323,8 +194,18 @@ export function handleSharing(
         toast(
           () => (
             <div className="text-center justify-between">
-              Please allow screen share. Click the middle of the picture above
-              and then press share.
+              Please press allow to enable webcam & audio access
+              <button
+                className="snack-btn"
+                onClick={() => {
+                  window.open(
+                    'https://help.clipchamp.com/en/articles/1505527-how-do-i-enable-my-webcam-for-recording',
+                    '_blank'
+                  );
+                }}
+              >
+                Directions
+              </button>
             </div>
           ),
           {
@@ -357,3 +238,110 @@ export function handleSharing(
       });
   }
 }
+
+/* TODO: Captions
+export function handleRequestToggleCaptions(
+  VCData: VideoChatData,
+  setCaptionsText: Function
+): void {
+  // Handle requesting captions before connected
+  if (!isConnected(VCData)) {
+    alert('You must join a call to use Live Captions');
+    return;
+  }
+  if (VCData.receivingCaptions) {
+    setCaptionsText('HIDDEN CAPTIONS');
+    VCData.receivingCaptions = false;
+  } else {
+    toast(
+      () => (
+        <div className="text-center justify-between">
+          <strong>Experimental:</strong> The user speaking must be using a
+          Chromium browser
+        </div>
+      ),
+      {
+        toastId: 'captions_start',
+      }
+    );
+
+    setCaptionsText('Captions Enabled');
+    VCData.receivingCaptions = true;
+  }
+  // Send request to get captions over data channel
+  sendToAllDataChannels('tog:', VCData.dataChannel);
+}
+
+export function handleReceiveCaptions(
+  captions: string,
+  VCData: VideoChatData,
+  setCaptionsText: Function
+): void {
+  if (VCData.receivingCaptions) {
+    setCaptionsText(captions);
+  }
+  // Other user is not using chrome
+  if (captions === 'notusingchrome') {
+    alert(
+      'Other caller must be using chrome for this feature to work. Live Captions disabled.'
+    );
+    setCaptionsText('HIDDEN CAPTIONS');
+  }
+}
+
+export function handleToggleCaptions(VCData: VideoChatData) {
+  if (VCData.sendingCaptions && VCData.recognition) {
+    VCData.sendingCaptions = false;
+    VCData.recognition.stop();
+  } else {
+    VCData.sendingCaptions = true;
+    handleStartSpeech(VCData);
+  }
+}
+
+export function handleStartSpeech(VCData: VideoChatData) {
+  try {
+    var SpeechRecognition = window.SpeechRecognition;
+    VCData.recognition = new SpeechRecognition();
+  } catch (e) {
+    VCData.sendingCaptions = false;
+    logger('error importing speech library' + e);
+    // Alert other user that they cannon use live captions
+    sendToAllDataChannels('cap:notusingchrome', VCData.dataChannel);
+    return;
+  }
+  VCData.recognition.continuous = true;
+  // Show results that aren't final
+  VCData.recognition.interimResults = true;
+  // var finalTranscript: any;
+  VCData.recognition.onresult = (e: any) => {
+    let interimTranscript = '';
+    for (let i = e.resultIndex, len = e.results.length; i < len; i++) {
+      var transcript = e.results[i][0].transcript;
+      logger(transcript);
+      if (e.results[i].isFinal) {
+        // finalTranscript += transcript;
+      } else {
+        interimTranscript += transcript;
+        var charsToKeep = interimTranscript.length % 100;
+        // Send captions over data chanel, subtracting as many complete 100 char slices from start
+        sendToAllDataChannels(
+          'cap:' +
+            interimTranscript.substring(interimTranscript.length - charsToKeep),
+          VCData.dataChannel
+        );
+      }
+    }
+  };
+  VCData.recognition.onend = function() {
+    logger('on speech recording end');
+    // Restart speech recognition if user has not stopped it
+    if (VCData.sendingCaptions) {
+      handleStartSpeech(VCData);
+    } else if (VCData.recognition) {
+      VCData.recognition.stop();
+    }
+  };
+  VCData.recognition.start();
+}
+ */
