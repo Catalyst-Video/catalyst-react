@@ -4,7 +4,7 @@ This package is currently in development. If you experience issues, let us know 
 
 📷💬 An open-source component that allows developers to quickly and easily add Zoom-like video chat to their web applications. Built using WebRTC, React, and Typescript. A functioning build be enabled in minutes with a few lines of code.
 
-Check out the full [Catalyst documentation](https://docs.catalyst.chat/)!
+Check out the full [Catalyst documentation](https://docs.catalyst.chat/docs-intro)!
 
 ## Quick Start
 
