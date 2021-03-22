@@ -78,7 +78,7 @@ export function Area(
 
 export function ResizeWrapper(): void {
   let Margin = 2;
-  let Wrapper = document.getElementById('wrapper');
+  let Wrapper = document.getElementById('remote-vid-wrapper');
   let Width = 0;
   let Height = 0;
   if (Wrapper) {

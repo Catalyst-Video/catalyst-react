@@ -1,4 +1,4 @@
-    #wrapper {
+    #remote-vid-wrapper {
         display: flex;
         align-content: center;
         flex-wrap: wrap;
@@ -11,7 +11,7 @@
         top: 0px;
         right: 0px;
     }
-    #wrapper video {
+    #remote-vid-wrapper video {
         margin: 2px;
         position: relative;
         vertical-align: middle;
@@ -24,7 +24,7 @@
         animation: show 0.4s ease;
     }
 
-    #wrapper video:after {
+    #remote-vid-wrapper video:after {
         color: #aaa;
         font-size: 13px;
         font-family: Arial, Helvetica, sans-serif;

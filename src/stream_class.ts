@@ -63,7 +63,7 @@ export default class VCDataStream implements VideoChatData {
     this.localICECandidates = {};
     this.socket = io(cstmServerAddress ?? DEFAULT_SERVER_ADDRESS);
     this.remoteVideoWrapper = document.getElementById(
-      'wrapper'
+      'remote-vid-wrapper'
     ) as HTMLDivElement;
     this.localVideo = document.getElementById(
       'local-video'
@@ -125,7 +125,7 @@ export default class VCDataStream implements VideoChatData {
     this.localAudio = stream.getAudioTracks()[0];
     if (!this.localVideo) {
       this.localVideo = document.getElementById(
-        'local-video'
+        'local-vid-wrapper'
       ) as HTMLMediaElement;
     }
     if (
@@ -202,7 +202,7 @@ export default class VCDataStream implements VideoChatData {
     // Remove video element
     try {
       logger('disconnected - UUID ' + uuid);
-      (document.getElementById('leave-sound') as HTMLVideoElement)?.play();
+      (document.getElementById('leave-sound') as HTMLAudioElement)?.play();
       this?.remoteVideoWrapper?.removeChild(
         document.querySelectorAll(`[uuid="${uuid}"]`)[0]
       );
@@ -439,7 +439,7 @@ export default class VCDataStream implements VideoChatData {
       logger('onAddStream <<< Received new stream from remote. Adding it...');
 
       logger('onAddStream <<< Playing join sound...');
-      (document.getElementById('join-sound') as HTMLVideoElement)?.play();
+      (document.getElementById('join-sound') as HTMLAudioElement)?.play();
       var node = document.createElement('video');
       node.setAttribute('autoplay', '');
       node.setAttribute('playsinline', '');
@@ -448,7 +448,7 @@ export default class VCDataStream implements VideoChatData {
       node.setAttribute('className', 'RemoteVideo');
       if (!this.remoteVideoWrapper) {
         this.remoteVideoWrapper = document.getElementById(
-          'wrapper'
+          'remote-vid-wrapper'
         ) as HTMLDivElement;
       }
       this.remoteVideoWrapper.appendChild(node);

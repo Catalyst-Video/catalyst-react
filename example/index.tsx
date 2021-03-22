@@ -25,9 +25,9 @@ const App = () => {
 
         // themeColor="indigo"
         // cstmOptionBtns={[
-        //   <div className="ct-button-container">
+        //   <div className="ct-btn-container">
         //     <button
-        //       className="hoverButton tooltip ct-not-selectable"
+        //       className="ct-hover-btn ct-tooltip ct-not-selectable"
         //       onClick={() => console.log('call ended')}
         //     >
         //       <FontAwesomeIcon icon={faSync} />
