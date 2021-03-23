@@ -1,5 +1,6 @@
 import { toast } from 'react-toastify';
 import React from 'react';
+import { VideoChatData } from '../typings/interfaces';
 
 export function displayWelcomeMessage(
   cstmSnackbarMsg: string | HTMLElement | Element | undefined,
@@ -113,4 +114,49 @@ export function setWidth(width: number, margin: number): void {
     RemoteVideos[s].style.margin = margin + 'px';
     RemoteVideos[s].style.height = width * 0.75 + 'px';
   }
+}
+
+export function uuidToHue(uuid: string, VCData: VideoChatData): number {
+  // Using uuid to generate random, unique pastel color
+  var hash = 0;
+  for (var i = 0; i < uuid.length; i++) {
+    hash = uuid.charCodeAt(i) + ((hash << 5) - hash);
+    hash = hash & hash;
+  }
+  var hue = Math.abs(hash % 360);
+  // Ensure color is not similar to other colors
+  var availColors: number[] = Array.from(
+    { length: 6 },
+    (x: number, i: number) => i * 60
+  );
+  VCData.peerColors.forEach(
+    (value: number, key: string, map: Map<string, number>) => {
+      availColors[Math.floor(value / 60)] = -1;
+    }
+  );
+  if (availColors[Math.floor(hue / 60)] == -1) {
+    for (var i = 0; i < availColors.length; i++) {
+      if (availColors[i] != -1) {
+        hue = (hue % 60) + availColors[i];
+        availColors[i] = -1;
+        break;
+      }
+    }
+  }
+  VCData.peerColors.set(uuid, hue);
+  return hue;
+}
+
+export function hueToColor(hue: string): string {
+  return `hsl(${hue},100%,70%)`;
+}
+
+// Sets the border color of uuid's stream
+export function setStreamColor(uuid: string, VCData: VideoChatData): void {
+  const hue = uuidToHue(uuid, VCData);
+  (document.querySelectorAll(
+    `[uuid="${uuid}"]`
+  )[0] as HTMLVideoElement).style.border = `2px solid ${hueToColor(
+    hue.toString()
+  )}`;
 }

@@ -13,6 +13,8 @@ export interface VideoChatData {
   picInPic: string;
   seenWelcomeSnackbar: boolean;
   setLocalVideoText: Function;
+  peerColors: Map<string, number>;
+  localColor: string;
   incrementUnseenChats: Function;
   setCaptionsText: Function;
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;

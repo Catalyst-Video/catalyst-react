@@ -13,7 +13,10 @@ import {
   closeAllMessages,
   displayVideoErrorMessage,
   displayWelcomeMessage,
+  hueToColor,
   ResizeWrapper,
+  setStreamColor,
+  uuidToHue,
 } from './utils/ui_utils';
 import { handlePictureInPicture } from './utils/stream_utils';
 
@@ -34,6 +37,8 @@ export default class VCDataStream implements VideoChatData {
   seenWelcomeSnackbar: boolean;
   picInPic: string;
   setLocalVideoText: Function;
+  peerColors: Map<string, number>;
+  localColor: string;
   incrementUnseenChats: Function;
   setCaptionsText: Function;
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;
@@ -75,6 +80,8 @@ export default class VCDataStream implements VideoChatData {
     this.localStream = undefined;
     this.picInPic = picInPic ? picInPic : 'dblclick';
     this.seenWelcomeSnackbar = false;
+    this.peerColors = new Map();
+    this.localColor = 'var(--themeColor)';
     this.setCaptionsText = setCapText;
     this.incrementUnseenChats = incrementUnseenChats;
     this.setLocalVideoText = setVidText;
@@ -139,6 +146,8 @@ export default class VCDataStream implements VideoChatData {
     }
     // Join the chat room
     this.socket.emit('join', this.sessionId, () => {
+      this.localColor = hueToColor(uuidToHue(this.socket.id, this).toString());
+      this.localVideo.style.border = `3px solid ${this.localColor}`;
       logger('joined');
     });
     // Add listeners to the websocket
@@ -169,7 +178,7 @@ export default class VCDataStream implements VideoChatData {
           // Prevent cross site scripting
           msg = msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
           sendToAllDataChannels('mes:' + msg, this.dataChannel);
-          addMessageToScreen(msg, true);
+          addMessageToScreen(msg, this.localColor, true);
           document.getElementById('chat-end')?.scrollIntoView({
             behavior: 'smooth',
             block: 'nearest',
@@ -270,8 +279,13 @@ export default class VCDataStream implements VideoChatData {
         const dataType = receivedData.substring(0, 4);
         const cleanedMessage = receivedData.slice(4);
         if (dataType === 'mes:') {
-          handlereceiveMessage(cleanedMessage);
+          handlereceiveMessage(
+            cleanedMessage,
+            hueToColor(this.peerColors.get(uuid)?.toString() ?? '')
+          );
           this.incrementUnseenChats();
+        } else if (dataType === 'clr:') {
+          setStreamColor(uuid, cleanedMessage);
           /* TODO: Captions 
         } else if (dataType === 'cap:') {
           handleReceiveCaptions(cleanedMessage, this, this.setCaptionsText);
@@ -286,6 +300,7 @@ export default class VCDataStream implements VideoChatData {
       /* 	Called when dataChannel is successfully opened - Set up callbacks for the connection generating iceCandidates or receiving the remote media stream. Wrapping callback functions to pass in the peer uuids. */
       this.dataChannel.get(uuid)!.onopen = (e: Event) => {
         logger('dataChannel opened');
+        setStreamColor(uuid, this);
       };
       if (this.peerConnections.get(uuid) !== undefined)
         this.peerConnections.get(uuid)!.onicecandidate = (
