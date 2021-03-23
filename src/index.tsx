@@ -160,11 +160,13 @@ const VideoChat = ({
       <div id="catalyst" className="ct-body">
         <FullScreen handle={fsHandle}>
           <HeaderComponent VCData={VCData} />
-          <ChatComponent showChat={showChat} />
+          <ChatComponent showChat={showChat} setShowChat={setShowChat} />
           <div id="ct-call-section">
             <div
               id="ct-captions-text"
-              className={captionsText === 'HIDDEN CAPTIONS' ? 'none' : ''}
+              className={`${captionsText === 'HIDDEN CAPTIONS' ? 'none' : ''} ${
+                showChat ? 'chat-offset' : ''
+              }`}
             >
               {captionsText}
             </div>
@@ -179,7 +181,7 @@ const VideoChat = ({
               </div>
             </Draggable>
 
-            <div className={`${showChat ? 'multi-chat' : ''} ct-multi-btn`}>
+            <div className={`${showChat ? 'chat-offset' : ''} ct-multi-btn`}>
               <div className={`ct-btn-container ${hidden?.mute ? 'none' : ''}`}>
                 <button
                   className={`${

@@ -1,6 +1,8 @@
 import React from 'react';
 import Sidebar from 'react-sidebar';
 import Draggable from 'react-draggable';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 const chatStyles = {
   root: {
@@ -52,11 +54,18 @@ const chatStyles = {
   },
 };
 
-const ChatComponent = ({ showChat }: { showChat: boolean }) => {
+const ChatComponent = ({
+  showChat,
+  setShowChat,
+}: {
+  showChat: boolean;
+  setShowChat: Function;
+}) => {
   return (
-    // <Sidebar
-    //   sidebar={
     <div id="chat-entire" className={showChat ? '' : 'hide-chat'}>
+      <button className="chat-close-btn" onClick={() => setShowChat(!showChat)}>
+        <FontAwesomeIcon icon={faTimes} size="lg" title="Close Chat Panel" />
+      </button>
       <div id="chat-zone">
         <div className="chat-messages"></div>
         <div id="chat-end" style={{ visibility: 'hidden' }}></div>
@@ -67,14 +76,6 @@ const ChatComponent = ({ showChat }: { showChat: boolean }) => {
         rows={2}
       ></textarea>
     </div>
-    //   }
-    //   open={showChat}
-    //   docked={true}
-    //   pullRight={true}
-    //   onSetOpen={() => console.log('open')}
-    //   styles={chatStyles}
-    //   shadow={false}
-    // ></Sidebar>
 
     // <Draggable>
     //   <div id="entire-chat" className={showChat ? '' : 'hide-chat'}>
