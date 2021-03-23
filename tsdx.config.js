@@ -2,18 +2,11 @@ const postcss = require('rollup-plugin-postcss');
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
 const strip = require('@rollup/plugin-strip');
-// const files = require('rollup-plugin-import-file');
 const copy = require('rollup-plugin-copy');
 
 module.exports = {
   rollup(config, options) {
     config.plugins.push(
-      // files({
-      //   output: 'dist/assets/sound',
-      //   extensions: '.mp3',
-      //   hash: true,
-      // }),
-
       postcss({
         plugins: [
           autoprefixer(),

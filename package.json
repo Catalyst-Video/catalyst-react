@@ -1,6 +1,6 @@
 {
   "name": "catalyst-vc-react",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "author": "@GoldinGuy seth@goldin.io & @JoeSemrai josephsemrai@gmail.com",
   "private": false,
   "license": "AGPL-3.0-only",
@@ -58,8 +58,7 @@
     "lint": "^0.7.0",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
-    "rollup-plugin-copy": "^3.4.0",
-    "rollup-plugin-import-file": "^1.0.1",
+    "rollup-plugin-copy": "github:Catalyst-Video/rollup-plugin-copy#master",
     "rollup-plugin-postcss": "^4.0.0",
     "size-limit": "^4.10.1",
     "tsdx": "^0.14.1",

@@ -135,7 +135,7 @@ a {
 }
 
 /* draggable local video */
-#catalyst #moveable {
+#catalyst #local-vid-wrapper {
   z-index: 100;
   position: absolute;
   width: 15%;
@@ -155,7 +155,7 @@ a {
 }
 
 /*Text inside local video*/
-#catalyst #moveable p {
+#catalyst #local-vid-wrapper p {
   z-index: 101;
   position: absolute;
   color: white;
@@ -209,7 +209,7 @@ a {
 }
 
 /* buttons */
-#catalyst .multi-button button {
+#catalyst .ct-multi-btn button {
   border: none;
   font-size: 1.5rem;
   transition: all 0.3s ease-in-out;
@@ -220,7 +220,7 @@ a {
   border-radius: 5px;
 }
 
-#catalyst .btn-on {
+#catalyst .ct-btn-on {
  /* color: #e53935 !important; */
  color: var(--themeColor) !important;
 }
@@ -233,7 +233,7 @@ a {
   color: var(--themeColor);
 }
 
- #catalyst .multi-button {
+ #catalyst .ct-multi-btn {
   position: absolute;
   left: 50%;
   transform: translate(-50%, 0);
@@ -249,7 +249,7 @@ a {
   /* width: 500px; */
 }
 
-#catalyst .ct-button-container {
+#catalyst .ct-btn-container {
   position: relative;
   margin: 0 auto;
   padding-left: 1rem;
@@ -459,11 +459,11 @@ a {
 }
 
 
-/* tooltips */
-#catalyst button.tooltip span {
+/* ct-tooltips */
+#catalyst button.ct-tooltip span {
   display: none;
 }
-#catalyst button.tooltip:hover span {
+#catalyst button.ct-tooltip:hover span {
   z-index: 999;
   color: white;
   font-family: "Heebo", sans-serif;
@@ -509,7 +509,7 @@ a {
 }
 
 
-  #catalyst .multi-button {
+  #catalyst .ct-multi-btn {
     position: fixed;
     left: 0;
     top: initial;
@@ -527,7 +527,7 @@ a {
 
   
 /* text inside local video */
-#catalyst #moveable p {
+#catalyst #local-vid-wrapper p {
   z-index: 101;
   position: absolute;
   color: white;
@@ -546,7 +546,7 @@ a {
     margin-left: 5%;
 }
 
-  #catalyst .ct-button-container {
+  #catalyst .ct-btn-container {
     position: relative;
     height: 100%;
     font-size: 3rem;
@@ -558,7 +558,7 @@ a {
     margin: 0;
   }
 
-  #catalyst .multi-button button {
+  #catalyst .ct-multi-btn button {
     position: relative;
     width: 100%;
     border: none;
@@ -574,8 +574,8 @@ a {
 
 
 
- #catalyst .ct-button-container:nth-child(3),
- #catalyst .ct-button-container:nth-child(5) {
+ #catalyst .ct-btn-container:nth-child(3),
+ #catalyst .ct-btn-container:nth-child(5) {
     display: none;
   }
 
