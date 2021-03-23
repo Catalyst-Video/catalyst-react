@@ -64,7 +64,7 @@ body .ct-body {
   height:  100%;
   width: 100%;
   max-height: 100vh;
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
   top: 0;
@@ -244,7 +244,7 @@ a {
 }
 
  #catalyst .ct-multi-btn {
-  position: absolute;
+  position: fixed;
   left: 50%;
   transform: translate(-50%, 0);
   bottom: 1vh;
@@ -257,6 +257,10 @@ a {
   flex-direction: row;
   justify-content: space-around;
   /* width: 500px; */
+}
+
+.multi-chat {
+  left: calc(50% - 120px) !important;
 }
 
 #catalyst .ct-btn-container {
@@ -322,45 +326,49 @@ a {
 }
 
 
-/* chat */
-#catalyst #entire-chat {
-  position: absolute;
-  height: 35%;
-  right:  0.5rem;
-  width: 270px;
-  bottom: 30%;
+#catalyst #chat-entire {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: white;
+  z-index: 2;
+  height: 100vh;
+  width: 240px;
   padding: 0rem;
-  background: rgba(255, 255, 255, 0.8);
   overflow-x: hidden;
   overflow: -moz-scrollbars-none;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-
-  border-radius: 10px;
+  transition: transform .3s ease-out;
+  -webkit-transition: -webkit-transform .3s ease-out;
+  will-change: transform;
 }
 
-#catalyst textarea.compose {
+#catalyst textarea.chat-compose {
   min-width: 100%;
-  min-height: 30%;
+  max-height: 27%;
+  min-height: 25%;
   font-family: "Heebo", sans-serif;
   position: fixed;
   bottom: 0;
   z-index: 100;
-  background-color: rgba(255, 255, 255, 0.8) !important;
-  padding: 0px 10px;
+  padding: 10px;
   box-sizing: border-box;
   overflow-wrap: break-word;
   border: none;
   outline: none;
   resize: none;
+  box-shadow: 0px -4px 3px rgba(50, 50, 50, 0.1);
+  border-radius: 5px 5px 0px 0px;
 }
 
 #catalyst #chat-zone {
   box-sizing: border-box;
-  position: absolute;
-  height: 100%;
+  position: fixed;
+  height: 77%;
   right: 0;
+  top: 0;
   width: 100%;
   overflow: scroll;
   font-family: "Heebo", sans-serif;
@@ -369,7 +377,7 @@ a {
 
 #catalyst #chat-zone::-webkit-scrollbar {
   width: 0 !important;
-   background: transparent !important; 
+  background: transparent !important; 
 }
 
 
@@ -381,19 +389,6 @@ a {
   justify-content: flex-end;
   padding: 8px;
 }
-
-#catalyst .hide-chat {
-  display: none;
-}
-
-#catalyst .chat-messages {
-  width: 100%;
-  overflow-x: hidden;
-  padding-bottom: 10%;
-  padding-top: 5px;
-  overflow: -moz-scrollbars-none;
-}
-
 #catalyst #chat-zone .chat-messages .message-item.customer {
   padding-left: 40px;
 }
@@ -438,6 +433,124 @@ a {
   padding: 7px;
   max-width: 100%;
 }
+
+#catalyst .hide-chat {
+  display: none;
+}
+
+#catalyst .chat-messages {
+  width: 100%;
+  overflow-x: hidden;
+  padding: 5px 0px;
+  overflow: -moz-scrollbars-none;
+}
+
+
+/* chat */
+/* #catalyst #entire-chat {
+  position: absolute;
+  height: 35%;
+  right:  0.5rem;
+  width: 270px;
+  bottom: 30%;
+  padding: 0rem;
+  background: rgba(255, 255, 255, 0.8);
+  overflow-x: hidden;
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+
+  border-radius: 10px;
+}
+
+
+#catalyst textarea.compose {
+  min-width: 100%;
+  min-height: 30%;
+  font-family: "Heebo", sans-serif;
+  position: fixed;
+  bottom: 0;
+  z-index: 100;
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  padding: 0px 10px;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  border: none;
+  outline: none;
+  resize: none;
+}
+
+#catalyst #chat-zone {
+  box-sizing: border-box;
+  position: absolute;
+  height: 100%;
+  right: 0;
+  width: 100%;
+  overflow: scroll;
+  font-family: "Heebo", sans-serif;
+  font-size: 0.8rem;
+}
+
+#catalyst #chat-zone::-webkit-scrollbar {
+  width: 0 !important;
+   background: transparent !important; 
+}
+
+
+#catalyst #chat-zone .chat-messages .message-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 8px;
+}
+
+#catalyst #chat-zone .chat-messages .message-item.customer {
+  padding-left: 40px;
+}
+
+ received messages 
+#catalyst #chat-zone .message-item.moderator .message-bloc {
+  background-color: white;
+  color: black;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px;
+  max-width: 100%;
+  border-style: solid;
+  border-width: 2px;
+  border-color: var(--themeColor);
+  border-radius: 20px 20px 20px 5px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+ sent messages
+#catalyst #chat-zone .message-item.customer .message-bloc {
+  background-color: white;
+  color: black;
+  border-style: solid;
+  border-width: 2px;
+  border-color: var(--themeColor);
+  border-radius: 20px 20px 5px 20px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+#catalyst #chat-zone .chat-messages .message-item.customer .message-bloc {
+  margin-left: auto;
+}
+
+#catalyst #chat-zone .chat-messages .message-item .message-bloc {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px;
+  max-width: 100%;
+} */
 
 #catalyst .message {
   word-break: break-all;
@@ -499,6 +612,7 @@ a {
 
   #catalyst #ct-header {
     z-index: 5;
+    position: fixed;
   }
 
   #catalyst #ct-header img {
@@ -531,6 +645,7 @@ a {
     padding: 0;
     flex-direction: row;
   }
+
 
   
 /* text inside local video */
@@ -603,6 +718,7 @@ a {
     width: 100vw;
     padding: 0;
     text-align: center;
+    z-index: 6;
   }
 
  #catalyst #chat-zone {

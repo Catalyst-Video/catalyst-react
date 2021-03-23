@@ -154,7 +154,7 @@ export default class VCDataStream implements VideoChatData {
     }); */
 
     const TextInput = document.querySelector(
-      'textarea.compose'
+      'textarea.chat-compose'
     ) as HTMLTextAreaElement;
     TextInput?.addEventListener('keypress', (e: any) => {
       if (e.keyCode === 13) {

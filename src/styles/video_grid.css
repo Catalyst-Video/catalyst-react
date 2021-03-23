@@ -5,11 +5,20 @@
         align-items: center;
         justify-content: center;
         vertical-align: middle;
-        position: absolute;
+        position: fixed;
         left: 0px;
         bottom: 0px;
         top: 0px;
         right: 0px;
+    }
+    .ct-chat {
+        width: calc(100% - 240px);
+
+    }
+    @media (max-width: 800px) {
+       .ct-chat  {
+            width: 100%;
+        }
     }
     #remote-vid-wrapper video {
         margin: 2px;
