@@ -446,6 +446,7 @@ export default class VCDataStream implements VideoChatData {
       node.setAttribute('id', 'remote-video');
       node.setAttribute('uuid', uuid);
       node.setAttribute('className', 'RemoteVideo');
+
       if (!this.remoteVideoWrapper) {
         this.remoteVideoWrapper = document.getElementById(
           'remote-vid-wrapper'

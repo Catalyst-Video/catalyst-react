@@ -16,26 +16,57 @@
         position: relative;
         vertical-align: middle;
         align-self: center;
+        /* z-index: 0; */
         border-radius: 10px;
         overflow: hidden;
         display: inline-block;
         box-shadow: 0px 12px 22px rgba(0, 0, 0, 0.2);
         background: #16171a;
         animation: show 0.4s ease;
+
     }
 
-    #remote-vid-wrapper video:after {
-        color: #aaa;
+    #remote-vid-wrapper video:before {
+    color: #fff;
+    font-size: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+    position: absolute;
+    bottom: 20px;
+    right: 23px;
+    font-weight: 100;
+    content: "Video Paused";
+}
+#remote-vid-wrapper video:after {
+    color: #fff;
+    font-size: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+    position: absolute;
+    bottom: 20px;
+    right: 23px;
+    font-weight: 100;
+    content: "Video Paused";
+}
+    /* #remote-vid-wrapper video::after {
+        display: block;
+        color: #fff;
+        content: "Video Paused";
         font-size: 13px;
         font-family: Arial, Helvetica, sans-serif;
-        position: absolute;
+        position:absolute;
         bottom: 20px;
         right: 23px;
         font-weight: 100;
-        content: "4:3";
-        display: block;
-        z-index: 10;
-    }
+        z-index: 100;
+    } */
+
+     #remote-vid-wrapper .mute {
+            position: absolute;
+            color: red;
+            font-size: 2rem;
+            cursor: pointer;
+            left: 50%;
+            bottom: 50%;
+        }
 
 /* Animation */
     @keyframes show {

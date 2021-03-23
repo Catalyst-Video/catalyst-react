@@ -15,15 +15,14 @@ const App = () => {
         defaults={{
           audioOn: true,
           videoOn: true,
-          showCaptionsArea: false,
-          showChatArea: false,
+          // showCaptionsArea: false,
+          showChatArea: true,
         }}
         onAddPeer={() => console.log('peer added')}
         onStartCall={() => console.log('on start call')}
         onRemovePeer={() => console.log('on remove peer')}
         onEndCall={() => console.log('on end call')}
-
-        // themeColor="indigo"
+        themeColor="indigo"
         // cstmOptionBtns={[
         //   <div className="ct-btn-container">
         //     <button
