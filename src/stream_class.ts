@@ -17,7 +17,7 @@ import {
 } from './utils/ui_utils';
 import { handlePictureInPicture } from './utils/stream_utils';
 
-const DEFAULT_SERVER_ADDRESS = 'https://catalyst-video-server.herokuapp.com/';
+const DEFAULT_SERVER_ADDRESS = 'https://server.catalyst.chat/';
 
 export default class VCDataStream implements VideoChatData {
   sessionId: string;
