@@ -9,6 +9,16 @@
   box-sizing: border-box;
 }
 
+*::selection {
+    background: var(--themeColor);
+}
+*::-moz-selection {
+  background: var(--themeColor);
+}
+*::-webkit-selection {
+    background: var(--themeColor);
+}
+
 /* on page load fade in */
 @-webkit-keyframes fadeIn {
   from {

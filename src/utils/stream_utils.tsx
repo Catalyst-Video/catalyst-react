@@ -8,19 +8,27 @@ export function handleMute(
   setAudio: Function,
   VCData: VideoChatData
 ): void {
-  var audioTrack: any;
-  setAudio(!audioEnabled);
-  VCData.peerConnections.forEach((value: any, key: any, map: any) => {
-    value.getSenders().find((s: any) => {
-      if (s.track.kind === 'audio') {
-        audioTrack = s.track;
+  if (isConnected(VCData)) {
+    var audioTrack: MediaStreamTrack;
+    setAudio(!audioEnabled);
+    VCData.peerConnections.forEach(
+      (
+        value: RTCPeerConnection,
+        key: string,
+        map: Map<string, RTCPeerConnection>
+      ) => {
+        value.getSenders().find((s: RTCRtpSender) => {
+          if (s.track?.kind === 'audio') {
+            audioTrack = s.track;
+          }
+          return audioTrack;
+        });
+        if (audioTrack) {
+          audioTrack.enabled = !audioEnabled;
+        }
       }
-      return audioTrack;
-    });
-    if (audioTrack) {
-      audioTrack.enabled = !audioEnabled;
-    }
-  });
+    );
+  }
 }
 
 export function handlePauseVideo(
@@ -29,24 +37,32 @@ export function handlePauseVideo(
   VCData: VideoChatData,
   setLocalVideoText: Function
 ): void {
-  var videoTrack: any;
-  setVideo(!videoEnabled);
-  if (videoEnabled) {
-    setLocalVideoText('Video Paused');
-  } else {
-    setLocalVideoText('Drag Me');
-  }
-  VCData.peerConnections.forEach((value: any, key: any, map: any) => {
-    logger('pausing video for ' + key.toString());
-    value.getSenders().find((s: any) => {
-      if (s.track.kind === 'video') {
-        logger('found video track');
-        videoTrack = s.track;
+  if (isConnected(VCData)) {
+    var videoTrack: MediaStreamTrack;
+    setVideo(!videoEnabled);
+    if (videoEnabled) {
+      setLocalVideoText('Video Paused');
+    } else {
+      setLocalVideoText('Drag Me');
+    }
+    VCData.peerConnections.forEach(
+      (
+        value: RTCPeerConnection,
+        key: string,
+        map: Map<string, RTCPeerConnection>
+      ) => {
+        logger('pausing video for ' + key.toString());
+        value.getSenders().find((s: RTCRtpSender) => {
+          if (s.track?.kind === 'video') {
+            logger('found video track');
+            videoTrack = s.track;
+          }
+          return videoTrack;
+        });
+        videoTrack.enabled = !videoEnabled;
       }
-      return videoTrack;
-    });
-    videoTrack.enabled = !videoEnabled;
-  });
+    );
+  }
 }
 
 // Swap current video track with passed in stream
