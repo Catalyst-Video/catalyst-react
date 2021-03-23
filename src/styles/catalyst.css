@@ -155,7 +155,7 @@ a {
 
 /* draggable local video */
 #catalyst #local-vid-wrapper {
-  z-index: 100;
+  z-index: 3;
   position: absolute;
   width: 15%;
   cursor: move;
@@ -360,7 +360,7 @@ a {
   top: 0;
   bottom: 0;
   background: white;
-  z-index: 2;
+  z-index: 4;
   height: 100vh;
   width: 240px;
   padding: 0rem;
@@ -536,7 +536,7 @@ a {
   }
 
   #catalyst #ct-header {
-    z-index: 5;
+    z-index: 2;
     position: fixed;
   }
 
@@ -575,7 +575,7 @@ a {
   
 /* text inside local video */
 #catalyst #local-vid-wrapper p {
-  z-index: 101;
+  z-index: 3;
   position: absolute;
   color: white;
   font-family: "Heebo", sans-serif;
@@ -682,9 +682,28 @@ a {
     font-weight: bold;
   }
 
-  #catalyst #entire-chat {
-    display: none;
-  }
+
+#catalyst #chat-entire {
+  width: 96vw;
+}
+
+#catalyst textarea.chat-compose {
+  height: 30%;
+}
+
+#catalyst #chat-zone {
+  height: 75%;
+} 
+
+#catalyst .chat-messages {
+  width: 100%;
+  min-height: 50%;
+  overflow-x: hidden;
+  padding: 35px 0px 5px 0px;
+  overflow: -moz-scrollbars-none;
+}
+
+
 }
 
 #catalyst .ct-header-btn {
