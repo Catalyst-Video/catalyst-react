@@ -15,8 +15,8 @@ const App = () => {
         defaults={{
           audioOn: true,
           videoOn: true,
-          showCaptionsArea: false,
-          showChatArea: false,
+          // showCaptionsArea: false,
+          showChatArea: true,
         }}
         onAddPeer={() => console.log('peer added')}
         onStartCall={() => console.log('on start call')}
