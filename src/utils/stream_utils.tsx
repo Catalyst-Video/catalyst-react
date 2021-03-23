@@ -8,9 +8,10 @@ export function handleMute(
   setAudio: Function,
   VCData: VideoChatData
 ): void {
+  setAudio(!audioEnabled);
+  if (VCData.localAudio) VCData.localAudio.enabled = !VCData.localAudio.enabled;
   if (isConnected(VCData)) {
     var audioTrack: MediaStreamTrack;
-    setAudio(!audioEnabled);
     VCData.peerConnections.forEach(
       (
         value: RTCPeerConnection,
@@ -37,14 +38,17 @@ export function handlePauseVideo(
   VCData: VideoChatData,
   setLocalVideoText: Function
 ): void {
+  setVideo(!videoEnabled);
+  if (videoEnabled) {
+    setLocalVideoText('Video Paused');
+  } else {
+    setLocalVideoText('Drag Me');
+  }
+  VCData.localStream?.getTracks().forEach((track: MediaStreamTrack) => {
+    track.enabled = !track.enabled;
+  });
   if (isConnected(VCData)) {
     var videoTrack: MediaStreamTrack;
-    setVideo(!videoEnabled);
-    if (videoEnabled) {
-      setLocalVideoText('Video Paused');
-    } else {
-      setLocalVideoText('Drag Me');
-    }
     VCData.peerConnections.forEach(
       (
         value: RTCPeerConnection,
