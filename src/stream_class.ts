@@ -34,6 +34,7 @@ export default class VCDataStream implements VideoChatData {
   seenWelcomeSnackbar: boolean;
   picInPic: string;
   setLocalVideoText: Function;
+  incrementUnseenChats: Function;
   setCaptionsText: Function;
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;
   onAddPeer: Function | undefined;
@@ -50,6 +51,7 @@ export default class VCDataStream implements VideoChatData {
     uniqueAppId: string,
     setCapText: Function,
     setVidText: Function,
+    incrementUnseenChats: Function,
     cstmServerAddress?: string,
     cstMsg?: string | HTMLElement | Element,
     picInPic?: string,
@@ -74,6 +76,7 @@ export default class VCDataStream implements VideoChatData {
     this.picInPic = picInPic ? picInPic : 'dblclick';
     this.seenWelcomeSnackbar = false;
     this.setCaptionsText = setCapText;
+    this.incrementUnseenChats = incrementUnseenChats;
     this.setLocalVideoText = setVidText;
     this.cstmSnackbarMsg = cstMsg;
     this.onAddPeer = onAddPeer ? onAddPeer : undefined;
@@ -268,6 +271,7 @@ export default class VCDataStream implements VideoChatData {
         const cleanedMessage = receivedData.slice(4);
         if (dataType === 'mes:') {
           handlereceiveMessage(cleanedMessage);
+          this.incrementUnseenChats();
           /* TODO: Captions 
         } else if (dataType === 'cap:') {
           handleReceiveCaptions(cleanedMessage, this, this.setCaptionsText);

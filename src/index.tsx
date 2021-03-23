@@ -89,6 +89,7 @@ const VideoChat = ({
   const [showChat, setShowChat] = useState<boolean>(
     defaults?.showChatArea ? defaults.showChatArea : false
   );
+  const [unseenChats, setUnseenChats] = useState(0);
   const [captionsText, setCaptionsText] = useState(
     'HIDDEN CAPTIONS'
     // TODO: Captions defaults?.showCaptionsArea ? '' : 'HIDDEN CAPTIONS'
@@ -136,12 +137,18 @@ const VideoChat = ({
     setThemeColor(themeColor ? themeColor : 'blue');
   }, [themeColor]);
 
+  const incrementUnseenChats = () => {
+    setUnseenChats(unseenChats => unseenChats + 1);
+    console.log(unseenChats);
+  };
+
   useEffect(() => {
     const VCD = new VCDataStream(
       sessionKey,
       uniqueAppId,
       setCaptionsText,
       setLocalVideoText,
+      incrementUnseenChats,
       cstmServerAddress,
       cstmSnackbarMsg,
       picInPic,
@@ -258,10 +265,17 @@ const VideoChat = ({
                   } ct-hover-btn ct-tooltip ct-not-selectable`}
                   onClick={() => {
                     setShowChat(!showChat);
+                    setUnseenChats(0);
                   }}
                 >
                   <span>{showChat ? 'Hide Chat' : 'Show Chat'}</span>
                   <FontAwesomeIcon icon={faComment} />
+                  {!showChat && unseenChats !== 0 && (
+                    <i
+                      className="chat-indicator"
+                      aria-valuetext={unseenChats.toString()}
+                    ></i>
+                  )}
                 </button>
               </div>
 

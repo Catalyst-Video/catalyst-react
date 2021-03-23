@@ -54,6 +54,22 @@
   }
 }
 
+#catalyst .chat-indicator:after{
+content:attr(aria-valuetext);
+font-size:12px;
+font-family: sans-serif;
+background: var(--themeColor);
+color: white;
+font-size: small;
+border-radius: 50%;
+padding: 2px 7px;
+position:absolute;
+right: 10px;
+top: -2px;
+z-index: -1;
+opacity:0.9;
+}
+
 /* body & video  */
 body .ct-body {
   background: #f3f5fd;
@@ -338,19 +354,18 @@ a {
 
 #catalyst .chat-close-btn {
 	/* background: white; */
-	/* border-radius: 10px; */
+	border-radius: 10px;
   background: transparent;
 	z-index: 20;
 	position: fixed;
 	top: 0.7rem;
-  /* padding: 5px; */
+  padding: 5px;
 	right: 0.7rem;
   border: none !important;
   outline: none !important;
   text-align: left;
   cursor: pointer; 
-  /* backdrop-filter: blur(6px);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05); */
+
   
 }
 
@@ -694,15 +709,6 @@ a {
 #catalyst #chat-zone {
   height: 75%;
 } 
-
-#catalyst .chat-messages {
-  width: 100%;
-  min-height: 50%;
-  overflow-x: hidden;
-  padding: 35px 0px 5px 0px;
-  overflow: -moz-scrollbars-none;
-}
-
 
 }
 
