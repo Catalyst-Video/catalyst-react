@@ -11,11 +11,15 @@ import { TwilioToken, VideoChatData } from './typings/interfaces';
 
 import {
   closeAllMessages,
+  createMuteNode,
+  createPauseNode,
   displayVideoErrorMessage,
   displayWelcomeMessage,
   hueToColor,
   ResizeWrapper,
   setStreamColor,
+  toggleMutedIndicator,
+  togglePausedIndicator,
   uuidToHue,
 } from './utils/ui_utils';
 import { handlePictureInPicture } from './utils/stream_utils';
@@ -308,6 +312,10 @@ export default class VCDataStream implements VideoChatData {
             handlereceiveMessage(cleanedMessage);
           }
           this.incrementUnseenChats();
+        } else if (dataType === 'mut:') {
+          toggleMutedIndicator(uuid);
+        } else if (dataType === 'vid:') {
+          togglePausedIndicator(uuid);
         } else if (
           dataType === 'clr:' &&
           (this.showBorderColors || this.showDotColors)
@@ -359,8 +367,7 @@ export default class VCDataStream implements VideoChatData {
             logger('connected');
             break;
           case 'disconnected':
-            // Disconnects are handled server-side
-            logger('disconnected - UUID ' + uuid);
+            logger('disconnected (handled server-side) - UUID: ' + uuid);
             break;
           case 'failed':
             logger('>>> would trigger refresh: failed ICE connection');
@@ -375,7 +382,7 @@ export default class VCDataStream implements VideoChatData {
     };
   };
 
-  // When the peerConnection generates an ice candidate, send it over the socket to the peer.
+  // When the peerConnection generates an ice candidate, send it over the socket to the peer
   onIceCandidate = (e: RTCPeerConnectionIceEvent, uuid: string) => {
     logger('onIceCandidate');
     if (e.candidate) {
@@ -425,9 +432,8 @@ export default class VCDataStream implements VideoChatData {
         this.peerConnections.get(uuid)?.setLocalDescription(offer);
         this.socket.emit('offer', JSON.stringify(offer), this.sessionId, uuid);
       })
-      .catch((err: any) => {
-        logger('failed offer creation');
-        // logger(err, true);
+      .catch((err: string) => {
+        logger('failed offer creation' + err);
       });
   };
 
@@ -503,13 +509,13 @@ export default class VCDataStream implements VideoChatData {
       vidNode.setAttribute('className', 'RemoteVideo');
       vidNode.setAttribute('uuid', uuid);
 
-      // TODO: mute & pause vid
-      var muteNode = document.createElement('FontAwesomeIcon');
-      muteNode.setAttribute('icon', 'faMicrophoneSlash');
-      // TODO: easiest way to add optional names?
+      var muteNode = createMuteNode(uuid);
+      var pauseNode = createPauseNode(uuid);
       vidDiv.appendChild(muteNode);
+      vidDiv.appendChild(pauseNode);
 
       // indicatorNode.textContent = 'John Doe';
+      // TODO: easiest way to add optional names?
 
       if (!this.remoteVideoWrapper) {
         this.remoteVideoWrapper = document.getElementById(

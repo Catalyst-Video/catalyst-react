@@ -112,6 +112,36 @@ body .ct-body {
 }
 
 
+i#remote-muted {
+font-family: sans-serif;
+color: var(--themeColor);
+/* background: red; */
+min-height: 5px;
+min-width: 5px;
+font-size: medium;
+border-radius: 50%;
+padding: 5px;
+position: absolute;
+bottom: 0.6rem;
+left:  0.6rem;
+z-index: 10;
+}
+
+i#remote-paused {
+font-family: sans-serif;
+color: var(--themeColor);
+/* background: red; */
+min-height: 5px;
+min-width: 5px;
+font-size: medium;
+border-radius: 50%;
+padding: 5px;
+position: absolute;
+bottom: 0.6rem;
+left:  2.6rem;
+z-index: 10;
+}
+
 /* ct-header  */
 #catalyst #ct-header {
   color: white;

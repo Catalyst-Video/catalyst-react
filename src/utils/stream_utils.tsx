@@ -11,6 +11,7 @@ export function handleMute(
   setAudio(!audioEnabled);
   if (VCData.localAudio) VCData.localAudio.enabled = !VCData.localAudio.enabled;
   if (isConnected(VCData.connected)) {
+    sendToAllDataChannels(`mut:`, VCData.dataChannel);
     var audioTrack: MediaStreamTrack;
     VCData.peerConnections.forEach(
       (
@@ -48,6 +49,7 @@ export function handlePauseVideo(
     track.enabled = !track.enabled;
   });
   if (isConnected(VCData.connected)) {
+    sendToAllDataChannels(`vid:`, VCData.dataChannel);
     var videoTrack: MediaStreamTrack;
     VCData.peerConnections.forEach(
       (
