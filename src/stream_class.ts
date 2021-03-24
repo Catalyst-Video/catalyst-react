@@ -486,7 +486,6 @@ export default class VCDataStream implements VideoChatData {
       (document.getElementById('join-sound') as HTMLAudioElement)?.play();
       var vidDiv = document.createElement('div');
       vidDiv.setAttribute('id', 'remote-div');
-      // vidDiv.setAttribute('uuid', uuid);
 
       var vidNode = document.createElement('video');
       vidNode.setAttribute('autoplay', '');
@@ -495,8 +494,9 @@ export default class VCDataStream implements VideoChatData {
       vidNode.setAttribute('className', 'RemoteVideo');
       vidNode.setAttribute('uuid', uuid);
 
-      var muteNode = document.createElement('FontAwesomeIcon');
-      muteNode.setAttribute('icon', 'faMicrophoneSlash');
+      // TODO: mute & pause vid
+      // var muteNode = document.createElement('FontAwesomeIcon');
+      // muteNode.setAttribute('icon', 'faMicrophoneSlash');
       // TODO: easiest way to add optional names?
       // indicatorNode.textContent = 'Seth Goldin';
 
