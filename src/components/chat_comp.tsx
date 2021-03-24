@@ -63,6 +63,7 @@ const ChatComponent = ({
 }) => {
   return (
     <div id="chat-entire" className={showChat ? '' : 'hide-chat'}>
+      <span className="chat-title">Chat</span>
       <button className="chat-close-btn" onClick={() => setShowChat(!showChat)}>
         <FontAwesomeIcon icon={faTimes} size="lg" title="Close Chat Panel" />
       </button>

@@ -10,7 +10,7 @@ export function handleMute(
 ): void {
   setAudio(!audioEnabled);
   if (VCData.localAudio) VCData.localAudio.enabled = !VCData.localAudio.enabled;
-  if (isConnected(VCData)) {
+  if (isConnected(VCData.connected)) {
     var audioTrack: MediaStreamTrack;
     VCData.peerConnections.forEach(
       (
@@ -47,7 +47,7 @@ export function handlePauseVideo(
   VCData.localStream?.getTracks().forEach((track: MediaStreamTrack) => {
     track.enabled = !track.enabled;
   });
-  if (isConnected(VCData)) {
+  if (isConnected(VCData.connected)) {
     var videoTrack: MediaStreamTrack;
     VCData.peerConnections.forEach(
       (
@@ -184,7 +184,7 @@ export function handleSharing(
   setLocalVideoText: Function
 ): void {
   // Handle swap video before video call is connected by checking that there's at least one peer connected
-  if (!isConnected(VCData)) {
+  if (!isConnected(VCData.connected)) {
     alert('You must join a call before you can share your screen.');
     return;
   }

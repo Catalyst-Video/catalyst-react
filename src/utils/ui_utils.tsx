@@ -1,54 +1,62 @@
 import { toast } from 'react-toastify';
 import React from 'react';
 import { VideoChatData } from '../typings/interfaces';
+import { isConnected } from './general_utils';
 
 export function displayWelcomeMessage(
   cstmSnackbarMsg: string | HTMLElement | Element | undefined,
-  sessionKey: string
+  sessionKey: string,
+  connected: Map<string, boolean>
 ): void {
-  toast(
-    () => (
-      <div className="text-center justify-between">
-        {cstmSnackbarMsg ? (
-          cstmSnackbarMsg
-        ) : (
-          <>
-            <span>Share your session key </span>
-            <strong>{sessionKey}</strong>
-            <span> with whoever wants to join</span>
-          </>
-        )}
-      </div>
-    ),
-    {
-      toastId: 'peer_prompt',
-    }
-  );
+  if (!isConnected(connected)) {
+    toast(
+      () => (
+        <div className="text-center justify-between">
+          {cstmSnackbarMsg ? (
+            cstmSnackbarMsg
+          ) : (
+            <>
+              <span>Share your session key </span>
+              <strong>{sessionKey}</strong>
+              <span> with whoever wants to join</span>
+            </>
+          )}
+        </div>
+      ),
+      {
+        toastId: 'peer_prompt',
+      }
+    );
+  }
 }
 
-export function displayVideoErrorMessage(): void {
-  toast(
-    () => (
-      <div className="text-center justify-between">
-        Please press allow to enable webcam & audio access
-        <button
-          className="snack-btn"
-          onClick={() => {
-            window.open(
-              'https://docs.catalyst.chat/docs-permissions',
-              '_blank'
-            );
-          }}
-        >
-          Help & Directions
-        </button>
-      </div>
-    ),
-    {
-      autoClose: false,
-      toastId: 'webcam/audio_error',
-    }
-  );
+export function displayVideoErrorMessage(
+  connected: Map<string, boolean>
+): void {
+  if (!isConnected(connected)) {
+    toast(
+      () => (
+        <div className="text-center justify-between">
+          Please press allow to enable webcam & audio access
+          <button
+            className="snack-btn"
+            onClick={() => {
+              window.open(
+                'https://docs.catalyst.chat/docs-permissions',
+                '_blank'
+              );
+            }}
+          >
+            Help & Directions
+          </button>
+        </div>
+      ),
+      {
+        autoClose: false,
+        toastId: 'webcam/audio_error',
+      }
+    );
+  }
 }
 
 export function closeAllMessages(): void {
@@ -148,19 +156,29 @@ export function uuidToHue(uuid: string, VCData: VideoChatData): number {
 }
 
 export function hueToColor(hue: string): string {
-  // return `hsl(${hue},100%,70%)`;
+  // NEON: return `hsl(${hue},100%,70%)`;
+  // PASTEL: return `hsl(${hue},70%,80%)`;
   return `hsl(${hue},70%,70%)`;
 }
 
-export function setStreamColor(uuid: string, VCData: VideoChatData): void {
-  const hue = uuidToHue(uuid, VCData);
-  (document.querySelectorAll(
-    `[uuid="${uuid}"]`
-  )[0] as HTMLVideoElement).style.border = `3px solid ${hueToColor(
-    hue.toString()
-  )}`;
-  // const hue = uuidToHue(uuid, VCData);
-  // (document.querySelectorAll(
-  //   `[indicatoruuid="${uuid}"]`
-  // )[0] as HTMLDivElement).style.background = hueToColor(hue.toString());
+export function setStreamColor(
+  uuid: string,
+  VCData: VideoChatData,
+  showDotColors: boolean,
+  showBorderColors: boolean
+): void {
+  if (showBorderColors) {
+    const hue = uuidToHue(uuid, VCData);
+    (document.querySelectorAll(
+      `[uuid="${uuid}"]`
+    )[0] as HTMLVideoElement).style.border = `3px solid ${hueToColor(
+      hue.toString()
+    )}`;
+  }
+  if (showDotColors) {
+    const hue = uuidToHue(uuid, VCData);
+    (document.querySelectorAll(
+      `[indicatoruuid="${uuid}"]`
+    )[0] as HTMLDivElement).style.background = hueToColor(hue.toString());
+  }
 }

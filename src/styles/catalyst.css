@@ -300,25 +300,29 @@ a {
 
 /* snackbar  */
 #catalyst .Toastify__progress-bar--default {
-  color:  var(--themeColor) !important;
-  background: var(--themeColor) !important;
+  color:  var(--themeColor);
+  background: var(--themeColor) ;
+}
+
+#catalyst .Toastify__toast-container--top-center .chat-offset {
+  transform: translateX(calc(-50% - 120px));
 }
 
 #catalyst .Toastify__close-button:hover, .Toastify__close-button:focus {
-  border: none !important;
-  outline: none !important;
+  border: none ;
+  outline: none ;
 }
 
 #catalyst .Toastify__toast-container {
-  width: 30rem !important;
-  border-radius: 20px !important;
+  width: 30rem ;
+  border-radius: 20px ;
 }
 
 #catalyst .text-center {
-  text-align: center !important;
+  text-align: center ;
 }
 #catalyst .Toastify__toast {
-  border-radius: 10px !important;
+  border-radius: 10px ;
 
 }
 
@@ -405,8 +409,17 @@ a {
   border: none;
   outline: none;
   resize: none;
-  box-shadow: 0px -4px 3px rgba(50, 50, 50, 0.1);
-  border-radius: 5px 5px 0px 0px;
+  box-shadow: 0px -4px 3px rgba(50, 50, 50, 5%);
+      border-radius: 2px 2px 0 0;
+}
+
+#catalyst span.chat-title {
+  font-size: 1.1rem;
+  font-family: "Fira Sans", sans-serif;
+  position: absolute;
+  left: 0.8rem;
+  z-index: 3;
+  top: 0.8rem;
 }
 
 #catalyst #chat-zone {
@@ -486,7 +499,8 @@ a {
 
 #catalyst .chat-messages {
   width: 100%;
-  min-height: 100%;
+  margin-top: 10%;
+  min-height: 90%;
   overflow-x: hidden;
   padding: 35px 0px 5px 0px;
   overflow: -moz-scrollbars-none;
@@ -571,7 +585,6 @@ a {
    width: 90%;
 }
 
-
   #catalyst .ct-multi-btn {
     position: fixed;
     left: 0;
@@ -588,6 +601,10 @@ a {
     flex-direction: row;
   }
 
+  
+#catalyst .Toastify__toast-container--top-center .chat-offset {
+  transform: translateX(-50%) !important;
+}
 
   
 /* text inside local video */
@@ -606,9 +623,9 @@ a {
 
  #catalyst #ct-captions-text {
     width: 90%;
-    top: 70%;
+    top: 80%;
     left: 0px;
-    margin-left: 5%;
+    margin-left: 2.5%;
 }
 
   #catalyst .ct-btn-container {
@@ -675,6 +692,8 @@ a {
     margin-left: 0;
     border-radius: 10px;
   }
+
+
 
   #catalyst .compose {
     position: absolute;

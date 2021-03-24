@@ -57,17 +57,17 @@ export function getBrowserName(): string {
   return name;
 }
 
-export function isConnected(VCData: VideoChatData): boolean {
-  var connected = false;
+export function isConnected(connected: Map<string, boolean>): boolean {
+  var isConnected = false;
   // No way to 'break' forEach -> we go through all anyway
-  VCData.connected.forEach(
+  connected.forEach(
     (value: boolean, key: string, map: Map<string, boolean>) => {
       if (value) {
-        connected = true;
+        isConnected = true;
       }
     }
   );
-  return connected;
+  return isConnected;
 }
 
 export function chatRoomFull(): void {

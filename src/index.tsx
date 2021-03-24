@@ -33,6 +33,9 @@ import {
   faPause,
   faPhoneSlash,
   faPlay,
+  faShareSquare,
+  faVideo,
+  faVideoSlash,
 } from '@fortawesome/free-solid-svg-icons';
 // assets
 const joinSound = require('./assets/sound/join.mp3');
@@ -233,7 +236,9 @@ const VideoChat = ({
                   }}
                 >
                   <span>{videoEnabled ? 'Pause Video' : 'Unpause Video'}</span>
-                  <FontAwesomeIcon icon={videoEnabled ? faPause : faPlay} />
+                  <FontAwesomeIcon
+                    icon={videoEnabled ? faVideo : faVideoSlash}
+                  />
                 </button>
               </div>
 
@@ -311,7 +316,8 @@ const VideoChat = ({
                   <span>
                     {!sharing ? 'Share Screen' : 'Stop Sharing Screen'}
                   </span>
-                  <FontAwesomeIcon icon={faDesktop} />
+
+                  <FontAwesomeIcon icon={faShareSquare} />
                 </button>
               </div>
 
@@ -373,6 +379,7 @@ const VideoChat = ({
             position="top-center"
             autoClose={50000}
             hideProgressBar={false}
+            className={showChat ? 'chat-offset' : ''}
             newestOnTop={false}
             closeOnClick
             rtl={false}

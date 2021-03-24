@@ -114,7 +114,7 @@ export default class VCDataStream implements VideoChatData {
       })
       .catch(error => {
         logger(error);
-        displayVideoErrorMessage();
+        displayVideoErrorMessage(this.connected);
         this.setCaptionsText(
           'Failed to activate your webcam. Check your webcam/privacy settings.'
         );
@@ -130,7 +130,11 @@ export default class VCDataStream implements VideoChatData {
     logger('onMediaStream');
     this.localStream = stream;
     if (!this.seenWelcomeSnackbar) {
-      displayWelcomeMessage(this.cstmSnackbarMsg, this.roomName);
+      displayWelcomeMessage(
+        this.cstmSnackbarMsg,
+        this.roomName,
+        this.connected
+      );
       this.seenWelcomeSnackbar = true;
       if (this.peerConnections.size === 0) {
         this.setCaptionsText('Room ready. Waiting for others to join...');
@@ -308,7 +312,12 @@ export default class VCDataStream implements VideoChatData {
           dataType === 'clr:' &&
           (this.showBorderColors || this.showDotColors)
         ) {
-          setStreamColor(uuid, cleanedMessage);
+          setStreamColor(
+            uuid,
+            cleanedMessage,
+            this.showDotColors,
+            this.showBorderColors
+          );
           /* TODO: Captions 
         } else if (dataType === 'cap:') {
           handleReceiveCaptions(cleanedMessage, this, this.setCaptionsText);
@@ -324,7 +333,7 @@ export default class VCDataStream implements VideoChatData {
       this.dataChannel.get(uuid)!.onopen = (e: Event) => {
         logger('dataChannel opened');
         if (this.showBorderColors || this.showDotColors) {
-          setStreamColor(uuid, this);
+          setStreamColor(uuid, this, this.showDotColors, this.showBorderColors);
         }
       };
       if (this.peerConnections.get(uuid) !== undefined)
@@ -498,7 +507,7 @@ export default class VCDataStream implements VideoChatData {
       // var muteNode = document.createElement('FontAwesomeIcon');
       // muteNode.setAttribute('icon', 'faMicrophoneSlash');
       // TODO: easiest way to add optional names?
-      // indicatorNode.textContent = 'Seth Goldin';
+      // indicatorNode.textContent = 'John Doe';
 
       if (!this.remoteVideoWrapper) {
         this.remoteVideoWrapper = document.getElementById(
@@ -517,6 +526,7 @@ export default class VCDataStream implements VideoChatData {
         if (this.showDotColors) {
           var indicatorNode = document.createElement('div');
           indicatorNode.setAttribute('id', 'indicator');
+          indicatorNode.setAttribute('indicatoruuid', uuid);
           vidDiv.appendChild(indicatorNode);
         }
 
