@@ -90,25 +90,17 @@ export function sendToAllDataChannels(
   );
 }
 
-export function handlereceiveMessage(
-  msg: any
-  // color: any,
-  // hideChat: boolean,
-  // setHideChat: Function
-): void {
+export function handlereceiveMessage(msg: string, color?: string): void {
   // Called when a message is received over the dataChannel, adds message to screen - auto scrolls chat down
-  addMessageToScreen(msg, false);
+  addMessageToScreen(msg, color ? color : 'var(--themeColor)', false);
   document
     .getElementById('chat-end')
     ?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-  // if (hideChat) {
-  // 	setHideChat(false);
-  // }
 }
 
 export function addMessageToScreen(
   msg: string,
-  // border: any,
+  border: string,
   isOwnMessage: boolean
 ): void {
   if (msg.length > 0) {
@@ -117,7 +109,7 @@ export function addMessageToScreen(
         .querySelector('.chat-messages')
         ?.insertAdjacentHTML(
           'beforeend',
-          `<div class="message-item customer cssanimation fadeInBottom"><div class="message-bloc" style="border: 3px solid var(--themeColor)"><div class="message">` +
+          `<div class="message-item customer cssanimation fadeInBottom"><div class="message-bloc" style="border: 3px solid ${border}"><div class="message">` +
             msg +
             '</div></div></div>'
         );
@@ -126,7 +118,7 @@ export function addMessageToScreen(
         .querySelector('.chat-messages')
         ?.insertAdjacentHTML(
           'beforeend',
-          `<div class="message-item moderator cssanimation fadeInBottom"><div class="message-bloc" style="border: 3px solid var(--themeColor)"><div class="message">` +
+          `<div class="message-item moderator cssanimation fadeInBottom"><div class="message-bloc" style="border: 3px solid ${border}"><div class="message">` +
             msg +
             '</div></div></div>'
         );

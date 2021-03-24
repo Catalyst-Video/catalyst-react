@@ -16,13 +16,13 @@ const App = () => {
           audioOn: true,
           videoOn: true,
           // showCaptionsArea: false,
-          showChatArea: true,
+          showChatArea: false,
         }}
         onAddPeer={() => console.log('peer added')}
         onStartCall={() => console.log('on start call')}
         onRemovePeer={() => console.log('on remove peer')}
         onEndCall={() => console.log('on end call')}
-        themeColor="indigo"
+        themeColor="blue"
         // cstmOptionBtns={[
         //   <div className="ct-btn-container">
         //     <button

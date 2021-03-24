@@ -61,6 +61,8 @@ const VideoChat = ({
   cstmSnackbarMsg,
   cstmOptionBtns,
   themeColor,
+  showDotColors,
+  showBorderColors,
 }: {
   sessionKey: string;
   uniqueAppId: string;
@@ -75,6 +77,8 @@ const VideoChat = ({
   cstmSnackbarMsg?: HTMLElement | Element | string;
   cstmOptionBtns?: Element[];
   themeColor?: string;
+  showDotColors?: boolean;
+  showBorderColors?: boolean;
 }) => {
   const fsHandle = useFullScreenHandle();
 
@@ -89,6 +93,7 @@ const VideoChat = ({
   const [showChat, setShowChat] = useState<boolean>(
     defaults?.showChatArea ? defaults.showChatArea : false
   );
+  const [unseenChats, setUnseenChats] = useState(0);
   const [captionsText, setCaptionsText] = useState(
     'HIDDEN CAPTIONS'
     // TODO: Captions defaults?.showCaptionsArea ? '' : 'HIDDEN CAPTIONS'
@@ -136,17 +141,25 @@ const VideoChat = ({
     setThemeColor(themeColor ? themeColor : 'blue');
   }, [themeColor]);
 
+  const incrementUnseenChats = () => {
+    setUnseenChats(unseenChats => unseenChats + 1);
+    console.log(unseenChats);
+  };
+
   useEffect(() => {
     const VCD = new VCDataStream(
       sessionKey,
       uniqueAppId,
       setCaptionsText,
       setLocalVideoText,
+      incrementUnseenChats,
       cstmServerAddress,
       cstmSnackbarMsg,
       picInPic,
       onAddPeer,
-      onRemovePeer
+      onRemovePeer,
+      showBorderColors,
+      showDotColors
     );
     setVCData(VCD);
     VCD?.requestMediaStream();
@@ -160,22 +173,29 @@ const VideoChat = ({
       <div id="catalyst" className="ct-body">
         <FullScreen handle={fsHandle}>
           <HeaderComponent VCData={VCData} />
+          <ChatComponent showChat={showChat} setShowChat={setShowChat} />
           <div id="ct-call-section">
             <div
               id="ct-captions-text"
-              className={`${captionsText === 'HIDDEN CAPTIONS' ? 'none' : ''}`}
+              className={`${captionsText === 'HIDDEN CAPTIONS' ? 'none' : ''} ${
+                showChat ? 'chat-offset' : ''
+              }`}
             >
               {captionsText}
             </div>
-            <div id="remote-vid-wrapper"></div>
+            <div
+              id="remote-vid-wrapper"
+              className={showChat ? 'ct-chat' : ''}
+            ></div>
             <Draggable defaultPosition={{ x: 30, y: 150 }}>
               <div id="local-vid-wrapper" className="video-1">
                 <p id="ct-local-text">{localVideoText}</p>
                 <video id="local-video" autoPlay muted playsInline></video>
+                <div id="local-indicator"></div>
               </div>
             </Draggable>
 
-            <div className="ct-multi-btn">
+            <div className={`${showChat ? 'chat-offset' : ''} ct-multi-btn`}>
               <div className={`ct-btn-container ${hidden?.mute ? 'none' : ''}`}>
                 <button
                   className={`${
@@ -252,10 +272,17 @@ const VideoChat = ({
                   } ct-hover-btn ct-tooltip ct-not-selectable`}
                   onClick={() => {
                     setShowChat(!showChat);
+                    setUnseenChats(0);
                   }}
                 >
                   <span>{showChat ? 'Hide Chat' : 'Show Chat'}</span>
                   <FontAwesomeIcon icon={faComment} />
+                  {!showChat && unseenChats !== 0 && (
+                    <i
+                      className="chat-indicator"
+                      aria-valuetext={unseenChats.toString()}
+                    ></i>
+                  )}
                 </button>
               </div>
 
@@ -327,12 +354,21 @@ const VideoChat = ({
                   <FontAwesomeIcon icon={faPhoneSlash} />
                   <span>End Call</span>
                 </button>
-                <audio id="join-sound" src={joinSound}></audio>
-                <audio id="leave-sound" src={leaveSound}></audio>
+                <audio
+                  id="join-sound"
+                  preload="auto"
+                  crossOrigin="anonymous"
+                  src={joinSound}
+                ></audio>
+                <audio
+                  id="leave-sound"
+                  preload="auto"
+                  crossOrigin="anonymous"
+                  src={leaveSound}
+                ></audio>
               </div>
             </div>
           </div>
-          <ChatComponent showChat={showChat} />
           <ToastContainer
             position="top-center"
             autoClose={50000}

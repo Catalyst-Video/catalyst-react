@@ -13,11 +13,14 @@ import {
   closeAllMessages,
   displayVideoErrorMessage,
   displayWelcomeMessage,
+  hueToColor,
   ResizeWrapper,
+  setStreamColor,
+  uuidToHue,
 } from './utils/ui_utils';
 import { handlePictureInPicture } from './utils/stream_utils';
 
-const DEFAULT_SERVER_ADDRESS = 'https://catalyst-video-server.herokuapp.com/';
+const DEFAULT_SERVER_ADDRESS = 'https://server.catalyst.chat/';
 
 export default class VCDataStream implements VideoChatData {
   sessionId: string;
@@ -34,6 +37,11 @@ export default class VCDataStream implements VideoChatData {
   seenWelcomeSnackbar: boolean;
   picInPic: string;
   setLocalVideoText: Function;
+  showDotColors: boolean;
+  showBorderColors: boolean;
+  peerColors: Map<string, number>;
+  localColor: string;
+  incrementUnseenChats: Function;
   setCaptionsText: Function;
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;
   onAddPeer: Function | undefined;
@@ -50,11 +58,14 @@ export default class VCDataStream implements VideoChatData {
     uniqueAppId: string,
     setCapText: Function,
     setVidText: Function,
+    incrementUnseenChats: Function,
     cstmServerAddress?: string,
     cstMsg?: string | HTMLElement | Element,
     picInPic?: string,
     onAddPeer?: Function,
-    onRemovePeer?: Function
+    onRemovePeer?: Function,
+    showBorderColors?: boolean,
+    showDotColors?: boolean
   ) {
     this.roomName = name;
     this.sessionId = uniqueAppId + name;
@@ -73,9 +84,14 @@ export default class VCDataStream implements VideoChatData {
     this.localStream = undefined;
     this.picInPic = picInPic ? picInPic : 'dblclick';
     this.seenWelcomeSnackbar = false;
+    this.peerColors = new Map();
+    this.localColor = 'var(--themeColor)';
     this.setCaptionsText = setCapText;
+    this.incrementUnseenChats = incrementUnseenChats;
     this.setLocalVideoText = setVidText;
     this.cstmSnackbarMsg = cstMsg;
+    this.showBorderColors = showBorderColors ? showBorderColors : false;
+    this.showDotColors = showDotColors ? showDotColors : false;
     this.onAddPeer = onAddPeer ? onAddPeer : undefined;
     this.onRemovePeer = onRemovePeer ? onRemovePeer : undefined;
     /*  TODO: Captions
@@ -84,7 +100,7 @@ export default class VCDataStream implements VideoChatData {
     this.recognition = undefined; */
   }
 
-  /* Call to getUserMedia (provided by adapter.js for  browser compatibility) asking for access to both the video and audio streams. If the request is accepted callback to the onMediaStream function, otherwise callback to the noMediaStream function. */
+  /* Call to getUserMedia requesting access to video and audio streams. If the request is accepted callback to the onMediaStream function, otherwise callback to the noMediaStream function. */
   requestMediaStream = () => {
     logger('requestMediaStream');
     navigator.mediaDevices
@@ -105,7 +121,7 @@ export default class VCDataStream implements VideoChatData {
         logger(
           'Failed to get local webcam video, check webcam privacy settings'
         );
-        // Keep trying to get user media
+        // Keep attempting to get user media
         setTimeout(this.requestMediaStream, 1000);
       });
   };
@@ -136,6 +152,18 @@ export default class VCDataStream implements VideoChatData {
     }
     // Join the chat room
     this.socket.emit('join', this.sessionId, () => {
+      if (this.showBorderColors) {
+        this.localColor = hueToColor(
+          uuidToHue(this.socket.id, this).toString()
+        );
+        this.localVideo.style.border = `2px solid ${this.localColor}`;
+      }
+      if (this.showDotColors) {
+        let localIndicator = document.getElementById(
+          'local-indicator'
+        ) as HTMLDivElement;
+        localIndicator.style.background = this.localColor;
+      }
       logger('joined');
     });
     // Add listeners to the websocket
@@ -154,7 +182,7 @@ export default class VCDataStream implements VideoChatData {
     }); */
 
     const TextInput = document.querySelector(
-      'textarea.compose'
+      'textarea.chat-compose'
     ) as HTMLTextAreaElement;
     TextInput?.addEventListener('keypress', (e: any) => {
       if (e.keyCode === 13) {
@@ -166,7 +194,7 @@ export default class VCDataStream implements VideoChatData {
           // Prevent cross site scripting
           msg = msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
           sendToAllDataChannels('mes:' + msg, this.dataChannel);
-          addMessageToScreen(msg, true);
+          addMessageToScreen(msg, this.localColor, true);
           document.getElementById('chat-end')?.scrollIntoView({
             behavior: 'smooth',
             block: 'nearest',
@@ -267,7 +295,20 @@ export default class VCDataStream implements VideoChatData {
         const dataType = receivedData.substring(0, 4);
         const cleanedMessage = receivedData.slice(4);
         if (dataType === 'mes:') {
-          handlereceiveMessage(cleanedMessage);
+          if (this.showBorderColors || this.showDotColors) {
+            handlereceiveMessage(
+              cleanedMessage,
+              hueToColor(this.peerColors.get(uuid)?.toString() ?? '')
+            );
+          } else {
+            handlereceiveMessage(cleanedMessage);
+          }
+          this.incrementUnseenChats();
+        } else if (
+          dataType === 'clr:' &&
+          (this.showBorderColors || this.showDotColors)
+        ) {
+          setStreamColor(uuid, cleanedMessage);
           /* TODO: Captions 
         } else if (dataType === 'cap:') {
           handleReceiveCaptions(cleanedMessage, this, this.setCaptionsText);
@@ -282,6 +323,9 @@ export default class VCDataStream implements VideoChatData {
       /* 	Called when dataChannel is successfully opened - Set up callbacks for the connection generating iceCandidates or receiving the remote media stream. Wrapping callback functions to pass in the peer uuids. */
       this.dataChannel.get(uuid)!.onopen = (e: Event) => {
         logger('dataChannel opened');
+        if (this.showBorderColors || this.showDotColors) {
+          setStreamColor(uuid, this);
+        }
       };
       if (this.peerConnections.get(uuid) !== undefined)
         this.peerConnections.get(uuid)!.onicecandidate = (
@@ -440,30 +484,46 @@ export default class VCDataStream implements VideoChatData {
 
       logger('onAddStream <<< Playing join sound...');
       (document.getElementById('join-sound') as HTMLAudioElement)?.play();
-      var node = document.createElement('video');
-      node.setAttribute('autoplay', '');
-      node.setAttribute('playsinline', '');
-      node.setAttribute('id', 'remote-video');
-      node.setAttribute('uuid', uuid);
-      node.setAttribute('className', 'RemoteVideo');
+      var vidDiv = document.createElement('div');
+      vidDiv.setAttribute('id', 'remote-div');
+      // vidDiv.setAttribute('uuid', uuid);
+
+      var vidNode = document.createElement('video');
+      vidNode.setAttribute('autoplay', '');
+      vidNode.setAttribute('playsinline', '');
+      vidNode.setAttribute('id', 'remote-video');
+      vidNode.setAttribute('className', 'RemoteVideo');
+      vidNode.setAttribute('uuid', uuid);
+
+      var muteNode = document.createElement('FontAwesomeIcon');
+      muteNode.setAttribute('icon', 'faMicrophoneSlash');
+      // TODO: easiest way to add optional names?
+      // indicatorNode.textContent = 'Seth Goldin';
 
       if (!this.remoteVideoWrapper) {
         this.remoteVideoWrapper = document.getElementById(
           'remote-vid-wrapper'
         ) as HTMLDivElement;
       }
-      this.remoteVideoWrapper.appendChild(node);
-      ResizeWrapper();
-      // Update remote video source
-      if (this.remoteVideoWrapper?.lastChild !== null) {
-        let newVid = this.remoteVideoWrapper.lastChild as HTMLVideoElement;
-        newVid.srcObject = e.streams.slice(-1)[0];
+      if (this.remoteVideoWrapper !== null) {
+        vidNode.srcObject = e.streams.slice(-1)[0];
 
         if (this.picInPic !== 'disabled') {
-          newVid.addEventListener(this.picInPic, () => {
-            handlePictureInPicture(this, newVid);
+          vidNode.addEventListener(this.picInPic, () => {
+            handlePictureInPicture(this, vidNode);
           });
         }
+
+        if (this.showDotColors) {
+          var indicatorNode = document.createElement('div');
+          indicatorNode.setAttribute('id', 'indicator');
+          vidDiv.appendChild(indicatorNode);
+        }
+
+        vidDiv.appendChild(vidNode);
+        this.remoteVideoWrapper.appendChild(vidDiv);
+        ResizeWrapper();
+
         if (this.onAddPeer) {
           this.onAddPeer();
         }
