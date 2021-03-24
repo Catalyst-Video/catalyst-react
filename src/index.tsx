@@ -194,7 +194,7 @@ const VideoChat = ({
               <div id="local-vid-wrapper" className="video-1">
                 <p id="ct-local-text">{localVideoText}</p>
                 <video id="local-video" autoPlay muted playsInline></video>
-                <div id="local-indicator"></div>
+                {showDotColors && <div id="local-indicator"></div>}
               </div>
             </Draggable>
 

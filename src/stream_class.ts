@@ -504,9 +504,11 @@ export default class VCDataStream implements VideoChatData {
       vidNode.setAttribute('uuid', uuid);
 
       // TODO: mute & pause vid
-      // var muteNode = document.createElement('FontAwesomeIcon');
-      // muteNode.setAttribute('icon', 'faMicrophoneSlash');
+      var muteNode = document.createElement('FontAwesomeIcon');
+      muteNode.setAttribute('icon', 'faMicrophoneSlash');
       // TODO: easiest way to add optional names?
+      vidDiv.appendChild(muteNode);
+
       // indicatorNode.textContent = 'John Doe';
 
       if (!this.remoteVideoWrapper) {
