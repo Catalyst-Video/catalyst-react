@@ -61,6 +61,8 @@ const VideoChat = ({
   cstmSnackbarMsg,
   cstmOptionBtns,
   themeColor,
+  showDotColors,
+  showBorderColors,
 }: {
   sessionKey: string;
   uniqueAppId: string;
@@ -75,6 +77,8 @@ const VideoChat = ({
   cstmSnackbarMsg?: HTMLElement | Element | string;
   cstmOptionBtns?: Element[];
   themeColor?: string;
+  showDotColors?: boolean;
+  showBorderColors?: boolean;
 }) => {
   const fsHandle = useFullScreenHandle();
 
@@ -153,7 +157,9 @@ const VideoChat = ({
       cstmSnackbarMsg,
       picInPic,
       onAddPeer,
-      onRemovePeer
+      onRemovePeer,
+      showBorderColors,
+      showDotColors
     );
     setVCData(VCD);
     VCD?.requestMediaStream();

@@ -90,20 +90,12 @@ export function sendToAllDataChannels(
   );
 }
 
-export function handlereceiveMessage(
-  msg: string,
-  color: string
-  // hideChat: boolean,
-  // setHideChat: Function
-): void {
+export function handlereceiveMessage(msg: string, color?: string): void {
   // Called when a message is received over the dataChannel, adds message to screen - auto scrolls chat down
-  addMessageToScreen(msg, color, false);
+  addMessageToScreen(msg, color ? color : 'var(--themeColor)', false);
   document
     .getElementById('chat-end')
     ?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-  // if (hideChat) {
-  // 	setHideChat(false);
-  // }
 }
 
 export function addMessageToScreen(

@@ -148,19 +148,19 @@ export function uuidToHue(uuid: string, VCData: VideoChatData): number {
 }
 
 export function hueToColor(hue: string): string {
-  return `hsl(${hue},100%,70%)`;
+  // return `hsl(${hue},100%,70%)`;
+  return `hsl(${hue},70%,70%)`;
 }
 
-// Sets the border color of uuid's stream
 export function setStreamColor(uuid: string, VCData: VideoChatData): void {
-  // const hue = uuidToHue(uuid, VCData);
-  // (document.querySelectorAll(
-  //   `[uuid="${uuid}"]`
-  // )[0] as HTMLVideoElement).style.border = `2px solid ${hueToColor(
-  //   hue.toString()
-  // )}`;
   const hue = uuidToHue(uuid, VCData);
   (document.querySelectorAll(
-    `[indicatoruuid="${uuid}"]`
-  )[0] as HTMLDivElement).style.background = hueToColor(hue.toString());
+    `[uuid="${uuid}"]`
+  )[0] as HTMLVideoElement).style.border = `3px solid ${hueToColor(
+    hue.toString()
+  )}`;
+  // const hue = uuidToHue(uuid, VCData);
+  // (document.querySelectorAll(
+  //   `[indicatoruuid="${uuid}"]`
+  // )[0] as HTMLDivElement).style.background = hueToColor(hue.toString());
 }

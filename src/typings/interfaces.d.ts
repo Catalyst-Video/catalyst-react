@@ -17,6 +17,8 @@ export interface VideoChatData {
   localColor: string;
   incrementUnseenChats: Function;
   setCaptionsText: Function;
+  showBorderColors: boolean;
+  showDotColors: boolean;
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;
   /* TODO: Captions
   sendingCaptions: boolean;

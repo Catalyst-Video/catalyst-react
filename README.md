@@ -18,7 +18,7 @@ npm i catalyst-vc-react
 #### Importation
 
 ```typescript
-import { VideoChat } from "catalyst-vc-react"
+import VideoChat from "catalyst-vc-react"
 ```
 #### Implementation
 
@@ -45,7 +45,8 @@ import { VideoChat } from "catalyst-vc-react"
 | `cstmSnackbarMsg`  | Displays message in snackbar popup on session start | `HTMLElement` or `Element` or `string`                              | `Share your session key {sessionKey} with whoever wants to join `                                | Optional |
 | `cstmOptionBtns`  | React elements that will be displayed in the Video Chat toolbar | `Element[]` | `[<div className="ct-btn-container"><button className="ct-hover-btn ct-tooltip ct-not-selectable" onClick={() => console.log('do something')}><FontAwesomeIcon icon={faSync} /><span>Do Something</span></button></div>,]`                                | Optional |
 | `themeColor`  | Alters Catalyst theme to use a particular color. Comes with a multitude of built-in options, or you can set a custom `hexadecimal` color of your choice. | `string`  | `blue` | Optional |
-
+| `showDotColors`  | Displays a small dot-shaped color indicator based on the user's UUID to help identify who sent a particular chat in large group calls | `boolean`  | `false` | Optional |
+| `showBorderColors`  | Displays a border around every user's video in a call based on their UUID to help identify who sent a particular chat in large group calls | `boolean`  | `false` | Optional |
 
 ## Meta
 

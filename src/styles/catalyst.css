@@ -122,7 +122,7 @@ body .ct-body {
   white-space: nowrap;
   position: relative;
   float: left;
-  z-index: 1;
+  z-index: 4;
 }
 
 #catalyst #ct-header p,
@@ -230,7 +230,7 @@ a {
   margin: 0;
   position: absolute;
   max-height: 300px;
-  top: calc(80%);
+  top: 78%;
   left: 50%;
   width: 400px;
   margin-left: -210px;
@@ -553,7 +553,7 @@ a {
   }
 
   #catalyst #ct-header {
-    z-index: 2;
+    z-index: -1;
     position: fixed;
   }
 
@@ -606,6 +606,7 @@ a {
 
  #catalyst #ct-captions-text {
     width: 90%;
+    top: 70%;
     left: 0px;
     margin-left: 5%;
 }

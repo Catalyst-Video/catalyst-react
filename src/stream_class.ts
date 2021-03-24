@@ -37,6 +37,8 @@ export default class VCDataStream implements VideoChatData {
   seenWelcomeSnackbar: boolean;
   picInPic: string;
   setLocalVideoText: Function;
+  showDotColors: boolean;
+  showBorderColors: boolean;
   peerColors: Map<string, number>;
   localColor: string;
   incrementUnseenChats: Function;
@@ -61,7 +63,9 @@ export default class VCDataStream implements VideoChatData {
     cstMsg?: string | HTMLElement | Element,
     picInPic?: string,
     onAddPeer?: Function,
-    onRemovePeer?: Function
+    onRemovePeer?: Function,
+    showBorderColors?: boolean,
+    showDotColors?: boolean
   ) {
     this.roomName = name;
     this.sessionId = uniqueAppId + name;
@@ -86,6 +90,8 @@ export default class VCDataStream implements VideoChatData {
     this.incrementUnseenChats = incrementUnseenChats;
     this.setLocalVideoText = setVidText;
     this.cstmSnackbarMsg = cstMsg;
+    this.showBorderColors = showBorderColors ? showBorderColors : false;
+    this.showDotColors = showDotColors ? showDotColors : false;
     this.onAddPeer = onAddPeer ? onAddPeer : undefined;
     this.onRemovePeer = onRemovePeer ? onRemovePeer : undefined;
     /*  TODO: Captions
@@ -146,11 +152,18 @@ export default class VCDataStream implements VideoChatData {
     }
     // Join the chat room
     this.socket.emit('join', this.sessionId, () => {
-      this.localColor = hueToColor(uuidToHue(this.socket.id, this).toString());
-      let localIndicator = document.getElementById(
-        'local-indicator'
-      ) as HTMLDivElement;
-      localIndicator.style.background = this.localColor;
+      if (this.showBorderColors) {
+        this.localColor = hueToColor(
+          uuidToHue(this.socket.id, this).toString()
+        );
+        this.localVideo.style.border = `2px solid ${this.localColor}`;
+      }
+      if (this.showDotColors) {
+        let localIndicator = document.getElementById(
+          'local-indicator'
+        ) as HTMLDivElement;
+        localIndicator.style.background = this.localColor;
+      }
       logger('joined');
     });
     // Add listeners to the websocket
@@ -282,12 +295,19 @@ export default class VCDataStream implements VideoChatData {
         const dataType = receivedData.substring(0, 4);
         const cleanedMessage = receivedData.slice(4);
         if (dataType === 'mes:') {
-          handlereceiveMessage(
-            cleanedMessage,
-            hueToColor(this.peerColors.get(uuid)?.toString() ?? '')
-          );
+          if (this.showBorderColors || this.showDotColors) {
+            handlereceiveMessage(
+              cleanedMessage,
+              hueToColor(this.peerColors.get(uuid)?.toString() ?? '')
+            );
+          } else {
+            handlereceiveMessage(cleanedMessage);
+          }
           this.incrementUnseenChats();
-        } else if (dataType === 'clr:') {
+        } else if (
+          dataType === 'clr:' &&
+          (this.showBorderColors || this.showDotColors)
+        ) {
           setStreamColor(uuid, cleanedMessage);
           /* TODO: Captions 
         } else if (dataType === 'cap:') {
@@ -303,7 +323,9 @@ export default class VCDataStream implements VideoChatData {
       /* 	Called when dataChannel is successfully opened - Set up callbacks for the connection generating iceCandidates or receiving the remote media stream. Wrapping callback functions to pass in the peer uuids. */
       this.dataChannel.get(uuid)!.onopen = (e: Event) => {
         logger('dataChannel opened');
-        setStreamColor(uuid, this);
+        if (this.showBorderColors || this.showDotColors) {
+          setStreamColor(uuid, this);
+        }
       };
       if (this.peerConnections.get(uuid) !== undefined)
         this.peerConnections.get(uuid)!.onicecandidate = (
@@ -464,17 +486,17 @@ export default class VCDataStream implements VideoChatData {
       (document.getElementById('join-sound') as HTMLAudioElement)?.play();
       var vidDiv = document.createElement('div');
       vidDiv.setAttribute('id', 'remote-div');
-      vidDiv.setAttribute('uuid', uuid);
+      // vidDiv.setAttribute('uuid', uuid);
 
       var vidNode = document.createElement('video');
       vidNode.setAttribute('autoplay', '');
       vidNode.setAttribute('playsinline', '');
       vidNode.setAttribute('id', 'remote-video');
       vidNode.setAttribute('className', 'RemoteVideo');
+      vidNode.setAttribute('uuid', uuid);
 
-      var indicatorNode = document.createElement('div');
-      indicatorNode.setAttribute('id', 'indicator');
-      indicatorNode.setAttribute('indicatoruuid', uuid);
+      var muteNode = document.createElement('FontAwesomeIcon');
+      muteNode.setAttribute('icon', 'faMicrophoneSlash');
       // TODO: easiest way to add optional names?
       // indicatorNode.textContent = 'Seth Goldin';
 
@@ -492,7 +514,12 @@ export default class VCDataStream implements VideoChatData {
           });
         }
 
-        vidDiv.appendChild(indicatorNode);
+        if (this.showDotColors) {
+          var indicatorNode = document.createElement('div');
+          indicatorNode.setAttribute('id', 'indicator');
+          vidDiv.appendChild(indicatorNode);
+        }
+
         vidDiv.appendChild(vidNode);
         this.remoteVideoWrapper.appendChild(vidDiv);
         ResizeWrapper();
