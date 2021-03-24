@@ -201,23 +201,23 @@ export function createPauseNode(uuid: string): HTMLElement {
 }
 
 export function toggleMutedIndicator(uuid: string): void {
-  var mutedDisplay = (document.querySelectorAll(
+  var mutedDisplay = document.querySelectorAll(
     `[muted-uuid="${uuid}"]`
-  )[0] as HTMLElement).style.display;
-  if (mutedDisplay === 'none') {
-    mutedDisplay = 'inline-block';
+  )[0] as HTMLElement;
+  if (mutedDisplay.style.display === 'none') {
+    mutedDisplay.style.display = 'block';
   } else {
-    mutedDisplay = 'none';
+    mutedDisplay.style.display = 'none';
   }
 }
 
 export function togglePausedIndicator(uuid: string): void {
-  var pausedDisplay = (document.querySelectorAll(
+  var pausedDisplay = document.querySelectorAll(
     `[paused-uuid="${uuid}"]`
-  )[0] as HTMLElement).style.display;
-  if (pausedDisplay === 'none') {
-    pausedDisplay = 'inline-block';
+  )[0] as HTMLElement;
+  if (pausedDisplay.style.display === 'none') {
+    pausedDisplay.style.display = 'block';
   } else {
-    pausedDisplay = 'none';
+    pausedDisplay.style.display = 'none';
   }
 }

@@ -86,15 +86,11 @@ const VideoChat = ({
   const fsHandle = useFullScreenHandle();
 
   const [browserSupported, setBrowserSupported] = useState(true);
-  const [audioEnabled, setAudio] = useState<boolean>(
-    defaults?.audioOn ? defaults.audioOn : true
-  );
-  const [videoEnabled, setVideo] = useState<boolean>(
-    defaults?.videoOn ? defaults.videoOn : true
-  );
+  // const [audioEnabled, setAudio] = useState<boolean>(defaults?.audioOn ?? true);
+  // const [videoEnabled, setVideo] = useState<boolean>(defaults?.videoOn ?? true);
   const [sharing, setSharing] = useState(false);
   const [showChat, setShowChat] = useState<boolean>(
-    defaults?.showChatArea ? defaults.showChatArea : false
+    defaults?.showChatArea ?? false
   );
   const [unseenChats, setUnseenChats] = useState(0);
   const [captionsText, setCaptionsText] = useState(
@@ -141,7 +137,7 @@ const VideoChat = ({
   }, []);
 
   useEffect(() => {
-    setThemeColor(themeColor ? themeColor : 'blue');
+    setThemeColor(themeColor ?? 'blue');
   }, [themeColor]);
 
   const incrementUnseenChats = () => {
@@ -162,7 +158,9 @@ const VideoChat = ({
       onAddPeer,
       onRemovePeer,
       showBorderColors,
-      showDotColors
+      showDotColors,
+      defaults?.audioOn,
+      defaults?.videoOn
     );
     setVCData(VCD);
     VCD?.requestMediaStream();
@@ -202,16 +200,18 @@ const VideoChat = ({
               <div className={`ct-btn-container ${hidden?.mute ? 'none' : ''}`}>
                 <button
                   className={`${
-                    audioEnabled ? '' : 'ct-btn-on'
+                    !VCData?.audioOn ? 'ct-btn-on' : ''
                   } ct-hover-btn ct-tooltip ct-not-selectable`}
                   onClick={() => {
-                    if (VCData) handleMute(audioEnabled, setAudio, VCData);
+                    if (VCData) handleMute(VCData);
                   }}
                 >
-                  <span>{audioEnabled ? 'Mute Audio' : 'Unmute Audio'}</span>
+                  <span>
+                    {!VCData?.audioOn ? 'Unmute Audio' : 'Mute Audio'}
+                  </span>
 
                   <FontAwesomeIcon
-                    icon={audioEnabled ? faMicrophone : faMicrophoneSlash}
+                    icon={!VCData?.audioOn ? faMicrophoneSlash : faMicrophone}
                   />
                 </button>
               </div>
@@ -223,21 +223,17 @@ const VideoChat = ({
               >
                 <button
                   className={`${
-                    videoEnabled ? '' : 'ct-btn-on'
+                    VCData?.videoOn ? 'ct-btn-on' : ''
                   } ct-hover-btn ct-tooltip ct-not-selectable`}
                   onClick={() => {
-                    if (VCData)
-                      handlePauseVideo(
-                        videoEnabled,
-                        setVideo,
-                        VCData,
-                        setLocalVideoText
-                      );
+                    if (VCData) handlePauseVideo(VCData, setLocalVideoText);
                   }}
                 >
-                  <span>{videoEnabled ? 'Pause Video' : 'Unpause Video'}</span>
+                  <span>
+                    {!VCData?.videoOn ? 'Unpause Video' : 'Pause Video'}
+                  </span>
                   <FontAwesomeIcon
-                    icon={videoEnabled ? faVideo : faVideoSlash}
+                    icon={!VCData?.videoOn ? faVideoSlash : faVideo}
                   />
                 </button>
               </div>
@@ -307,8 +303,6 @@ const VideoChat = ({
                         VCData,
                         sharing,
                         setSharing,
-                        videoEnabled,
-                        setVideo,
                         setLocalVideoText
                       );
                   }}

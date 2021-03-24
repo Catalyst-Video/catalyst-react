@@ -125,6 +125,7 @@ position: absolute;
 bottom: 0.6rem;
 left:  0.6rem;
 z-index: 10;
+display: none;
 }
 
 i#remote-paused {
@@ -140,6 +141,7 @@ position: absolute;
 bottom: 0.6rem;
 left:  2.6rem;
 z-index: 10;
+display: none;
 }
 
 /* ct-header  */

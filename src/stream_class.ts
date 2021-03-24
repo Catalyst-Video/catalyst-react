@@ -50,6 +50,8 @@ export default class VCDataStream implements VideoChatData {
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;
   onAddPeer: Function | undefined;
   onRemovePeer: Function | undefined;
+  audioOn: boolean;
+  videoOn: boolean;
 
   /*  TODO: Captions
   sendingCaptions: boolean;
@@ -69,7 +71,9 @@ export default class VCDataStream implements VideoChatData {
     onAddPeer?: Function,
     onRemovePeer?: Function,
     showBorderColors?: boolean,
-    showDotColors?: boolean
+    showDotColors?: boolean,
+    audioOn?: boolean,
+    videoOn?: boolean
   ) {
     this.roomName = name;
     this.sessionId = uniqueAppId + name;
@@ -86,7 +90,7 @@ export default class VCDataStream implements VideoChatData {
     this.peerConnections = new Map();
     this.localAudio = undefined;
     this.localStream = undefined;
-    this.picInPic = picInPic ? picInPic : 'dblclick';
+    this.picInPic = picInPic ?? 'dblclick';
     this.seenWelcomeSnackbar = false;
     this.peerColors = new Map();
     this.localColor = 'var(--themeColor)';
@@ -94,10 +98,12 @@ export default class VCDataStream implements VideoChatData {
     this.incrementUnseenChats = incrementUnseenChats;
     this.setLocalVideoText = setVidText;
     this.cstmSnackbarMsg = cstMsg;
-    this.showBorderColors = showBorderColors ? showBorderColors : false;
-    this.showDotColors = showDotColors ? showDotColors : false;
-    this.onAddPeer = onAddPeer ? onAddPeer : undefined;
-    this.onRemovePeer = onRemovePeer ? onRemovePeer : undefined;
+    this.showBorderColors = showBorderColors ?? false;
+    this.showDotColors = showDotColors ?? false;
+    this.onAddPeer = onAddPeer ?? undefined;
+    this.onRemovePeer = onRemovePeer ?? undefined;
+    this.audioOn = audioOn ?? true;
+    this.videoOn = videoOn ?? true;
     /*  TODO: Captions
     this.sendingCaptions = false;
     this.receivingCaptions = false;
@@ -342,6 +348,12 @@ export default class VCDataStream implements VideoChatData {
         logger('dataChannel opened');
         if (this.showBorderColors || this.showDotColors) {
           setStreamColor(uuid, this, this.showDotColors, this.showBorderColors);
+        }
+        if (!this.audioOn) {
+          sendToAllDataChannels(`mut:`, this.dataChannel);
+        }
+        if (!this.videoOn) {
+          sendToAllDataChannels(`vid:`, this.dataChannel);
         }
       };
       if (this.peerConnections.get(uuid) !== undefined)
