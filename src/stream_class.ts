@@ -17,9 +17,9 @@ import {
   displayWelcomeMessage,
   hueToColor,
   ResizeWrapper,
+  setMutedIndicator,
+  setPausedIndicator,
   setStreamColor,
-  toggleMutedIndicator,
-  togglePausedIndicator,
   uuidToHue,
 } from './utils/ui_utils';
 import { handlePictureInPicture } from './utils/stream_utils';
@@ -48,10 +48,12 @@ export default class VCDataStream implements VideoChatData {
   incrementUnseenChats: Function;
   setCaptionsText: Function;
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;
+  onStartCall: Function | undefined;
   onAddPeer: Function | undefined;
   onRemovePeer: Function | undefined;
-  audioOn: boolean;
-  videoOn: boolean;
+  startAudioPaused: boolean;
+  startVideoPaused: boolean;
+  startedCall: boolean;
 
   /*  TODO: Captions
   sendingCaptions: boolean;
@@ -68,12 +70,13 @@ export default class VCDataStream implements VideoChatData {
     cstmServerAddress?: string,
     cstMsg?: string | HTMLElement | Element,
     picInPic?: string,
+    onStartCall?: Function,
     onAddPeer?: Function,
     onRemovePeer?: Function,
     showBorderColors?: boolean,
     showDotColors?: boolean,
-    audioOn?: boolean,
-    videoOn?: boolean
+    startAudioPaused?: boolean,
+    startVideoPaused?: boolean
   ) {
     this.roomName = name;
     this.sessionId = uniqueAppId + name;
@@ -100,10 +103,12 @@ export default class VCDataStream implements VideoChatData {
     this.cstmSnackbarMsg = cstMsg;
     this.showBorderColors = showBorderColors ?? false;
     this.showDotColors = showDotColors ?? false;
+    this.onStartCall = onStartCall ?? undefined;
     this.onAddPeer = onAddPeer ?? undefined;
     this.onRemovePeer = onRemovePeer ?? undefined;
-    this.audioOn = audioOn ?? true;
-    this.videoOn = videoOn ?? true;
+    this.startAudioPaused = startAudioPaused ?? false;
+    this.startVideoPaused = startVideoPaused ?? false;
+    this.startedCall = false;
     /*  TODO: Captions
     this.sendingCaptions = false;
     this.receivingCaptions = false;
@@ -319,9 +324,9 @@ export default class VCDataStream implements VideoChatData {
           }
           this.incrementUnseenChats();
         } else if (dataType === 'mut:') {
-          toggleMutedIndicator(uuid);
+          setMutedIndicator(uuid, cleanedMessage);
         } else if (dataType === 'vid:') {
-          togglePausedIndicator(uuid);
+          setPausedIndicator(uuid, true);
         } else if (
           dataType === 'clr:' &&
           (this.showBorderColors || this.showDotColors)
@@ -349,12 +354,6 @@ export default class VCDataStream implements VideoChatData {
         if (this.showBorderColors || this.showDotColors) {
           setStreamColor(uuid, this, this.showDotColors, this.showBorderColors);
         }
-        if (!this.audioOn) {
-          sendToAllDataChannels(`mut:`, this.dataChannel);
-        }
-        if (!this.videoOn) {
-          sendToAllDataChannels(`vid:`, this.dataChannel);
-        }
       };
       if (this.peerConnections.get(uuid) !== undefined)
         this.peerConnections.get(uuid)!.onicecandidate = (
@@ -363,8 +362,49 @@ export default class VCDataStream implements VideoChatData {
           this.onIceCandidate(e, uuid);
         };
 
+      /*    this.peerConnections
+        .get(uuid)
+        ?.getSenders()
+        .find((s: RTCRtpSender) => {
+          if (s.track?.kind === 'audio') {
+            s.track.addEventListener(
+              'mute',
+              e => {
+                setMutedIndicator(uuid, true);
+                console.log('mute');
+              },
+              false
+            );
+            s.track.addEventListener(
+              'unmute',
+              e => {
+                setMutedIndicator(uuid, false);
+                console.log('unmute');
+              },
+              false
+            );
+
+            // s.track.onunmute = () => setMutedIndicator(uuid, false);
+          }
+        }); */
+
+      //     this.peerConnections
+      //       .get(uuid)
+      //       ?.getSenders().find((s: RTCRtpSender) => {
+      //   if (s.track?.kind === 'video') {
+      //     logger('found video track');
+      //     videoTrack = s.track;
+      //   }
+      //   return videoTrack;
+      // });
+
       this.peerConnections.get(uuid)!.ontrack = (e: RTCTrackEvent) => {
         this.onAddStream(e, uuid);
+
+        if (!this.startedCall) {
+          if (this.onStartCall) this.onStartCall();
+          this.startedCall = true;
+        }
         this.setCaptionsText('Session connected successfully');
         setTimeout(() => {
           this.setCaptionsText('HIDDEN CAPTIONS');
@@ -521,7 +561,10 @@ export default class VCDataStream implements VideoChatData {
       vidNode.setAttribute('className', 'RemoteVideo');
       vidNode.setAttribute('uuid', uuid);
 
-      var muteNode = createMuteNode(uuid);
+      var muteNode = createMuteNode(
+        uuid
+        // e.streams.slice(-1)[0].getAudioTracks()[0]
+      );
       var pauseNode = createPauseNode(uuid);
       vidDiv.appendChild(muteNode);
       vidDiv.appendChild(pauseNode);
@@ -536,6 +579,31 @@ export default class VCDataStream implements VideoChatData {
       }
       if (this.remoteVideoWrapper !== null) {
         vidNode.srcObject = e.streams.slice(-1)[0];
+
+        // vidNode.srcObject.getAudioTracks().forEach(track => {
+        // if (e.track?.kind === 'audio') {
+        //   e.track.onmute = () => {
+        //     setMutedIndicator(uuid, true);
+        //     console.log('mute');
+        //   };
+
+        //   e.track.onunmute = () => {
+        //     setMutedIndicator(uuid, false);
+        //     console.log('unmute');
+        //   };
+        // }
+
+        // });
+
+        // e.streams[0].getAudioTracks()[0].onmute = () => {
+        //   setMutedIndicator(uuid, true);
+        //   console.log('mute');
+        // };
+
+        //  e.streams[0].getAudioTracks()[0].onunmute = () => {
+        //   setMutedIndicator(uuid, false);
+        //   console.log('unmute');
+        // };
 
         if (this.picInPic !== 'disabled') {
           vidNode.addEventListener(this.picInPic, () => {

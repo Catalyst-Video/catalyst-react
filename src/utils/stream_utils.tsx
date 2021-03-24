@@ -4,45 +4,51 @@ import { isConnected, logger, sendToAllDataChannels } from './general_utils';
 import React from 'react';
 
 export function handleMute(
-  // audioEnabled: boolean,
-  // setAudio: Function,
+  audioEnabled: boolean,
+  setAudio: Function,
   VCData: VideoChatData
 ): void {
-  // setAudio(!audioEnabled);
-  VCData.audioOn = !VCData.audioOn;
-  if (VCData.localAudio) VCData.localAudio.enabled = !VCData.localAudio.enabled;
-  if (isConnected(VCData.connected)) {
-    sendToAllDataChannels(`mut:`, VCData.dataChannel);
-    var audioTrack: MediaStreamTrack;
-    VCData.peerConnections.forEach(
-      (
-        value: RTCPeerConnection,
-        key: string,
-        map: Map<string, RTCPeerConnection>
-      ) => {
-        value.getSenders().find((s: RTCRtpSender) => {
-          if (s.track?.kind === 'audio') {
-            audioTrack = s.track;
-          }
-          return audioTrack;
-        });
-        if (audioTrack) {
-          audioTrack.enabled = VCData.audioOn;
-        }
-      }
-    );
+  setAudio(!audioEnabled);
+  if (VCData.localAudio) {
+    sendToAllDataChannels(`mut:${audioEnabled}`, VCData.dataChannel);
+    if (audioEnabled) {
+      VCData.localAudio.enabled = false;
+    } else {
+      VCData.localAudio.enabled = true;
+    }
   }
+
+  // if (isConnected(VCData.connected)) {
+  //   sendToAllDataChannels(`mut:`, VCData.dataChannel);
+  //   var audioTrack: MediaStreamTrack;
+  //   VCData.peerConnections.forEach(
+  //     (
+  //       value: RTCPeerConnection,
+  //       key: string,
+  //       map: Map<string, RTCPeerConnection>
+  //     ) => {
+  //       value.getSenders().find((s: RTCRtpSender) => {
+  //         if (s.track?.kind === 'audio') {
+  //           audioTrack = s.track;
+  //         }
+  //         return audioTrack;
+  //       });
+  //       if (audioTrack) {
+  //         audioTrack.enabled = !audioEnabled;
+  //       }
+  //     }
+  //   );
+  // }
 }
 
 export function handlePauseVideo(
-  // videoEnabled: boolean,
-  // setVideo: Function,
+  videoEnabled: boolean,
+  setVideo: Function,
   VCData: VideoChatData,
   setLocalVideoText: Function
 ): void {
-  // setVideo(!videoEnabled);
-  VCData.videoOn = !VCData.videoOn;
-  if (VCData.videoOn) {
+  setVideo(!videoEnabled);
+  if (videoEnabled) {
     setLocalVideoText('Video Paused');
   } else {
     setLocalVideoText('Drag Me');
@@ -67,7 +73,7 @@ export function handlePauseVideo(
           }
           return videoTrack;
         });
-        videoTrack.enabled = VCData.videoOn;
+        videoTrack.enabled = !videoEnabled;
       }
     );
   }
@@ -76,6 +82,8 @@ export function handlePauseVideo(
 // Swap current video track with passed in stream
 export function handleSwitchStreamHelper(
   stream: any,
+  videoEnabled: boolean,
+  setVideo: Function,
   VCData: VideoChatData,
   setLocalVideoText: Function
 ): void {
@@ -121,8 +129,8 @@ export function handleSwitchStreamHelper(
   // Update local video object
   VCData.localVideo.srcObject = stream;
   // Unpause video on swap
-  if (!VCData.videoOn) {
-    handlePauseVideo(VCData, setLocalVideoText);
+  if (!videoEnabled) {
+    handlePauseVideo(videoEnabled, setVideo, VCData, setLocalVideoText);
   }
 }
 
@@ -181,6 +189,8 @@ export function handleSharing(
   VCData: VideoChatData,
   sharing: boolean,
   setSharing: Function,
+  videoEnabled: boolean,
+  setVideo: Function,
   setLocalVideoText: Function
 ): void {
   // Handle swap video before video call is connected by checking that there's at least one peer connected
@@ -200,7 +210,13 @@ export function handleSharing(
           stream.addTrack(stream.getAudioTracks()[0]);
         }
         logger(stream.toString());
-        handleSwitchStreamHelper(stream, VCData, setLocalVideoText);
+        handleSwitchStreamHelper(
+          stream,
+          videoEnabled,
+          setVideo,
+          VCData,
+          setLocalVideoText
+        );
         setLocalVideoText('Sharing Screen');
       })
       .catch((e: Event) => {
@@ -241,7 +257,13 @@ export function handleSharing(
       })
       .then(stream => {
         setSharing(false);
-        handleSwitchStreamHelper(stream, VCData, setLocalVideoText);
+        handleSwitchStreamHelper(
+          stream,
+          videoEnabled,
+          setVideo,
+          VCData,
+          setLocalVideoText
+        );
         setLocalVideoText('Drag Me');
       });
   }

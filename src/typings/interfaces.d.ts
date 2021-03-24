@@ -20,8 +20,8 @@ export interface VideoChatData {
   showBorderColors: boolean;
   showDotColors: boolean;
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;
-  audioOn: boolean;
-  videoOn: boolean;
+  startAudioPaused: boolean;
+  startVideoPaused: boolean;
   /* TODO: Captions
   sendingCaptions: boolean;
   receivingCaptions: boolean;

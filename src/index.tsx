@@ -26,13 +26,10 @@ import {
   // faClosedCaptioning,
   faComment,
   faCompress,
-  faDesktop,
   faExpand,
   faMicrophone,
   faMicrophoneSlash,
-  faPause,
   faPhoneSlash,
-  faPlay,
   faShareSquare,
   faVideo,
   faVideoSlash,
@@ -86,8 +83,8 @@ const VideoChat = ({
   const fsHandle = useFullScreenHandle();
 
   const [browserSupported, setBrowserSupported] = useState(true);
-  // const [audioEnabled, setAudio] = useState<boolean>(defaults?.audioOn ?? true);
-  // const [videoEnabled, setVideo] = useState<boolean>(defaults?.videoOn ?? true);
+  const [audioEnabled, setAudio] = useState<boolean>(defaults?.audioOn ?? true);
+  const [videoEnabled, setVideo] = useState<boolean>(defaults?.videoOn ?? true);
   const [sharing, setSharing] = useState(false);
   const [showChat, setShowChat] = useState<boolean>(
     defaults?.showChatArea ?? false
@@ -155,6 +152,7 @@ const VideoChat = ({
       cstmServerAddress,
       cstmSnackbarMsg,
       picInPic,
+      onStartCall,
       onAddPeer,
       onRemovePeer,
       showBorderColors,
@@ -164,9 +162,12 @@ const VideoChat = ({
     );
     setVCData(VCD);
     VCD?.requestMediaStream();
-    if (onStartCall) {
-      onStartCall();
-    }
+    // if (!defaults?.audioOn) {
+    //   handleMute(audioEnabled, setAudio, VCD);
+    // }
+    // if (!defaults?.videoOn) {
+    //   handlePauseVideo(videoEnabled, setVideo, VCD, setLocalVideoText);
+    // }
   }, [sessionKey, uniqueAppId, cstmServerAddress, cstmSnackbarMsg, picInPic]);
 
   if (browserSupported) {
@@ -200,18 +201,15 @@ const VideoChat = ({
               <div className={`ct-btn-container ${hidden?.mute ? 'none' : ''}`}>
                 <button
                   className={`${
-                    !VCData?.audioOn ? 'ct-btn-on' : ''
+                    audioEnabled ? '' : 'ct-btn-on'
                   } ct-hover-btn ct-tooltip ct-not-selectable`}
                   onClick={() => {
-                    if (VCData) handleMute(VCData);
+                    if (VCData) handleMute(audioEnabled, setAudio, VCData);
                   }}
                 >
-                  <span>
-                    {!VCData?.audioOn ? 'Unmute Audio' : 'Mute Audio'}
-                  </span>
-
+                  <span>{audioEnabled ? 'Mute Audio' : 'Unmute Audio'}</span>
                   <FontAwesomeIcon
-                    icon={!VCData?.audioOn ? faMicrophoneSlash : faMicrophone}
+                    icon={audioEnabled ? faMicrophone : faMicrophoneSlash}
                   />
                 </button>
               </div>
@@ -223,17 +221,21 @@ const VideoChat = ({
               >
                 <button
                   className={`${
-                    VCData?.videoOn ? 'ct-btn-on' : ''
+                    videoEnabled ? '' : 'ct-btn-on'
                   } ct-hover-btn ct-tooltip ct-not-selectable`}
                   onClick={() => {
-                    if (VCData) handlePauseVideo(VCData, setLocalVideoText);
+                    if (VCData)
+                      handlePauseVideo(
+                        videoEnabled,
+                        setVideo,
+                        VCData,
+                        setLocalVideoText
+                      );
                   }}
                 >
-                  <span>
-                    {!VCData?.videoOn ? 'Unpause Video' : 'Pause Video'}
-                  </span>
+                  <span>{videoEnabled ? 'Pause Video' : 'Unpause Video'}</span>
                   <FontAwesomeIcon
-                    icon={!VCData?.videoOn ? faVideoSlash : faVideo}
+                    icon={videoEnabled ? faVideo : faVideoSlash}
                   />
                 </button>
               </div>
@@ -303,6 +305,8 @@ const VideoChat = ({
                         VCData,
                         sharing,
                         setSharing,
+                        videoEnabled,
+                        setVideo,
                         setLocalVideoText
                       );
                   }}
