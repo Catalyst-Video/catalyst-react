@@ -94,7 +94,7 @@ export default class VCDataStream implements VideoChatData {
     this.recognition = undefined; */
   }
 
-  /* Call to getUserMedia (provided by adapter.js for  browser compatibility) asking for access to both the video and audio streams. If the request is accepted callback to the onMediaStream function, otherwise callback to the noMediaStream function. */
+  /* Call to getUserMedia requesting access to video and audio streams. If the request is accepted callback to the onMediaStream function, otherwise callback to the noMediaStream function. */
   requestMediaStream = () => {
     logger('requestMediaStream');
     navigator.mediaDevices
@@ -115,7 +115,7 @@ export default class VCDataStream implements VideoChatData {
         logger(
           'Failed to get local webcam video, check webcam privacy settings'
         );
-        // Keep trying to get user media
+        // Keep attempting to get user media
         setTimeout(this.requestMediaStream, 1000);
       });
   };
@@ -147,7 +147,10 @@ export default class VCDataStream implements VideoChatData {
     // Join the chat room
     this.socket.emit('join', this.sessionId, () => {
       this.localColor = hueToColor(uuidToHue(this.socket.id, this).toString());
-      this.localVideo.style.border = `3px solid ${this.localColor}`;
+      let localIndicator = document.getElementById(
+        'local-indicator'
+      ) as HTMLDivElement;
+      localIndicator.style.background = this.localColor;
       logger('joined');
     });
     // Add listeners to the websocket
@@ -459,30 +462,41 @@ export default class VCDataStream implements VideoChatData {
 
       logger('onAddStream <<< Playing join sound...');
       (document.getElementById('join-sound') as HTMLAudioElement)?.play();
-      var node = document.createElement('video');
-      node.setAttribute('autoplay', '');
-      node.setAttribute('playsinline', '');
-      node.setAttribute('id', 'remote-video');
-      node.setAttribute('uuid', uuid);
-      node.setAttribute('className', 'RemoteVideo');
+      var vidDiv = document.createElement('div');
+      vidDiv.setAttribute('id', 'remote-div');
+      vidDiv.setAttribute('uuid', uuid);
+
+      var vidNode = document.createElement('video');
+      vidNode.setAttribute('autoplay', '');
+      vidNode.setAttribute('playsinline', '');
+      vidNode.setAttribute('id', 'remote-video');
+      vidNode.setAttribute('className', 'RemoteVideo');
+
+      var indicatorNode = document.createElement('div');
+      indicatorNode.setAttribute('id', 'indicator');
+      indicatorNode.setAttribute('indicatoruuid', uuid);
+      // TODO: easiest way to add optional names?
+      // indicatorNode.textContent = 'Seth Goldin';
 
       if (!this.remoteVideoWrapper) {
         this.remoteVideoWrapper = document.getElementById(
           'remote-vid-wrapper'
         ) as HTMLDivElement;
       }
-      this.remoteVideoWrapper.appendChild(node);
-      ResizeWrapper();
-      // Update remote video source
-      if (this.remoteVideoWrapper?.lastChild !== null) {
-        let newVid = this.remoteVideoWrapper.lastChild as HTMLVideoElement;
-        newVid.srcObject = e.streams.slice(-1)[0];
+      if (this.remoteVideoWrapper !== null) {
+        vidNode.srcObject = e.streams.slice(-1)[0];
 
         if (this.picInPic !== 'disabled') {
-          newVid.addEventListener(this.picInPic, () => {
-            handlePictureInPicture(this, newVid);
+          vidNode.addEventListener(this.picInPic, () => {
+            handlePictureInPicture(this, vidNode);
           });
         }
+
+        vidDiv.appendChild(indicatorNode);
+        vidDiv.appendChild(vidNode);
+        this.remoteVideoWrapper.appendChild(vidDiv);
+        ResizeWrapper();
+
         if (this.onAddPeer) {
           this.onAddPeer();
         }

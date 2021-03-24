@@ -86,7 +86,7 @@ export function ResizeWrapper(): void {
     Width = Wrapper.offsetWidth - Margin * 2;
     Height = Wrapper.offsetHeight - Margin * 2;
   }
-  let RemoteVideos = document.querySelectorAll('#remote-video');
+  let RemoteVideos = document.querySelectorAll('#remote-div');
   // console.log(RemoteVideos);
   let max = 0;
 
@@ -106,7 +106,7 @@ export function ResizeWrapper(): void {
 }
 
 export function setWidth(width: number, margin: number): void {
-  let RemoteVideos = document.querySelectorAll('#remote-video') as NodeListOf<
+  let RemoteVideos = document.querySelectorAll('#remote-div') as NodeListOf<
     HTMLVideoElement
   >;
   for (var s = 0; s < RemoteVideos.length; s++) {
@@ -153,10 +153,14 @@ export function hueToColor(hue: string): string {
 
 // Sets the border color of uuid's stream
 export function setStreamColor(uuid: string, VCData: VideoChatData): void {
+  // const hue = uuidToHue(uuid, VCData);
+  // (document.querySelectorAll(
+  //   `[uuid="${uuid}"]`
+  // )[0] as HTMLVideoElement).style.border = `2px solid ${hueToColor(
+  //   hue.toString()
+  // )}`;
   const hue = uuidToHue(uuid, VCData);
   (document.querySelectorAll(
-    `[uuid="${uuid}"]`
-  )[0] as HTMLVideoElement).style.border = `2px solid ${hueToColor(
-    hue.toString()
-  )}`;
+    `[indicatoruuid="${uuid}"]`
+  )[0] as HTMLDivElement).style.background = hueToColor(hue.toString());
 }

@@ -10,6 +10,7 @@
         bottom: 0px;
         top: 0px;
         right: 0px;
+         /* position: relative;  */
     }
     .ct-chat {
         width: calc(100% - 240px);
@@ -20,12 +21,28 @@
             width: 100%;
         }
     }
-    #remote-vid-wrapper video {
+
+div#remote-div{
+  margin: 2px;
+        position: relative;
+        vertical-align: middle;
+        align-self: center;
+        z-index: 0;
+        overflow: hidden;
+        border-radius: 10px;
+
+        display: inline-block;
+        animation: show 0.4s ease;
+}
+
+   video#remote-video {
+       width: 100%;
+       height: 100%;
         margin: 2px;
         position: relative;
         vertical-align: middle;
         align-self: center;
-        /* z-index: 0; */
+        z-index: 0;
         border-radius: 10px;
         overflow: hidden;
         display: inline-block;
@@ -35,47 +52,43 @@
 
     }
 
-    #remote-vid-wrapper video:before {
-    color: #fff;
-    font-size: 13px;
-    font-family: Arial, Helvetica, sans-serif;
-    position: absolute;
-    bottom: 20px;
-    right: 23px;
-    font-weight: 100;
-    content: "Video Paused";
+div#indicator {
+font-size:12px;
+font-family: sans-serif;
+color: white;
+background: black;
+min-height: 4px;
+min-width:4px;
+font-size: small;
+border-radius: 50%;
+padding: 4px;
+position: absolute;
+bottom:  0.5rem;
+left:  0.6rem;
+z-index: 10;
 }
-#remote-vid-wrapper video:after {
-    color: #fff;
-    font-size: 13px;
-    font-family: Arial, Helvetica, sans-serif;
-    position: absolute;
-    bottom: 20px;
-    right: 23px;
-    font-weight: 100;
-    content: "Video Paused";
-}
-    /* #remote-vid-wrapper video::after {
-        display: block;
-        color: #fff;
-        content: "Video Paused";
-        font-size: 13px;
-        font-family: Arial, Helvetica, sans-serif;
-        position:absolute;
-        bottom: 20px;
-        right: 23px;
-        font-weight: 100;
-        z-index: 100;
-    } */
 
-     #remote-vid-wrapper .mute {
-            position: absolute;
-            color: red;
-            font-size: 2rem;
-            cursor: pointer;
-            left: 50%;
-            bottom: 50%;
-        }
+div#local-indicator {
+font-size:12px;
+font-family: sans-serif;
+color: white;
+background: black;
+min-height: 4px;
+min-width: 4px;
+font-size: small;
+border-radius: 50%;
+padding: 4px;
+position: absolute;
+bottom: 0.6rem;
+left:  0.5rem;
+z-index: 10;
+}
+
+
+/* animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; */
+
+/* animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite; */
+
 
 /* Animation */
     @keyframes show {
@@ -89,3 +102,19 @@
         }
     }
 
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+    @keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
