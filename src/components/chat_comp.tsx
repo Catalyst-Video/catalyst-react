@@ -2,6 +2,7 @@ import React from 'react';
 import Draggable from 'react-draggable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { ResizeWrapper } from '../utils/ui_utils';
 
 const chatStyles = {
   root: {
@@ -62,6 +63,7 @@ const ChatComponent = ({
 }) => {
   return (
     <div id="chat-entire" className={showChat ? '' : 'hide-chat'}>
+      <span className="chat-title">Chat</span>
       <button className="chat-close-btn" onClick={() => setShowChat(!showChat)}>
         <FontAwesomeIcon icon={faTimes} size="lg" title="Close Chat Panel" />
       </button>
@@ -75,22 +77,6 @@ const ChatComponent = ({
         rows={2}
       ></textarea>
     </div>
-
-    // <Draggable>
-    //   <div id="entire-chat" className={showChat ? '' : 'hide-chat'}>
-    //     <div id="chat-zone">
-    //       <div className="chat-messages"></div>
-    //       <div id="chat-end" style={{ visibility: 'hidden' }}>
-    //         end
-    //       </div>
-    //     </div>
-    //     <textarea
-    //       className="compose"
-    //       placeholder="Send Message"
-    //       rows={2}
-    //     ></textarea>
-    //   </div>
-    // </Draggable>
   );
 };
 

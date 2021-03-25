@@ -9,26 +9,13 @@ export function handleMute(
   VCData: VideoChatData
 ): void {
   setAudio(!audioEnabled);
-  if (VCData.localAudio) VCData.localAudio.enabled = !VCData.localAudio.enabled;
-  if (isConnected(VCData)) {
-    var audioTrack: MediaStreamTrack;
-    VCData.peerConnections.forEach(
-      (
-        value: RTCPeerConnection,
-        key: string,
-        map: Map<string, RTCPeerConnection>
-      ) => {
-        value.getSenders().find((s: RTCRtpSender) => {
-          if (s.track?.kind === 'audio') {
-            audioTrack = s.track;
-          }
-          return audioTrack;
-        });
-        if (audioTrack) {
-          audioTrack.enabled = !audioEnabled;
-        }
-      }
-    );
+  if (VCData.localAudio) {
+    sendToAllDataChannels(`mut:${audioEnabled}`, VCData.dataChannel);
+    if (audioEnabled) {
+      VCData.localAudio.enabled = false;
+    } else {
+      VCData.localAudio.enabled = true;
+    }
   }
 }
 
@@ -39,33 +26,24 @@ export function handlePauseVideo(
   setLocalVideoText: Function
 ): void {
   setVideo(!videoEnabled);
-  if (videoEnabled) {
-    setLocalVideoText('Video Paused');
-  } else {
-    setLocalVideoText('Drag Me');
-  }
-  VCData.localStream?.getTracks().forEach((track: MediaStreamTrack) => {
-    track.enabled = !track.enabled;
-  });
-  if (isConnected(VCData)) {
-    var videoTrack: MediaStreamTrack;
-    VCData.peerConnections.forEach(
-      (
-        value: RTCPeerConnection,
-        key: string,
-        map: Map<string, RTCPeerConnection>
-      ) => {
-        logger('pausing video for ' + key.toString());
-        value.getSenders().find((s: RTCRtpSender) => {
-          if (s.track?.kind === 'video') {
-            logger('found video track');
-            videoTrack = s.track;
-          }
-          return videoTrack;
+  if (VCData && VCData.localVideo) {
+    sendToAllDataChannels(`vid:${videoEnabled}`, VCData.dataChannel);
+    if (videoEnabled) {
+      VCData.localStream
+        ?.getVideoTracks()
+        .forEach((track: MediaStreamTrack) => {
+          // track.stop();
+          track.enabled = false;
         });
-        videoTrack.enabled = !videoEnabled;
-      }
-    );
+      setLocalVideoText('Video Paused');
+    } else {
+      VCData.localStream
+        ?.getVideoTracks()
+        .forEach((track: MediaStreamTrack) => {
+          track.enabled = true;
+        });
+      setLocalVideoText('Drag Me');
+    }
   }
 }
 
@@ -184,7 +162,7 @@ export function handleSharing(
   setLocalVideoText: Function
 ): void {
   // Handle swap video before video call is connected by checking that there's at least one peer connected
-  if (!isConnected(VCData)) {
+  if (!isConnected(VCData.connected)) {
     alert('You must join a call before you can share your screen.');
     return;
   }
@@ -211,27 +189,30 @@ export function handleSharing(
       })
       .catch((e: Event) => {
         // Request screen share, note: we can request to capture audio for screen sharing video content.
-        toast(
-          () => (
-            <div className="text-center justify-between">
-              Please press allow to enable webcam & audio access
-              <button
-                className="snack-btn"
-                onClick={() => {
-                  window.open(
-                    'https://help.clipchamp.com/en/articles/1505527-how-do-i-enable-my-webcam-for-recording',
-                    '_blank'
-                  );
-                }}
-              >
-                Directions
-              </button>
-            </div>
-          ),
-          {
-            toastId: 'screen_share',
-          }
-        );
+        if (!isConnected(VCData.connected)) {
+          toast(
+            () => (
+              <div className="text-center justify-between">
+                Please press allow to enable webcam & audio access
+                <button
+                  className="snack-btn"
+                  onClick={() => {
+                    window.open(
+                      'https://docs.catalyst.chat/docs-permissions',
+                      '_blank'
+                    );
+                  }}
+                >
+                  Help & Directions
+                </button>
+              </div>
+            ),
+            {
+              autoClose: false,
+              toastId: 'webcam/audio_error',
+            }
+          );
+        }
         logger('Error sharing screen' + e);
       });
   } else {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 // components
 import {
   HeaderComponent,
@@ -8,7 +8,11 @@ import {
 // utils
 import VCDataStream from './stream_class';
 import { ResizeWrapper } from './utils/ui_utils';
-import { getBrowserName, setThemeColor } from './utils/general_utils';
+import {
+  getBrowserName,
+  sendToAllDataChannels,
+  setThemeColor,
+} from './utils/general_utils';
 import {
   handleMute,
   handlePauseVideo,
@@ -26,13 +30,13 @@ import {
   // faClosedCaptioning,
   faComment,
   faCompress,
-  faDesktop,
   faExpand,
   faMicrophone,
   faMicrophoneSlash,
-  faPause,
   faPhoneSlash,
-  faPlay,
+  faShareSquare,
+  faVideo,
+  faVideoSlash,
 } from '@fortawesome/free-solid-svg-icons';
 // assets
 const joinSound = require('./assets/sound/join.mp3');
@@ -58,6 +62,7 @@ const VideoChat = ({
   onAddPeer,
   onRemovePeer,
   onEndCall,
+  handleArbitraryData,
   cstmSnackbarMsg,
   cstmOptionBtns,
   themeColor,
@@ -74,6 +79,7 @@ const VideoChat = ({
   onAddPeer?: Function;
   onRemovePeer?: Function;
   onEndCall?: Function;
+  handleArbitraryData?: Function;
   cstmSnackbarMsg?: HTMLElement | Element | string;
   cstmOptionBtns?: Element[];
   themeColor?: string;
@@ -83,15 +89,11 @@ const VideoChat = ({
   const fsHandle = useFullScreenHandle();
 
   const [browserSupported, setBrowserSupported] = useState(true);
-  const [audioEnabled, setAudio] = useState<boolean>(
-    defaults?.audioOn ? defaults.audioOn : true
-  );
-  const [videoEnabled, setVideo] = useState<boolean>(
-    defaults?.videoOn ? defaults.videoOn : true
-  );
+  const [audioEnabled, setAudio] = useState<boolean>(defaults?.audioOn ?? true);
+  const [videoEnabled, setVideo] = useState<boolean>(defaults?.videoOn ?? true);
   const [sharing, setSharing] = useState(false);
   const [showChat, setShowChat] = useState<boolean>(
-    defaults?.showChatArea ? defaults.showChatArea : false
+    defaults?.showChatArea ?? false
   );
   const [unseenChats, setUnseenChats] = useState(0);
   const [captionsText, setCaptionsText] = useState(
@@ -138,13 +140,49 @@ const VideoChat = ({
   }, []);
 
   useEffect(() => {
-    setThemeColor(themeColor ? themeColor : 'blue');
+    setThemeColor(themeColor ?? 'blue');
   }, [themeColor]);
+
+  useEffect(() => {
+    if (VCData && VCData?.startedCall) {
+      if (onStartCall) onStartCall();
+      if (!audioEnabled && VCData.localAudio) {
+        // sendToAllDataChannels(`mut:true`, VCData.dataChannel);
+        VCData.localAudio.enabled = false;
+      }
+      if (!videoEnabled && VCData.localVideo) {
+        // sendToAllDataChannels(`vid:${videoEnabled}`, VCData.dataChannel);
+        VCData.localStream
+          ?.getVideoTracks()
+          .forEach((track: MediaStreamTrack) => {
+            track.enabled = false;
+          });
+      }
+    }
+  }, [VCData?.startedCall]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (VCData && VCData?.dataChannel) {
+        if (!audioEnabled) {
+          sendToAllDataChannels(`mut:true`, VCData.dataChannel);
+        }
+        if (!videoEnabled) {
+          sendToAllDataChannels(`vid:true`, VCData.dataChannel);
+        }
+      }
+    }, 3200);
+  }, [VCData?.peerConnections.size]);
 
   const incrementUnseenChats = () => {
     setUnseenChats(unseenChats => unseenChats + 1);
     console.log(unseenChats);
   };
+
+  useEffect(() => {
+    ResizeWrapper();
+    setUnseenChats(0);
+  }, [showChat]);
 
   useEffect(() => {
     const VCD = new VCDataStream(
@@ -159,13 +197,11 @@ const VideoChat = ({
       onAddPeer,
       onRemovePeer,
       showBorderColors,
-      showDotColors
+      showDotColors,
+      handleArbitraryData
     );
     setVCData(VCD);
     VCD?.requestMediaStream();
-    if (onStartCall) {
-      onStartCall();
-    }
   }, [sessionKey, uniqueAppId, cstmServerAddress, cstmSnackbarMsg, picInPic]);
 
   if (browserSupported) {
@@ -191,7 +227,7 @@ const VideoChat = ({
               <div id="local-vid-wrapper" className="video-1">
                 <p id="ct-local-text">{localVideoText}</p>
                 <video id="local-video" autoPlay muted playsInline></video>
-                <div id="local-indicator"></div>
+                {showDotColors && <div id="local-indicator"></div>}
               </div>
             </Draggable>
 
@@ -206,7 +242,6 @@ const VideoChat = ({
                   }}
                 >
                   <span>{audioEnabled ? 'Mute Audio' : 'Unmute Audio'}</span>
-
                   <FontAwesomeIcon
                     icon={audioEnabled ? faMicrophone : faMicrophoneSlash}
                   />
@@ -233,7 +268,9 @@ const VideoChat = ({
                   }}
                 >
                   <span>{videoEnabled ? 'Pause Video' : 'Unpause Video'}</span>
-                  <FontAwesomeIcon icon={videoEnabled ? faPause : faPlay} />
+                  <FontAwesomeIcon
+                    icon={videoEnabled ? faVideo : faVideoSlash}
+                  />
                 </button>
               </div>
 
@@ -272,7 +309,6 @@ const VideoChat = ({
                   } ct-hover-btn ct-tooltip ct-not-selectable`}
                   onClick={() => {
                     setShowChat(!showChat);
-                    setUnseenChats(0);
                   }}
                 >
                   <span>{showChat ? 'Hide Chat' : 'Show Chat'}</span>
@@ -311,7 +347,8 @@ const VideoChat = ({
                   <span>
                     {!sharing ? 'Share Screen' : 'Stop Sharing Screen'}
                   </span>
-                  <FontAwesomeIcon icon={faDesktop} />
+
+                  <FontAwesomeIcon icon={faShareSquare} />
                 </button>
               </div>
 
@@ -373,6 +410,7 @@ const VideoChat = ({
             position="top-center"
             autoClose={50000}
             hideProgressBar={false}
+            className={showChat ? 'chat-offset' : ''}
             newestOnTop={false}
             closeOnClick
             rtl={false}
