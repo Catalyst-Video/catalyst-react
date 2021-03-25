@@ -48,7 +48,6 @@ export default class VCDataStream implements VideoChatData {
   incrementUnseenChats: Function;
   setCaptionsText: Function;
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;
-  setCallStarted: Function;
   onAddPeer: Function | undefined;
   onRemovePeer: Function | undefined;
   startAudioPaused: boolean;
@@ -67,7 +66,6 @@ export default class VCDataStream implements VideoChatData {
     setCapText: Function,
     setVidText: Function,
     incrementUnseenChats: Function,
-    setCallStarted: Function,
     cstmServerAddress?: string,
     cstMsg?: string | HTMLElement | Element,
     picInPic?: string,
@@ -103,7 +101,6 @@ export default class VCDataStream implements VideoChatData {
     this.cstmSnackbarMsg = cstMsg;
     this.showBorderColors = showBorderColors ?? false;
     this.showDotColors = showDotColors ?? false;
-    this.setCallStarted = setCallStarted;
     this.onAddPeer = onAddPeer ?? undefined;
     this.onRemovePeer = onRemovePeer ?? undefined;
     this.startAudioPaused = startAudioPaused ?? false;
@@ -366,7 +363,6 @@ export default class VCDataStream implements VideoChatData {
         this.onAddStream(e, uuid);
 
         if (!this.startedCall) {
-          this.setCallStarted(true);
           this.startedCall = true;
         }
         this.setCaptionsText('Session connected successfully');

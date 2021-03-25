@@ -100,7 +100,6 @@ const VideoChat = ({
   );
   const [localVideoText, setLocalVideoText] = useState('No webcam input');
   const [VCData, setVCData] = useState<VideoChatData>();
-  const [callStarted, setCallStarted] = useState(false);
 
   useEffect(() => {
     var ua: string = navigator.userAgent || navigator.vendor;
@@ -150,7 +149,7 @@ const VideoChat = ({
   // }, [VCData?]);
 
   useEffect(() => {
-    if (VCData && callStarted) {
+    if (VCData && VCData?.startedCall) {
       if (onStartCall) onStartCall();
       if (!audioEnabled) {
         if (VCData.localAudio && !defaults?.audioOn) {
@@ -169,7 +168,7 @@ const VideoChat = ({
         }
       }
     }
-  }, [callStarted]);
+  }, [VCData?.startedCall]);
 
   const incrementUnseenChats = () => {
     setUnseenChats(unseenChats => unseenChats + 1);
@@ -183,7 +182,6 @@ const VideoChat = ({
       setCaptionsText,
       setLocalVideoText,
       incrementUnseenChats,
-      setCallStarted,
       cstmServerAddress,
       cstmSnackbarMsg,
       picInPic,

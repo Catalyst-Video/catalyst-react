@@ -20,7 +20,6 @@ export interface VideoChatData {
   incrementUnseenChats: Function;
   setCaptionsText: Function;
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;
-  setCallStarted: Function;
   onAddPeer: Function | undefined;
   onRemovePeer: Function | undefined;
   startAudioPaused: boolean;
