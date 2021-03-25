@@ -17,28 +17,6 @@ export function handleMute(
       VCData.localAudio.enabled = true;
     }
   }
-
-  // if (isConnected(VCData.connected)) {
-  //   sendToAllDataChannels(`mut:`, VCData.dataChannel);
-  //   var audioTrack: MediaStreamTrack;
-  //   VCData.peerConnections.forEach(
-  //     (
-  //       value: RTCPeerConnection,
-  //       key: string,
-  //       map: Map<string, RTCPeerConnection>
-  //     ) => {
-  //       value.getSenders().find((s: RTCRtpSender) => {
-  //         if (s.track?.kind === 'audio') {
-  //           audioTrack = s.track;
-  //         }
-  //         return audioTrack;
-  //       });
-  //       if (audioTrack) {
-  //         audioTrack.enabled = !audioEnabled;
-  //       }
-  //     }
-  //   );
-  // }
 }
 
 export function handlePauseVideo(
@@ -67,37 +45,6 @@ export function handlePauseVideo(
       setLocalVideoText('Drag Me');
     }
   }
-
-  // setVideo(!videoEnabled);
-  // if (videoEnabled) {
-  //   setLocalVideoText('Video Paused');
-  // } else {
-  //   setLocalVideoText('Drag Me');
-  // }
-  // VCData.localStream?.getTracks().forEach((track: MediaStreamTrack) => {
-  //   track.enabled = !track.enabled;
-  // });
-  // if (isConnected(VCData.connected)) {
-  //   sendToAllDataChannels(`vid:`, VCData.dataChannel);
-  //   var videoTrack: MediaStreamTrack;
-  //   VCData.peerConnections.forEach(
-  //     (
-  //       value: RTCPeerConnection,
-  //       key: string,
-  //       map: Map<string, RTCPeerConnection>
-  //     ) => {
-  //       logger('pausing video for ' + key.toString());
-  //       value.getSenders().find((s: RTCRtpSender) => {
-  //         if (s.track?.kind === 'video') {
-  //           logger('found video track');
-  //           videoTrack = s.track;
-  //         }
-  //         return videoTrack;
-  //       });
-  //       videoTrack.enabled = !videoEnabled;
-  //     }
-  //   );
-  // }
 }
 
 // Swap current video track with passed in stream
