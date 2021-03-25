@@ -22,7 +22,7 @@ const App = () => {
         onStartCall={() => console.log('on start call')}
         onRemovePeer={() => console.log('on remove peer')}
         onEndCall={() => console.log('on end call')}
-        themeColor="blue"
+        themeColor="indigo"
         // cstmOptionBtns={[
         //   <div className="ct-btn-container">
         //     <button

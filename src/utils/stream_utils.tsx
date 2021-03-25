@@ -54,6 +54,7 @@ export function handlePauseVideo(
       VCData.localStream
         ?.getVideoTracks()
         .forEach((track: MediaStreamTrack) => {
+          // track.stop();
           track.enabled = false;
         });
       setLocalVideoText('Video Paused');

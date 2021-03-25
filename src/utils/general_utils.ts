@@ -1,6 +1,3 @@
-import { VideoChatData } from '../typings/interfaces';
-import { CSSGlobalVariables } from 'css-global-variables';
-
 export function logger(data: string): void {
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     console.log(data);
@@ -8,38 +5,42 @@ export function logger(data: string): void {
 }
 
 export function setThemeColor(color: string): void {
-  let cssVar = new CSSGlobalVariables();
+  var themeColor: string;
+
   switch (color) {
     case 'pink':
-      cssVar.themeColor = '#D53F8C';
+      themeColor = '#D53F8C';
       break;
     case 'red':
-      cssVar.themeColor = '#E53E3E';
+      themeColor = '#E53E3E';
       break;
     case 'orange':
-      cssVar.themeColor = '#DD6B20';
+      themeColor = '#DD6B20';
       break;
     case 'yellow':
-      cssVar.themeColor = '#FFCE26';
+      themeColor = '#FFCE26';
       break;
     case 'green':
-      cssVar.themeColor = '#38A169';
+      themeColor = '#38A169';
       break;
     case 'teal':
-      cssVar.themeColor = '#319795';
+      themeColor = '#319795';
       break;
     case 'blue':
-      cssVar.themeColor = '#3f83f8';
+      themeColor = '#3f83f8';
       break;
     case 'indigo':
-      cssVar.themeColor = '#5A67D8';
+      themeColor = '#5A67D8';
       break;
     case 'purple':
-      cssVar.themeColor = '#805AD5';
+      themeColor = '#805AD5';
       break;
     default:
-      cssVar.themeColor = color;
+      themeColor = color;
   }
+  var style = document.createElement('style');
+  document.head.appendChild(style);
+  style.sheet?.insertRule(`:root { --themeColor: ${themeColor}}`);
 }
 
 export function getBrowserName(): string {
