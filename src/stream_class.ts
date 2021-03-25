@@ -48,7 +48,7 @@ export default class VCDataStream implements VideoChatData {
   incrementUnseenChats: Function;
   setCaptionsText: Function;
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;
-  onStartCall: Function | undefined;
+  setCallStarted: Function;
   onAddPeer: Function | undefined;
   onRemovePeer: Function | undefined;
   startAudioPaused: boolean;
@@ -67,10 +67,10 @@ export default class VCDataStream implements VideoChatData {
     setCapText: Function,
     setVidText: Function,
     incrementUnseenChats: Function,
+    setCallStarted: Function,
     cstmServerAddress?: string,
     cstMsg?: string | HTMLElement | Element,
     picInPic?: string,
-    onStartCall?: Function,
     onAddPeer?: Function,
     onRemovePeer?: Function,
     showBorderColors?: boolean,
@@ -103,7 +103,7 @@ export default class VCDataStream implements VideoChatData {
     this.cstmSnackbarMsg = cstMsg;
     this.showBorderColors = showBorderColors ?? false;
     this.showDotColors = showDotColors ?? false;
-    this.onStartCall = onStartCall ?? undefined;
+    this.setCallStarted = setCallStarted;
     this.onAddPeer = onAddPeer ?? undefined;
     this.onRemovePeer = onRemovePeer ?? undefined;
     this.startAudioPaused = startAudioPaused ?? false;
@@ -326,7 +326,7 @@ export default class VCDataStream implements VideoChatData {
         } else if (dataType === 'mut:') {
           setMutedIndicator(uuid, cleanedMessage);
         } else if (dataType === 'vid:') {
-          setPausedIndicator(uuid, true);
+          setPausedIndicator(uuid, cleanedMessage);
         } else if (
           dataType === 'clr:' &&
           (this.showBorderColors || this.showDotColors)
@@ -362,47 +362,11 @@ export default class VCDataStream implements VideoChatData {
           this.onIceCandidate(e, uuid);
         };
 
-      /*    this.peerConnections
-        .get(uuid)
-        ?.getSenders()
-        .find((s: RTCRtpSender) => {
-          if (s.track?.kind === 'audio') {
-            s.track.addEventListener(
-              'mute',
-              e => {
-                setMutedIndicator(uuid, true);
-                console.log('mute');
-              },
-              false
-            );
-            s.track.addEventListener(
-              'unmute',
-              e => {
-                setMutedIndicator(uuid, false);
-                console.log('unmute');
-              },
-              false
-            );
-
-            // s.track.onunmute = () => setMutedIndicator(uuid, false);
-          }
-        }); */
-
-      //     this.peerConnections
-      //       .get(uuid)
-      //       ?.getSenders().find((s: RTCRtpSender) => {
-      //   if (s.track?.kind === 'video') {
-      //     logger('found video track');
-      //     videoTrack = s.track;
-      //   }
-      //   return videoTrack;
-      // });
-
       this.peerConnections.get(uuid)!.ontrack = (e: RTCTrackEvent) => {
         this.onAddStream(e, uuid);
 
         if (!this.startedCall) {
-          if (this.onStartCall) this.onStartCall();
+          this.setCallStarted(true);
           this.startedCall = true;
         }
         this.setCaptionsText('Session connected successfully');

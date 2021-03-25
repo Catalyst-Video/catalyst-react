@@ -10,18 +10,23 @@ export interface VideoChatData {
   peerConnections: Map<string, RTCPeerConnection>;
   localStream: MediaStream | undefined;
   localAudio: MediaStreamTrack | undefined;
-  picInPic: string;
   seenWelcomeSnackbar: boolean;
+  picInPic: string;
   setLocalVideoText: Function;
+  showDotColors: boolean;
+  showBorderColors: boolean;
   peerColors: Map<string, number>;
   localColor: string;
   incrementUnseenChats: Function;
   setCaptionsText: Function;
-  showBorderColors: boolean;
-  showDotColors: boolean;
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;
+  setCallStarted: Function;
+  onAddPeer: Function | undefined;
+  onRemovePeer: Function | undefined;
   startAudioPaused: boolean;
   startVideoPaused: boolean;
+  startedCall: boolean;
+
   /* TODO: Captions
   sendingCaptions: boolean;
   receivingCaptions: boolean;

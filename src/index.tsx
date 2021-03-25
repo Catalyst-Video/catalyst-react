@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 // components
 import {
   HeaderComponent,
@@ -8,7 +8,11 @@ import {
 // utils
 import VCDataStream from './stream_class';
 import { ResizeWrapper } from './utils/ui_utils';
-import { getBrowserName, setThemeColor } from './utils/general_utils';
+import {
+  getBrowserName,
+  sendToAllDataChannels,
+  setThemeColor,
+} from './utils/general_utils';
 import {
   handleMute,
   handlePauseVideo,
@@ -96,6 +100,7 @@ const VideoChat = ({
   );
   const [localVideoText, setLocalVideoText] = useState('No webcam input');
   const [VCData, setVCData] = useState<VideoChatData>();
+  const [callStarted, setCallStarted] = useState(false);
 
   useEffect(() => {
     var ua: string = navigator.userAgent || navigator.vendor;
@@ -137,6 +142,35 @@ const VideoChat = ({
     setThemeColor(themeColor ?? 'blue');
   }, [themeColor]);
 
+  // useLayoutEffect(() => {
+  //   if (VCData) {
+  //     sendToAllDataChannels(`mut:${audioEnabled}`, VCData.dataChannel);
+  //     sendToAllDataChannels(`vid:${videoEnabled}`, VCData.dataChannel);
+  //   }
+  // }, [VCData?]);
+
+  useEffect(() => {
+    if (VCData && callStarted) {
+      if (onStartCall) onStartCall();
+      if (!audioEnabled) {
+        if (VCData.localAudio && !defaults?.audioOn) {
+          // sendToAllDataChannels(`mut:${audioEnabled}`, VCData.dataChannel);
+          VCData.localAudio.enabled = false;
+        }
+      }
+      if (!videoEnabled) {
+        if (VCData.localVideo && !defaults?.videoOn) {
+          // sendToAllDataChannels(`vid:${videoEnabled}`, VCData.dataChannel);
+          VCData.localStream
+            ?.getVideoTracks()
+            .forEach((track: MediaStreamTrack) => {
+              track.enabled = false;
+            });
+        }
+      }
+    }
+  }, [callStarted]);
+
   const incrementUnseenChats = () => {
     setUnseenChats(unseenChats => unseenChats + 1);
     console.log(unseenChats);
@@ -149,10 +183,10 @@ const VideoChat = ({
       setCaptionsText,
       setLocalVideoText,
       incrementUnseenChats,
+      setCallStarted,
       cstmServerAddress,
       cstmSnackbarMsg,
       picInPic,
-      onStartCall,
       onAddPeer,
       onRemovePeer,
       showBorderColors,
