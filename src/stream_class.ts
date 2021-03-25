@@ -513,18 +513,16 @@ export default class VCDataStream implements VideoChatData {
       (document.getElementById('join-sound') as HTMLAudioElement)?.play();
       var vidDiv = document.createElement('div');
       vidDiv.setAttribute('id', 'remote-div');
+      vidDiv.setAttribute('uuid', uuid);
 
       var vidNode = document.createElement('video');
       vidNode.setAttribute('autoplay', '');
       vidNode.setAttribute('playsinline', '');
       vidNode.setAttribute('id', 'remote-video');
       vidNode.setAttribute('className', 'RemoteVideo');
-      vidNode.setAttribute('uuid', uuid);
+      vidNode.setAttribute('vid-uuid', uuid);
 
-      var muteNode = createMuteNode(
-        uuid
-        // e.streams.slice(-1)[0].getAudioTracks()[0]
-      );
+      var muteNode = createMuteNode(uuid);
       var pauseNode = createPauseNode(uuid);
       vidDiv.appendChild(muteNode);
       vidDiv.appendChild(pauseNode);
@@ -540,31 +538,6 @@ export default class VCDataStream implements VideoChatData {
       if (this.remoteVideoWrapper !== null) {
         vidNode.srcObject = e.streams.slice(-1)[0];
 
-        // vidNode.srcObject.getAudioTracks().forEach(track => {
-        // if (e.track?.kind === 'audio') {
-        //   e.track.onmute = () => {
-        //     setMutedIndicator(uuid, true);
-        //     console.log('mute');
-        //   };
-
-        //   e.track.onunmute = () => {
-        //     setMutedIndicator(uuid, false);
-        //     console.log('unmute');
-        //   };
-        // }
-
-        // });
-
-        // e.streams[0].getAudioTracks()[0].onmute = () => {
-        //   setMutedIndicator(uuid, true);
-        //   console.log('mute');
-        // };
-
-        //  e.streams[0].getAudioTracks()[0].onunmute = () => {
-        //   setMutedIndicator(uuid, false);
-        //   console.log('unmute');
-        // };
-
         if (this.picInPic !== 'disabled') {
           vidNode.addEventListener(this.picInPic, () => {
             handlePictureInPicture(this, vidNode);
@@ -574,7 +547,7 @@ export default class VCDataStream implements VideoChatData {
         if (this.showDotColors) {
           var indicatorNode = document.createElement('div');
           indicatorNode.setAttribute('id', 'indicator');
-          indicatorNode.setAttribute('indicatoruuid', uuid);
+          indicatorNode.setAttribute('indicator-uuid', uuid);
           vidDiv.appendChild(indicatorNode);
         }
 

@@ -115,7 +115,7 @@ body .ct-body {
 i#remote-muted {
 font-family: sans-serif;
 color: var(--themeColor);
-/* background: red; */
+animation: show 0.4s ease; 
 min-height: 5px;
 min-width: 5px;
 font-size: medium;
@@ -131,7 +131,7 @@ display: none;
 i#remote-paused {
 font-family: sans-serif;
 color: var(--themeColor);
-/* background: red; */
+animation: show 0.4s ease; 
 min-height: 5px;
 min-width: 5px;
 font-size: medium;

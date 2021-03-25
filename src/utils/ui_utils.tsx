@@ -170,7 +170,7 @@ export function setStreamColor(
   if (showBorderColors) {
     const hue = uuidToHue(uuid, VCData);
     (document.querySelectorAll(
-      `[uuid="${uuid}"]`
+      `[vid-uuid="${uuid}"]`
     )[0] as HTMLVideoElement).style.border = `3px solid ${hueToColor(
       hue.toString()
     )}`;
@@ -178,7 +178,7 @@ export function setStreamColor(
   if (showDotColors) {
     const hue = uuidToHue(uuid, VCData);
     (document.querySelectorAll(
-      `[indicatoruuid="${uuid}"]`
+      `[indicator-uuid="${uuid}"]`
     )[0] as HTMLDivElement).style.background = hueToColor(hue.toString());
   }
 }

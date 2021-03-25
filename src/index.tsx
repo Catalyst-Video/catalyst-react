@@ -141,13 +141,6 @@ const VideoChat = ({
     setThemeColor(themeColor ?? 'blue');
   }, [themeColor]);
 
-  // useLayoutEffect(() => {
-  //   if (VCData) {
-  //     sendToAllDataChannels(`mut:${audioEnabled}`, VCData.dataChannel);
-  //     sendToAllDataChannels(`vid:${videoEnabled}`, VCData.dataChannel);
-  //   }
-  // }, [VCData?]);
-
   useEffect(() => {
     if (VCData && VCData?.startedCall) {
       if (onStartCall) onStartCall();
@@ -169,6 +162,17 @@ const VideoChat = ({
       }
     }
   }, [VCData?.startedCall]);
+
+  // window.onload = () => {
+  //   if (VCData && VCData?.dataChannel) {
+  //     if (!audioEnabled) {
+  //       sendToAllDataChannels(`mut:true`, VCData.dataChannel);
+  //     }
+  //     if (!videoEnabled) {
+  //       sendToAllDataChannels(`vid:true`, VCData.dataChannel);
+  //     }
+  //   }
+  // };
 
   const incrementUnseenChats = () => {
     setUnseenChats(unseenChats => unseenChats + 1);
@@ -194,12 +198,6 @@ const VideoChat = ({
     );
     setVCData(VCD);
     VCD?.requestMediaStream();
-    // if (!defaults?.audioOn) {
-    //   handleMute(audioEnabled, setAudio, VCD);
-    // }
-    // if (!defaults?.videoOn) {
-    //   handlePauseVideo(videoEnabled, setVideo, VCD, setLocalVideoText);
-    // }
   }, [sessionKey, uniqueAppId, cstmServerAddress, cstmSnackbarMsg, picInPic]);
 
   if (browserSupported) {
