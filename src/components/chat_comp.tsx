@@ -3,6 +3,7 @@ import Sidebar from 'react-sidebar';
 import Draggable from 'react-draggable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { ResizeWrapper } from '../utils/ui_utils';
 
 const chatStyles = {
   root: {

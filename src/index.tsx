@@ -147,7 +147,7 @@ const VideoChat = ({
     if (VCData && VCData?.startedCall) {
       if (onStartCall) onStartCall();
       if (!audioEnabled && VCData.localAudio) {
-        // sendToAllDataChannels(`mut:${audioEnabled}`, VCData.dataChannel);
+        // sendToAllDataChannels(`mut:true`, VCData.dataChannel);
         VCData.localAudio.enabled = false;
       }
       if (!videoEnabled && VCData.localVideo) {
@@ -161,27 +161,28 @@ const VideoChat = ({
     }
   }, [VCData?.startedCall]);
 
-  // useEffect(() => {
-
-  //     if (
-  //       VCData &&
-  //       VCData?.dataChannel
-
-  //     ) {
-  //       if (!audioEnabled) {
-
-  //         sendToAllDataChannels(`mut:true`, VCData.dataChannel);
-  //       }
-  //       if (!videoEnabled) {
-  //         sendToAllDataChannels(`vid:true`, VCData.dataChannel);
-  //       }
-  //     }
-  // }, [VCData?.peerConnections.size]);
+  useEffect(() => {
+    setTimeout(() => {
+      if (VCData && VCData?.dataChannel) {
+        if (!audioEnabled) {
+          sendToAllDataChannels(`mut:true`, VCData.dataChannel);
+        }
+        if (!videoEnabled) {
+          sendToAllDataChannels(`vid:true`, VCData.dataChannel);
+        }
+      }
+    }, 3200);
+  }, [VCData?.peerConnections.size]);
 
   const incrementUnseenChats = () => {
     setUnseenChats(unseenChats => unseenChats + 1);
     console.log(unseenChats);
   };
+
+  useEffect(() => {
+    ResizeWrapper();
+    setUnseenChats(0);
+  }, [showChat]);
 
   useEffect(() => {
     const VCD = new VCDataStream(
@@ -308,7 +309,6 @@ const VideoChat = ({
                   } ct-hover-btn ct-tooltip ct-not-selectable`}
                   onClick={() => {
                     setShowChat(!showChat);
-                    setUnseenChats(0);
                   }}
                 >
                   <span>{showChat ? 'Hide Chat' : 'Show Chat'}</span>
