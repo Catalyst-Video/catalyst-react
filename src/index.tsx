@@ -62,6 +62,7 @@ const VideoChat = ({
   onAddPeer,
   onRemovePeer,
   onEndCall,
+  handleArbitraryData,
   cstmSnackbarMsg,
   cstmOptionBtns,
   themeColor,
@@ -78,6 +79,7 @@ const VideoChat = ({
   onAddPeer?: Function;
   onRemovePeer?: Function;
   onEndCall?: Function;
+  handleArbitraryData?: Function;
   cstmSnackbarMsg?: HTMLElement | Element | string;
   cstmOptionBtns?: Element[];
   themeColor?: string;
@@ -144,35 +146,37 @@ const VideoChat = ({
   useEffect(() => {
     if (VCData && VCData?.startedCall) {
       if (onStartCall) onStartCall();
-      if (!audioEnabled) {
-        if (VCData.localAudio && !defaults?.audioOn) {
-          // sendToAllDataChannels(`mut:${audioEnabled}`, VCData.dataChannel);
-          VCData.localAudio.enabled = false;
-        }
+      if (!audioEnabled && VCData.localAudio) {
+        // sendToAllDataChannels(`mut:${audioEnabled}`, VCData.dataChannel);
+        VCData.localAudio.enabled = false;
       }
-      if (!videoEnabled) {
-        if (VCData.localVideo && !defaults?.videoOn) {
-          // sendToAllDataChannels(`vid:${videoEnabled}`, VCData.dataChannel);
-          VCData.localStream
-            ?.getVideoTracks()
-            .forEach((track: MediaStreamTrack) => {
-              track.enabled = false;
-            });
-        }
+      if (!videoEnabled && VCData.localVideo) {
+        // sendToAllDataChannels(`vid:${videoEnabled}`, VCData.dataChannel);
+        VCData.localStream
+          ?.getVideoTracks()
+          .forEach((track: MediaStreamTrack) => {
+            track.enabled = false;
+          });
       }
     }
   }, [VCData?.startedCall]);
 
-  // window.onload = () => {
-  //   if (VCData && VCData?.dataChannel) {
-  //     if (!audioEnabled) {
-  //       sendToAllDataChannels(`mut:true`, VCData.dataChannel);
+  // useEffect(() => {
+
+  //     if (
+  //       VCData &&
+  //       VCData?.dataChannel
+
+  //     ) {
+  //       if (!audioEnabled) {
+
+  //         sendToAllDataChannels(`mut:true`, VCData.dataChannel);
+  //       }
+  //       if (!videoEnabled) {
+  //         sendToAllDataChannels(`vid:true`, VCData.dataChannel);
+  //       }
   //     }
-  //     if (!videoEnabled) {
-  //       sendToAllDataChannels(`vid:true`, VCData.dataChannel);
-  //     }
-  //   }
-  // };
+  // }, [VCData?.peerConnections.size]);
 
   const incrementUnseenChats = () => {
     setUnseenChats(unseenChats => unseenChats + 1);
@@ -193,8 +197,7 @@ const VideoChat = ({
       onRemovePeer,
       showBorderColors,
       showDotColors,
-      defaults?.audioOn,
-      defaults?.videoOn
+      handleArbitraryData
     );
     setVCData(VCD);
     VCD?.requestMediaStream();

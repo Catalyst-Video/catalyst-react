@@ -50,8 +50,7 @@ export default class VCDataStream implements VideoChatData {
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;
   onAddPeer: Function | undefined;
   onRemovePeer: Function | undefined;
-  startAudioPaused: boolean;
-  startVideoPaused: boolean;
+  handleArbitraryData: Function | undefined;
   startedCall: boolean;
 
   /*  TODO: Captions
@@ -73,8 +72,7 @@ export default class VCDataStream implements VideoChatData {
     onRemovePeer?: Function,
     showBorderColors?: boolean,
     showDotColors?: boolean,
-    startAudioPaused?: boolean,
-    startVideoPaused?: boolean
+    handleArbitraryData?: Function
   ) {
     this.roomName = name;
     this.sessionId = uniqueAppId + name;
@@ -89,8 +87,6 @@ export default class VCDataStream implements VideoChatData {
       'local-video'
     ) as HTMLMediaElement;
     this.peerConnections = new Map();
-    this.localAudio = undefined;
-    this.localStream = undefined;
     this.picInPic = picInPic ?? 'dblclick';
     this.seenWelcomeSnackbar = false;
     this.peerColors = new Map();
@@ -101,10 +97,9 @@ export default class VCDataStream implements VideoChatData {
     this.cstmSnackbarMsg = cstMsg;
     this.showBorderColors = showBorderColors ?? false;
     this.showDotColors = showDotColors ?? false;
-    this.onAddPeer = onAddPeer ?? undefined;
-    this.onRemovePeer = onRemovePeer ?? undefined;
-    this.startAudioPaused = startAudioPaused ?? false;
-    this.startVideoPaused = startVideoPaused ?? false;
+    this.onAddPeer = onAddPeer;
+    this.onRemovePeer = onRemovePeer;
+    this.handleArbitraryData = handleArbitraryData;
     this.startedCall = false;
     /*  TODO: Captions
     this.sendingCaptions = false;
@@ -220,15 +215,6 @@ export default class VCDataStream implements VideoChatData {
         }
       }
     });
-
-    /* POST MESSAGING - forward post messaging from one parent to the other */
-    window.onmessage = (e: MessageEvent) => {
-      try {
-        if (JSON.parse(e.data).type === 'arbitraryData') {
-          sendToAllDataChannels(e.data, this.dataChannel);
-        }
-      } catch (e) {}
-    };
   };
 
   call = (uuid: string, room: string) => {
@@ -342,9 +328,25 @@ export default class VCDataStream implements VideoChatData {
         } else {
           // Arbitrary data handling
           logger('Received arbitrary data: ' + receivedData.toString());
-          window.top.postMessage(receivedData, '*');
+          if (this.handleArbitraryData) {
+            this.handleArbitraryData(receivedData.toString());
+          } else {
+            window.top.postMessage(receivedData, '*');
+          }
         }
       };
+
+      /* POST MESSAGING - forward post messaging from one parent to the other */
+      window.onmessage = (e: MessageEvent) => {
+        try {
+          if (JSON.parse(e.data).type === 'arbitraryData') {
+            sendToAllDataChannels(e.data, this.dataChannel);
+          }
+        } catch (e) {
+          logger(e);
+        }
+      };
+
       /* 	Called when dataChannel is successfully opened - Set up callbacks for the connection generating iceCandidates or receiving the remote media stream. Wrapping callback functions to pass in the peer uuids. */
       this.dataChannel.get(uuid)!.onopen = (e: Event) => {
         logger('dataChannel opened');

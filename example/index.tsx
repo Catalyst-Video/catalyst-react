@@ -13,8 +13,8 @@ const App = () => {
         sessionKey="testingGround"
         uniqueAppId="demo"
         defaults={{
-          audioOn: false,
-          videoOn: false,
+          // audioOn: false,
+          // videoOn: false,
           // showCaptionsArea: false,
           showChatArea: false,
         }}

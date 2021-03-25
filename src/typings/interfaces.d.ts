@@ -22,8 +22,7 @@ export interface VideoChatData {
   cstmSnackbarMsg: string | HTMLElement | Element | undefined;
   onAddPeer: Function | undefined;
   onRemovePeer: Function | undefined;
-  startAudioPaused: boolean;
-  startVideoPaused: boolean;
+  handleArbitraryData: Function | undefined;
   startedCall: boolean;
 
   /* TODO: Captions
