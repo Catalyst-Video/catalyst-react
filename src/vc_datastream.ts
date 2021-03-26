@@ -275,7 +275,7 @@ export default class VCDataStream implements VideoChatData {
       /* POST MESSAGING - handle arbitrary data in iFrames by forwarding post messaging from one parent to the other */
       window.onmessage = (e: MessageEvent) => {
         try {
-          if (JSON.parse(e.data).type === 'arbitraryData')
+          if (JSON.parse(e.data).type === 'arbitrary_data')
             sendToAllDataChannels(e.data, this.dataChannel);
         } catch (e) {
           logger(e);
