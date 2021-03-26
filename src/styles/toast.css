@@ -104,7 +104,7 @@
   background: #e74c3c;
 }
 .Toastify__toast-body {
-  margin: auto 0;
+  margin: auto;
   padding: 6px;
   text-align: center;
   justify-content: space-between;

@@ -16,7 +16,6 @@ export interface VideoChatData {
   peerColors: Map<string, number>;
   localColor: string;
   incrementUnseenChats: Function;
-  setCaptionsText: Function;
   onAddPeer: Function | undefined;
   onRemovePeer: Function | undefined;
   handleArbitraryData: Function | undefined;

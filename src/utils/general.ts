@@ -83,9 +83,3 @@ export function sendToAllDataChannels(
     }
   );
 }
-
-export function chatRoomFullAlert(): void {
-  alert(
-    "Chat room is full. Check to ensure you don't have multiple tabs open, or try with a new room link."
-  );
-}

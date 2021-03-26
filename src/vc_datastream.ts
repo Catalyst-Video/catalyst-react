@@ -4,6 +4,7 @@ import {
   closeAllToasts,
   createMuteNode,
   createPauseNode,
+  displayMessage,
   displayMsg,
   displayWebcamErrorMessage,
   handlereceiveMessage,
@@ -38,7 +39,6 @@ export default class VCDataStream implements VideoChatData {
   peerColors: Map<string, number>;
   localColor: string;
   incrementUnseenChats: Function;
-  setCaptionsText: Function;
   onAddPeer: Function | undefined;
   onRemovePeer: Function | undefined;
   handleArbitraryData: Function | undefined;
@@ -47,7 +47,6 @@ export default class VCDataStream implements VideoChatData {
   constructor(
     sessionKey: string,
     uniqueAppId: string,
-    setCapText: Function,
     setVidText: Function,
     incrementUnseenChats: Function,
     cstmServerAddress?: string,
@@ -73,7 +72,6 @@ export default class VCDataStream implements VideoChatData {
     this.picInPic = picInPic ?? 'dblclick';
     this.peerColors = new Map();
     this.localColor = 'var(--themeColor)';
-    this.setCaptionsText = setCapText;
     this.incrementUnseenChats = incrementUnseenChats;
     this.setLocalVideoText = setVidText;
     this.showBorderColors = showBorderColors ?? false;
@@ -99,9 +97,6 @@ export default class VCDataStream implements VideoChatData {
       .catch(error => {
         logger(error);
         displayWebcamErrorMessage(this.connected);
-        this.setCaptionsText(
-          'Failed to activate your webcam. Check your webcam/privacy settings.'
-        );
         logger(
           'Failed to get local webcam video, check webcam privacy settings'
         );
@@ -140,9 +135,9 @@ export default class VCDataStream implements VideoChatData {
     });
     // Add listeners to the websocket
     this.socket.on('leave', this.onPeerLeave);
-    this.socket.on('full', chatRoomFull);
     this.socket.on('offer', this.onOffer);
     this.socket.on('willInitiateCall', this.call);
+    this.socket.on('full', logger('chatRoomFull'));
     // Set up listeners on the socket
     this.socket.on('candidate', this.onCandidate);
     this.socket.on('answer', this.onAnswer);
@@ -203,8 +198,6 @@ export default class VCDataStream implements VideoChatData {
     this.peerConnections.delete(uuid);
     this.dataChannel.delete(uuid);
     if (this.onRemovePeer) this.onRemovePeer();
-    if (this.peerConnections.size === 0)
-      this.setCaptionsText('Room ready. Waiting for others to join...');
   };
 
   establishConnection = (correctUuid: string, callback: Function) => {
@@ -299,10 +292,7 @@ export default class VCDataStream implements VideoChatData {
         this.onAddStream(e, uuid);
 
         if (!this.startedCall) this.startedCall = true;
-        this.setCaptionsText('Session connected successfully');
-        setTimeout(() => {
-          this.setCaptionsText('HIDDEN CAPTIONS');
-        }, 5000);
+        displayMessage('Session connected successfully', 500);
       };
       // Called when there is a change in connection state
       this.peerConnections.get(uuid)!.oniceconnectionstatechange = (
@@ -353,12 +343,8 @@ export default class VCDataStream implements VideoChatData {
   };
   // When receiving a candidate over the socket, turn it back into a real RTCIceCandidate and add it to the peerConnection.
   onCandidate = (candidate: RTCIceCandidate, uuid: string) => {
-    if (this.peerConnections.size === 0) {
-      this.setCaptionsText('Found other user. Connecting...');
-      setTimeout(() => {
-        this.setCaptionsText('HIDDEN CAPTIONS');
-      }, 5000);
-    }
+    if (this.peerConnections.size === 0)
+      displayMessage('Found other user. Connecting...');
     var rtcCandidate: RTCIceCandidate = new RTCIceCandidate(
       JSON.parse(candidate.toString())
     );
@@ -493,11 +479,7 @@ export default class VCDataStream implements VideoChatData {
         if (this.onAddPeer) this.onAddPeer();
         closeAllToasts();
         this.connected.set(uuid, true);
-        this.setCaptionsText('HIDDEN CAPTIONS');
       }
     }
   };
-}
-function chatRoomFull(arg0: string, chatRoomFull: any) {
-  throw new Error('Function not implemented.');
 }

@@ -42,9 +42,9 @@ export function setThemeColor(color: string): void {
 }
 
 export function displayWelcomeMessage(
-  cstmSnackbarMsg: string | HTMLElement | Element | undefined,
   sessionKey: string,
-  connected: Map<string, boolean>
+  connected: Map<string, boolean>,
+  cstmSnackbarMsg?: string | HTMLElement | Element | undefined
 ): void {
   if (!isConnected(connected)) {
     toast(
@@ -54,9 +54,10 @@ export function displayWelcomeMessage(
             cstmSnackbarMsg
           ) : (
             <>
-              <span>Share your session key </span>
+              <span>
+                Room ready! Waiting for others to join with session key{' '}
+              </span>
               <strong>{sessionKey}</strong>
-              <span> with whoever wants to join</span>
             </>
           )}
         </div>
@@ -75,7 +76,7 @@ export function displayWebcamErrorMessage(
     toast(
       () => (
         <div className="text-center justify-between">
-          Please press allow to enable webcam & audio access
+          Failed to access video, please check webcam privacy settings
           <button
             className="snack-btn"
             onClick={() => {
@@ -95,6 +96,13 @@ export function displayWebcamErrorMessage(
       }
     );
   }
+}
+
+export function displayMessage(msg: string, displayLength?: number): void {
+  toast(() => <div className="text-center justify-between">{msg}</div>, {
+    toastId: 'info_msg',
+    autoClose: displayLength ? displayLength : 5000,
+  });
 }
 
 export function closeAllToasts(): void {
