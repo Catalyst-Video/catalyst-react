@@ -23,10 +23,10 @@ module.exports = {
         targets: [{ src: 'src/assets/sound', dest: 'dist/assets' }],
         copyOnce: true,
         verbose: true,
-      }),
-      strip({
-        labels: ['unittest'],
       })
+      // strip({
+      //   labels: ['unittest'],
+      // })
     );
     return config;
   },

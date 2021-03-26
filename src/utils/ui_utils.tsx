@@ -213,28 +213,6 @@ export function createPauseNode(uuid: string): HTMLElement {
   return pauseNode;
 }
 
-// export function toggleMutedIndicator(uuid: string): void {
-//   var mutedDisplay = document.querySelectorAll(
-//     `[muted-uuid="${uuid}"]`
-//   )[0] as HTMLElement;
-//   if (mutedDisplay.style.display === 'none') {
-//     mutedDisplay.style.display = 'block';
-//   } else {
-//     mutedDisplay.style.display = 'none';
-//   }
-// }
-
-// export function setPausedIndicator(uuid: string, display: boolean): void {
-//   var pausedDisplay = document.querySelectorAll(
-//     `[paused-uuid="${uuid}"]`
-//   )[0] as HTMLElement;
-//   if (display) {
-//     pausedDisplay.style.display = 'block';
-//   } else {
-//     pausedDisplay.style.display = 'none';
-//   }
-// }
-
 export function setMutedIndicator(uuid: string, display: string): void {
   var mutedDisplay = document.querySelectorAll(
     `[muted-uuid="${uuid}"]`
