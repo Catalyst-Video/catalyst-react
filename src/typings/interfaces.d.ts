@@ -23,11 +23,6 @@ export interface VideoChatData {
   handleArbitraryData: Function | undefined;
   startedCall: boolean;
 
-  /* TODO: Captions
-  sendingCaptions: boolean;
-  receivingCaptions: boolean;
-  recognition: SpeechRecognition | undefined;*/
-
   requestMediaStream(e?: Event): void;
   onMediaStream(e: MediaStream): void;
   onMediaStream(e: MediaStream, uuid: string): void;
