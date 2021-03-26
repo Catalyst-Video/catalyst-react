@@ -1,25 +1,21 @@
-/* VIDEO CHAT DATA: track video/audio streams, peer connections, handle webrtc */
+/* VIDEO CHAT DATASTREAM: track video/audio streams, peer connections, handle webrtc */
 import io from 'socket.io-client';
 import {
-  chatRoomFull,
-  handlereceiveMessage,
-  sendToAllDataChannels,
-  addMessageToScreen,
-  logger,
-} from './utils/general_utils';
-import {
-  closeAllMessages,
+  closeAllToasts,
   createMuteNode,
   createPauseNode,
-  displayVideoErrorMessage,
+  displayMsg,
+  displayWebcamErrorMessage,
+  handlereceiveMessage,
   hueToColor,
   ResizeWrapper,
   setMutedIndicator,
   setPausedIndicator,
   setStreamColor,
   uuidToHue,
-} from './utils/ui_utils';
-import { handlePictureInPicture } from './utils/stream_utils';
+} from './utils/ui';
+import { handlePictureInPicture } from './utils/stream';
+import { logger, sendToAllDataChannels } from './utils/general';
 import { TwilioToken, VideoChatData } from './typings/interfaces';
 
 const DEFAULT_SERVER_ADDRESS = 'https://server.catalyst.chat/';
@@ -102,7 +98,7 @@ export default class VCDataStream implements VideoChatData {
       })
       .catch(error => {
         logger(error);
-        displayVideoErrorMessage(this.connected);
+        displayWebcamErrorMessage(this.connected);
         this.setCaptionsText(
           'Failed to activate your webcam. Check your webcam/privacy settings.'
         );
@@ -164,7 +160,7 @@ export default class VCDataStream implements VideoChatData {
           // Prevent cross site scripting
           msg = msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
           sendToAllDataChannels('mes:' + msg, this.dataChannel);
-          addMessageToScreen(msg, this.localColor, true);
+          displayMsg(msg, this.localColor, true);
           document.getElementById('chat-end')?.scrollIntoView({
             behavior: 'smooth',
             block: 'nearest',
@@ -244,27 +240,27 @@ export default class VCDataStream implements VideoChatData {
       // Handle different dataChannel types: First 4 chars represent data type
       this.dataChannel.get(uuid)!.onmessage = (e: MessageEvent) => {
         const dataId = e.data.substring(0, 4);
-        const mes = e.data.slice(4);
+        const msg = e.data.slice(4);
         switch (dataId) {
           case 'mes:':
             if (this.showBorderColors || this.showDotColors)
               handlereceiveMessage(
-                mes,
+                msg,
                 hueToColor(this.peerColors.get(uuid)?.toString() ?? '')
               );
-            else handlereceiveMessage(mes);
+            else handlereceiveMessage(msg);
             this.incrementUnseenChats();
             break;
           case 'mut:':
-            setMutedIndicator(uuid, mes);
+            setMutedIndicator(uuid, msg);
             break;
           case 'vid:':
-            setPausedIndicator(uuid, mes);
+            setPausedIndicator(uuid, msg);
             break;
           case 'clr:' && (this.showBorderColors || this.showDotColors):
             setStreamColor(
               uuid,
-              mes,
+              msg,
               this.showDotColors,
               this.showBorderColors
             );
@@ -276,7 +272,7 @@ export default class VCDataStream implements VideoChatData {
         }
       };
 
-      /* POST MESSAGING - forward post messaging from one parent to the other */
+      /* POST MESSAGING - handle arbitrary data in iFrames by forwarding post messaging from one parent to the other */
       window.onmessage = (e: MessageEvent) => {
         try {
           if (JSON.parse(e.data).type === 'arbitraryData')
@@ -286,7 +282,7 @@ export default class VCDataStream implements VideoChatData {
         }
       };
 
-      /* 	Called when dataChannel is successfully opened - Set up callbacks for the connection generating iceCandidates or receiving the remote media stream. Wrapping callback functions to pass in the peer uuids. */
+      /* Called when dataChannel is successfully opened - Set up callbacks for the connection generating iceCandidates or receiving the remote media stream. Wrapping callback functions to pass in the peer uuids. */
       this.dataChannel.get(uuid)!.onopen = () => {
         logger('dataChannel opened');
         if (this.showBorderColors || this.showDotColors)
@@ -495,10 +491,13 @@ export default class VCDataStream implements VideoChatData {
         ResizeWrapper();
 
         if (this.onAddPeer) this.onAddPeer();
-        closeAllMessages();
+        closeAllToasts();
         this.connected.set(uuid, true);
         this.setCaptionsText('HIDDEN CAPTIONS');
       }
     }
   };
+}
+function chatRoomFull(arg0: string, chatRoomFull: any) {
+  throw new Error('Function not implemented.');
 }

@@ -1,7 +1,45 @@
 import { toast } from 'react-toastify';
 import React from 'react';
 import { VideoChatData } from '../typings/interfaces';
-import { isConnected } from './general_utils';
+import { isConnected } from './general';
+
+export function setThemeColor(color: string): void {
+  var themeColor: string;
+  switch (color) {
+    case 'pink':
+      themeColor = '#D53F8C';
+      break;
+    case 'red':
+      themeColor = '#E53E3E';
+      break;
+    case 'orange':
+      themeColor = '#DD6B20';
+      break;
+    case 'yellow':
+      themeColor = '#FFCE26';
+      break;
+    case 'green':
+      themeColor = '#38A169';
+      break;
+    case 'teal':
+      themeColor = '#319795';
+      break;
+    case 'blue':
+      themeColor = '#3f83f8';
+      break;
+    case 'indigo':
+      themeColor = '#5A67D8';
+      break;
+    case 'purple':
+      themeColor = '#805AD5';
+      break;
+    default:
+      themeColor = color;
+  }
+  var style = document.createElement('style');
+  document.head.appendChild(style);
+  style.sheet?.insertRule(`:root { --themeColor: ${themeColor}}`);
+}
 
 export function displayWelcomeMessage(
   cstmSnackbarMsg: string | HTMLElement | Element | undefined,
@@ -30,7 +68,7 @@ export function displayWelcomeMessage(
   }
 }
 
-export function displayVideoErrorMessage(
+export function displayWebcamErrorMessage(
   connected: Map<string, boolean>
 ): void {
   if (!isConnected(connected)) {
@@ -59,7 +97,7 @@ export function displayVideoErrorMessage(
   }
 }
 
-export function closeAllMessages(): void {
+export function closeAllToasts(): void {
   toast.dismiss();
 }
 
@@ -95,7 +133,6 @@ export function ResizeWrapper(): void {
     Height = Wrapper.offsetHeight - Margin * 2;
   }
   let RemoteVideos = document.querySelectorAll('#remote-div');
-  // console.log(RemoteVideos);
   let max = 0;
 
   // loop TODO: needs to be optimized
@@ -122,6 +159,39 @@ export function setWidth(width: number, margin: number): void {
     RemoteVideos[s].style.margin = margin + 'px';
     RemoteVideos[s].style.height = width * 0.75 + 'px';
   }
+}
+
+export function handlereceiveMessage(msg: string, color?: string): void {
+  displayMsg(msg, color ? color : 'var(--themeColor)', false);
+  document
+    .getElementById('chat-end')
+    ?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+}
+
+export function displayMsg(
+  msg: string,
+  border: string,
+  isOwnMessage: boolean
+): void {
+  if (msg.length > 0)
+    if (isOwnMessage)
+      document
+        .querySelector('.chat-messages')
+        ?.insertAdjacentHTML(
+          'beforeend',
+          `<div class="message-item customer cssanimation fadeInBottom"><div class="message-bloc" style="border: 3px solid ${border}"><div class="message">` +
+            msg +
+            '</div></div></div>'
+        );
+    else
+      document
+        .querySelector('.chat-messages')
+        ?.insertAdjacentHTML(
+          'beforeend',
+          `<div class="message-item moderator cssanimation fadeInBottom"><div class="message-bloc" style="border: 3px solid ${border}"><div class="message">` +
+            msg +
+            '</div></div></div>'
+        );
 }
 
 export function uuidToHue(uuid: string, VC: VideoChatData): number {

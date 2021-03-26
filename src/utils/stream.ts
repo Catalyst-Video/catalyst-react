@@ -1,7 +1,6 @@
-import { toast } from 'react-toastify';
+import { isConnected, logger, sendToAllDataChannels } from './general';
+import { displayWebcamErrorMessage } from './ui';
 import { VideoChatData } from '../typings/interfaces';
-import { isConnected, logger, sendToAllDataChannels } from './general_utils';
-import React from 'react';
 
 export function handleMute(
   audioEnabled: boolean,
@@ -11,11 +10,8 @@ export function handleMute(
   setAudio(!audioEnabled);
   if (VC.localAudio) {
     sendToAllDataChannels(`mut:${audioEnabled}`, VC.dataChannel);
-    if (audioEnabled) {
-      VC.localAudio.enabled = false;
-    } else {
-      VC.localAudio.enabled = true;
-    }
+    if (audioEnabled) VC.localAudio.enabled = false;
+    else VC.localAudio.enabled = true;
   }
 }
 
@@ -30,8 +26,8 @@ export function handlePauseVideo(
     sendToAllDataChannels(`vid:${videoEnabled}`, VC.dataChannel);
     if (videoEnabled) {
       VC.localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
-        // track.stop();
         track.enabled = false;
+        // TODO: experiment with track.stop(); to remove recording indicator on PC
       });
       setLocalVideoText('Video Paused');
     } else {
@@ -43,7 +39,7 @@ export function handlePauseVideo(
   }
 }
 
-// Swap current video track with passed in stream
+// Swap current video track with passed in stream by getting current track, swapping video for each peer connection
 export function handleSwitchStreamHelper(
   stream: any,
   videoEnabled: boolean,
@@ -51,17 +47,11 @@ export function handleSwitchStreamHelper(
   VC: VideoChatData,
   setLocalVideoText: Function
 ): void {
-  // Get current video track
   let videoTrack = stream.getVideoTracks()[0];
   let audioTrack = stream.getAudioTracks()[0];
-  // Add listen for if the current track swaps, swap back
-  videoTrack.onended = () => {
-    // TODO: swap();
-  };
-  // Swap video for every peer connection
+
   VC.connected.forEach(
     (value: boolean, key: string, map: Map<string, boolean>) => {
-      // check if connected before swapping video channel
       if (VC.connected.get(key)) {
         const sender = VC.peerConnections
           ?.get(key)
@@ -70,7 +60,6 @@ export function handleSwitchStreamHelper(
             return s.track.kind === videoTrack.kind;
           });
         if (sender) sender.replaceTrack(videoTrack);
-        // Replace audio track if sharing screen with audio
         if (stream.getAudioTracks()[0]) {
           logger('Audio track is' + audioTrack.toString());
           const sender2 = VC.peerConnections
@@ -88,25 +77,18 @@ export function handleSwitchStreamHelper(
       }
     }
   );
-  // Update local video stream
+  // Update local video stream, local video object, unpause video on swap
   VC.localStream = stream;
-  // Update local video object
   VC.localVideo.srcObject = stream;
-  // Unpause video on swap
-  if (!videoEnabled) {
+  if (!videoEnabled)
     handlePauseVideo(videoEnabled, setVideo, VC, setLocalVideoText);
-  }
 }
 
 export function handlePictureInPicture(
   VC: VideoChatData,
   video: HTMLVideoElement
 ): void {
-  if (
-    'pictureInPictureEnabled' in document ||
-    // @ts-ignore
-    VC.remoteVideoWrapper.lastChild.webkitSetPresentationMode
-  ) {
+  if ('pictureInPictureEnabled' in document) {
     if (video) {
       // @ts-ignore
       if (document && document.pictureInPictureElement && video) {
@@ -163,9 +145,8 @@ export function handleSharing(
       })
       .then((stream: MediaStream) => {
         setSharing(true);
-        if (stream.getAudioTracks()[0]) {
+        if (stream.getAudioTracks()[0])
           stream.addTrack(stream.getAudioTracks()[0]);
-        }
         logger(stream.toString());
         handleSwitchStreamHelper(
           stream,
@@ -178,30 +159,7 @@ export function handleSharing(
       })
       .catch((e: Event) => {
         // Request screen share, note: we can request to capture audio for screen sharing video content.
-        if (!isConnected(VC.connected)) {
-          toast(
-            () => (
-              <div className="text-center justify-between">
-                Please press allow to enable webcam & audio access
-                <button
-                  className="snack-btn"
-                  onClick={() => {
-                    window.open(
-                      'https://docs.catalyst.chat/docs-permissions',
-                      '_blank'
-                    );
-                  }}
-                >
-                  Help & Directions
-                </button>
-              </div>
-            ),
-            {
-              autoClose: false,
-              toastId: 'webcam/audio_error',
-            }
-          );
-        }
+        if (!isConnected(VC.connected)) displayWebcamErrorMessage(VC.connected);
         logger('Error sharing screen' + e);
       });
   } else {

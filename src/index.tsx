@@ -4,18 +4,14 @@ import {
   ChatComponent,
   IncompatibleComponent,
 } from './components/index';
-import VCDataStream from './stream_class';
-import { displayWelcomeMessage, ResizeWrapper } from './utils/ui_utils';
+import VCDataStream from './vc_datastream';
 import {
-  initialBrowserCheck,
-  sendToAllDataChannels,
+  displayWelcomeMessage,
+  ResizeWrapper,
   setThemeColor,
-} from './utils/general_utils';
-import {
-  handleMute,
-  handlePauseVideo,
-  handleSharing,
-} from './utils/stream_utils';
+} from './utils/ui';
+import { initialBrowserCheck, sendToAllDataChannels } from './utils/general';
+import { handleMute, handlePauseVideo, handleSharing } from './utils/stream';
 import {
   DefaultSettings,
   HiddenSettings,
