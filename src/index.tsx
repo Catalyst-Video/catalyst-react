@@ -10,6 +10,7 @@ import VCDataStream from './stream_class';
 import { displayWelcomeMessage, ResizeWrapper } from './utils/ui_utils';
 import {
   getBrowserName,
+  initialBrowserCheck,
   sendToAllDataChannels,
   setThemeColor,
 } from './utils/general_utils';
@@ -50,7 +51,6 @@ import './styles/video_grid.css';
 // packages
 import { ToastContainer } from 'react-toastify';
 import Draggable from 'react-draggable';
-import DetectRTC from 'detectrtc';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 
 const VideoChat = ({
@@ -94,52 +94,17 @@ const VideoChat = ({
   const [audioEnabled, setAudio] = useState<boolean>(defaults?.audioOn ?? true);
   const [videoEnabled, setVideo] = useState<boolean>(defaults?.videoOn ?? true);
   const [sharing, setSharing] = useState(false);
+  const [unseenChats, setUnseenChats] = useState(0);
+  const [seenWelcomeMessage, setSeenWelcomeMessage] = useState(false);
+  const [captionsText, setCaptionsText] = useState('HIDDEN CAPTIONS');
+  const [localVideoText, setLocalVideoText] = useState('No webcam input');
+  const [VC, setVCData] = useState<VideoChatData>();
   const [showChat, setShowChat] = useState<boolean>(
     defaults?.showChatArea ?? false
   );
-  const [unseenChats, setUnseenChats] = useState(0);
-  const [seenWelcomeMessage, setSeenWelcomeMessage] = useState(false);
-  const [captionsText, setCaptionsText] = useState(
-    'HIDDEN CAPTIONS'
-    // TODO: Captions defaults?.showCaptionsArea ? '' : 'HIDDEN CAPTIONS'
-  );
-  const [localVideoText, setLocalVideoText] = useState('No webcam input');
-  const [VC, setVCData] = useState<VideoChatData>();
 
   useEffect(() => {
-    var ua: string = navigator.userAgent || navigator.vendor;
-    if (
-      DetectRTC.isMobileDevice &&
-      (ua.indexOf('FBAN') > -1 ||
-        ua.indexOf('FBAV') > -1 ||
-        ua.indexOf('Instagram') > -1)
-    ) {
-      if (DetectRTC.osName === 'iOS') {
-        setBrowserSupported(false);
-      }
-    }
-    if (DetectRTC.isMobileDevice) {
-      if (DetectRTC.osName === 'iOS' && !DetectRTC.browser.isSafari) {
-        setBrowserSupported(false);
-      }
-    }
-    const isWebRTCSupported =
-      navigator.getUserMedia || window.RTCPeerConnection;
-    const browserName: string = getBrowserName();
-    if (!isWebRTCSupported || browserName === 'MSIE') {
-      setBrowserSupported(false);
-    }
-    navigator.mediaDevices.ondevicechange = () => window.location.reload();
-
-    // Load and Resize Event
-    window.addEventListener(
-      'load',
-      (e: Event) => {
-        ResizeWrapper();
-        window.onresize = ResizeWrapper;
-      },
-      false
-    );
+    initialBrowserCheck(setBrowserSupported);
   }, []);
 
   useEffect(() => {
@@ -147,14 +112,17 @@ const VideoChat = ({
   }, [themeColor]);
 
   useEffect(() => {
+    ResizeWrapper();
+    setUnseenChats(0);
+  }, [showChat]);
+
+  useEffect(() => {
     if (VC && VC?.startedCall) {
       if (onStartCall) onStartCall();
       if (!audioEnabled && VC.localAudio) {
-        // sendToAllDataChannels(`mut:true`, VC.dataChannel);
         VC.localAudio.enabled = false;
       }
       if (!videoEnabled && VC.localVideo) {
-        // sendToAllDataChannels(`vid:${videoEnabled}`, VC.dataChannel);
         VC.localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
           track.enabled = false;
         });
@@ -175,16 +143,6 @@ const VideoChat = ({
     }, 3200);
   }, [VC?.peerConnections.size]);
 
-  const incrementUnseenChats = () => {
-    setUnseenChats(unseenChats => unseenChats + 1);
-    console.log(unseenChats);
-  };
-
-  useEffect(() => {
-    ResizeWrapper();
-    setUnseenChats(0);
-  }, [showChat]);
-
   useEffect(() => {
     const VCData = new VCDataStream(
       sessionKey,
@@ -204,10 +162,16 @@ const VideoChat = ({
     VCData?.requestMediaStream();
     if (!seenWelcomeMessage) {
       displayWelcomeMessage(cstmSnackbarMsg, sessionKey, VCData.connected);
+      setSeenWelcomeMessage(true);
       if (VCData.peerConnections.size === 0)
         setCaptionsText('Room ready. Waiting for others to join...');
     }
   }, [sessionKey, uniqueAppId, cstmServerAddress, cstmSnackbarMsg, picInPic]);
+
+  const incrementUnseenChats = () => {
+    setUnseenChats(unseenChats => unseenChats + 1);
+    console.log(unseenChats);
+  };
 
   if (browserSupported) {
     return (
@@ -356,29 +320,6 @@ const VideoChat = ({
                   <FontAwesomeIcon icon={faShareSquare} />
                 </button>
               </div>
-
-              {/* TODO: Captions
-              
-              <div
-                className={`ct-btn-container ${hidden?.captions ? 'none' : ''}`}
-              >
-                <button
-                  className={`${
-                    captionsText === 'HIDDEN CAPTIONS' ? '' : 'ct-btn-on'
-                  } ct-hover-btn ct-tooltip ct-not-selectable`}
-                  onClick={() => {
-                    if (VC)
-                      handleRequestToggleCaptions(VC, setCaptionsText);
-                  }}
-                >
-                  <FontAwesomeIcon icon={faClosedCaptioning} />
-                  <span>
-                    {captionsText === 'HIDDEN CAPTIONS'
-                      ? 'HIDDEN CAPTIONS'
-                      : 'Hide HIDDEN CAPTIONS'}
-                  </span>
-                </button>
-              </div> */}
 
               {cstmOptionBtns?.map((component, idx) => (
                 <React.Fragment key={idx}>{component}</React.Fragment>

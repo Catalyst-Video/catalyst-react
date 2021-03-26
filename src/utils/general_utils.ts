@@ -1,7 +1,45 @@
+import DetectRTC from 'detectrtc';
+import { ResizeWrapper } from './ui_utils';
+
 export function logger(data: string): void {
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     console.log(data);
   }
+}
+
+export function initialBrowserCheck(setBrowserSupported: Function): void {
+  var ua: string = navigator.userAgent || navigator.vendor;
+  if (
+    DetectRTC.isMobileDevice &&
+    (ua.indexOf('FBAN') > -1 ||
+      ua.indexOf('FBAV') > -1 ||
+      ua.indexOf('Instagram') > -1)
+  ) {
+    if (DetectRTC.osName === 'iOS') {
+      setBrowserSupported(false);
+    }
+  }
+  if (DetectRTC.isMobileDevice) {
+    if (DetectRTC.osName === 'iOS' && !DetectRTC.browser.isSafari) {
+      setBrowserSupported(false);
+    }
+  }
+  const isWebRTCSupported = navigator.getUserMedia || window.RTCPeerConnection;
+  const browserName: string = getBrowserName();
+  if (!isWebRTCSupported || browserName === 'MSIE') {
+    setBrowserSupported(false);
+  }
+  navigator.mediaDevices.ondevicechange = () => window.location.reload();
+
+  // Load and Resize Event
+  window.addEventListener(
+    'load',
+    (e: Event) => {
+      ResizeWrapper();
+      window.onresize = ResizeWrapper;
+    },
+    false
+  );
 }
 
 export function setThemeColor(color: string): void {

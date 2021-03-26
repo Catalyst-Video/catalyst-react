@@ -107,14 +107,7 @@ export function handlePictureInPicture(
     // @ts-ignore
     VC.remoteVideoWrapper.lastChild.webkitSetPresentationMode
   ) {
-    // var video = VC.remoteVideoWrapper.lastChild as HTMLVideoElement;
     if (video) {
-      // video.addEventListener('enterpictureinpicture', setPicInPic(true), false);
-      // video.addEventListener(
-      //   'leavepictureinpicture ',
-      //   setPicInPic(false),
-      //   false
-      // );
       // @ts-ignore
       if (document && document.pictureInPictureElement && video) {
         // @ts-ignore
