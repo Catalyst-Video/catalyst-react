@@ -1,33 +1,24 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-// components
+import React, { useEffect, useState } from 'react';
 import {
   HeaderComponent,
   ChatComponent,
   IncompatibleComponent,
 } from './components/index';
-// utils
-import VCDataStream from './stream_class';
-import { ResizeWrapper } from './utils/ui_utils';
+import VCDataStream from './vc_datastream';
 import {
-  getBrowserName,
-  sendToAllDataChannels,
+  displayWelcomeMessage,
+  ResizeWrapper,
   setThemeColor,
-} from './utils/general_utils';
-import {
-  handleMute,
-  handlePauseVideo,
-  handleSharing,
-} from './utils/stream_utils';
-// typings
+} from './utils/ui';
+import { initialBrowserCheck, sendToAllDataChannels } from './utils/general';
+import { handleMute, handlePauseVideo, handleSharing } from './utils/stream';
 import {
   DefaultSettings,
   HiddenSettings,
   VideoChatData,
 } from './typings/interfaces';
-// icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  // faClosedCaptioning,
   faComment,
   faCompress,
   faExpand,
@@ -38,18 +29,16 @@ import {
   faVideo,
   faVideoSlash,
 } from '@fortawesome/free-solid-svg-icons';
-// assets
-const joinSound = require('./assets/sound/join.mp3');
-const leaveSound = require('./assets/sound/leave.mp3');
-
-import './styles/catalyst.css';
-import 'react-toastify/dist/ReactToastify.css';
-import './styles/video_grid.css';
-// packages
+// import joinSound from './assets/sound/join.mp3';
+// import leaveSound from './assets/sound/leave.mp3';
+// const joinSound = require('./assets/sound/join.mp3');
+// const leaveSound = require('./assets/sound/leave.mp3');
 import { ToastContainer } from 'react-toastify';
 import Draggable from 'react-draggable';
-import DetectRTC from 'detectrtc';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
+import './styles/catalyst.css';
+import './styles/toast.css';
+import './styles/video_grid.css';
 
 const VideoChat = ({
   sessionKey,
@@ -88,55 +77,21 @@ const VideoChat = ({
 }) => {
   const fsHandle = useFullScreenHandle();
 
+  const [VC, setVCData] = useState<VideoChatData>();
   const [browserSupported, setBrowserSupported] = useState(true);
   const [audioEnabled, setAudio] = useState<boolean>(defaults?.audioOn ?? true);
   const [videoEnabled, setVideo] = useState<boolean>(defaults?.videoOn ?? true);
   const [sharing, setSharing] = useState(false);
+  const [unseenChats, setUnseenChats] = useState(0);
+  const [seenWelcomeMessage, setSeenWelcomeMessage] = useState(false);
+  const [captionsText, setCaptionsText] = useState('HIDDEN CAPTIONS');
+  const [localVideoText, setLocalVideoText] = useState('No webcam input');
   const [showChat, setShowChat] = useState<boolean>(
     defaults?.showChatArea ?? false
   );
-  const [unseenChats, setUnseenChats] = useState(0);
-  const [captionsText, setCaptionsText] = useState(
-    'HIDDEN CAPTIONS'
-    // TODO: Captions defaults?.showCaptionsArea ? '' : 'HIDDEN CAPTIONS'
-  );
-  const [localVideoText, setLocalVideoText] = useState('No webcam input');
-  const [VCData, setVCData] = useState<VideoChatData>();
 
   useEffect(() => {
-    var ua: string = navigator.userAgent || navigator.vendor;
-    if (
-      DetectRTC.isMobileDevice &&
-      (ua.indexOf('FBAN') > -1 ||
-        ua.indexOf('FBAV') > -1 ||
-        ua.indexOf('Instagram') > -1)
-    ) {
-      if (DetectRTC.osName === 'iOS') {
-        setBrowserSupported(false);
-      }
-    }
-    if (DetectRTC.isMobileDevice) {
-      if (DetectRTC.osName === 'iOS' && !DetectRTC.browser.isSafari) {
-        setBrowserSupported(false);
-      }
-    }
-    const isWebRTCSupported =
-      navigator.getUserMedia || window.RTCPeerConnection;
-    const browserName: string = getBrowserName();
-    if (!isWebRTCSupported || browserName === 'MSIE') {
-      setBrowserSupported(false);
-    }
-    navigator.mediaDevices.ondevicechange = () => window.location.reload();
-
-    // Load and Resize Event
-    window.addEventListener(
-      'load',
-      (e: Event) => {
-        ResizeWrapper();
-        window.onresize = ResizeWrapper;
-      },
-      false
-    );
+    initialBrowserCheck(setBrowserSupported);
   }, []);
 
   useEffect(() => {
@@ -144,55 +99,38 @@ const VideoChat = ({
   }, [themeColor]);
 
   useEffect(() => {
-    if (VCData && VCData?.startedCall) {
-      if (onStartCall) onStartCall();
-      if (!audioEnabled && VCData.localAudio) {
-        // sendToAllDataChannels(`mut:true`, VCData.dataChannel);
-        VCData.localAudio.enabled = false;
-      }
-      if (!videoEnabled && VCData.localVideo) {
-        // sendToAllDataChannels(`vid:${videoEnabled}`, VCData.dataChannel);
-        VCData.localStream
-          ?.getVideoTracks()
-          .forEach((track: MediaStreamTrack) => {
-            track.enabled = false;
-          });
-      }
-    }
-  }, [VCData?.startedCall]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      if (VCData && VCData?.dataChannel) {
-        if (!audioEnabled) {
-          sendToAllDataChannels(`mut:true`, VCData.dataChannel);
-        }
-        if (!videoEnabled) {
-          sendToAllDataChannels(`vid:true`, VCData.dataChannel);
-        }
-      }
-    }, 3200);
-  }, [VCData?.peerConnections.size]);
-
-  const incrementUnseenChats = () => {
-    setUnseenChats(unseenChats => unseenChats + 1);
-    console.log(unseenChats);
-  };
-
-  useEffect(() => {
     ResizeWrapper();
     setUnseenChats(0);
   }, [showChat]);
 
   useEffect(() => {
-    const VCD = new VCDataStream(
+    if (VC && VC?.startedCall) {
+      if (onStartCall) onStartCall();
+      if (!audioEnabled && VC.localAudio) VC.localAudio.enabled = false;
+      if (!videoEnabled && VC.localVideo)
+        VC.localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
+          track.enabled = false;
+        });
+    }
+  }, [VC?.startedCall]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (VC && VC?.dataChannel) {
+        if (!audioEnabled) sendToAllDataChannels(`mut:true`, VC.dataChannel);
+        if (!videoEnabled) sendToAllDataChannels(`vid:true`, VC.dataChannel);
+      }
+    }, 3200);
+  }, [VC?.peerConnections.size]);
+
+  useEffect(() => {
+    const VCData = new VCDataStream(
       sessionKey,
       uniqueAppId,
       setCaptionsText,
       setLocalVideoText,
       incrementUnseenChats,
       cstmServerAddress,
-      cstmSnackbarMsg,
       picInPic,
       onAddPeer,
       onRemovePeer,
@@ -200,15 +138,25 @@ const VideoChat = ({
       showDotColors,
       handleArbitraryData
     );
-    setVCData(VCD);
-    VCD?.requestMediaStream();
+    setVCData(VCData);
+    VCData?.requestMediaStream();
+    if (!seenWelcomeMessage) {
+      displayWelcomeMessage(cstmSnackbarMsg, sessionKey, VCData.connected);
+      setSeenWelcomeMessage(true);
+      if (VCData.peerConnections.size === 0)
+        setCaptionsText('Room ready. Waiting for others to join...');
+    }
   }, [sessionKey, uniqueAppId, cstmServerAddress, cstmSnackbarMsg, picInPic]);
 
-  if (browserSupported) {
+  const incrementUnseenChats = () => {
+    setUnseenChats(unseenChats => unseenChats + 1);
+  };
+
+  if (browserSupported)
     return (
       <div id="catalyst" className="ct-body">
         <FullScreen handle={fsHandle}>
-          <HeaderComponent VCData={VCData} />
+          <HeaderComponent VC={VC} sessionKey={sessionKey} />
           <ChatComponent showChat={showChat} setShowChat={setShowChat} />
           <div id="ct-call-section">
             <div
@@ -238,7 +186,7 @@ const VideoChat = ({
                     audioEnabled ? '' : 'ct-btn-on'
                   } ct-hover-btn ct-tooltip ct-not-selectable`}
                   onClick={() => {
-                    if (VCData) handleMute(audioEnabled, setAudio, VCData);
+                    if (VC) handleMute(audioEnabled, setAudio, VC);
                   }}
                 >
                   <span>{audioEnabled ? 'Mute Audio' : 'Unmute Audio'}</span>
@@ -258,11 +206,11 @@ const VideoChat = ({
                     videoEnabled ? '' : 'ct-btn-on'
                   } ct-hover-btn ct-tooltip ct-not-selectable`}
                   onClick={() => {
-                    if (VCData)
+                    if (VC)
                       handlePauseVideo(
                         videoEnabled,
                         setVideo,
-                        VCData,
+                        VC,
                         setLocalVideoText
                       );
                   }}
@@ -333,9 +281,9 @@ const VideoChat = ({
                   } ct-hover-btn ct-tooltip ct-not-selectable`}
                   id="share-button"
                   onClick={() => {
-                    if (VCData)
+                    if (VC)
                       handleSharing(
-                        VCData,
+                        VC,
                         sharing,
                         setSharing,
                         videoEnabled,
@@ -351,29 +299,6 @@ const VideoChat = ({
                   <FontAwesomeIcon icon={faShareSquare} />
                 </button>
               </div>
-
-              {/* TODO: Captions
-              
-              <div
-                className={`ct-btn-container ${hidden?.captions ? 'none' : ''}`}
-              >
-                <button
-                  className={`${
-                    captionsText === 'HIDDEN CAPTIONS' ? '' : 'ct-btn-on'
-                  } ct-hover-btn ct-tooltip ct-not-selectable`}
-                  onClick={() => {
-                    if (VCData)
-                      handleRequestToggleCaptions(VCData, setCaptionsText);
-                  }}
-                >
-                  <FontAwesomeIcon icon={faClosedCaptioning} />
-                  <span>
-                    {captionsText === 'HIDDEN CAPTIONS'
-                      ? 'HIDDEN CAPTIONS'
-                      : 'Hide HIDDEN CAPTIONS'}
-                  </span>
-                </button>
-              </div> */}
 
               {cstmOptionBtns?.map((component, idx) => (
                 <React.Fragment key={idx}>{component}</React.Fragment>
@@ -391,7 +316,7 @@ const VideoChat = ({
                   <FontAwesomeIcon icon={faPhoneSlash} />
                   <span>End Call</span>
                 </button>
-                <audio
+                {/* <audio
                   id="join-sound"
                   preload="auto"
                   crossOrigin="anonymous"
@@ -402,7 +327,7 @@ const VideoChat = ({
                   preload="auto"
                   crossOrigin="anonymous"
                   src={leaveSound}
-                ></audio>
+                ></audio> */}
               </div>
             </div>
           </div>
@@ -422,9 +347,7 @@ const VideoChat = ({
         </FullScreen>
       </div>
     );
-  } else {
-    return <IncompatibleComponent />;
-  }
+  else return <IncompatibleComponent />;
 };
 
 export default VideoChat;

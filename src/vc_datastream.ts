@@ -1,34 +1,27 @@
-/* VIDEO CHAT DATA: track video/audio streams, peer connections, handle webrtc */
+/* VIDEO CHAT DATASTREAM: track video/audio streams, peer connections, handle webrtc */
 import io from 'socket.io-client';
 import {
-  chatRoomFull,
-  handlereceiveMessage,
-  sendToAllDataChannels,
-  addMessageToScreen,
-  logger,
-} from './utils/general_utils';
-import { TwilioToken, VideoChatData } from './typings/interfaces';
-
-import {
-  closeAllMessages,
+  closeAllToasts,
   createMuteNode,
   createPauseNode,
-  displayVideoErrorMessage,
-  displayWelcomeMessage,
+  displayMsg,
+  displayWebcamErrorMessage,
+  handlereceiveMessage,
   hueToColor,
   ResizeWrapper,
   setMutedIndicator,
   setPausedIndicator,
   setStreamColor,
   uuidToHue,
-} from './utils/ui_utils';
-import { handlePictureInPicture } from './utils/stream_utils';
+} from './utils/ui';
+import { handlePictureInPicture } from './utils/stream';
+import { logger, sendToAllDataChannels } from './utils/general';
+import { TwilioToken, VideoChatData } from './typings/interfaces';
 
 const DEFAULT_SERVER_ADDRESS = 'https://server.catalyst.chat/';
 
 export default class VCDataStream implements VideoChatData {
   sessionId: string;
-  roomName: string;
   dataChannel: Map<string, RTCDataChannel>;
   connected: Map<string, boolean>;
   localICECandidates: Record<string, RTCIceCandidate[]>;
@@ -38,7 +31,6 @@ export default class VCDataStream implements VideoChatData {
   peerConnections: Map<string, RTCPeerConnection>;
   localStream: MediaStream | undefined;
   localAudio: MediaStreamTrack | undefined;
-  seenWelcomeSnackbar: boolean;
   picInPic: string;
   setLocalVideoText: Function;
   showDotColors: boolean;
@@ -47,26 +39,18 @@ export default class VCDataStream implements VideoChatData {
   localColor: string;
   incrementUnseenChats: Function;
   setCaptionsText: Function;
-  cstmSnackbarMsg: string | HTMLElement | Element | undefined;
   onAddPeer: Function | undefined;
   onRemovePeer: Function | undefined;
   handleArbitraryData: Function | undefined;
   startedCall: boolean;
 
-  /*  TODO: Captions
-  sendingCaptions: boolean;
-  receivingCaptions: boolean;
-  recognition: SpeechRecognition | undefined; 
-  */
-
   constructor(
-    name: string,
+    sessionKey: string,
     uniqueAppId: string,
     setCapText: Function,
     setVidText: Function,
     incrementUnseenChats: Function,
     cstmServerAddress?: string,
-    cstMsg?: string | HTMLElement | Element,
     picInPic?: string,
     onAddPeer?: Function,
     onRemovePeer?: Function,
@@ -74,8 +58,7 @@ export default class VCDataStream implements VideoChatData {
     showDotColors?: boolean,
     handleArbitraryData?: Function
   ) {
-    this.roomName = name;
-    this.sessionId = uniqueAppId + name;
+    this.sessionId = uniqueAppId + sessionKey;
     this.dataChannel = new Map();
     this.connected = new Map();
     this.localICECandidates = {};
@@ -88,23 +71,17 @@ export default class VCDataStream implements VideoChatData {
     ) as HTMLMediaElement;
     this.peerConnections = new Map();
     this.picInPic = picInPic ?? 'dblclick';
-    this.seenWelcomeSnackbar = false;
     this.peerColors = new Map();
     this.localColor = 'var(--themeColor)';
     this.setCaptionsText = setCapText;
     this.incrementUnseenChats = incrementUnseenChats;
     this.setLocalVideoText = setVidText;
-    this.cstmSnackbarMsg = cstMsg;
     this.showBorderColors = showBorderColors ?? false;
     this.showDotColors = showDotColors ?? false;
     this.onAddPeer = onAddPeer;
     this.onRemovePeer = onRemovePeer;
     this.handleArbitraryData = handleArbitraryData;
     this.startedCall = false;
-    /*  TODO: Captions
-    this.sendingCaptions = false;
-    this.receivingCaptions = false;
-    this.recognition = undefined; */
   }
 
   /* Call to getUserMedia requesting access to video and audio streams. If the request is accepted callback to the onMediaStream function, otherwise callback to the noMediaStream function. */
@@ -121,7 +98,7 @@ export default class VCDataStream implements VideoChatData {
       })
       .catch(error => {
         logger(error);
-        displayVideoErrorMessage(this.connected);
+        displayWebcamErrorMessage(this.connected);
         this.setCaptionsText(
           'Failed to activate your webcam. Check your webcam/privacy settings.'
         );
@@ -136,31 +113,15 @@ export default class VCDataStream implements VideoChatData {
   onMediaStream = (stream: MediaStream) => {
     logger('onMediaStream');
     this.localStream = stream;
-    if (!this.seenWelcomeSnackbar) {
-      displayWelcomeMessage(
-        this.cstmSnackbarMsg,
-        this.roomName,
-        this.connected
-      );
-      this.seenWelcomeSnackbar = true;
-      if (this.peerConnections.size === 0) {
-        this.setCaptionsText('Room ready. Waiting for others to join...');
-      }
-    }
 
     /* When a video stream is added to VideoChat, we need to store the local audio track, because the screen sharing MediaStream doesn't have audio by default, which is problematic for peer C who joins while another peer A/B is screen sharing (C won't receive A/Bs audio). */
     this.localAudio = stream.getAudioTracks()[0];
-    if (!this.localVideo) {
+    if (!this.localVideo)
       this.localVideo = document.getElementById(
         'local-vid-wrapper'
       ) as HTMLMediaElement;
-    }
-    if (
-      this.localVideo.srcObject === null ||
-      this.localVideo.srcObject === undefined
-    ) {
-      this.localVideo.srcObject = stream;
-    }
+
+    if (!this.localVideo.srcObject) this.localVideo.srcObject = stream;
     // Join the chat room
     this.socket.emit('join', this.sessionId, () => {
       if (this.showBorderColors) {
@@ -178,19 +139,13 @@ export default class VCDataStream implements VideoChatData {
       logger('joined');
     });
     // Add listeners to the websocket
-    this.socket.on('leave', this.onLeave);
+    this.socket.on('leave', this.onPeerLeave);
     this.socket.on('full', chatRoomFull);
     this.socket.on('offer', this.onOffer);
     this.socket.on('willInitiateCall', this.call);
     // Set up listeners on the socket
     this.socket.on('candidate', this.onCandidate);
     this.socket.on('answer', this.onAnswer);
-    /* TODO: captions   this.socket.on('requestToggleCaptions', () => handleToggleCaptions(this));
-
-    this.socket.on('receiveCaptions', (captions: any) => {
-      handleReceiveCaptions(captions, this, this.setCaptionsText);
-      logger(captions);
-    }); */
 
     const TextInput = document.querySelector(
       'textarea.chat-compose'
@@ -205,7 +160,7 @@ export default class VCDataStream implements VideoChatData {
           // Prevent cross site scripting
           msg = msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
           sendToAllDataChannels('mes:' + msg, this.dataChannel);
-          addMessageToScreen(msg, this.localColor, true);
+          displayMsg(msg, this.localColor, true);
           document.getElementById('chat-end')?.scrollIntoView({
             behavior: 'smooth',
             block: 'nearest',
@@ -228,11 +183,14 @@ export default class VCDataStream implements VideoChatData {
     this.socket.emit('token', this.sessionId, uuid);
   };
 
-  onLeave = (uuid: string) => {
-    // Remove video element
+  // Remove video element container, delete connection & metadata
+  onPeerLeave = (uuid: string) => {
     try {
       logger('disconnected - UUID ' + uuid);
-      (document.getElementById('leave-sound') as HTMLAudioElement)?.play();
+      let leaveSound = document.getElementById(
+        'leave-sound'
+      ) as HTMLAudioElement;
+      if (leaveSound) leaveSound?.play();
       this?.remoteVideoWrapper?.removeChild(
         document.querySelectorAll(`[uuid="${uuid}"]`)[0]
       );
@@ -240,119 +198,95 @@ export default class VCDataStream implements VideoChatData {
     } catch (e) {
       logger(e);
     }
-    // Delete connection & metadata
     this.connected.delete(uuid);
     this.peerConnections.get(uuid)?.close(); // necessary b/c otherwise the RTC connection isn't closed
     this.peerConnections.delete(uuid);
     this.dataChannel.delete(uuid);
-    if (this.onRemovePeer) {
-      this.onRemovePeer();
-    }
-    if (this.peerConnections.size === 0) {
+    if (this.onRemovePeer) this.onRemovePeer();
+    if (this.peerConnections.size === 0)
       this.setCaptionsText('Room ready. Waiting for others to join...');
-      /*   TODO: determine if this is desireable 
-      setTimeout(() => {
-        this.setCaptionsText('HIDDEN CAPTIONS');
-      }, 5000); */
-    }
   };
 
   establishConnection = (correctUuid: string, callback: Function) => {
     return (token: TwilioToken, uuid: string) => {
-      if (correctUuid !== uuid) {
-        return;
-      }
+      if (correctUuid !== uuid) return;
       logger(`<<< Received token, connecting to ${uuid}`);
       // Initialize localICEcandidates for peer uuid to empty array
       this.localICECandidates[uuid] = [];
       // Initialize connection status with peer uuid to false
       this.connected.set(uuid, false);
-      // Set up a new RTCPeerConnection using the token's iceServers.
+      // Set up a new RTCPeerConnection using the token's iceServers
       this.peerConnections.set(
         uuid,
         new RTCPeerConnection({
           iceServers: token.iceServers,
         })
       );
-      // Add the local video stream to the peerConnection.
+      // Add the local video stream to the peerConnection
       this.localStream?.getTracks().forEach((track: MediaStreamTrack) => {
         this.peerConnections
           .get(uuid)
           ?.addTrack(track, this.localStream as MediaStream);
       });
 
-      // Add general purpose data channel to peer connection, used for text chats, captions, and toggling sending captions
+      // Add general purpose data channel to peer connection: used for chats, toggling indicators, and arbitrary data. Both peers *must* have same "id"
       this.dataChannel.set(
         uuid,
         this.peerConnections.get(uuid)?.createDataChannel('chat', {
           negotiated: true,
-          // both peers must have same id
           id: 0,
         }) as RTCDataChannel
       );
-      // Handle different dataChannel types
+      // Handle different dataChannel types: First 4 chars represent data type
       this.dataChannel.get(uuid)!.onmessage = (e: MessageEvent) => {
-        const receivedData = e.data;
-        // First 4 chars represent data type
-        const dataType = receivedData.substring(0, 4);
-        const cleanedMessage = receivedData.slice(4);
-        if (dataType === 'mes:') {
-          if (this.showBorderColors || this.showDotColors) {
-            handlereceiveMessage(
-              cleanedMessage,
-              hueToColor(this.peerColors.get(uuid)?.toString() ?? '')
+        const dataId = e.data.substring(0, 4);
+        const msg = e.data.slice(4);
+        switch (dataId) {
+          case 'mes:':
+            if (this.showBorderColors || this.showDotColors)
+              handlereceiveMessage(
+                msg,
+                hueToColor(this.peerColors.get(uuid)?.toString() ?? '')
+              );
+            else handlereceiveMessage(msg);
+            this.incrementUnseenChats();
+            break;
+          case 'mut:':
+            setMutedIndicator(uuid, msg);
+            break;
+          case 'vid:':
+            setPausedIndicator(uuid, msg);
+            break;
+          case 'clr:' && (this.showBorderColors || this.showDotColors):
+            setStreamColor(
+              uuid,
+              msg,
+              this.showDotColors,
+              this.showBorderColors
             );
-          } else {
-            handlereceiveMessage(cleanedMessage);
-          }
-          this.incrementUnseenChats();
-        } else if (dataType === 'mut:') {
-          setMutedIndicator(uuid, cleanedMessage);
-        } else if (dataType === 'vid:') {
-          setPausedIndicator(uuid, cleanedMessage);
-        } else if (
-          dataType === 'clr:' &&
-          (this.showBorderColors || this.showDotColors)
-        ) {
-          setStreamColor(
-            uuid,
-            cleanedMessage,
-            this.showDotColors,
-            this.showBorderColors
-          );
-          /* TODO: Captions 
-        } else if (dataType === 'cap:') {
-          handleReceiveCaptions(cleanedMessage, this, this.setCaptionsText);
-        } else if (dataType === 'tog:') {
-          this.sendingCaptions = !this.sendingCaptions; */
-        } else {
-          // Arbitrary data handling
-          logger('Received arbitrary data: ' + receivedData.toString());
-          if (this.handleArbitraryData) {
-            this.handleArbitraryData(receivedData.toString());
-          } else {
-            window.top.postMessage(receivedData, '*');
-          }
+            break;
+          default:
+            logger('Received arbitrary data: ' + e.data);
+            if (this.handleArbitraryData) this.handleArbitraryData(e.data);
+            else window.top.postMessage(e.data, '*');
         }
       };
 
-      /* POST MESSAGING - forward post messaging from one parent to the other */
+      /* POST MESSAGING - handle arbitrary data in iFrames by forwarding post messaging from one parent to the other */
       window.onmessage = (e: MessageEvent) => {
         try {
-          if (JSON.parse(e.data).type === 'arbitraryData') {
+          if (JSON.parse(e.data).type === 'arbitrary_data')
             sendToAllDataChannels(e.data, this.dataChannel);
-          }
         } catch (e) {
           logger(e);
         }
       };
 
-      /* 	Called when dataChannel is successfully opened - Set up callbacks for the connection generating iceCandidates or receiving the remote media stream. Wrapping callback functions to pass in the peer uuids. */
-      this.dataChannel.get(uuid)!.onopen = (e: Event) => {
+      /* Called when dataChannel is successfully opened - Set up callbacks for the connection generating iceCandidates or receiving the remote media stream. Wrapping callback functions to pass in the peer uuids. */
+      this.dataChannel.get(uuid)!.onopen = () => {
         logger('dataChannel opened');
-        if (this.showBorderColors || this.showDotColors) {
+        if (this.showBorderColors || this.showDotColors)
           setStreamColor(uuid, this, this.showDotColors, this.showBorderColors);
-        }
       };
       if (this.peerConnections.get(uuid) !== undefined)
         this.peerConnections.get(uuid)!.onicecandidate = (
@@ -364,9 +298,7 @@ export default class VCDataStream implements VideoChatData {
       this.peerConnections.get(uuid)!.ontrack = (e: RTCTrackEvent) => {
         this.onAddStream(e, uuid);
 
-        if (!this.startedCall) {
-          this.startedCall = true;
-        }
+        if (!this.startedCall) this.startedCall = true;
         this.setCaptionsText('Session connected successfully');
         setTimeout(() => {
           this.setCaptionsText('HIDDEN CAPTIONS');
@@ -474,7 +406,7 @@ export default class VCDataStream implements VideoChatData {
       });
   };
 
-  // When a browser receives an offer, set up a callback to be run when the ephemeral token is returned from Twilio.
+  // When a browser receives an offer, set up a callback to be run when the ephemeral token is returned from Twilio
   onOffer = (offer: RTCSessionDescription, uuid: string): void => {
     logger('onOffer <<< Received offer');
     this.socket.on(
@@ -486,7 +418,7 @@ export default class VCDataStream implements VideoChatData {
     this.socket.emit('token', this.sessionId, uuid);
   };
 
-  // When an answer is received, add it to the peerConnection as the remote description.
+  // When an answer is received, add it to the peerConnection as the remote description
   onAnswer = (answer: RTCSessionDescription, uuid: string) => {
     logger(`onAnswer <<< Received answer from ${uuid}`);
     var rtcAnswer = new RTCSessionDescription(JSON.parse(answer.toString()));
@@ -512,7 +444,8 @@ export default class VCDataStream implements VideoChatData {
       logger('onAddStream <<< Received new stream from remote. Adding it...');
 
       logger('onAddStream <<< Playing join sound...');
-      (document.getElementById('join-sound') as HTMLAudioElement)?.play();
+      let joinSound = document.getElementById('join-sound') as HTMLAudioElement;
+      if (joinSound) joinSound?.play();
       var vidDiv = document.createElement('div');
       vidDiv.setAttribute('id', 'remote-div');
       vidDiv.setAttribute('uuid', uuid);
@@ -529,14 +462,14 @@ export default class VCDataStream implements VideoChatData {
       vidDiv.appendChild(muteNode);
       vidDiv.appendChild(pauseNode);
 
-      // indicatorNode.textContent = 'John Doe';
       // TODO: easiest way to add optional names?
+      // indicatorNode.textContent = 'John Doe';
 
-      if (!this.remoteVideoWrapper) {
+      if (!this.remoteVideoWrapper)
         this.remoteVideoWrapper = document.getElementById(
           'remote-vid-wrapper'
         ) as HTMLDivElement;
-      }
+
       if (this.remoteVideoWrapper !== null) {
         vidNode.srcObject = e.streams.slice(-1)[0];
 
@@ -557,13 +490,14 @@ export default class VCDataStream implements VideoChatData {
         this.remoteVideoWrapper.appendChild(vidDiv);
         ResizeWrapper();
 
-        if (this.onAddPeer) {
-          this.onAddPeer();
-        }
-        closeAllMessages();
+        if (this.onAddPeer) this.onAddPeer();
+        closeAllToasts();
         this.connected.set(uuid, true);
         this.setCaptionsText('HIDDEN CAPTIONS');
       }
     }
   };
+}
+function chatRoomFull(arg0: string, chatRoomFull: any) {
+  throw new Error('Function not implemented.');
 }

@@ -3,10 +3,22 @@ const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
 const strip = require('@rollup/plugin-strip');
 const copy = require('rollup-plugin-copy');
+// const url = require('@rollup/plugin-url');
 
 module.exports = {
   rollup(config, options) {
     config.plugins.push(
+      // url({
+      //   include: [
+      //     '**/*.svg',
+      //     '**/*.png',
+      //     '**/*.jp(e)?g',
+      //     '**/*.gif',
+      //     '**/*.webp',
+      //     '**/*.mp3',
+      //   ],
+      //   destDir: 'dist/assets',
+      // }),
       postcss({
         plugins: [
           autoprefixer(),

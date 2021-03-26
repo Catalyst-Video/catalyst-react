@@ -330,39 +330,6 @@ a {
 }
 
 
-/* snackbar  */
-#catalyst .Toastify__progress-bar--default {
-  color:  var(--themeColor);
-  background: var(--themeColor) ;
-}
-
-#catalyst .Toastify__toast-container--top-center .chat-offset {
-  transform: translateX(calc(-50% - 120px));
-}
-
-#catalyst .Toastify__close-button:hover, .Toastify__close-button:focus {
-  border: none ;
-  outline: none ;
-}
-
-#catalyst .Toastify__toast-container {
-  width: 30rem ;
-  border-radius: 20px ;
-}
-
-#catalyst .text-center {
-  text-align: center ;
-}
-#catalyst .Toastify__toast {
-  border-radius: 10px ;
-
-}
-
-#catalyst .Toastify__toast .Toastify__toast-body {
-  text-align: center !important;
-  justify-content: space-between !important;
-
-}
 
 #catalyst .justify-between {
   justify-content: space-between !important;
@@ -632,12 +599,6 @@ a {
     padding: 0;
     flex-direction: row;
   }
-
-  
-#catalyst .Toastify__toast-container--top-center .chat-offset {
-  transform: translateX(-50%) !important;
-}
-
   
 /* text inside local video */
 #catalyst #local-vid-wrapper p {
@@ -687,7 +648,6 @@ a {
     border-radius: 5px;
   }
 
-  
 .chat-offset {
   left: 0px !important;
 }
@@ -696,13 +656,6 @@ a {
  #catalyst .ct-btn-container:nth-child(5) {
     display: none;
   }
-
-  /* snackbar  */
-#catalyst .Toastify__toast-container {
-  width: 90% !important;
-  left: 5%;
-  top: 4%;
-}
 
   /* chat  */
  #catalyst #entire-chat {

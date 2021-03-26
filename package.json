@@ -1,6 +1,6 @@
 {
   "name": "catalyst-vc-react",
-  "version": "1.1.7",
+  "version": "1.2.1",
   "author": "@GoldinGuy seth@goldin.io & @JoeSemrai josephsemrai@gmail.com",
   "private": false,
   "license": "AGPL-3.0-only",
@@ -11,6 +11,8 @@
     "video chat",
     "react video chat",
     "react",
+    "free video chat",
+    "socket-io",
     "webrtc"
   ],
   "main": "dist/index.js",
@@ -43,6 +45,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-strip": "^2.0.0",
+    "@rollup/plugin-url": "^6.0.0",
     "@size-limit/preset-big-lib": "^4.10.1",
     "@size-limit/preset-small-lib": "^4.10.1",
     "@testing-library/jest-dom": "^5.11.9",
