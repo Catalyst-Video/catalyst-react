@@ -1,6 +1,5 @@
 export interface VideoChatData {
   sessionId: string;
-  roomName: string;
   dataChannel: Map<string, RTCDataChannel>;
   connected: Map<string, boolean>;
   localICECandidates: Record<string, RTCIceCandidate[]>;
@@ -28,7 +27,7 @@ export interface VideoChatData {
   onMediaStream(e: MediaStream, uuid: string): void;
 
   onAddStream(e: RTCTrackEvent, uuid: string): void;
-  onLeave(uuid: string): void;
+  onPeerLeave(uuid: string): void;
 
   createOffer(uuid: string): void;
   onOffer(offer: RTCSessionDescription, uuid: string): void;
@@ -50,7 +49,6 @@ export interface DefaultSettings {
   audioOn?: boolean;
   videoOn?: boolean;
   showChatArea?: boolean;
-  // TODO: showCaptionsArea?: boolean;
 }
 
 export interface HiddenSettings {
@@ -58,9 +56,9 @@ export interface HiddenSettings {
   pausevideo?: boolean;
   screenshare?: boolean;
   chat?: boolean;
-  // TODO: captions?: boolean;
   endcall?: boolean;
 }
+
 export interface TwilioToken {
   accountSid: string;
   dateCreated: string;

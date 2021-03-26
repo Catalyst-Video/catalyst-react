@@ -1,15 +1,12 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-// components
+import React, { useEffect, useState } from 'react';
 import {
   HeaderComponent,
   ChatComponent,
   IncompatibleComponent,
 } from './components/index';
-// utils
 import VCDataStream from './stream_class';
 import { displayWelcomeMessage, ResizeWrapper } from './utils/ui_utils';
 import {
-  getBrowserName,
   initialBrowserCheck,
   sendToAllDataChannels,
   setThemeColor,
@@ -19,16 +16,13 @@ import {
   handlePauseVideo,
   handleSharing,
 } from './utils/stream_utils';
-// typings
 import {
   DefaultSettings,
   HiddenSettings,
   VideoChatData,
 } from './typings/interfaces';
-// icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  // faClosedCaptioning,
   faComment,
   faCompress,
   faExpand,
@@ -39,19 +33,16 @@ import {
   faVideo,
   faVideoSlash,
 } from '@fortawesome/free-solid-svg-icons';
-// assets
 // import joinSound from './assets/sound/join.mp3';
 // import leaveSound from './assets/sound/leave.mp3';
 // const joinSound = require('./assets/sound/join.mp3');
 // const leaveSound = require('./assets/sound/leave.mp3');
-
-import './styles/catalyst.css';
-import './styles/toast.css';
-import './styles/video_grid.css';
-// packages
 import { ToastContainer } from 'react-toastify';
 import Draggable from 'react-draggable';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
+import './styles/catalyst.css';
+import './styles/toast.css';
+import './styles/video_grid.css';
 
 const VideoChat = ({
   sessionKey,
@@ -90,6 +81,7 @@ const VideoChat = ({
 }) => {
   const fsHandle = useFullScreenHandle();
 
+  const [VC, setVCData] = useState<VideoChatData>();
   const [browserSupported, setBrowserSupported] = useState(true);
   const [audioEnabled, setAudio] = useState<boolean>(defaults?.audioOn ?? true);
   const [videoEnabled, setVideo] = useState<boolean>(defaults?.videoOn ?? true);
@@ -98,7 +90,6 @@ const VideoChat = ({
   const [seenWelcomeMessage, setSeenWelcomeMessage] = useState(false);
   const [captionsText, setCaptionsText] = useState('HIDDEN CAPTIONS');
   const [localVideoText, setLocalVideoText] = useState('No webcam input');
-  const [VC, setVCData] = useState<VideoChatData>();
   const [showChat, setShowChat] = useState<boolean>(
     defaults?.showChatArea ?? false
   );
@@ -119,26 +110,19 @@ const VideoChat = ({
   useEffect(() => {
     if (VC && VC?.startedCall) {
       if (onStartCall) onStartCall();
-      if (!audioEnabled && VC.localAudio) {
-        VC.localAudio.enabled = false;
-      }
-      if (!videoEnabled && VC.localVideo) {
+      if (!audioEnabled && VC.localAudio) VC.localAudio.enabled = false;
+      if (!videoEnabled && VC.localVideo)
         VC.localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
           track.enabled = false;
         });
-      }
     }
   }, [VC?.startedCall]);
 
   useEffect(() => {
     setTimeout(() => {
       if (VC && VC?.dataChannel) {
-        if (!audioEnabled) {
-          sendToAllDataChannels(`mut:true`, VC.dataChannel);
-        }
-        if (!videoEnabled) {
-          sendToAllDataChannels(`vid:true`, VC.dataChannel);
-        }
+        if (!audioEnabled) sendToAllDataChannels(`mut:true`, VC.dataChannel);
+        if (!videoEnabled) sendToAllDataChannels(`vid:true`, VC.dataChannel);
       }
     }, 3200);
   }, [VC?.peerConnections.size]);
@@ -170,14 +154,13 @@ const VideoChat = ({
 
   const incrementUnseenChats = () => {
     setUnseenChats(unseenChats => unseenChats + 1);
-    console.log(unseenChats);
   };
 
-  if (browserSupported) {
+  if (browserSupported)
     return (
       <div id="catalyst" className="ct-body">
         <FullScreen handle={fsHandle}>
-          <HeaderComponent VC={VC} />
+          <HeaderComponent VC={VC} sessionKey={sessionKey} />
           <ChatComponent showChat={showChat} setShowChat={setShowChat} />
           <div id="ct-call-section">
             <div
@@ -368,9 +351,7 @@ const VideoChat = ({
         </FullScreen>
       </div>
     );
-  } else {
-    return <IncompatibleComponent />;
-  }
+  else return <IncompatibleComponent />;
 };
 
 export default VideoChat;

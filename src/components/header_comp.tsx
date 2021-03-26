@@ -3,7 +3,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { VideoChatData } from '../typings/interfaces';
 
-const HeaderComponent = ({ VC }: { VC: VideoChatData | undefined }) => {
+const HeaderComponent = ({
+  VC,
+  sessionKey,
+}: {
+  VC: VideoChatData | undefined;
+  sessionKey: string;
+}) => {
   const [showSessionDetails, setShowSessionDetails] = useState(false);
 
   return (
@@ -31,27 +37,11 @@ const HeaderComponent = ({ VC }: { VC: VideoChatData | undefined }) => {
               className="session-details-close"
             />
           </span>
-          Room:<i> {VC.roomName}</i>
+          Room:<i> {sessionKey}</i>
           <br />
           UUID:{' '}
-          <i>{VC.sessionId.substring(0, VC.sessionId.indexOf(VC.roomName))}</i>
+          <i>{VC.sessionId.substring(0, VC.sessionId.indexOf(sessionKey))}</i>
           <br />
-          {/* Connected:
-          {Object.keys(VC.localICECandidates).forEach(key => {
-            {
-              VC.localICECandidates[key].forEach(candidate => {
-                console.log(key);
-                return (
-                  <i>
-                    {
-                      // @ts-ignore
-                      candidate.address
-                    }
-                  </i>
-                );
-              });
-            }
-          })} */}
         </button>
       )}
     </div>
