@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { VideoChatData } from '../typings/interfaces';
 
-const HeaderComponent = ({ VCData }: { VCData: VideoChatData | undefined }) => {
+const HeaderComponent = ({ VC }: { VC: VideoChatData | undefined }) => {
   const [showSessionDetails, setShowSessionDetails] = useState(false);
 
   return (
@@ -17,7 +17,7 @@ const HeaderComponent = ({ VCData }: { VCData: VideoChatData | undefined }) => {
           <HeaderImg />
         </button>
       </div>
-      {showSessionDetails && VCData && (
+      {showSessionDetails && VC && (
         <button
           className="session-details-btn"
           onClick={() => setShowSessionDetails(!showSessionDetails)}
@@ -31,20 +31,15 @@ const HeaderComponent = ({ VCData }: { VCData: VideoChatData | undefined }) => {
               className="session-details-close"
             />
           </span>
-          Room:<i> {VCData.roomName}</i>
+          Room:<i> {VC.roomName}</i>
           <br />
           UUID:{' '}
-          <i>
-            {VCData.sessionId.substring(
-              0,
-              VCData.sessionId.indexOf(VCData.roomName)
-            )}
-          </i>
+          <i>{VC.sessionId.substring(0, VC.sessionId.indexOf(VC.roomName))}</i>
           <br />
           {/* Connected:
-          {Object.keys(VCData.localICECandidates).forEach(key => {
+          {Object.keys(VC.localICECandidates).forEach(key => {
             {
-              VCData.localICECandidates[key].forEach(candidate => {
+              VC.localICECandidates[key].forEach(candidate => {
                 console.log(key);
                 return (
                   <i>

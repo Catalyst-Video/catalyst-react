@@ -124,7 +124,7 @@ export function setWidth(width: number, margin: number): void {
   }
 }
 
-export function uuidToHue(uuid: string, VCData: VideoChatData): number {
+export function uuidToHue(uuid: string, VC: VideoChatData): number {
   // Using uuid to generate random, unique pastel color
   var hash = 0;
   for (var i = 0; i < uuid.length; i++) {
@@ -137,7 +137,7 @@ export function uuidToHue(uuid: string, VCData: VideoChatData): number {
     { length: 6 },
     (x: number, i: number) => i * 60
   );
-  VCData.peerColors.forEach(
+  VC.peerColors.forEach(
     (value: number, key: string, map: Map<string, number>) => {
       availColors[Math.floor(value / 60)] = -1;
     }
@@ -151,7 +151,7 @@ export function uuidToHue(uuid: string, VCData: VideoChatData): number {
       }
     }
   }
-  VCData.peerColors.set(uuid, hue);
+  VC.peerColors.set(uuid, hue);
   return hue;
 }
 
@@ -163,12 +163,12 @@ export function hueToColor(hue: string): string {
 
 export function setStreamColor(
   uuid: string,
-  VCData: VideoChatData,
+  VC: VideoChatData,
   showDotColors: boolean,
   showBorderColors: boolean
 ): void {
   if (showBorderColors) {
-    const hue = uuidToHue(uuid, VCData);
+    const hue = uuidToHue(uuid, VC);
     (document.querySelectorAll(
       `[vid-uuid="${uuid}"]`
     )[0] as HTMLVideoElement).style.border = `3px solid ${hueToColor(
@@ -176,7 +176,7 @@ export function setStreamColor(
     )}`;
   }
   if (showDotColors) {
-    const hue = uuidToHue(uuid, VCData);
+    const hue = uuidToHue(uuid, VC);
     (document.querySelectorAll(
       `[indicator-uuid="${uuid}"]`
     )[0] as HTMLDivElement).style.background = hueToColor(hue.toString());

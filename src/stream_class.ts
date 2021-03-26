@@ -14,7 +14,6 @@ import {
   createMuteNode,
   createPauseNode,
   displayVideoErrorMessage,
-  displayWelcomeMessage,
   hueToColor,
   ResizeWrapper,
   setMutedIndicator,
@@ -38,7 +37,6 @@ export default class VCDataStream implements VideoChatData {
   peerConnections: Map<string, RTCPeerConnection>;
   localStream: MediaStream | undefined;
   localAudio: MediaStreamTrack | undefined;
-  seenWelcomeSnackbar: boolean;
   picInPic: string;
   setLocalVideoText: Function;
   showDotColors: boolean;
@@ -47,17 +45,10 @@ export default class VCDataStream implements VideoChatData {
   localColor: string;
   incrementUnseenChats: Function;
   setCaptionsText: Function;
-  cstmSnackbarMsg: string | HTMLElement | Element | undefined;
   onAddPeer: Function | undefined;
   onRemovePeer: Function | undefined;
   handleArbitraryData: Function | undefined;
   startedCall: boolean;
-
-  /*  TODO: Captions
-  sendingCaptions: boolean;
-  receivingCaptions: boolean;
-  recognition: SpeechRecognition | undefined; 
-  */
 
   constructor(
     name: string,
@@ -66,7 +57,6 @@ export default class VCDataStream implements VideoChatData {
     setVidText: Function,
     incrementUnseenChats: Function,
     cstmServerAddress?: string,
-    cstMsg?: string | HTMLElement | Element,
     picInPic?: string,
     onAddPeer?: Function,
     onRemovePeer?: Function,
@@ -88,23 +78,17 @@ export default class VCDataStream implements VideoChatData {
     ) as HTMLMediaElement;
     this.peerConnections = new Map();
     this.picInPic = picInPic ?? 'dblclick';
-    this.seenWelcomeSnackbar = false;
     this.peerColors = new Map();
     this.localColor = 'var(--themeColor)';
     this.setCaptionsText = setCapText;
     this.incrementUnseenChats = incrementUnseenChats;
     this.setLocalVideoText = setVidText;
-    this.cstmSnackbarMsg = cstMsg;
     this.showBorderColors = showBorderColors ?? false;
     this.showDotColors = showDotColors ?? false;
     this.onAddPeer = onAddPeer;
     this.onRemovePeer = onRemovePeer;
     this.handleArbitraryData = handleArbitraryData;
     this.startedCall = false;
-    /*  TODO: Captions
-    this.sendingCaptions = false;
-    this.receivingCaptions = false;
-    this.recognition = undefined; */
   }
 
   /* Call to getUserMedia requesting access to video and audio streams. If the request is accepted callback to the onMediaStream function, otherwise callback to the noMediaStream function. */
@@ -136,17 +120,6 @@ export default class VCDataStream implements VideoChatData {
   onMediaStream = (stream: MediaStream) => {
     logger('onMediaStream');
     this.localStream = stream;
-    if (!this.seenWelcomeSnackbar) {
-      displayWelcomeMessage(
-        this.cstmSnackbarMsg,
-        this.roomName,
-        this.connected
-      );
-      this.seenWelcomeSnackbar = true;
-      if (this.peerConnections.size === 0) {
-        this.setCaptionsText('Room ready. Waiting for others to join...');
-      }
-    }
 
     /* When a video stream is added to VideoChat, we need to store the local audio track, because the screen sharing MediaStream doesn't have audio by default, which is problematic for peer C who joins while another peer A/B is screen sharing (C won't receive A/Bs audio). */
     this.localAudio = stream.getAudioTracks()[0];
@@ -185,12 +158,6 @@ export default class VCDataStream implements VideoChatData {
     // Set up listeners on the socket
     this.socket.on('candidate', this.onCandidate);
     this.socket.on('answer', this.onAnswer);
-    /* TODO: captions   this.socket.on('requestToggleCaptions', () => handleToggleCaptions(this));
-
-    this.socket.on('receiveCaptions', (captions: any) => {
-      handleReceiveCaptions(captions, this, this.setCaptionsText);
-      logger(captions);
-    }); */
 
     const TextInput = document.querySelector(
       'textarea.chat-compose'
@@ -232,7 +199,10 @@ export default class VCDataStream implements VideoChatData {
     // Remove video element
     try {
       logger('disconnected - UUID ' + uuid);
-      (document.getElementById('leave-sound') as HTMLAudioElement)?.play();
+      let leaveSound = document.getElementById(
+        'leave-sound'
+      ) as HTMLAudioElement;
+      if (leaveSound) leaveSound?.play();
       this?.remoteVideoWrapper?.removeChild(
         document.querySelectorAll(`[uuid="${uuid}"]`)[0]
       );
@@ -250,10 +220,6 @@ export default class VCDataStream implements VideoChatData {
     }
     if (this.peerConnections.size === 0) {
       this.setCaptionsText('Room ready. Waiting for others to join...');
-      /*   TODO: determine if this is desireable 
-      setTimeout(() => {
-        this.setCaptionsText('HIDDEN CAPTIONS');
-      }, 5000); */
     }
   };
 
@@ -320,11 +286,6 @@ export default class VCDataStream implements VideoChatData {
             this.showDotColors,
             this.showBorderColors
           );
-          /* TODO: Captions 
-        } else if (dataType === 'cap:') {
-          handleReceiveCaptions(cleanedMessage, this, this.setCaptionsText);
-        } else if (dataType === 'tog:') {
-          this.sendingCaptions = !this.sendingCaptions; */
         } else {
           // Arbitrary data handling
           logger('Received arbitrary data: ' + receivedData.toString());
@@ -512,7 +473,8 @@ export default class VCDataStream implements VideoChatData {
       logger('onAddStream <<< Received new stream from remote. Adding it...');
 
       logger('onAddStream <<< Playing join sound...');
-      (document.getElementById('join-sound') as HTMLAudioElement)?.play();
+      let joinSound = document.getElementById('join-sound') as HTMLAudioElement;
+      if (joinSound) joinSound?.play();
       var vidDiv = document.createElement('div');
       vidDiv.setAttribute('id', 'remote-div');
       vidDiv.setAttribute('uuid', uuid);

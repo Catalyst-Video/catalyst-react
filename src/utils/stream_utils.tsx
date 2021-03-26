@@ -6,15 +6,15 @@ import React from 'react';
 export function handleMute(
   audioEnabled: boolean,
   setAudio: Function,
-  VCData: VideoChatData
+  VC: VideoChatData
 ): void {
   setAudio(!audioEnabled);
-  if (VCData.localAudio) {
-    sendToAllDataChannels(`mut:${audioEnabled}`, VCData.dataChannel);
+  if (VC.localAudio) {
+    sendToAllDataChannels(`mut:${audioEnabled}`, VC.dataChannel);
     if (audioEnabled) {
-      VCData.localAudio.enabled = false;
+      VC.localAudio.enabled = false;
     } else {
-      VCData.localAudio.enabled = true;
+      VC.localAudio.enabled = true;
     }
   }
 }
@@ -22,26 +22,22 @@ export function handleMute(
 export function handlePauseVideo(
   videoEnabled: boolean,
   setVideo: Function,
-  VCData: VideoChatData,
+  VC: VideoChatData,
   setLocalVideoText: Function
 ): void {
   setVideo(!videoEnabled);
-  if (VCData && VCData.localVideo) {
-    sendToAllDataChannels(`vid:${videoEnabled}`, VCData.dataChannel);
+  if (VC && VC.localVideo) {
+    sendToAllDataChannels(`vid:${videoEnabled}`, VC.dataChannel);
     if (videoEnabled) {
-      VCData.localStream
-        ?.getVideoTracks()
-        .forEach((track: MediaStreamTrack) => {
-          // track.stop();
-          track.enabled = false;
-        });
+      VC.localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
+        // track.stop();
+        track.enabled = false;
+      });
       setLocalVideoText('Video Paused');
     } else {
-      VCData.localStream
-        ?.getVideoTracks()
-        .forEach((track: MediaStreamTrack) => {
-          track.enabled = true;
-        });
+      VC.localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
+        track.enabled = true;
+      });
       setLocalVideoText('Drag Me');
     }
   }
@@ -52,7 +48,7 @@ export function handleSwitchStreamHelper(
   stream: any,
   videoEnabled: boolean,
   setVideo: Function,
-  VCData: VideoChatData,
+  VC: VideoChatData,
   setLocalVideoText: Function
 ): void {
   // Get current video track
@@ -63,11 +59,11 @@ export function handleSwitchStreamHelper(
     // TODO: swap();
   };
   // Swap video for every peer connection
-  VCData.connected.forEach(
+  VC.connected.forEach(
     (value: boolean, key: string, map: Map<string, boolean>) => {
       // check if connected before swapping video channel
-      if (VCData.connected.get(key)) {
-        const sender = VCData.peerConnections
+      if (VC.connected.get(key)) {
+        const sender = VC.peerConnections
           ?.get(key)
           ?.getSenders()
           .find((s: any) => {
@@ -77,7 +73,7 @@ export function handleSwitchStreamHelper(
         // Replace audio track if sharing screen with audio
         if (stream.getAudioTracks()[0]) {
           logger('Audio track is' + audioTrack.toString());
-          const sender2 = VCData.peerConnections
+          const sender2 = VC.peerConnections
             ?.get(key)
             ?.getSenders()
             .find((s: any) => {
@@ -93,25 +89,25 @@ export function handleSwitchStreamHelper(
     }
   );
   // Update local video stream
-  VCData.localStream = stream;
+  VC.localStream = stream;
   // Update local video object
-  VCData.localVideo.srcObject = stream;
+  VC.localVideo.srcObject = stream;
   // Unpause video on swap
   if (!videoEnabled) {
-    handlePauseVideo(videoEnabled, setVideo, VCData, setLocalVideoText);
+    handlePauseVideo(videoEnabled, setVideo, VC, setLocalVideoText);
   }
 }
 
 export function handlePictureInPicture(
-  VCData: VideoChatData,
+  VC: VideoChatData,
   video: HTMLVideoElement
 ): void {
   if (
     'pictureInPictureEnabled' in document ||
     // @ts-ignore
-    VCData.remoteVideoWrapper.lastChild.webkitSetPresentationMode
+    VC.remoteVideoWrapper.lastChild.webkitSetPresentationMode
   ) {
-    // var video = VCData.remoteVideoWrapper.lastChild as HTMLVideoElement;
+    // var video = VC.remoteVideoWrapper.lastChild as HTMLVideoElement;
     if (video) {
       // video.addEventListener('enterpictureinpicture', setPicInPic(true), false);
       // video.addEventListener(
@@ -154,7 +150,7 @@ export function handlePictureInPicture(
 }
 
 export function handleSharing(
-  VCData: VideoChatData,
+  VC: VideoChatData,
   sharing: boolean,
   setSharing: Function,
   videoEnabled: boolean,
@@ -162,7 +158,7 @@ export function handleSharing(
   setLocalVideoText: Function
 ): void {
   // Handle swap video before video call is connected by checking that there's at least one peer connected
-  if (!isConnected(VCData.connected)) {
+  if (!isConnected(VC.connected)) {
     alert('You must join a call before you can share your screen.');
     return;
   }
@@ -182,14 +178,14 @@ export function handleSharing(
           stream,
           videoEnabled,
           setVideo,
-          VCData,
+          VC,
           setLocalVideoText
         );
         setLocalVideoText('Sharing Screen');
       })
       .catch((e: Event) => {
         // Request screen share, note: we can request to capture audio for screen sharing video content.
-        if (!isConnected(VCData.connected)) {
+        if (!isConnected(VC.connected)) {
           toast(
             () => (
               <div className="text-center justify-between">
@@ -217,7 +213,7 @@ export function handleSharing(
       });
   } else {
     // Stop the screen share video track. (We don't want to stop the audio track obviously.)
-    (VCData.localVideo?.srcObject as MediaStream)
+    (VC.localVideo?.srcObject as MediaStream)
       ?.getVideoTracks()
       .forEach((track: MediaStreamTrack) => track.stop());
     // Get webcam input
@@ -232,117 +228,10 @@ export function handleSharing(
           stream,
           videoEnabled,
           setVideo,
-          VCData,
+          VC,
           setLocalVideoText
         );
         setLocalVideoText('Drag Me');
       });
   }
 }
-
-/* TODO: Captions
-export function handleRequestToggleCaptions(
-  VCData: VideoChatData,
-  setCaptionsText: Function
-): void {
-  // Handle requesting captions before connected
-  if (!isConnected(VCData)) {
-    alert('You must join a call to use Live Captions');
-    return;
-  }
-  if (VCData.receivingCaptions) {
-    setCaptionsText('HIDDEN CAPTIONS');
-    VCData.receivingCaptions = false;
-  } else {
-    toast(
-      () => (
-        <div className="text-center justify-between">
-          <strong>Experimental:</strong> The user speaking must be using a
-          Chromium browser
-        </div>
-      ),
-      {
-        toastId: 'captions_start',
-      }
-    );
-
-    setCaptionsText('Captions Enabled');
-    VCData.receivingCaptions = true;
-  }
-  // Send request to get captions over data channel
-  sendToAllDataChannels('tog:', VCData.dataChannel);
-}
-
-export function handleReceiveCaptions(
-  captions: string,
-  VCData: VideoChatData,
-  setCaptionsText: Function
-): void {
-  if (VCData.receivingCaptions) {
-    setCaptionsText(captions);
-  }
-  // Other user is not using chrome
-  if (captions === 'notusingchrome') {
-    alert(
-      'Other caller must be using chrome for this feature to work. Live Captions disabled.'
-    );
-    setCaptionsText('HIDDEN CAPTIONS');
-  }
-}
-
-export function handleToggleCaptions(VCData: VideoChatData) {
-  if (VCData.sendingCaptions && VCData.recognition) {
-    VCData.sendingCaptions = false;
-    VCData.recognition.stop();
-  } else {
-    VCData.sendingCaptions = true;
-    handleStartSpeech(VCData);
-  }
-}
-
-export function handleStartSpeech(VCData: VideoChatData) {
-  try {
-    var SpeechRecognition = window.SpeechRecognition;
-    VCData.recognition = new SpeechRecognition();
-  } catch (e) {
-    VCData.sendingCaptions = false;
-    logger('error importing speech library' + e);
-    // Alert other user that they cannon use live captions
-    sendToAllDataChannels('cap:notusingchrome', VCData.dataChannel);
-    return;
-  }
-  VCData.recognition.continuous = true;
-  // Show results that aren't final
-  VCData.recognition.interimResults = true;
-  // var finalTranscript: any;
-  VCData.recognition.onresult = (e: any) => {
-    let interimTranscript = '';
-    for (let i = e.resultIndex, len = e.results.length; i < len; i++) {
-      var transcript = e.results[i][0].transcript;
-      logger(transcript);
-      if (e.results[i].isFinal) {
-        // finalTranscript += transcript;
-      } else {
-        interimTranscript += transcript;
-        var charsToKeep = interimTranscript.length % 100;
-        // Send captions over data chanel, subtracting as many complete 100 char slices from start
-        sendToAllDataChannels(
-          'cap:' +
-            interimTranscript.substring(interimTranscript.length - charsToKeep),
-          VCData.dataChannel
-        );
-      }
-    }
-  };
-  VCData.recognition.onend = function() {
-    logger('on speech recording end');
-    // Restart speech recognition if user has not stopped it
-    if (VCData.sendingCaptions) {
-      handleStartSpeech(VCData);
-    } else if (VCData.recognition) {
-      VCData.recognition.stop();
-    }
-  };
-  VCData.recognition.start();
-}
- */
