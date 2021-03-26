@@ -43,7 +43,8 @@ const joinSound = require('./assets/sound/join.mp3');
 const leaveSound = require('./assets/sound/leave.mp3');
 
 import './styles/catalyst.css';
-import 'react-toastify/dist/ReactToastify.css';
+// import 'react-toastify/dist/ReactToastify.css';
+import './styles/toast.css';
 import './styles/video_grid.css';
 // packages
 import { ToastContainer } from 'react-toastify';
