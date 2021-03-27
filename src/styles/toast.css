@@ -41,7 +41,7 @@
   right: 1em;
 }
 
-@media only screen and (max-width : 480px) {
+@media only screen and (max-width: 480px) {
   .Toastify__toast-container {
     width: 100vw;
     padding: 0;
@@ -60,6 +60,7 @@
     right: 0;
     left: initial;
   }
+
 }
 .Toastify__toast {
   position: relative;
@@ -118,6 +119,9 @@
 @media only screen and (max-width : 480px) {
   .Toastify__toast {
     margin-bottom: 0;
+  }
+  .chat-offset .Toastify__toast  {
+    display: none !important;
   }
 }
 .Toastify__close-button {
@@ -515,12 +519,20 @@
 
 .Toastify__toast-container--top-center .chat-offset {
   transform: translateX(calc(-50% - 120px));
+  visibility: visible;
 }
 
-@media (max-width: 640px) {
-.Toastify__toast-container--top-center .chat-offset {
-  transform: translateX(-50%);
+@media (min-width: 480) and (max-width: 640px) {
+   
+  .Toastify__toast-container--top-center {
+    top: 1em;
+    left: 50%;
+    transform: translateX(0%) !important;
+  }
+
 }
+
+@media (max-width: 480px) {
 
 .Toastify__toast-container {
   width: 90% ;

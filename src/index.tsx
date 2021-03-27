@@ -33,7 +33,7 @@ import {
 // import leaveSound from './assets/sound/leave.mp3';
 // const joinSound = require('./assets/sound/join.mp3');
 // const leaveSound = require('./assets/sound/leave.mp3');
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, Zoom } from 'react-toastify';
 import Draggable from 'react-draggable';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import './styles/catalyst.css';
@@ -83,7 +83,6 @@ const VideoChat = ({
   const [videoEnabled, setVideo] = useState<boolean>(defaults?.videoOn ?? true);
   const [sharing, setSharing] = useState(false);
   const [unseenChats, setUnseenChats] = useState(0);
-  const [seenWelcomeMessage, setSeenWelcomeMessage] = useState(false);
   const [localVideoText, setLocalVideoText] = useState('No webcam input');
   const [showChat, setShowChat] = useState<boolean>(
     defaults?.showChatArea ?? false
@@ -120,9 +119,9 @@ const VideoChat = ({
         if (!videoEnabled) sendToAllDataChannels(`vid:true`, VC.dataChannel);
       }
     }, 3200);
-    if (VC?.peerConnections.size === 0)
-      displayWelcomeMessage(sessionKey, VC.connected, cstmSnackbarMsg);
-  }, [VC?.peerConnections.size]);
+    // TODO: get this working
+    if (VC) displayWelcomeMessage(sessionKey, VC.connected, cstmSnackbarMsg);
+  }, [VC]);
 
   useEffect(() => {
     const VCData = new VCDataStream(
@@ -140,10 +139,7 @@ const VideoChat = ({
     );
     setVCData(VCData);
     VCData?.requestMediaStream();
-    if (!seenWelcomeMessage) {
-      displayWelcomeMessage(sessionKey, VCData.connected, cstmSnackbarMsg);
-      setSeenWelcomeMessage(true);
-    }
+    displayWelcomeMessage(sessionKey, VCData.connected, cstmSnackbarMsg);
   }, [sessionKey, uniqueAppId, cstmServerAddress, cstmSnackbarMsg, picInPic]);
 
   const incrementUnseenChats = () => {
@@ -333,6 +329,7 @@ const VideoChat = ({
             draggable
             pauseOnHover
             limit={2}
+            // transition={Zoom}
           />
         </FullScreen>
       </div>

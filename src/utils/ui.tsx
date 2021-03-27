@@ -63,6 +63,7 @@ export function displayWelcomeMessage(
         </div>
       ),
       {
+        autoClose: false,
         toastId: 'peer_prompt',
       }
     );

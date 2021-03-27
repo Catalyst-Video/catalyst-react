@@ -7,12 +7,11 @@ const App = () => {
   return (
     <div>
       <VideoChat
-        sessionKey="testingGround"
+        sessionKey="TestingGround"
         uniqueAppId="demo"
         defaults={{
           // audioOn: false,
           // videoOn: false,
-          // showCaptionsArea: false,
           showChatArea: false,
         }}
         onAddPeer={() => console.log('peer added')}
