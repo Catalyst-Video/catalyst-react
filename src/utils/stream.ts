@@ -1,6 +1,6 @@
 import { isConnected, logger, sendToAllDataChannels } from './general';
-import { displayMessage, displayWebcamErrorMessage } from './ui';
 import { VideoChatData } from '../typings/interfaces';
+import { displayMessage, displayWebcamErrorMessage } from './messages';
 
 export function handleMute(
   audioEnabled: boolean,

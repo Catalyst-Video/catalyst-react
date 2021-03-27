@@ -1,22 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import {
-  HeaderComponent,
-  ChatComponent,
-  IncompatibleComponent,
-} from './components/index';
+
+// import joinSound from './assets/sound/join.mp3';
+// import leaveSound from './assets/sound/leave.mp3';
+// const joinSound = require('./assets/sound/join.mp3');
+// const leaveSound = require('./assets/sound/leave.mp3');
+
+// Styles
+import './styles/catalyst.css';
+import './styles/toast.css';
+import './styles/video_grid.css';
+
+// Component Imports
+import Header from './components/Header';
+import Chat from './components/Chat';
+import IncompatibleAlert from './components/IncompatibleAlert';
+
+// Utilities and JS
 import VCDataStream from './vc_datastream';
-import {
-  displayWelcomeMessage,
-  ResizeWrapper,
-  setThemeColor,
-} from './utils/ui';
+import { ResizeWrapper, setThemeColor } from './utils/ui';
+
 import { initialBrowserCheck, sendToAllDataChannels } from './utils/general';
 import { handleMute, handlePauseVideo, handleSharing } from './utils/stream';
-import {
-  DefaultSettings,
-  HiddenSettings,
-  VideoChatData,
-} from './typings/interfaces';
+
+// Other packages
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faComment,
@@ -29,16 +35,17 @@ import {
   faVideo,
   faVideoSlash,
 } from '@fortawesome/free-solid-svg-icons';
-// import joinSound from './assets/sound/join.mp3';
-// import leaveSound from './assets/sound/leave.mp3';
-// const joinSound = require('./assets/sound/join.mp3');
-// const leaveSound = require('./assets/sound/leave.mp3');
-import { ToastContainer, Zoom } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import Draggable from 'react-draggable';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
-import './styles/catalyst.css';
-import './styles/toast.css';
-import './styles/video_grid.css';
+
+// Types
+import {
+  DefaultSettings,
+  HiddenSettings,
+  VideoChatData,
+} from './typings/interfaces';
+import { displayWelcomeMessage } from './utils/messages';
 
 const VideoChat = ({
   sessionKey,
@@ -143,15 +150,15 @@ const VideoChat = ({
   }, [sessionKey, uniqueAppId, cstmServerAddress, cstmSnackbarMsg, picInPic]);
 
   const incrementUnseenChats = () => {
-    setUnseenChats(unseenChats => unseenChats + 1);
+    setUnseenChats((unseenChats) => unseenChats + 1);
   };
 
   if (browserSupported)
     return (
       <div id="catalyst" className="ct-body">
         <FullScreen handle={fsHandle}>
-          <HeaderComponent VC={VC} sessionKey={sessionKey} />
-          <ChatComponent showChat={showChat} setShowChat={setShowChat} />
+          <Header VC={VC} sessionKey={sessionKey} />
+          <Chat showChat={showChat} setShowChat={setShowChat} />
           <div id="ct-call-section">
             <div
               id="remote-vid-wrapper"
@@ -334,7 +341,7 @@ const VideoChat = ({
         </FullScreen>
       </div>
     );
-  else return <IncompatibleComponent />;
+  else return <IncompatibleAlert />;
 };
 
 export default VideoChat;
