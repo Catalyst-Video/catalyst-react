@@ -155,6 +155,7 @@ display: none;
   position: relative;
   float: left;
   z-index: 4;
+  display: block;
 }
 
 #catalyst #ct-header p,
@@ -167,6 +168,10 @@ img {
 a {
   color: white;
   text-decoration: none;
+}
+
+#catalyst .mobile-banner {
+  display: none;
 }
 
 #catalyst #permanent-ct-header {
@@ -208,7 +213,10 @@ a {
   z-index: 3;
   position: absolute;
   width: 15%;
+  max-height: 100px;
+  min-width: 100px;
   cursor: move;
+  text-align: center
 }
 
 #catalyst #local-video {
@@ -228,7 +236,7 @@ a {
   z-index: 101;
   position: absolute;
   color: white;
-  opacity: 0.6;
+  opacity: 0.4;
   font-family: "Heebo", sans-serif;
   white-space: nowrap;
   top: 50%;
@@ -315,6 +323,7 @@ a {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  z-index: 4;
   /* width: 500px; */
 }
 
@@ -533,12 +542,15 @@ a {
   }
 }
 
-
 /* ct-tooltips */
 #catalyst button.ct-tooltip span {
   display: none;
+  opacity: 0;
+  transition: opacity 0s 3s;
 }
 #catalyst button.ct-tooltip:hover span {
+  opacity: 1;
+  transition: opacity 0s;
   z-index: 999;
   color: white;
   font-family: "Heebo", sans-serif;
@@ -568,6 +580,7 @@ a {
   #catalyst #ct-header {
     z-index: -1;
     position: fixed;
+    display: none;
   }
 
   #catalyst #ct-header img {
@@ -578,6 +591,24 @@ a {
   #catalyst #ct-header p {
     margin: 0;
     line-height: 2rem;
+  }
+
+  #catalyst .mobile-banner {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    display: block;
+    text-align: center;
+    /* background: rgb(136, 151, 168); */
+    background:  var(--themeColor);
+    padding: 1.5px;
+    color: white;
+    height: 1rem;
+    font-size: 13px;
+    z-index: 10;
+    opacity: .8;
+    font-family: "Fira Sans", sans-serif;
   }
 
   #catalyst #room-text {
@@ -603,21 +634,23 @@ a {
 /* text inside local video */
 #catalyst #local-vid-wrapper p {
   z-index: 3;
-  position: absolute;
+  position: relative;
   color: white;
   font-family: "Heebo", sans-serif;
   white-space: nowrap;
   font-weight: bold;
   font-size: 0.8rem;
   margin: auto;
-  margin-left: 38px;
   background: rgba(0, 0, 0, 0.12);
   padding: 15px;
   border-radius: 5px;
+  left: 30%;
+  top: 30%;
 }
 
 #catalyst #local-video {
   min-width: 130px;
+  position: absolute;
   bottom: 0 !important;
   right: 0 !important;
 }
@@ -647,7 +680,7 @@ a {
     border: none;
     font-size: 2rem;
     transition: all 0.3s ease-in-out;
-    color: gray;
+    color: #333;
     background: transparent;
     bottom: 0;
     cursor: pointer;

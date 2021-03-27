@@ -293,6 +293,7 @@ export default class VCDataStream implements VideoChatData {
 
         if (!this.startedCall) this.startedCall = true;
         displayMessage('Session connected successfully', 500);
+        setTimeout(() => closeAllToasts(), 1000);
       };
       // Called when there is a change in connection state
       this.peerConnections.get(uuid)!.oniceconnectionstatechange = (

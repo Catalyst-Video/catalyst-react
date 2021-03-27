@@ -21,11 +21,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faComment,
   faCompress,
+  faDesktop,
   faExpand,
   faMicrophone,
   faMicrophoneSlash,
   faPhoneSlash,
-  faShareSquare,
   faVideo,
   faVideoSlash,
 } from '@fortawesome/free-solid-svg-icons';
@@ -282,7 +282,7 @@ const VideoChat = ({
                     {!sharing ? 'Share Screen' : 'Stop Sharing Screen'}
                   </span>
 
-                  <FontAwesomeIcon icon={faShareSquare} />
+                  <FontAwesomeIcon icon={faDesktop} />
                 </button>
               </div>
 
