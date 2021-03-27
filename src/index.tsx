@@ -1,10 +1,21 @@
 import React, { useEffect, useState } from 'react';
 
+// import joinSound from './assets/sound/join.mp3';
+// import leaveSound from './assets/sound/leave.mp3';
+// const joinSound = require('./assets/sound/join.mp3');
+// const leaveSound = require('./assets/sound/leave.mp3');
+
+// Styles
+import './styles/catalyst.css';
+import './styles/toast.css';
+import './styles/video_grid.css';
+
 // Component Imports
 import Header from './components/Header';
 import Chat from './components/Chat';
 import IncompatibleAlert from './components/IncompatibleAlert';
 
+// Utilities and JS
 import VCDataStream from './vc_datastream';
 import {
   displayWelcomeMessage,
@@ -13,11 +24,8 @@ import {
 } from './utils/ui';
 import { initialBrowserCheck, sendToAllDataChannels } from './utils/general';
 import { handleMute, handlePauseVideo, handleSharing } from './utils/stream';
-import {
-  DefaultSettings,
-  HiddenSettings,
-  VideoChatData,
-} from './typings/interfaces';
+
+// Other packages
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faComment,
@@ -30,17 +38,16 @@ import {
   faVideo,
   faVideoSlash,
 } from '@fortawesome/free-solid-svg-icons';
-// import joinSound from './assets/sound/join.mp3';
-// import leaveSound from './assets/sound/leave.mp3';
-// const joinSound = require('./assets/sound/join.mp3');
-// const leaveSound = require('./assets/sound/leave.mp3');
-import { ToastContainer, Zoom } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import Draggable from 'react-draggable';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
-import './styles/catalyst.css';
-import './styles/toast.css';
-import './styles/video_grid.css';
-import IncompatibleComponent from '../dist/components/IncompatibleWarning';
+
+// Types
+import {
+  DefaultSettings,
+  HiddenSettings,
+  VideoChatData,
+} from './typings/interfaces';
 
 const VideoChat = ({
   sessionKey,
@@ -153,7 +160,7 @@ const VideoChat = ({
       <div id="catalyst" className="ct-body">
         <FullScreen handle={fsHandle}>
           <Header VC={VC} sessionKey={sessionKey} />
-          <ChatComponent showChat={showChat} setShowChat={setShowChat} />
+          <Chat showChat={showChat} setShowChat={setShowChat} />
           <div id="ct-call-section">
             <div
               id="remote-vid-wrapper"
@@ -336,7 +343,7 @@ const VideoChat = ({
         </FullScreen>
       </div>
     );
-  else return <IncompatibleComponent />;
+  else return <IncompatibleAlert />;
 };
 
 export default VideoChat;
