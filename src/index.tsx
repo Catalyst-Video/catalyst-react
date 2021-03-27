@@ -15,10 +15,10 @@ import Header from './components/Header';
 import Chat from './components/Chat';
 import IncompatibleAlert from './components/IncompatibleAlert';
 
-// Utilities and JS
+// Utils
 import VCDataStream from './vc_datastream';
 import { ResizeWrapper, setThemeColor } from './utils/ui';
-
+import { displayWelcomeMessage } from './utils/messages';
 import { initialBrowserCheck, sendToAllDataChannels } from './utils/general';
 import { handleMute, handlePauseVideo, handleSharing } from './utils/stream';
 
@@ -45,7 +45,6 @@ import {
   HiddenSettings,
   VideoChatData,
 } from './typings/interfaces';
-import { displayWelcomeMessage } from './utils/messages';
 
 const VideoChat = ({
   sessionKey,
@@ -150,7 +149,7 @@ const VideoChat = ({
   }, [sessionKey, uniqueAppId, cstmServerAddress, cstmSnackbarMsg, picInPic]);
 
   const incrementUnseenChats = () => {
-    setUnseenChats((unseenChats) => unseenChats + 1);
+    setUnseenChats(unseenChats => unseenChats + 1);
   };
 
   if (browserSupported)

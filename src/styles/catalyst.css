@@ -216,13 +216,17 @@ a {
   max-height: 100px;
   min-width: 100px;
   cursor: move;
-  text-align: center
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #catalyst #local-video {
   width: 100%;
   height: auto;
   min-width: 100px;
+  position: absolute;
   text-align: center;
   border-radius: 10px;
   -webkit-transform: scaleX(-1);
@@ -233,16 +237,13 @@ a {
 
 /*Text inside local video*/
 #catalyst #local-vid-wrapper p {
-  z-index: 101;
+  z-index: 10;
   position: absolute;
   color: white;
   opacity: 0.4;
   font-family: "Heebo", sans-serif;
   white-space: nowrap;
-  top: 50%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
+  height: 100%;
   font-weight: bold;
 }
 
@@ -644,15 +645,13 @@ a {
   background: rgba(0, 0, 0, 0.12);
   padding: 15px;
   border-radius: 5px;
-  left: 30%;
-  top: 30%;
 }
 
 #catalyst #local-video {
   min-width: 130px;
   position: absolute;
-  bottom: 0 !important;
-  right: 0 !important;
+  /* bottom: 0 !important;
+  right: 0 !important; */
 }
 
  #catalyst #ct-captions-text {
