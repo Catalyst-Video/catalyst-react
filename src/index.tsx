@@ -17,11 +17,8 @@ import IncompatibleAlert from './components/IncompatibleAlert';
 
 // Utilities and JS
 import VCDataStream from './vc_datastream';
-import {
-  displayWelcomeMessage,
-  ResizeWrapper,
-  setThemeColor,
-} from './utils/ui';
+import { ResizeWrapper, setThemeColor } from './utils/ui';
+
 import { initialBrowserCheck, sendToAllDataChannels } from './utils/general';
 import { handleMute, handlePauseVideo, handleSharing } from './utils/stream';
 
@@ -48,6 +45,7 @@ import {
   HiddenSettings,
   VideoChatData,
 } from './typings/interfaces';
+import { displayWelcomeMessage } from './utils/messages';
 
 const VideoChat = ({
   sessionKey,

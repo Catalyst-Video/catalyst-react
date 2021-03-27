@@ -4,10 +4,6 @@ import {
   closeAllToasts,
   createMuteNode,
   createPauseNode,
-  displayMessage,
-  displayMsg,
-  displayWebcamErrorMessage,
-  handlereceiveMessage,
   hueToColor,
   ResizeWrapper,
   setMutedIndicator,
@@ -18,6 +14,12 @@ import {
 import { handlePictureInPicture } from './utils/stream';
 import { logger, sendToAllDataChannels } from './utils/general';
 import { TwilioToken, VideoChatData } from './typings/interfaces';
+import {
+  displayWebcamErrorMessage,
+  displayMsg,
+  handlereceiveMessage,
+  displayMessage,
+} from './utils/messages';
 
 const DEFAULT_SERVER_ADDRESS = 'https://server.catalyst.chat/';
 
