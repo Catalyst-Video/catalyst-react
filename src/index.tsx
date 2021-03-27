@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {
-  HeaderComponent,
-  ChatComponent,
-  IncompatibleComponent,
-} from './components/index';
+
+// Component Imports
+import Header from './components/Header';
+import Chat from './components/Chat';
+import IncompatibleAlert from './components/IncompatibleAlert';
+
 import VCDataStream from './vc_datastream';
 import {
   displayWelcomeMessage,
@@ -39,6 +40,7 @@ import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import './styles/catalyst.css';
 import './styles/toast.css';
 import './styles/video_grid.css';
+import IncompatibleComponent from '../dist/components/IncompatibleWarning';
 
 const VideoChat = ({
   sessionKey,
@@ -143,14 +145,14 @@ const VideoChat = ({
   }, [sessionKey, uniqueAppId, cstmServerAddress, cstmSnackbarMsg, picInPic]);
 
   const incrementUnseenChats = () => {
-    setUnseenChats(unseenChats => unseenChats + 1);
+    setUnseenChats((unseenChats) => unseenChats + 1);
   };
 
   if (browserSupported)
     return (
       <div id="catalyst" className="ct-body">
         <FullScreen handle={fsHandle}>
-          <HeaderComponent VC={VC} sessionKey={sessionKey} />
+          <Header VC={VC} sessionKey={sessionKey} />
           <ChatComponent showChat={showChat} setShowChat={setShowChat} />
           <div id="ct-call-section">
             <div

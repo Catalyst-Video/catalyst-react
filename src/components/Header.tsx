@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { VideoChatData } from '../typings/interfaces';
 
-const HeaderComponent = ({
+const Header = ({
   VC,
   sessionKey,
 }: {
@@ -49,7 +49,7 @@ const HeaderComponent = ({
   );
 };
 
-export default HeaderComponent;
+export default Header;
 
 const HeaderImg = () => {
   return (
