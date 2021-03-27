@@ -21,11 +21,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faComment,
   faCompress,
+  faDesktop,
   faExpand,
   faMicrophone,
   faMicrophoneSlash,
   faPhoneSlash,
-  faShareSquare,
   faVideo,
   faVideoSlash,
 } from '@fortawesome/free-solid-svg-icons';
@@ -33,7 +33,7 @@ import {
 // import leaveSound from './assets/sound/leave.mp3';
 // const joinSound = require('./assets/sound/join.mp3');
 // const leaveSound = require('./assets/sound/leave.mp3');
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, Zoom } from 'react-toastify';
 import Draggable from 'react-draggable';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import './styles/catalyst.css';
@@ -83,8 +83,6 @@ const VideoChat = ({
   const [videoEnabled, setVideo] = useState<boolean>(defaults?.videoOn ?? true);
   const [sharing, setSharing] = useState(false);
   const [unseenChats, setUnseenChats] = useState(0);
-  const [seenWelcomeMessage, setSeenWelcomeMessage] = useState(false);
-  const [captionsText, setCaptionsText] = useState('HIDDEN CAPTIONS');
   const [localVideoText, setLocalVideoText] = useState('No webcam input');
   const [showChat, setShowChat] = useState<boolean>(
     defaults?.showChatArea ?? false
@@ -121,13 +119,14 @@ const VideoChat = ({
         if (!videoEnabled) sendToAllDataChannels(`vid:true`, VC.dataChannel);
       }
     }, 3200);
-  }, [VC?.peerConnections.size]);
+    // TODO: get this working
+    if (VC) displayWelcomeMessage(sessionKey, VC.connected, cstmSnackbarMsg);
+  }, [VC]);
 
   useEffect(() => {
     const VCData = new VCDataStream(
       sessionKey,
       uniqueAppId,
-      setCaptionsText,
       setLocalVideoText,
       incrementUnseenChats,
       cstmServerAddress,
@@ -140,12 +139,7 @@ const VideoChat = ({
     );
     setVCData(VCData);
     VCData?.requestMediaStream();
-    if (!seenWelcomeMessage) {
-      displayWelcomeMessage(cstmSnackbarMsg, sessionKey, VCData.connected);
-      setSeenWelcomeMessage(true);
-      if (VCData.peerConnections.size === 0)
-        setCaptionsText('Room ready. Waiting for others to join...');
-    }
+    displayWelcomeMessage(sessionKey, VCData.connected, cstmSnackbarMsg);
   }, [sessionKey, uniqueAppId, cstmServerAddress, cstmSnackbarMsg, picInPic]);
 
   const incrementUnseenChats = () => {
@@ -159,14 +153,6 @@ const VideoChat = ({
           <HeaderComponent VC={VC} sessionKey={sessionKey} />
           <ChatComponent showChat={showChat} setShowChat={setShowChat} />
           <div id="ct-call-section">
-            <div
-              id="ct-captions-text"
-              className={`${captionsText === 'HIDDEN CAPTIONS' ? 'none' : ''} ${
-                showChat ? 'chat-offset' : ''
-              }`}
-            >
-              {captionsText}
-            </div>
             <div
               id="remote-vid-wrapper"
               className={showChat ? 'ct-chat' : ''}
@@ -296,7 +282,7 @@ const VideoChat = ({
                     {!sharing ? 'Share Screen' : 'Stop Sharing Screen'}
                   </span>
 
-                  <FontAwesomeIcon icon={faShareSquare} />
+                  <FontAwesomeIcon icon={faDesktop} />
                 </button>
               </div>
 
@@ -334,15 +320,16 @@ const VideoChat = ({
           <ToastContainer
             position="top-center"
             autoClose={50000}
-            hideProgressBar={false}
+            hideProgressBar={true}
             className={showChat ? 'chat-offset' : ''}
-            newestOnTop={false}
+            newestOnTop={true}
             closeOnClick
             rtl={false}
             pauseOnFocusLoss
             draggable
             pauseOnHover
             limit={2}
+            // transition={Zoom}
           />
         </FullScreen>
       </div>

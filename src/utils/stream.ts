@@ -1,5 +1,5 @@
 import { isConnected, logger, sendToAllDataChannels } from './general';
-import { displayWebcamErrorMessage } from './ui';
+import { displayMessage, displayWebcamErrorMessage } from './ui';
 import { VideoChatData } from '../typings/interfaces';
 
 export function handleMute(
@@ -110,17 +110,22 @@ export function handlePictureInPicture(
           default:
             // @ts-ignore
             video.requestPictureInPicture().catch((e: string) => {
-              alert('You must join a call to enter picture in picture.');
+              if (!isConnected(VC.connected))
+                displayMessage(
+                  'You must join a call to enter picture in picture'
+                );
             });
         }
       }
     } else {
-      alert('You must join a call to enter picture in picture.');
+      if (!isConnected(VC.connected))
+        displayMessage('You must join a call to enter picture in picture');
     }
   } else {
-    alert(
-      'Your browser does not support Picture in Picture. Consider using Chrome, Edge, or Safari.'
-    );
+    if (!isConnected(VC.connected))
+      displayMessage(
+        'Your browser does not support Picture in Picture. Consider using Chrome, Edge, or Safari.'
+      );
   }
 }
 
@@ -134,7 +139,7 @@ export function handleSharing(
 ): void {
   // Handle swap video before video call is connected by checking that there's at least one peer connected
   if (!isConnected(VC.connected)) {
-    alert('You must join a call before you can share your screen.');
+    displayMessage('You must join a call before you can screen share');
     return;
   }
   if (!sharing) {

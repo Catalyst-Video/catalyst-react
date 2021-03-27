@@ -7,19 +7,18 @@ const App = () => {
   return (
     <div>
       <VideoChat
-        sessionKey="testingGround"
+        sessionKey="TestingGround"
         uniqueAppId="demo"
         defaults={{
           // audioOn: false,
           // videoOn: false,
-          // showCaptionsArea: false,
           showChatArea: false,
         }}
         onAddPeer={() => console.log('peer added')}
         onStartCall={() => console.log('on start call')}
         onRemovePeer={() => console.log('on remove peer')}
         onEndCall={() => console.log('on end call')}
-        themeColor="indigo"
+        // themeColor="indigo"
         // cstmOptionBtns={[
         //   <div className="ct-btn-container">
         //     <button

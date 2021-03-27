@@ -14,6 +14,7 @@ const HeaderComponent = ({
 
   return (
     <div className="show-top">
+      <div className="mobile-banner">Powered by Catalyst</div>
       <div id="ct-header" className="ct-not-selectable">
         <button
           className="ct-header-btn"
