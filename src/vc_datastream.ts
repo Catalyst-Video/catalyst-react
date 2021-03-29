@@ -36,6 +36,7 @@ export default class VCDataStream implements VideoChatData {
   localAudio: MediaStreamTrack | undefined;
   picInPic: string;
   setLocalVideoText: Function;
+  setNumPeers: Function;
   showDotColors: boolean;
   showBorderColors: boolean;
   peerColors: Map<string, number>;
@@ -51,6 +52,7 @@ export default class VCDataStream implements VideoChatData {
     uniqueAppId: string,
     setVidText: Function,
     incrementUnseenChats: Function,
+    setNumPeers: Function,
     cstmServerAddress?: string,
     picInPic?: string,
     onAddPeer?: Function,
@@ -75,6 +77,7 @@ export default class VCDataStream implements VideoChatData {
     this.peerColors = new Map();
     this.localColor = 'var(--themeColor)';
     this.incrementUnseenChats = incrementUnseenChats;
+    this.setNumPeers = setNumPeers;
     this.setLocalVideoText = setVidText;
     this.showBorderColors = showBorderColors ?? false;
     this.showDotColors = showDotColors ?? false;
@@ -199,6 +202,7 @@ export default class VCDataStream implements VideoChatData {
     this.peerConnections.get(uuid)?.close(); // necessary b/c otherwise the RTC connection isn't closed
     this.peerConnections.delete(uuid);
     this.dataChannel.delete(uuid);
+    this.setNumPeers(this.peerConnections.size);
     if (this.onRemovePeer) this.onRemovePeer();
   };
 
@@ -430,6 +434,7 @@ export default class VCDataStream implements VideoChatData {
   // Called when a stream is added to the peer connection: Create new <video> node and append remote video source to wrapper div
   onAddStream = (e: RTCTrackEvent, uuid: string) => {
     if (document.querySelector(`[uuid="${uuid}"]`) === null) {
+      this.setNumPeers(this.peerConnections.size);
       logger('onAddStream <<< Received new stream from remote. Adding it...');
 
       logger('onAddStream <<< Playing join sound...');

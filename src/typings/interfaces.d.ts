@@ -11,6 +11,7 @@ export interface VideoChatData {
   localAudio: MediaStreamTrack | undefined;
   picInPic: string;
   setLocalVideoText: Function;
+  setNumPeers: Function;
   showDotColors: boolean;
   showBorderColors: boolean;
   peerColors: Map<string, number>;

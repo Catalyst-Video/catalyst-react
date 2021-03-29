@@ -90,6 +90,7 @@ const VideoChat = ({
   const [sharing, setSharing] = useState(false);
   const [unseenChats, setUnseenChats] = useState(0);
   const [localVideoText, setLocalVideoText] = useState('No webcam input');
+  const [numPeers, setNumPeers] = useState(0);
   const [showChat, setShowChat] = useState<boolean>(
     defaults?.showChatArea ?? false
   );
@@ -119,22 +120,12 @@ const VideoChat = ({
   }, [VC?.startedCall]);
 
   useEffect(() => {
-    setTimeout(() => {
-      if (VC && VC?.dataChannel) {
-        if (!audioEnabled) sendToAllDataChannels(`mut:true`, VC.dataChannel);
-        if (!videoEnabled) sendToAllDataChannels(`vid:true`, VC.dataChannel);
-      }
-    }, 3200);
-    // TODO: get this working
-    if (VC) displayWelcomeMessage(sessionKey, VC.connected, cstmSnackbarMsg);
-  }, [VC]);
-
-  useEffect(() => {
     const VCData = new VCDataStream(
       sessionKey,
       uniqueAppId,
       setLocalVideoText,
       incrementUnseenChats,
+      setNumPeers,
       cstmServerAddress,
       picInPic,
       onAddPeer,
@@ -146,7 +137,17 @@ const VideoChat = ({
     setVCData(VCData);
     VCData?.requestMediaStream();
     displayWelcomeMessage(sessionKey, VCData.connected, cstmSnackbarMsg);
-  }, [sessionKey, uniqueAppId, cstmServerAddress, cstmSnackbarMsg, picInPic]);
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (VC && VC?.dataChannel) {
+        if (!audioEnabled) sendToAllDataChannels(`mut:true`, VC.dataChannel);
+        if (!videoEnabled) sendToAllDataChannels(`vid:true`, VC.dataChannel);
+      }
+    }, 2000);
+    if (VC) displayWelcomeMessage(sessionKey, VC.connected, cstmSnackbarMsg);
+  }, [numPeers]);
 
   const incrementUnseenChats = () => {
     setUnseenChats(unseenChats => unseenChats + 1);
