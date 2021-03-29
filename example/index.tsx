@@ -2,6 +2,7 @@ import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import VideoChat from '../dist/index';
+import { toast } from 'react-toastify';
 
 const App = () => {
   return (
@@ -17,7 +18,7 @@ const App = () => {
         onAddPeer={() => console.log('peer added')}
         onStartCall={() => console.log('on start call')}
         onRemovePeer={() => console.log('on remove peer')}
-        onEndCall={() => console.log('on end call')}
+        onEndCall={() => toast('Triggered end call')}
         // themeColor="indigo"
         // cstmOptionBtns={[
         //   <div className="ct-btn-container">
