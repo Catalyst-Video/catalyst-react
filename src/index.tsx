@@ -81,7 +81,7 @@ const VideoChat = ({
   themeColor?: string;
   showDotColors?: boolean;
   showBorderColors?: boolean;
-  autoFade?: boolean;
+  autoFade?: number;
 }) => {
   const fsHandle = useFullScreenHandle();
 
@@ -98,7 +98,7 @@ const VideoChat = ({
   );
 
   useEffect(() => {
-    initialBrowserCheck(setBrowserSupported, autoFade ? autoFade : true);
+    initialBrowserCheck(setBrowserSupported, autoFade ? autoFade : 600);
   }, []);
 
   useEffect(() => {

@@ -24,7 +24,7 @@ export function getBrowserName(): string {
 
 export function initialBrowserCheck(
   setBrowserSupported: Function,
-  autoFade: boolean
+  autoFade: number
 ): void {
   var ua: string = navigator.userAgent || navigator.vendor;
   if (
@@ -60,7 +60,7 @@ export function initialBrowserCheck(
   );
 
   // fade or show UI on mouse move
-  if (autoFade) {
+  if (autoFade > 0) {
     var timedelay = 1;
     var header = document.getElementById('ct-header');
     var toolbar = document.getElementById('ct-toolbar');
@@ -81,9 +81,9 @@ export function initialBrowserCheck(
       toolbar?.classList.remove('hide');
       timedelay = 1;
       clearInterval(_delay);
-      _delay = setInterval(delayCheck, 600);
+      _delay = setInterval(delayCheck, autoFade);
     });
-    var _delay = setInterval(delayCheck, 600);
+    var _delay = setInterval(delayCheck, autoFade);
   }
 }
 
