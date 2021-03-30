@@ -57,6 +57,7 @@ const VideoChat = ({
   onAddPeer,
   onRemovePeer,
   onEndCall,
+  sendArbitraryData,
   handleArbitraryData,
   cstmSnackbarMsg,
   cstmOptionBtns,
@@ -75,6 +76,7 @@ const VideoChat = ({
   onAddPeer?: Function;
   onRemovePeer?: Function;
   onEndCall?: Function;
+  sendArbitraryData?: Function;
   handleArbitraryData?: Function;
   cstmSnackbarMsg?: HTMLElement | Element | string;
   cstmOptionBtns?: Element[];

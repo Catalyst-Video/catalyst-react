@@ -68,3 +68,17 @@ export interface TwilioToken {
   ttl: number;
   username: string;
 }
+
+declare global {
+  interface String {
+    autolink(): string;
+  }
+}
+
+// String.prototype.autolink = function(length: number) {
+//   let d = String(this);
+//   while (d.length < length) {
+//     d = '0' + d;
+//   }
+//   return d;
+// };

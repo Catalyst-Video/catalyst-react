@@ -524,6 +524,7 @@ a {
 
 #catalyst .message a {
   text-decoration: underline;
+  color: var(--themeColor);
 }
 
 #catalyst .cssanimation {
@@ -850,6 +851,4 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
       -ms-user-select: none;
           user-select: none;
 }
-
-
 
