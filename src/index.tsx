@@ -57,12 +57,14 @@ const VideoChat = ({
   onAddPeer,
   onRemovePeer,
   onEndCall,
+  sendArbitraryData,
   handleArbitraryData,
   cstmSnackbarMsg,
   cstmOptionBtns,
   themeColor,
   showDotColors,
   showBorderColors,
+  autoFade,
 }: {
   sessionKey: string;
   uniqueAppId: string;
@@ -74,12 +76,14 @@ const VideoChat = ({
   onAddPeer?: Function;
   onRemovePeer?: Function;
   onEndCall?: Function;
+  sendArbitraryData?: Function;
   handleArbitraryData?: Function;
   cstmSnackbarMsg?: HTMLElement | Element | string;
   cstmOptionBtns?: Element[];
   themeColor?: string;
   showDotColors?: boolean;
   showBorderColors?: boolean;
+  autoFade?: number;
 }) => {
   const fsHandle = useFullScreenHandle();
 
@@ -96,7 +100,7 @@ const VideoChat = ({
   );
 
   useEffect(() => {
-    initialBrowserCheck(setBrowserSupported);
+    initialBrowserCheck(setBrowserSupported, autoFade ? autoFade : 600);
   }, []);
 
   useEffect(() => {
@@ -172,7 +176,10 @@ const VideoChat = ({
               </div>
             </Draggable>
 
-            <div className={`${showChat ? 'chat-offset' : ''} ct-multi-btn`}>
+            <div
+              id="ct-toolbar"
+              className={`${showChat ? 'chat-offset' : ''} ct-multi-btn`}
+            >
               <div className={`ct-btn-container ${hidden?.mute ? 'none' : ''}`}>
                 <button
                   className={`${

@@ -22,7 +22,10 @@ export function getBrowserName(): string {
   return name;
 }
 
-export function initialBrowserCheck(setBrowserSupported: Function): void {
+export function initialBrowserCheck(
+  setBrowserSupported: Function,
+  autoFade: number
+): void {
   var ua: string = navigator.userAgent || navigator.vendor;
   if (
     DetectRTC.isMobileDevice &&
@@ -55,6 +58,33 @@ export function initialBrowserCheck(setBrowserSupported: Function): void {
     },
     false
   );
+
+  // fade or show UI on mouse move
+  if (autoFade > 0) {
+    var timedelay = 1;
+    var header = document.getElementById('ct-header');
+    var toolbar = document.getElementById('ct-toolbar');
+    const delayCheck = () => {
+      if (timedelay === 5) {
+        header?.classList.add('hide');
+        header?.classList.remove('show');
+        toolbar?.classList.add('hide');
+        toolbar?.classList.remove('show');
+        timedelay = 1;
+      }
+      timedelay += 1;
+    };
+    document.addEventListener('mousemove', () => {
+      header?.classList.add('show');
+      header?.classList.remove('hide');
+      toolbar?.classList.add('show');
+      toolbar?.classList.remove('hide');
+      timedelay = 1;
+      clearInterval(_delay);
+      _delay = setInterval(delayCheck, autoFade);
+    });
+    var _delay = setInterval(delayCheck, autoFade);
+  }
 }
 
 export function isConnected(connected: Map<string, boolean>): boolean {

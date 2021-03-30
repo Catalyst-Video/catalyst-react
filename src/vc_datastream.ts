@@ -20,6 +20,7 @@ import {
   handlereceiveMessage,
   displayMessage,
 } from './utils/messages';
+import './utils/autolink.js';
 
 const DEFAULT_SERVER_ADDRESS = 'https://server.catalyst.chat/';
 
@@ -159,6 +160,7 @@ export default class VCDataStream implements VideoChatData {
         if (msg && msg.length > 0) {
           // Prevent cross site scripting
           msg = msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          msg = msg.autolink();
           sendToAllDataChannels('mes:' + msg, this.dataChannel);
           displayMsg(msg, this.localColor, true);
           document.getElementById('chat-end')?.scrollIntoView({
@@ -271,7 +273,7 @@ export default class VCDataStream implements VideoChatData {
         }
       };
 
-      /* POST MESSAGING - handle arbitrary data in iFrames by forwarding post messaging from one parent to the other */
+      /* POST MESSAGING - handle arbitrary data in iFrames by forwarding post messaging from one peer to the other */
       window.onmessage = (e: MessageEvent) => {
         try {
           if (JSON.parse(e.data).type === 'arbitrary_data')
