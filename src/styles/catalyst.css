@@ -54,6 +54,7 @@
   }
 }
 
+
 #catalyst .chat-indicator:after{
 content:attr(aria-valuetext);
 font-size:12px;
@@ -687,6 +688,10 @@ a {
     border-radius: 5px;
   }
 
+
+
+ 
+
 .chat-offset {
   left: 0px !important;
 }
@@ -761,6 +766,25 @@ a {
 } 
 
 }
+
+ @media (hover: hover) {
+  
+  #catalyst  .show {
+      transition: opacity 400ms;
+      opacity: 1;
+    }
+  #catalyst  .hide {
+      opacity: 0;
+      transition: opacity 400ms;
+    }
+  }
+
+
+  @media (hover: none) {
+    #catalyst button.ct-tooltip:hover span {
+      display: none;
+    }
+  }
 
 #catalyst .ct-header-btn {
   border: none !important;

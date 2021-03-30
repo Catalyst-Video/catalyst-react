@@ -63,6 +63,7 @@ const VideoChat = ({
   themeColor,
   showDotColors,
   showBorderColors,
+  autoFade,
 }: {
   sessionKey: string;
   uniqueAppId: string;
@@ -80,6 +81,7 @@ const VideoChat = ({
   themeColor?: string;
   showDotColors?: boolean;
   showBorderColors?: boolean;
+  autoFade?: boolean;
 }) => {
   const fsHandle = useFullScreenHandle();
 
@@ -96,7 +98,7 @@ const VideoChat = ({
   );
 
   useEffect(() => {
-    initialBrowserCheck(setBrowserSupported);
+    initialBrowserCheck(setBrowserSupported, autoFade ? autoFade : true);
   }, []);
 
   useEffect(() => {
@@ -172,7 +174,10 @@ const VideoChat = ({
               </div>
             </Draggable>
 
-            <div className={`${showChat ? 'chat-offset' : ''} ct-multi-btn`}>
+            <div
+              id="ct-toolbar"
+              className={`${showChat ? 'chat-offset' : ''} ct-multi-btn`}
+            >
               <div className={`ct-btn-container ${hidden?.mute ? 'none' : ''}`}>
                 <button
                   className={`${
