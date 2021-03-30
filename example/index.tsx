@@ -13,7 +13,7 @@ const App = () => {
         defaults={{
           // audioOn: false,
           // videoOn: false,
-          showChatArea: false,
+          showChatArea: true,
         }}
         onAddPeer={() => console.log('peer added')}
         onStartCall={() => console.log('on start call')}

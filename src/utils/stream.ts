@@ -41,7 +41,7 @@ export function handlePauseVideo(
 
 // Swap current video track with passed in stream by getting current track, swapping video for each peer connection
 export function handleSwitchStreamHelper(
-  stream: any,
+  stream: MediaStream,
   videoEnabled: boolean,
   setVideo: Function,
   VC: VideoChatData,

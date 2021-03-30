@@ -26,6 +26,7 @@ import { handleMute, handlePauseVideo, handleSharing } from './utils/stream';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faComment,
+  faCommentDots,
   faCompress,
   faDesktop,
   faExpand,
@@ -260,7 +261,9 @@ const VideoChat = ({
                   }}
                 >
                   <span>{showChat ? 'Hide Chat' : 'Show Chat'}</span>
-                  <FontAwesomeIcon icon={faComment} />
+                  <FontAwesomeIcon
+                    icon={unseenChats === 0 ? faComment : faCommentDots}
+                  />
                   {!showChat && unseenChats !== 0 && (
                     <i
                       className="chat-indicator"

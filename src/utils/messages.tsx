@@ -9,7 +9,7 @@ export function displayWebcamErrorMessage(
     toast(
       () => (
         <div className="text-center justify-between">
-          Failed to access video, please check webcam privacy settings
+          Failed to access video, check webcam privacy settings
           <button
             className="snack-btn"
             onClick={() => {
