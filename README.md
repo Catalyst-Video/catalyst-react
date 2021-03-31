@@ -40,9 +40,10 @@ import VideoChat from "catalyst-vc-react"
 | `picInPic`          | Enter Picture In Picture mode after clicking, double clicking, or not at all                   | ```string```                              |`click`, `dblclick`, `disabled`  | Optional      |
 | `onStartCall`  | Function triggered when call is instantiated | `Function`  | `() => console.log("call started")` | Optional |
 | `onAddPeer`  | Function triggered when a peer joins the call | `Function`  | `() => console.log("peer joined")` | Optional |
-| `onRemovePeer`  | Function triggered when a peer leaves the call | `Function`  | `() => console.log("peer left")` | Optional |
+| `onRemovePeer`  | JSON string containing arbitrary data for your application | `string`  | `{ type: "arbitrary_data", meta: "foo", trigger: "bar" }` | Optional |
 | `onEndCall`  | Function triggered when user clicks the "end call" button | `Function`  | `() => console.log("call ended")` | Optional |
-| `handleArbitraryData`  | Function with a prop containing stringified arbitrary data triggered when a message with the type arbitrary_data is received. Can be used to send JSON between peers | `Function`  | `customFunction(arbitraryData)` | Optional |
+| `arbitraryData`  | Function triggered when user clicks the "end call" button | `Function`  | `() => console.log("call ended")` | Optional |
+| `onReceiveArbitraryData`  | Function with a prop containing stringified arbitrary data triggered when a message with the type arbitrary_data is received. Can be used to send JSON between peers | `Function`  | `customFunction(arbitraryData)` | Optional |
 | `cstmSnackbarMsg`  | Displays message in snackbar popup on session start | `HTMLElement` or `Element` or `string`                              | `Share your session key {sessionKey} with whoever wants to join `                                | Optional |
 | `cstmOptionBtns`  | React elements that will be displayed in the Video Chat toolbar | `Element[]` | `[<div className="ct-btn-container"><button className="ct-hover-btn ct-tooltip ct-not-selectable" onClick={() => console.log('do something')}><FontAwesomeIcon icon={faSync} /><span>Do Something</span></button></div>,]`                                | Optional |
 | `themeColor`  | Alters Catalyst theme to use a particular color. Comes with a multitude of built-in options, or you can set a custom `hexadecimal` color of your choice. | `string`  | `blue` | Optional |

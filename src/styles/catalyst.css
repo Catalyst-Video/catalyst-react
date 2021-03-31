@@ -93,13 +93,14 @@ body .ct-body {
   width: 100%;
   max-height: 100vh;
   position: fixed;
-  left: 0;
-  right: 0;
   top: 0;
-  bottom: 0;
+  left: 0;
+  /*
+  right: 0;
+  bottom: 0; */
 }
 
-.fullscreen-enabled {
+#catalyst .fullscreen-enabled {
   background: #f3f5fd !important;
 
 }
@@ -113,7 +114,7 @@ body .ct-body {
 }
 
 
-i#remote-muted {
+#catalyst i#remote-muted {
 font-family: sans-serif;
 color: var(--themeColor);
 animation: show 0.4s ease; 
@@ -129,7 +130,7 @@ z-index: 10;
 display: none;
 }
 
-i#remote-paused {
+#catalyst i#remote-paused {
 font-family: sans-serif;
 color: var(--themeColor);
 animation: show 0.4s ease; 
@@ -159,8 +160,7 @@ display: none;
   display: block;
 }
 
-#catalyst #ct-header p,
-img {
+#catalyst #ct-header {
   float: left;
   padding: 7px;
 }

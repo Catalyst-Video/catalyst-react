@@ -58,8 +58,8 @@ const VideoChat = ({
   onAddPeer,
   onRemovePeer,
   onEndCall,
-  sendArbitraryData,
-  handleArbitraryData,
+  arbitraryData,
+  onReceiveArbitraryData,
   cstmSnackbarMsg,
   cstmOptionBtns,
   themeColor,
@@ -77,8 +77,8 @@ const VideoChat = ({
   onAddPeer?: Function;
   onRemovePeer?: Function;
   onEndCall?: Function;
-  sendArbitraryData?: Function;
-  handleArbitraryData?: Function;
+  arbitraryData?: string;
+  onReceiveArbitraryData?: Function;
   cstmSnackbarMsg?: HTMLElement | Element | string;
   cstmOptionBtns?: Element[];
   themeColor?: string;
@@ -125,6 +125,10 @@ const VideoChat = ({
   }, [VC?.startedCall]);
 
   useEffect(() => {
+    if (arbitraryData && VC) sendToAllDataChannels(arbitraryData, VC.dataChannel);
+  }, [arbitraryData]);
+
+  useEffect(() => {
     const VCData = new VCDataStream(
       sessionKey,
       uniqueAppId,
@@ -137,7 +141,7 @@ const VideoChat = ({
       onRemovePeer,
       showBorderColors,
       showDotColors,
-      handleArbitraryData
+      onReceiveArbitraryData
     );
     setVCData(VCData);
     VCData?.requestMediaStream();
