@@ -6,32 +6,36 @@ import { toast } from 'react-toastify';
 
 const App = () => {
   return (
-    <div>
-      <VideoChat
-        sessionKey="TestingGround"
-        uniqueAppId="demo"
-        defaults={{
-          // audioOn: false,
-          // videoOn: false,
-          showChatArea: true,
-        }}
-        onAddPeer={() => console.log('peer added')}
-        onStartCall={() => console.log('on start call')}
-        onRemovePeer={() => console.log('on remove peer')}
-        onEndCall={() => toast('Triggered end call')}
-        // themeColor="indigo"
-        // cstmOptionBtns={[
-        //   <div className="ct-btn-container">
-        //     <button
-        //       className="ct-hover-btn ct-tooltip ct-not-selectable"
-        //       onClick={() => console.log('call ended')}
-        //     >
-        //       <FontAwesomeIcon icon={faSync} />
-        //       <span>Synchronize</span>
-        //     </button>
-        //   </div>,
-        // ]}
-      />
+    <div style={{ width: '100vw', height: '100vh', background: 'red' }}>
+      <div style={{ width: '70vw', height: '90vh', top: 0, left: 0 }}>
+        <VideoChat
+          sessionKey="TestingGround"
+          uniqueAppId="demo"
+          defaults={
+            {
+              // audioOn: false,
+              // videoOn: false,
+              // showChatArea: true,
+            }
+          }
+          onAddPeer={() => console.log('peer added')}
+          onStartCall={() => console.log('on start call')}
+          onRemovePeer={() => console.log('on remove peer')}
+          onEndCall={() => toast('Triggered end call')}
+          // themeColor="indigo"
+          // cstmOptionBtns={[
+          //   <div className="ct-btn-container">
+          //     <button
+          //       className="ct-hover-btn ct-tooltip ct-not-selectable"
+          //       onClick={() => console.log('call ended')}
+          //     >
+          //       <FontAwesomeIcon icon={faSync} />
+          //       <span>Synchronize</span>
+          //     </button>
+          //   </div>,
+          // ]}
+        />
+      </div>
     </div>
   );
 };

@@ -54,24 +54,11 @@
   }
 }
 
-
-#catalyst .chat-indicator:after{
-content:attr(aria-valuetext);
-font-size:12px;
-font-family: sans-serif;
-background: var(--themeColor);
-color: white;
-font-size: small;
-border-radius: 50%;
-padding: 2px 7px;
-position:absolute;
-right: 10px;
-top: -2px;
-z-index: -1;
-opacity:0.9;
-font-style: normal;
+/* TODO:  */
+html, body
+{
+    margin: 0px; padding: 0px
 }
-
 
 /* body & video  */
 body .ct-body {
@@ -92,9 +79,10 @@ body .ct-body {
   height:  100%;
   width: 100%;
   max-height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
+  max-width: 100vw;
+  position: relative;
+  /* top: 0;
+  left: 0; */
   /*
   right: 0;
   bottom: 0; */
@@ -102,7 +90,6 @@ body .ct-body {
 
 #catalyst .fullscreen-enabled {
   background: #f3f5fd !important;
-
 }
 
 #catalyst video {
@@ -146,6 +133,30 @@ z-index: 10;
 display: none;
 }
 
+
+#catalyst .chat-indicator:after{
+content:attr(aria-valuetext);
+font-size:12px;
+font-family: sans-serif;
+background: var(--themeColor);
+color: white;
+font-size: small;
+border-radius: 50%;
+padding: 2px 7px;
+position:absolute;
+right: 10px;
+top: -2px;
+z-index: -1;
+opacity:0.9;
+font-style: normal;
+}
+
+#ct-call-section {
+  width: inherit;
+  height: inherit;
+}
+
+
 /* ct-header  */
 #catalyst #ct-header {
   color: white;
@@ -154,7 +165,8 @@ display: none;
   font-weight: 600;
   font-size: 1rem;
   white-space: nowrap;
-  position: relative;
+  position: absolute; 
+  /* relative  */
   float: left;
   z-index: 4;
   display: block;
@@ -211,7 +223,7 @@ a {
 
 /* draggable local video */
 #catalyst #local-vid-wrapper {
-  z-index: 3;
+  z-index: 10;
   position: absolute;
   width: 15%;
   max-height: 100px;
@@ -300,7 +312,6 @@ a {
 }
 
 #catalyst .ct-btn-on {
- /* color: #e53935 !important; */
  color: var(--themeColor) !important;
 }
 
@@ -314,9 +325,6 @@ a {
 
  #catalyst .ct-multi-btn {
   position: fixed;
-  left: 50%;
-  transform: translate(-50%, 0);
-  bottom: 1vh;
   border-radius: 10px;
   background: rgba(255, 255, 255, 1);
   backdrop-filter: blur(6px);
@@ -324,10 +332,20 @@ a {
   padding: 15px;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
-  z-index: 4;
-  /* width: 500px; */
+  align-items: center;
+  max-width: 100vw;
+  z-index: 10;
+  margin-bottom: 0.5rem;
 }
+
+#catalyst #ct-toolbar {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center; 
+  flex-direction: row;
+} 
 
 .chat-offset {
   left: calc(50% - 120px) !important;
@@ -338,6 +356,7 @@ a {
   margin: 0 auto;
   padding-left: 1rem;
   padding-right: 1rem;
+  z-index: 10;
 }
 
 
@@ -645,21 +664,24 @@ a {
    width: 90%;
 }
 
-  #catalyst .ct-multi-btn {
-    position: fixed;
-    left: 0;
-    top: initial;
-    bottom: 0;
-    width: 100%;
-    height: 3rem;
+
+
+#catalyst #ct-toolbar {
+  width: inherit;
+  /* flex-direction: column;
+  display: inline-block;
+  align-self: flex-end;
+  width: inherit;
+  flex: 1; */
+} 
+
+
+ #catalyst .ct-multi-btn {
     margin: 0;
-    -ms-transform: translate(0%, 0%);
-    transform: translate(0%, 0%);
-    z-index: 10;
-    /* border-radius: 10px; */
     padding: 0;
-    flex-direction: row;
-  }
+    /* position: fixed;
+    width: inherit; */
+  } 
   
 /* text inside local video */
 #catalyst #local-vid-wrapper p {
@@ -679,8 +701,6 @@ a {
 #catalyst #local-video {
   min-width: 130px;
   position: absolute;
-  /* bottom: 0 !important;
-  right: 0 !important; */
 }
 
  #catalyst #ct-captions-text {
