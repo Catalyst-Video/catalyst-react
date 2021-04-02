@@ -155,7 +155,14 @@ const VideoChat = ({
         if (!videoEnabled) sendToAllDataChannels(`vid:true`, VC.dataChannel);
       }
     }, 2000);
-    if (VC) displayWelcomeMessage(sessionKey, VC.connected, cstmSnackbarMsg);
+    if (VC) {
+      displayWelcomeMessage(sessionKey, VC.connected, cstmSnackbarMsg);
+      if (!audioEnabled && VC.localAudio) VC.localAudio.enabled = false;
+      if (!videoEnabled && VC.localVideo)
+        VC.localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
+          track.enabled = false;
+        });
+    }
   }, [numPeers]);
 
   const incrementUnseenChats = () => {
@@ -270,9 +277,7 @@ const VideoChat = ({
                     }}
                   >
                     <span>{showChat ? 'Hide Chat' : 'Show Chat'}</span>
-                    <FontAwesomeIcon
-                      icon={faComment}
-                    />
+                    <FontAwesomeIcon icon={faComment} />
                     {!showChat && unseenChats !== 0 && (
                       <i
                         className="chat-indicator"
