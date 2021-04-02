@@ -49,6 +49,7 @@ export interface DefaultSettings {
   audioOn?: boolean;
   videoOn?: boolean;
   showChatArea?: boolean;
+  showToastArea?: boolean;
 }
 
 export interface HiddenSettings {

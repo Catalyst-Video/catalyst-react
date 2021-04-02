@@ -183,7 +183,7 @@ const VideoChat = ({
             ></div>
 
             <div id="ct-toolbar">
-              <div className="ct-multi-btn">
+              <div className={`${showChat ? 'chat-offset' : ''} ct-multi-btn`}>
                 <div
                   className={`ct-btn-container ${hidden?.mute ? 'none' : ''}`}
                 >
@@ -345,19 +345,21 @@ const VideoChat = ({
                 </div>
               </div>
             </div>
-            <ToastContainer
-              position="top-center"
-              autoClose={50000}
-              hideProgressBar={true}
-              className={showChat ? 'chat-offset' : ''}
-              newestOnTop={true}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              limit={2}
-            />
+            {(defaults?.showToastArea ?? true) && (
+              <ToastContainer
+                position="top-center"
+                autoClose={50000}
+                hideProgressBar={true}
+                className={showChat ? 'chat-offset' : ''}
+                newestOnTop={true}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                limit={2}
+              />
+            )}
           </div>
         </FullScreen>
       </div>

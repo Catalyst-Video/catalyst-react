@@ -343,9 +343,6 @@ a {
   flex-direction: row;
 } 
 
-.chat-offset {
-  left: calc(50% - 120px) !important;
-}
 
 #catalyst .ct-btn-container {
   position: relative;
@@ -381,6 +378,13 @@ a {
   }
 }
 
+
+@media (min-width: 1200px){
+  .chat-offset {
+  /* left: calc(50% - 120px) !important; */
+    right: calc(50% + 120px)!important;
+}
+}
 
 
 #catalyst .chat-close-btn {
