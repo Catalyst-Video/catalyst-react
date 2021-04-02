@@ -1,25 +1,36 @@
 
 /* snackbar  */
 .text-center {
-  text-align: center ;
+  text-align: center;
+}
+
+.Toastify {
+  width: inherit;
+  height: inherit;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center; 
+  flex-direction: row; 
+  max-width: inherit;
 }
 
 .Toastify__toast-container {
   z-index: 9999;
   -webkit-transform: translate3d(0, 0, 9999px);
-  position: fixed;
+  position: absolute;
   padding: 4px;
-  width: 30rem ;
+  width: 30rem;
   border-radius: 20px ;
   box-sizing: border-box;
   color: #fff;
+  max-width: 100%;
 }
 .Toastify__toast-container--top-left {
   top: 1em;
   left: 1em;
 }
 .Toastify__toast-container--top-center {
-  top: 1em;
+  top: 1em; 
   left: 50%;
   transform: translateX(-50%);
 }

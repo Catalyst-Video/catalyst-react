@@ -81,11 +81,6 @@ body .ct-body {
   max-height: 100vh;
   max-width: 100vw;
   position: relative;
-  /* top: 0;
-  left: 0; */
-  /*
-  right: 0;
-  bottom: 0; */
 }
 
 #catalyst .fullscreen-enabled {
@@ -155,7 +150,6 @@ font-style: normal;
   width: inherit;
   height: inherit;
 }
-
 
 /* ct-header  */
 #catalyst #ct-header {
@@ -309,6 +303,8 @@ a {
   cursor: pointer;
   padding: 7px;
   border-radius: 5px;
+  z-index: 3;
+  position: relative;
 }
 
 #catalyst .ct-btn-on {
@@ -334,7 +330,7 @@ a {
   flex-direction: row;
   align-items: center;
   max-width: 100vw;
-  z-index: 10;
+  z-index: 8;
   margin-bottom: 0.5rem;
 }
 
@@ -402,13 +398,15 @@ a {
 }
 
 #catalyst #chat-entire {
-  position: fixed;
+  position: absolute;
   right: 0;
-  top: 0;
-  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row;
   background: white;
-  z-index: 4;
-  height: 100vh;
+  z-index: 11;
+  max-height: 100vh;
+  height: inherit;
   width: 240px;
   padding: 0rem;
   overflow-x: hidden;
@@ -418,7 +416,23 @@ a {
   transition: transform .3s ease-out;
   -webkit-transition: -webkit-transform .3s ease-out;
   will-change: transform;
-  /* animation: 0.2s ease-out 0s 1 slideInFromRight; */
+}
+
+#catalyst #chat-zone {
+  box-sizing: border-box;
+  position: relative;
+  justify-content: flex-end;
+  height: 77%;
+  flex-direction: row;
+  width: inherit;
+  overflow: scroll;
+  font-family: "Heebo", sans-serif;
+  font-size: 0.8rem;
+}
+
+#catalyst #chat-zone::-webkit-scrollbar {
+  width: 0 !important;
+  background: transparent !important; 
 }
 
 #catalyst div.chat-compose-wrapper {
@@ -478,22 +492,6 @@ a {
   top: 0.8rem;
 }
 
-#catalyst #chat-zone {
-  box-sizing: border-box;
-  position: fixed;
-  height: 77%;
-  right: 0;
-  top: 0;
-  width: 100%;
-  overflow: scroll;
-  font-family: "Heebo", sans-serif;
-  font-size: 0.8rem;
-}
-
-#catalyst #chat-zone::-webkit-scrollbar {
-  width: 0 !important;
-  background: transparent !important; 
-}
 
 
 #catalyst #chat-zone .chat-messages .message-item {
@@ -550,7 +548,7 @@ a {
 }
 
 #catalyst .hide-chat {
-  display: none;
+  display: none !important;
 }
 
 #catalyst .chat-messages {
@@ -561,8 +559,6 @@ a {
   padding: 35px 0px 5px 0px;
   overflow: -moz-scrollbars-none;
 }
-
-
 
 #catalyst .message {
   word-break: break-all;
@@ -594,17 +590,17 @@ a {
 /* ct-tooltips */
 #catalyst button.ct-tooltip span {
   display: none;
-  opacity: 0;
-  transition: opacity 0s 3s;
+  /* opacity: 0;
+  transition: opacity 0s 3s; */
+  position: absolute;
 }
 #catalyst button.ct-tooltip:hover span {
-  opacity: 1;
-  transition: opacity 0s;
+  /* opacity: 1;
+  transition: opacity 0s; */
   z-index: 999;
   color: white;
   font-family: "Heebo", sans-serif;
   font-size: 0.8rem;
-  position: absolute;
   left: 3.5rem;
   white-space: nowrap;
   top: 0px;
@@ -612,8 +608,10 @@ a {
   background: #16171a;
   padding: 10px;
   border-radius: 10px;
-  display: flex;
+  display: block;
+  position: absolute;
 }
+
 
 
 /* mobile layout */
@@ -623,6 +621,7 @@ a {
     width: 100%;
     height: 100%;
     max-height: 100vh;
+      max-width: 100vw;
     font-size: 1em;
   }
 
@@ -649,7 +648,6 @@ a {
     width: 100%;
     display: block;
     text-align: center;
-    /* background: rgb(136, 151, 168); */
     background:  var(--themeColor);
     padding: 1.5px;
     color: white;
@@ -667,20 +665,13 @@ a {
 
 
 #catalyst #ct-toolbar {
-  width: inherit;
-  /* flex-direction: column;
-  display: inline-block;
-  align-self: flex-end;
-  width: inherit;
-  flex: 1; */
+      max-width: inherit; 
 } 
-
 
  #catalyst .ct-multi-btn {
     margin: 0;
     padding: 0;
-    /* position: fixed;
-    width: inherit; */
+    /* width: 100%; */
   } 
   
 /* text inside local video */
@@ -755,11 +746,12 @@ a {
     width: 100vw;
     padding: 0;
     text-align: center;
-    z-index: 6;
+    z-index: 12;
   }
 
  #catalyst #chat-zone {
-    position: relative;
+    /* position: relative; */
+    position: absolute;
     padding-top: 20px;
     width: 100%;
     height: calc(100% - 2rem);
@@ -767,12 +759,10 @@ a {
     border-radius: 10px;
   }
 
-
-
-#catalyst #chat-entire {
-  width: 96vw;
-  z-index: 5;
-}
+  #catalyst #chat-entire {
+    width: 96%;
+    z-index: 12;
+  }
 
 
   #catalyst div.chat-compose-wrapper {
@@ -849,6 +839,7 @@ font-size: 20px;
   @media (hover: none) {
     #catalyst button.ct-tooltip:hover span {
       display: none;
+      z-index: 999;
     }
   }
 
