@@ -26,7 +26,6 @@ import { handleMute, handlePauseVideo, handleSharing } from './utils/stream';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faComment,
-  faCommentDots,
   faCompress,
   faDesktop,
   faExpand,
@@ -183,7 +182,8 @@ const VideoChat = ({
             ></div>
 
             <div id="ct-toolbar">
-              <div className={`${showChat ? 'chat-offset' : ''} ct-multi-btn`}>
+              <div className="ct-multi-btn">
+                {/* <div className={`${showChat ? 'chat-offset' : ''} ct-multi-btn`}> */}
                 <div
                   className={`ct-btn-container ${hidden?.mute ? 'none' : ''}`}
                 >
@@ -271,7 +271,7 @@ const VideoChat = ({
                   >
                     <span>{showChat ? 'Hide Chat' : 'Show Chat'}</span>
                     <FontAwesomeIcon
-                      icon={unseenChats === 0 ? faComment : faCommentDots}
+                      icon={faComment}
                     />
                     {!showChat && unseenChats !== 0 && (
                       <i

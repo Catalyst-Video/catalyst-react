@@ -7,17 +7,24 @@ import { toast } from 'react-toastify';
 const App = () => {
   return (
     <div style={{ width: '100vw', height: '100vh', background: 'red' }}>
-      <div style={{ width: '70vw', height: '90vh', top: 0, left: 0 }}>
+      <div
+        style={{
+          width: '70vw',
+          height: '70vh',
+          top: '50px',
+          left: '50px',
+          position: 'absolute',
+        }}
+      >
         <VideoChat
           sessionKey="TestingGround"
           uniqueAppId="demo"
-          defaults={
-            {
-              // audioOn: false,
-              // videoOn: false,
-              // showChatArea: true,
-            }
-          }
+          defaults={{
+            audioOn: false,
+            videoOn: false,
+            // showChatArea: true,
+            // showToastArea: false,
+          }}
           onAddPeer={() => console.log('peer added')}
           onStartCall={() => console.log('on start call')}
           onRemovePeer={() => console.log('on remove peer')}

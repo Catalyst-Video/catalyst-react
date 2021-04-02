@@ -49,6 +49,10 @@ export function initialBrowserCheck(
   }
   navigator.mediaDevices.ondevicechange = () => window.location.reload();
 
+  let catalystNode = document.getElementById('catalyst');
+  if (catalystNode && catalystNode.parentNode?.parentNode?.nodeName === 'BODY')
+    catalystNode.style.position = 'fixed';
+
   // Load and resize Event
   window.addEventListener(
     'load',
