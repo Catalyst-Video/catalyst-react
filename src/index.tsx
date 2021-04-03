@@ -59,7 +59,7 @@ const VideoChat = ({
   onEndCall,
   arbitraryData,
   onReceiveArbitraryData,
-  cstmSnackbarMsg,
+  cstmWelcomeMsg,
   cstmOptionBtns,
   themeColor,
   showDotColors,
@@ -78,7 +78,7 @@ const VideoChat = ({
   onEndCall?: Function;
   arbitraryData?: string;
   onReceiveArbitraryData?: Function;
-  cstmSnackbarMsg?: HTMLElement | Element | string;
+  cstmWelcomeMsg?: HTMLElement | Element | string;
   cstmOptionBtns?: Element[];
   themeColor?: string;
   showDotColors?: boolean;
@@ -145,7 +145,7 @@ const VideoChat = ({
     );
     setVCData(VCData);
     VCData?.requestMediaStream();
-    displayWelcomeMessage(sessionKey, VCData.connected, cstmSnackbarMsg);
+    displayWelcomeMessage(sessionKey, VCData.connected, cstmWelcomeMsg);
   }, []);
 
   useEffect(() => {
@@ -156,7 +156,7 @@ const VideoChat = ({
       }
     }, 2000);
     if (VC) {
-      displayWelcomeMessage(sessionKey, VC.connected, cstmSnackbarMsg);
+      displayWelcomeMessage(sessionKey, VC.connected, cstmWelcomeMsg);
       if (!audioEnabled && VC.localAudio) VC.localAudio.enabled = false;
       if (!videoEnabled && VC.localVideo)
         VC.localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
