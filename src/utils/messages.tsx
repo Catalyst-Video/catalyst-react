@@ -34,7 +34,7 @@ export function displayWebcamErrorMessage(
 export function displayWelcomeMessage(
   sessionKey: string,
   connected: Map<string, boolean>,
-  cstmSnackbarMsg?: string | HTMLElement | Element | undefined
+  cstmSnackbarMsg?: JSX.Element | string
 ): void {
   if (!isConnected(connected)) {
     toast(

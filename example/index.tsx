@@ -29,6 +29,12 @@ const App = () => {
       onStartCall={() => console.log('on start call')}
       onRemovePeer={() => console.log('on remove peer')}
       onEndCall={() => toast('Triggered end call')}
+      // cstmWelcomeMsg={
+      //   <>
+      //     <span>Room ready! Waiting for others to join with session key </span>
+      //     <strong>{'Bob'}</strong>
+      //   </>
+      // }
       // themeColor="indigo"
       // cstmOptionBtns={[
       //   <div className="ct-btn-container">

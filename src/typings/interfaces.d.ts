@@ -55,6 +55,7 @@ export interface DefaultSettings {
 export interface HiddenSettings {
   mute?: boolean;
   pausevideo?: boolean;
+  fullscreen?: boolean;
   screenshare?: boolean;
   chat?: boolean;
   endcall?: boolean;

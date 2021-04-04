@@ -78,8 +78,8 @@ const VideoChat = ({
   onEndCall?: Function;
   arbitraryData?: string;
   onReceiveArbitraryData?: Function;
-  cstmWelcomeMsg?: HTMLElement | Element | string;
-  cstmOptionBtns?: Element[];
+  cstmWelcomeMsg?: JSX.Element | string;
+  cstmOptionBtns?: JSX.Element[];
   themeColor?: string;
   showDotColors?: boolean;
   showBorderColors?: boolean;
@@ -239,7 +239,7 @@ const VideoChat = ({
 
                 <div
                   className={`ct-btn-container ${
-                    hidden?.pausevideo ? 'none' : ''
+                    hidden?.fullscreen ? 'none' : ''
                   }`}
                 >
                   <button
