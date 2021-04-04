@@ -57,7 +57,7 @@ const WrapperComp = ({
       // cstmWelcomeMsg="DISABLED"
       // alwaysBanner={true}
       // hidden={{ chat: true, mute: true }}
-      darkMode={true}
+      // darkMode={true}
       onAddPeer={() => console.log('peer added')}
       onStartCall={() => console.log('on start call')}
       onRemovePeer={() => console.log('on remove peer')}
