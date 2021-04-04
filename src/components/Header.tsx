@@ -6,44 +6,54 @@ import { VideoChatData } from '../typings/interfaces';
 const Header = ({
   VC,
   sessionKey,
+  alwaysBanner,
 }: {
   VC: VideoChatData | undefined;
   sessionKey: string;
+  alwaysBanner: boolean | undefined;
 }) => {
   const [showSessionDetails, setShowSessionDetails] = useState(false);
 
   return (
     <div className="show-top">
-      <div className="mobile-banner">Powered by Catalyst</div>
-      <div id="ct-header" className="ct-not-selectable">
-        <button
-          className="ct-header-btn"
-          style={{ display: 'inline' }}
-          onClick={() => setShowSessionDetails(!showSessionDetails)}
-        >
-          <HeaderImg />
-        </button>
+      <div className={alwaysBanner ? 'header-banner' : 'mobile-banner'}>
+        Powered by Catalyst
       </div>
-      {showSessionDetails && VC && (
-        <button
-          className="session-details-btn"
-          onClick={() => setShowSessionDetails(!showSessionDetails)}
-        >
-          <span className="session-details-title">
-            <strong>Session Details</strong>
-            <FontAwesomeIcon
-              icon={faTimes}
-              size="lg"
-              title="Close Session Details"
-              className="session-details-close"
-            />
-          </span>
-          Room:<i> {sessionKey}</i>
-          <br />
-          UUID:{' '}
-          <i>{VC.sessionId.substring(0, VC.sessionId.indexOf(sessionKey))}</i>
-          <br />
-        </button>
+      {!alwaysBanner && (
+        <>
+          <div id="ct-header" className="ct-not-selectable">
+            <button
+              className="ct-header-btn"
+              style={{ display: 'inline' }}
+              onClick={() => setShowSessionDetails(!showSessionDetails)}
+            >
+              <HeaderImg />
+            </button>
+          </div>
+          {showSessionDetails && VC && (
+            <button
+              className="session-details-btn"
+              onClick={() => setShowSessionDetails(!showSessionDetails)}
+            >
+              <span className="session-details-title">
+                <strong>Session Details</strong>
+                <FontAwesomeIcon
+                  icon={faTimes}
+                  size="lg"
+                  title="Close Session Details"
+                  className="session-details-close"
+                />
+              </span>
+              Room:<i> {sessionKey}</i>
+              <br />
+              UUID:{' '}
+              <i>
+                {VC.sessionId.substring(0, VC.sessionId.indexOf(sessionKey))}
+              </i>
+              <br />
+            </button>
+          )}
+        </>
       )}
     </div>
   );

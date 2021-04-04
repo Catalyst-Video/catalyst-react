@@ -50,6 +50,7 @@ export interface DefaultSettings {
   videoOn?: boolean;
   showChatArea?: boolean;
   showToastArea?: boolean;
+  // darkMode?: boolean
 }
 
 export interface HiddenSettings {
@@ -58,6 +59,7 @@ export interface HiddenSettings {
   fullscreen?: boolean;
   screenshare?: boolean;
   chat?: boolean;
+  darkmode?: boolean;
   endcall?: boolean;
 }
 
@@ -69,6 +71,12 @@ export interface TwilioToken {
   password: string;
   ttl: number;
   username: string;
+}
+
+export enum HeaderType {
+  Logo,
+  Banner,
+  Responsive,
 }
 
 declare global {

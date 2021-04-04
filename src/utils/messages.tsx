@@ -36,7 +36,7 @@ export function displayWelcomeMessage(
   connected: Map<string, boolean>,
   cstmSnackbarMsg?: JSX.Element | string
 ): void {
-  if (!isConnected(connected)) {
+  if (!isConnected(connected) && cstmSnackbarMsg !== 'DISABLED') {
     toast(
       () => (
         <div className="text-center justify-between">

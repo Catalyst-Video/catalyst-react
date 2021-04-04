@@ -87,8 +87,17 @@ body .ct-body {
   position: relative;
 }
 
+
+body .dark {
+  background: #17171d;
+}
+
 #catalyst .fullscreen-enabled {
-  background: #f3f5fd !important;
+  background-color: #f3f5fd;
+}
+
+#catalyst .fullscreen-enabled.dark {
+  background-color: #17171d;
 }
 
 #catalyst video {
@@ -309,6 +318,10 @@ a {
   border-radius: 5px;
 }
 
+#catalyst .dark .ct-multi-btn button {
+  color: #ddd;
+}
+
 #catalyst .ct-btn-on {
  color: var(--themeColor) !important;
 }
@@ -333,6 +346,10 @@ a {
   align-items: center;
   max-width: 100vw;
   margin-bottom: 0.5rem;
+}
+
+#catalyst .dark .ct-multi-btn {
+  background: #252429;
 }
 
 #catalyst #ct-toolbar {
@@ -386,6 +403,23 @@ a {
 }
 }
 
+ #catalyst .header-banner {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    display: block;
+    text-align: center;
+    background:  var(--themeColor);
+    padding: 1.5px;
+    color: white;
+    min-height: 1rem;
+    max-height: 1.5rem;
+    font-size: 13px;
+    z-index: 4;
+    opacity: .8;
+    font-family: "Fira Sans", sans-serif;
+  }
 
 #catalyst .chat-close-btn {
 	border-radius: 10px;
@@ -399,6 +433,10 @@ a {
   outline: none !important;
   text-align: left;
   cursor: pointer; 
+}
+
+#catalyst .dark .chat-close-btn {
+  color: #eee; 
 }
 
 #catalyst #chat-entire {
@@ -420,6 +458,16 @@ a {
   transition: transform .3s ease-out;
   -webkit-transition: -webkit-transform .3s ease-out;
   will-change: transform;
+}
+
+#catalyst .dark #chat-entire {
+  background: #252429;
+  color: #eee; 
+}
+
+#catalyst  .dark textarea.chat-compose {
+ background: #252429;
+ color: #eee; 
 }
 
 #catalyst #chat-zone {
@@ -654,7 +702,8 @@ a {
     background:  var(--themeColor);
     padding: 1.5px;
     color: white;
-    height: 1rem;
+    min-height: 1rem;
+    max-height: 1.5rem;
     font-size: 13px;
     z-index: 4;
     opacity: .8;

@@ -25,6 +25,11 @@
   color: #fff;
   max-width: 100%;
 }
+
+.dark .Toastify__toast--default {
+  background: #252429;
+}
+
 .Toastify__toast-container--top-left {
   top: 1em;
   left: 1em;

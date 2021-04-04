@@ -31,7 +31,9 @@ import {
   faExpand,
   faMicrophone,
   faMicrophoneSlash,
+  faMoon,
   faPhoneSlash,
+  faSun,
   faVideo,
   faVideoSlash,
 } from '@fortawesome/free-solid-svg-icons';
@@ -42,6 +44,7 @@ import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 // Types
 import {
   DefaultSettings,
+  HeaderType,
   HiddenSettings,
   VideoChatData,
 } from './typings/interfaces';
@@ -65,6 +68,8 @@ const VideoChat = ({
   showDotColors,
   showBorderColors,
   autoFade,
+  alwaysBanner,
+  darkMode,
 }: {
   sessionKey: string;
   uniqueAppId: string;
@@ -84,6 +89,8 @@ const VideoChat = ({
   showDotColors?: boolean;
   showBorderColors?: boolean;
   autoFade?: number;
+  alwaysBanner?: boolean;
+  darkMode?: boolean;
 }) => {
   const fsHandle = useFullScreenHandle();
 
@@ -95,6 +102,7 @@ const VideoChat = ({
   const [unseenChats, setUnseenChats] = useState(0);
   const [localVideoText, setLocalVideoText] = useState('No webcam input');
   const [numPeers, setNumPeers] = useState(0);
+  const [dark, setDark] = useState(darkMode ?? false);
   const [showChat, setShowChat] = useState<boolean>(
     defaults?.showChatArea ?? false
   );
@@ -147,7 +155,7 @@ const VideoChat = ({
     VCData?.requestMediaStream();
     displayWelcomeMessage(sessionKey, VCData.connected, cstmWelcomeMsg);
 
-    return function cleanup() {
+    return () => {
       VCData.socket.emit('disconnecting');
       VCData.socket.disconnect();
       VCData.localStream?.getTracks().forEach(track => track.stop());
@@ -179,9 +187,9 @@ const VideoChat = ({
 
   if (browserSupported)
     return (
-      <div id="catalyst" className="ct-body">
-        <FullScreen handle={fsHandle}>
-          <Header VC={VC} sessionKey={sessionKey} />
+      <div id="catalyst" className={`ct-body ${dark ? 'dark' : ''}`}>
+        <FullScreen handle={fsHandle} className={dark ? 'dark' : ''}>
+          <Header VC={VC} sessionKey={sessionKey} alwaysBanner={alwaysBanner} />
           <Chat showChat={showChat} setShowChat={setShowChat} />
           <div id="ct-call-section">
             <Draggable defaultPosition={{ x: 30, y: 150 }} bounds="parent">
@@ -198,152 +206,159 @@ const VideoChat = ({
 
             <div id="ct-toolbar">
               <div className="ct-multi-btn">
-                {/* <div className={`${showChat ? 'chat-offset' : ''} ct-multi-btn`}> */}
-                <div
-                  className={`ct-btn-container ${hidden?.mute ? 'none' : ''}`}
-                >
-                  <button
-                    className={`${
-                      audioEnabled ? '' : 'ct-btn-on'
-                    } ct-hover-btn ct-tooltip ct-not-selectable`}
-                    onClick={() => {
-                      if (VC) handleMute(audioEnabled, setAudio, VC);
-                    }}
-                  >
-                    <span>{audioEnabled ? 'Mute Audio' : 'Unmute Audio'}</span>
-                    <FontAwesomeIcon
-                      icon={audioEnabled ? faMicrophone : faMicrophoneSlash}
-                    />
-                  </button>
-                </div>
+                {!hidden?.mute && (
+                  <div className="ct-btn-container">
+                    <button
+                      className={`${
+                        audioEnabled ? '' : 'ct-btn-on'
+                      } ct-hover-btn ct-tooltip ct-not-selectable`}
+                      onClick={() => {
+                        if (VC) handleMute(audioEnabled, setAudio, VC);
+                      }}
+                    >
+                      <span>
+                        {audioEnabled ? 'Mute Audio' : 'Unmute Audio'}
+                      </span>
+                      <FontAwesomeIcon
+                        icon={audioEnabled ? faMicrophone : faMicrophoneSlash}
+                      />
+                    </button>
+                  </div>
+                )}
+                {!hidden?.pausevideo && (
+                  <div className="ct-btn-container">
+                    <button
+                      className={`${
+                        videoEnabled ? '' : 'ct-btn-on'
+                      } ct-hover-btn ct-tooltip ct-not-selectable`}
+                      onClick={() => {
+                        if (VC)
+                          handlePauseVideo(
+                            videoEnabled,
+                            setVideo,
+                            VC,
+                            setLocalVideoText
+                          );
+                      }}
+                    >
+                      <span>
+                        {videoEnabled ? 'Pause Video' : 'Unpause Video'}
+                      </span>
+                      <FontAwesomeIcon
+                        icon={videoEnabled ? faVideo : faVideoSlash}
+                      />
+                    </button>
+                  </div>
+                )}
+                {!hidden?.fullscreen && (
+                  <div className="ct-btn-container">
+                    <button
+                      className={`${
+                        !fsHandle.active ? '' : 'ct-btn-on'
+                      } ct-hover-btn ct-tooltip ct-not-selectable`}
+                      onClick={() => {
+                        if (fsHandle.active) {
+                          fsHandle.exit();
+                        } else {
+                          fsHandle.enter();
+                        }
+                      }}
+                    >
+                      <span>
+                        {!fsHandle.active
+                          ? 'Enter Full Screen'
+                          : 'Exit Full Screen'}
+                      </span>
+                      <FontAwesomeIcon
+                        icon={!fsHandle.active ? faExpand : faCompress}
+                      />
+                    </button>
+                  </div>
+                )}
+                {!hidden?.chat && (
+                  <div className="ct-btn-container">
+                    <button
+                      className={`${
+                        !showChat ? '' : 'ct-btn-on'
+                      } ct-hover-btn ct-tooltip ct-not-selectable`}
+                      onClick={() => {
+                        setShowChat(!showChat);
+                      }}
+                    >
+                      <span>{showChat ? 'Hide Chat' : 'Show Chat'}</span>
+                      <FontAwesomeIcon icon={faComment} />
+                      {!showChat && unseenChats !== 0 && (
+                        <i
+                          className="chat-indicator"
+                          aria-valuetext={unseenChats.toString()}
+                        ></i>
+                      )}
+                    </button>
+                  </div>
+                )}
 
-                <div
-                  className={`ct-btn-container ${
-                    hidden?.pausevideo ? 'none' : ''
-                  }`}
-                >
-                  <button
-                    className={`${
-                      videoEnabled ? '' : 'ct-btn-on'
-                    } ct-hover-btn ct-tooltip ct-not-selectable`}
-                    onClick={() => {
-                      if (VC)
-                        handlePauseVideo(
-                          videoEnabled,
-                          setVideo,
-                          VC,
-                          setLocalVideoText
-                        );
-                    }}
-                  >
-                    <span>
-                      {videoEnabled ? 'Pause Video' : 'Unpause Video'}
-                    </span>
-                    <FontAwesomeIcon
-                      icon={videoEnabled ? faVideo : faVideoSlash}
-                    />
-                  </button>
-                </div>
+                {!hidden?.darkmode && (
+                  <div className="ct-btn-container">
+                    <button
+                      className={`${
+                        !showChat ? '' : 'ct-btn-on'
+                      } ct-hover-btn ct-tooltip ct-not-selectable`}
+                      onClick={() => {
+                        setDark(!dark);
+                      }}
+                    >
+                      <span>{!dark ? 'Dark Mode' : 'Light Mode'}</span>
+                      <FontAwesomeIcon icon={dark ? faMoon : faSun} />
+                    </button>
+                  </div>
+                )}
 
-                <div
-                  className={`ct-btn-container ${
-                    hidden?.fullscreen ? 'none' : ''
-                  }`}
-                >
-                  <button
-                    className={`${
-                      !fsHandle.active ? '' : 'ct-btn-on'
-                    } ct-hover-btn ct-tooltip ct-not-selectable`}
-                    onClick={() => {
-                      if (fsHandle.active) {
-                        fsHandle.exit();
-                      } else {
-                        fsHandle.enter();
-                      }
-                    }}
-                  >
-                    <span>
-                      {!fsHandle.active
-                        ? 'Enter Full Screen'
-                        : 'Exit Full Screen'}
-                    </span>
-                    <FontAwesomeIcon
-                      icon={!fsHandle.active ? faExpand : faCompress}
-                    />
-                  </button>
-                </div>
+                {!hidden?.screenshare && (
+                  <div className="ct-btn-container">
+                    <button
+                      className={`${
+                        !sharing ? '' : 'ct-btn-on'
+                      } ct-hover-btn ct-tooltip ct-not-selectable`}
+                      id="share-button"
+                      onClick={() => {
+                        if (VC)
+                          handleSharing(
+                            VC,
+                            sharing,
+                            setSharing,
+                            videoEnabled,
+                            setVideo,
+                            setLocalVideoText
+                          );
+                      }}
+                    >
+                      <span>
+                        {!sharing ? 'Share Screen' : 'Stop Sharing Screen'}
+                      </span>
 
-                <div
-                  className={`ct-btn-container ${hidden?.chat ? 'none' : ''}`}
-                >
-                  <button
-                    className={`${
-                      !showChat ? '' : 'ct-btn-on'
-                    } ct-hover-btn ct-tooltip ct-not-selectable`}
-                    onClick={() => {
-                      setShowChat(!showChat);
-                    }}
-                  >
-                    <span>{showChat ? 'Hide Chat' : 'Show Chat'}</span>
-                    <FontAwesomeIcon icon={faComment} />
-                    {!showChat && unseenChats !== 0 && (
-                      <i
-                        className="chat-indicator"
-                        aria-valuetext={unseenChats.toString()}
-                      ></i>
-                    )}
-                  </button>
-                </div>
-
-                <div
-                  className={`ct-btn-container ${
-                    hidden?.screenshare ? 'none' : ''
-                  }`}
-                >
-                  <button
-                    className={`${
-                      !sharing ? '' : 'ct-btn-on'
-                    } ct-hover-btn ct-tooltip ct-not-selectable`}
-                    id="share-button"
-                    onClick={() => {
-                      if (VC)
-                        handleSharing(
-                          VC,
-                          sharing,
-                          setSharing,
-                          videoEnabled,
-                          setVideo,
-                          setLocalVideoText
-                        );
-                    }}
-                  >
-                    <span>
-                      {!sharing ? 'Share Screen' : 'Stop Sharing Screen'}
-                    </span>
-
-                    <FontAwesomeIcon icon={faDesktop} />
-                  </button>
-                </div>
+                      <FontAwesomeIcon icon={faDesktop} />
+                    </button>
+                  </div>
+                )}
 
                 {cstmOptionBtns?.map((component, idx) => (
                   <React.Fragment key={idx}>{component}</React.Fragment>
                 ))}
 
-                <div
-                  className={`ct-btn-container ${
-                    hidden?.endcall ? 'none' : ''
-                  }`}
-                >
-                  <button
-                    className="ct-hover-btn ct-tooltip ct-not-selectable"
-                    onClick={() =>
-                      onEndCall ? onEndCall() : console.log('call ended')
-                    }
-                  >
-                    <FontAwesomeIcon icon={faPhoneSlash} />
-                    <span>End Call</span>
-                  </button>
-                  {/* <audio
+                {hidden?.endcall && (
+                  <div className="ct-btn-container">
+                    <button
+                      className="ct-hover-btn ct-tooltip ct-not-selectable"
+                      onClick={() =>
+                        onEndCall ? onEndCall() : console.log('call ended')
+                      }
+                    >
+                      <FontAwesomeIcon icon={faPhoneSlash} />
+                      <span>End Call</span>
+                    </button>
+                  </div>
+                )}
+                {/* <audio
                   id="join-sound"
                   preload="auto"
                   crossOrigin="anonymous"
@@ -355,7 +370,6 @@ const VideoChat = ({
                   crossOrigin="anonymous"
                   src={leaveSound}
                 ></audio> */}
-                </div>
               </div>
             </div>
             {(defaults?.showToastArea ?? true) && (
@@ -369,6 +383,7 @@ const VideoChat = ({
                 rtl={false}
                 pauseOnFocusLoss
                 draggable
+                toastClassName={dark ? 'dark' : ''}
                 pauseOnHover
                 limit={2}
               />
