@@ -471,7 +471,7 @@ a {
 
 
 #catalyst textarea.chat-compose {
-  min-width: calc(100% - 1rem);
+  /* min-width: calc(100% - 1rem); */
   max-height: 27%;
   min-height: 25%;
   font-family: "Heebo", sans-serif;

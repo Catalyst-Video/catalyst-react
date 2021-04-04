@@ -197,20 +197,16 @@ export function setMutedIndicator(uuid: string, display: string): void {
   var mutedDisplay = document.querySelectorAll(
     `[muted-uuid="${uuid}"]`
   )[0] as HTMLElement;
-  if (display === 'true') {
-    mutedDisplay.style.display = 'block';
-  } else {
-    mutedDisplay.style.display = 'none';
-  }
+  if (mutedDisplay)
+    if (display === 'true') mutedDisplay.style.display = 'block';
+    else mutedDisplay.style.display = 'none';
 }
 
 export function setPausedIndicator(uuid: string, display: string): void {
   var pausedDisplay = document.querySelectorAll(
     `[paused-uuid="${uuid}"]`
   )[0] as HTMLElement;
-  if (display === 'true') {
-    pausedDisplay.style.display = 'block';
-  } else {
-    pausedDisplay.style.display = 'none';
-  }
+  if (pausedDisplay)
+    if (display === 'true') pausedDisplay.style.display = 'block';
+    else pausedDisplay.style.display = 'none';
 }

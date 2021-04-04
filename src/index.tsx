@@ -146,6 +146,14 @@ const VideoChat = ({
     setVCData(VCData);
     VCData?.requestMediaStream();
     displayWelcomeMessage(sessionKey, VCData.connected, cstmWelcomeMsg);
+
+    return function cleanup() {
+      VCData.socket.emit('disconnecting');
+      VCData.socket.disconnect();
+      VCData.localStream?.getTracks().forEach(track => track.stop());
+      VCData.peerConnections.forEach(peer => peer.close());
+      setVCData(undefined);
+    };
   }, []);
 
   useEffect(() => {

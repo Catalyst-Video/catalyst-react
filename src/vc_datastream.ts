@@ -198,10 +198,10 @@ export default class VCDataStream implements VideoChatData {
   onPeerLeave = (uuid: string) => {
     try {
       logger('disconnected - UUID ' + uuid);
-      let leaveSound = document.getElementById(
+      /* TODO:  let leaveSound = document.getElementById(
         'leave-sound'
       ) as HTMLAudioElement;
-      if (leaveSound) leaveSound?.play();
+       if (leaveSound) leaveSound?.play(); */
       this?.remoteVideoWrapper?.removeChild(
         document.querySelectorAll(`[uuid="${uuid}"]`)[0]
       );
@@ -448,9 +448,9 @@ export default class VCDataStream implements VideoChatData {
       this.setNumPeers(this.peerConnections.size);
       logger('onAddStream <<< Received new stream from remote. Adding it...');
 
-      logger('onAddStream <<< Playing join sound...');
+      /*TODO:   logger('onAddStream <<< Playing join sound...');
       let joinSound = document.getElementById('join-sound') as HTMLAudioElement;
-      if (joinSound) joinSound?.play();
+      if (joinSound) joinSound?.play(); */
       var vidDiv = document.createElement('div');
       vidDiv.setAttribute('id', 'remote-div');
       vidDiv.setAttribute('uuid', uuid);
