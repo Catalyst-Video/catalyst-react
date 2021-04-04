@@ -309,7 +309,7 @@ a {
 /* buttons */
 #catalyst .ct-multi-btn button {
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.5rem !important;
   transition: all 0.3s ease-in-out;
   color: black;
   background: transparent;
@@ -769,7 +769,7 @@ a {
     position: relative;
     width: 100%;
     border: none;
-    font-size: 2rem;
+    font-size: 2rem !important;
     transition: all 0.3s ease-in-out;
     color: #333;
     background: transparent;

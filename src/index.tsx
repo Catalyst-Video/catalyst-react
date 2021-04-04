@@ -345,7 +345,7 @@ const VideoChat = ({
                   <React.Fragment key={idx}>{component}</React.Fragment>
                 ))}
 
-                {hidden?.endcall && (
+                {!hidden?.endcall && (
                   <div className="ct-btn-container">
                     <button
                       className="ct-hover-btn ct-tooltip ct-not-selectable"
