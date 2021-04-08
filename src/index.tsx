@@ -250,7 +250,7 @@ const CatalystChat = ({
                   </div>
                 )}
                 {!hidden?.fullscreen && (
-                  <div className="ct-btn-container">
+                  <div className="ct-btn-container mobile-none">
                     <button
                       className={`${
                         !fsHandle.active ? '' : 'ct-btn-on'
@@ -313,7 +313,7 @@ const CatalystChat = ({
                 )}
 
                 {!hidden?.screenshare && (
-                  <div className="ct-btn-container">
+                  <div className="ct-btn-container mobile-none">
                     <button
                       className={`${
                         !sharing ? '' : 'ct-btn-on'
