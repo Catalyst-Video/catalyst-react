@@ -69,6 +69,7 @@ const CatalystChat = ({
   autoFade,
   alwaysBanner,
   darkMode,
+  disableLocalVidDrag,
 }: {
   sessionKey: string;
   uniqueAppId: string;
@@ -90,6 +91,7 @@ const CatalystChat = ({
   autoFade?: number;
   alwaysBanner?: boolean;
   darkMode?: boolean;
+  disableLocalVidDrag?: boolean;
 }) => {
   const fsHandle = useFullScreenHandle();
 
@@ -131,6 +133,10 @@ const CatalystChat = ({
   }, [VC?.startedCall]);
 
   useEffect(() => {
+    setLocalVideoText(disableLocalVidDrag ? '' : 'Drag Me');
+  }, [VC?.localStream]);
+
+  useEffect(() => {
     if (arbitraryData && VC)
       sendToAllDataChannels(arbitraryData, VC.dataChannel);
   }, [arbitraryData]);
@@ -139,7 +145,6 @@ const CatalystChat = ({
     const VCData = new VCDataStream(
       sessionKey,
       uniqueAppId,
-      setLocalVideoText,
       incrementUnseenChats,
       setNumPeers,
       cstmServerAddress,
@@ -171,7 +176,8 @@ const CatalystChat = ({
       }
     }, 2000);
     if (VC) {
-      displayWelcomeMessage(sessionKey, VC.connected, cstmWelcomeMsg);
+      if (numPeers === 0)
+        displayWelcomeMessage(sessionKey, VC.connected, cstmWelcomeMsg);
       if (!audioEnabled && VC.localAudio) VC.localAudio.enabled = false;
       if (!videoEnabled && VC.localVideo)
         VC.localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
@@ -191,7 +197,11 @@ const CatalystChat = ({
           <Header VC={VC} sessionKey={sessionKey} alwaysBanner={alwaysBanner} />
           <Chat showChat={showChat} setShowChat={setShowChat} />
           <div id="ct-call-section">
-            <Draggable defaultPosition={{ x: 30, y: 150 }} bounds="parent">
+            <Draggable
+              defaultPosition={{ x: 30, y: 150 }}
+              bounds="parent"
+              disabled={disableLocalVidDrag ?? false}
+            >
               <div id="local-vid-wrapper" className="video-1">
                 <p id="ct-local-text">{localVideoText}</p>
                 <video id="local-video" autoPlay muted playsInline></video>
@@ -236,7 +246,8 @@ const CatalystChat = ({
                             videoEnabled,
                             setVideo,
                             VC,
-                            setLocalVideoText
+                            setLocalVideoText,
+                            disableLocalVidDrag
                           );
                       }}
                     >
@@ -327,7 +338,8 @@ const CatalystChat = ({
                             setSharing,
                             videoEnabled,
                             setVideo,
-                            setLocalVideoText
+                            setLocalVideoText,
+                            disableLocalVidDrag
                           );
                       }}
                     >

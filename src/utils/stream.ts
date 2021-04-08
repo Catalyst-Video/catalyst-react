@@ -19,7 +19,8 @@ export function handlePauseVideo(
   videoEnabled: boolean,
   setVideo: Function,
   VC: VideoChatData,
-  setLocalVideoText: Function
+  setLocalVideoText: Function,
+  disableLocalVidDrag: boolean | undefined
 ): void {
   setVideo(!videoEnabled);
   if (VC && VC.localVideo) {
@@ -34,7 +35,7 @@ export function handlePauseVideo(
       VC.localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
         track.enabled = true;
       });
-      setLocalVideoText('Drag Me');
+      setLocalVideoText(disableLocalVidDrag ? '' : 'Drag Me');
     }
   }
 }
@@ -45,7 +46,8 @@ export function handleSwitchStreamHelper(
   videoEnabled: boolean,
   setVideo: Function,
   VC: VideoChatData,
-  setLocalVideoText: Function
+  setLocalVideoText: Function,
+  disableLocalVidDrag: boolean | undefined
 ): void {
   let videoTrack = stream.getVideoTracks()[0];
   let audioTrack = stream.getAudioTracks()[0];
@@ -81,7 +83,13 @@ export function handleSwitchStreamHelper(
   VC.localStream = stream;
   VC.localVideo.srcObject = stream;
   if (!videoEnabled)
-    handlePauseVideo(videoEnabled, setVideo, VC, setLocalVideoText);
+    handlePauseVideo(
+      videoEnabled,
+      setVideo,
+      VC,
+      setLocalVideoText,
+      disableLocalVidDrag
+    );
 }
 
 export function handlePictureInPicture(
@@ -135,7 +143,8 @@ export function handleSharing(
   setSharing: Function,
   videoEnabled: boolean,
   setVideo: Function,
-  setLocalVideoText: Function
+  setLocalVideoText: Function,
+  disableLocalVidDrag: boolean | undefined
 ): void {
   // Handle swap video before video call is connected by checking that there's at least one peer connected
   if (!isConnected(VC.connected)) {
@@ -158,7 +167,8 @@ export function handleSharing(
           videoEnabled,
           setVideo,
           VC,
-          setLocalVideoText
+          setLocalVideoText,
+          disableLocalVidDrag
         );
         setLocalVideoText('Sharing Screen');
       })
@@ -185,9 +195,10 @@ export function handleSharing(
           videoEnabled,
           setVideo,
           VC,
-          setLocalVideoText
+          setLocalVideoText,
+          disableLocalVidDrag
         );
-        setLocalVideoText('Drag Me');
+        setLocalVideoText(disableLocalVidDrag ? '' : 'Drag Me');
       });
   }
 }

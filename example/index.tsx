@@ -35,54 +35,55 @@ const WrapperComp = ({
   setShowVideoCall: Function;
 }) => {
   return (
-    <div style={{ width: '100vw', height: '100vh', background: 'red' }}>
-      <div
-        style={{
-          width: '70vw',
-          height: '70vh',
-          top: '50px',
-          left: '50px',
-          position: 'absolute',
-        }}
-      >
-        <CatalystChat
-          sessionKey={sessionKey}
-          uniqueAppId="demo"
-          defaults={{
-            audioOn: false,
-            videoOn: false,
-            // showChatArea: true,
-            // showToastArea: false,
-          }}
-          // cstmWelcomeMsg="DISABLED"
-          // alwaysBanner={true}
-          // hidden={{ chat: true, mute: true }}
-          // darkMode={true}
-          onAddPeer={() => console.log('peer added')}
-          onStartCall={() => console.log('on start call')}
-          onRemovePeer={() => console.log('on remove peer')}
-          onEndCall={() => setShowVideoCall(false)}
-          // cstmWelcomeMsg={
-          //   <>
-          //     <span>Room ready! Waiting for others to join with session key </span>
-          //     <strong>{'Bob'}</strong>
-          //   </>
-          // }
-          // themeColor="indigo"
-          // cstmOptionBtns={[
-          //   <div className="ct-btn-container">
-          //     <button
-          //       className="ct-hover-btn ct-tooltip ct-not-selectable"
-          //       onClick={() => console.log('call ended')}
-          //     >
-          //       <FontAwesomeIcon icon={faSync} />
-          //       <span>Synchronize</span>
-          //     </button>
-          //   </div>,
-          // ]}
-        />
-      </div>
-    </div>
+    // <div style={{ width: '100vw', height: '100vh', background: 'red' }}>
+    //   <div
+    //     style={{
+    //       width: '70vw',
+    //       height: '70vh',
+    //       top: '50px',
+    //       left: '50px',
+    //       position: 'absolute',
+    //     }}
+    //   >
+    <CatalystChat
+      sessionKey={sessionKey}
+      uniqueAppId="demo"
+      disableLocalVidDrag={true}
+      defaults={{
+        audioOn: false,
+        videoOn: false,
+        // showChatArea: true,
+        // showToastArea: false,
+      }}
+      // cstmWelcomeMsg="DISABLED"
+      // alwaysBanner={true}
+      // hidden={{ chat: true, mute: true }}
+      // darkMode={true}
+      onAddPeer={() => console.log('peer added')}
+      onStartCall={() => console.log('on start call')}
+      onRemovePeer={() => console.log('on remove peer')}
+      onEndCall={() => setShowVideoCall(false)}
+      // cstmWelcomeMsg={
+      //   <>
+      //     <span>Room ready! Waiting for others to join with session key </span>
+      //     <strong>{'Bob'}</strong>
+      //   </>
+      // }
+      // themeColor="indigo"
+      // cstmOptionBtns={[
+      //   <div className="ct-btn-container">
+      //     <button
+      //       className="ct-hover-btn ct-tooltip ct-not-selectable"
+      //       onClick={() => console.log('call ended')}
+      //     >
+      //       <FontAwesomeIcon icon={faSync} />
+      //       <span>Synchronize</span>
+      //     </button>
+      //   </div>,
+      // ]}
+    />
+    //   </div>
+    // </div>
   );
 };
 

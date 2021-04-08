@@ -36,7 +36,7 @@ import CatalystChat from "catalyst-vc-react"
 | `uniqueAppId` | Unique project identifier - keeps video calls from different projects from overlapping                                                          |  `string` | `"4d39df3f-f67b-4217-b832-57d4ffa2b217"` |  Yes      |
 | `cstmServerAddress` | Domain for your signaling server. Uses the Catalyst Demo one by default                                                                   |  `string` | `"https://server.catalyst.chat/"` |  Optional    |
 | `defaults`          | Settings for the default instance of Catalyst                                                                                   | ```{audioOn?: boolean; videoOn?: boolean; showChatArea?: boolean; showToastArea?: boolean; }```                              | ```{ audioOn: true, videoOn: true, showToastArea: true }```  | Optional      |
-| `hidden`          | Hide any of Catalyst's wide array of video options                                                    | ```{ mute?: boolean; pausevideo?: boolean; screenshare?: boolean; fullscreen?: boolean; chat?: boolean; darkmode?: boolean; endcall?: boolean;  }```                              |```{ mute: false, pausevideo: false, screenshare: false, chat: false, darkmode: false, fullscreen: false, endcall: false }```  | Optional      |
+| `hidden`          | Hide any of Catalyst's wide array of video options                                                    | ```{ mute?: boolean; pausevideo?: boolean; screenshare?: boolean; fullscreen?: boolean; chat?: boolean; darkmode?: boolean; endcall?: boolean;  }```                              |```{ mute: true, pausevideo: true, screenshare: true, chat: true, darkmode: true, fullscreen: true, endcall: true }```  | Optional      |
 | `picInPic`          | Enter Picture In Picture mode after clicking, double clicking, or not at all                   | ```string```                              |`click`, `dblclick`, `disabled`  | Optional      |
 | `onStartCall`  | Function triggered when call is instantiated | `Function`  | `() => console.log("call started")` | Optional |
 | `onAddPeer`  | Function triggered when a peer joins the call | `Function`  | `() => console.log("peer joined")` | Optional |
@@ -52,6 +52,7 @@ import CatalystChat from "catalyst-vc-react"
 | `autoFade`  | Enable or disable header logo and toolbar from fading after X milliseconds of inactivity. If 0, disabled | `number`  | `600` | Optional |
 | `alwaysBanner`  | Always display "Powered By Catalyst" banner instead of Logo responsively | `boolean`  | `false` | Optional |
 | `darkMode`  | Switch theming to dark mode | `boolean`  | `false` | Optional |
+| `disableLocalVidDrag`  | Disable the ability to drag local video & hide "Drag Me" text. Useful for implementations where the entire chat is draggable | `boolean`  | `true` | Optional |
 
 
 ## Meta

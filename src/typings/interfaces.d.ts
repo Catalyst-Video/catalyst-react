@@ -10,7 +10,7 @@ export interface VideoChatData {
   localStream: MediaStream | undefined;
   localAudio: MediaStreamTrack | undefined;
   picInPic: string;
-  setLocalVideoText: Function;
+  // setLocalVideoText: Function;
   setNumPeers: Function;
   showDotColors: boolean;
   showBorderColors: boolean;

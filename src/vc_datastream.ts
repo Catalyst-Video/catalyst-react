@@ -36,7 +36,6 @@ export default class VCDataStream implements VideoChatData {
   localStream: MediaStream | undefined;
   localAudio: MediaStreamTrack | undefined;
   picInPic: string;
-  setLocalVideoText: Function;
   setNumPeers: Function;
   showDotColors: boolean;
   showBorderColors: boolean;
@@ -51,7 +50,6 @@ export default class VCDataStream implements VideoChatData {
   constructor(
     sessionKey: string,
     uniqueAppId: string,
-    setVidText: Function,
     incrementUnseenChats: Function,
     setNumPeers: Function,
     cstmServerAddress?: string,
@@ -79,7 +77,6 @@ export default class VCDataStream implements VideoChatData {
     this.localColor = 'var(--themeColor)';
     this.incrementUnseenChats = incrementUnseenChats;
     this.setNumPeers = setNumPeers;
-    this.setLocalVideoText = setVidText;
     this.showBorderColors = showBorderColors ?? false;
     this.showDotColors = showDotColors ?? false;
     this.onAddPeer = onAddPeer;
@@ -98,7 +95,6 @@ export default class VCDataStream implements VideoChatData {
       })
       .then(stream => {
         this.onMediaStream(stream);
-        this.setLocalVideoText('Drag Me');
       })
       .catch(error => {
         logger(error);
