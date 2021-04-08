@@ -30,6 +30,8 @@ export function handlePauseVideo(
         track.enabled = false;
         // TODO: experiment with track.stop(); to remove recording indicator on PC
       });
+      // if (VC.localVideo.srcObject && VC.localStream)
+      //   VC.localVideo.srcObject = VC.localStream;
       setLocalVideoText('Video Paused');
     } else {
       VC.localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {

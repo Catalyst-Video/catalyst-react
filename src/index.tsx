@@ -19,7 +19,11 @@ import IncompatibleAlert from './components/IncompatibleAlert';
 import VCDataStream from './vc_datastream';
 import { ResizeWrapper, setThemeColor } from './utils/ui';
 import { displayWelcomeMessage } from './utils/messages';
-import { initialBrowserCheck, sendToAllDataChannels } from './utils/general';
+import {
+  initialBrowserCheck,
+  logger,
+  sendToAllDataChannels,
+} from './utils/general';
 import { handleMute, handlePauseVideo, handleSharing } from './utils/stream';
 
 // Other packages
@@ -133,10 +137,6 @@ const CatalystChat = ({
   }, [VC?.startedCall]);
 
   useEffect(() => {
-    setLocalVideoText(disableLocalVidDrag ? '' : 'Drag Me');
-  }, [VC?.localStream]);
-
-  useEffect(() => {
     if (arbitraryData && VC)
       sendToAllDataChannels(arbitraryData, VC.dataChannel);
   }, [arbitraryData]);
@@ -158,6 +158,17 @@ const CatalystChat = ({
     setVCData(VCData);
     VCData?.requestMediaStream();
     displayWelcomeMessage(sessionKey, VCData.connected, cstmWelcomeMsg);
+    VCData.localVideo.addEventListener('playing', () => {
+      setLocalVideoText(disableLocalVidDrag ? '' : 'Drag Me');
+      if (!videoEnabled)
+        handlePauseVideo(
+          !videoEnabled,
+          setVideo,
+          VCData,
+          setLocalVideoText,
+          disableLocalVidDrag
+        );
+    });
 
     return () => {
       VCData.socket.emit('disconnecting');
