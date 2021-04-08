@@ -160,7 +160,7 @@ const CatalystChat = ({
     displayWelcomeMessage(sessionKey, VCData.connected, cstmWelcomeMsg);
     VCData.localVideo.addEventListener('playing', () => {
       setLocalVideoText(disableLocalVidDrag ? '' : 'Drag Me');
-      if (!videoEnabled)
+      if (!videoEnabled && !VCData.startedCall)
         handlePauseVideo(
           !videoEnabled,
           setVideo,
