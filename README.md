@@ -18,12 +18,12 @@ npm i catalyst-vc-react
 #### Importation
 
 ```typescript
-import VideoChat from "catalyst-vc-react"
+import CatalystChat from "catalyst-vc-react"
 ```
 #### Implementation
 
 ```tsx
-	<VideoChat
+	<CatalystChat
 			sessionKey="ENTER_SESSION_KEY_HERE"
 			uniqueAppId="ENTER_UUID_HERE"
 		/>
@@ -42,7 +42,7 @@ import VideoChat from "catalyst-vc-react"
 | `onAddPeer`  | Function triggered when a peer joins the call | `Function`  | `() => console.log("peer joined")` | Optional |
 | `onRemovePeer`  | JSON string containing arbitrary data for your application | `string`  | `{ type: "arbitrary_data", meta: "foo", trigger: "bar" }` | Optional |
 | `onEndCall`  | Function triggered when user clicks the "end call" button | `Function`  | `() => console.log("call ended")` | Optional |
-| `arbitraryData`  | Function triggered when user clicks the "end call" button | `Function`  | `() => console.log("call ended")` | Optional |
+| `arbitraryData`  | Stringified JSON passable through Catalyst if you need to transmit data between peers without involving an additional server | `string`  | `{ type: "arbitrary_data", meta: "foo" }` | Optional |
 | `onReceiveArbitraryData`  | Function with a prop containing stringified arbitrary data triggered when a message with the type arbitrary_data is received. Can be used to send JSON between peers | `Function`  | `customFunction(arbitraryData)` | Optional |
 | `cstmWelcomeMsg`  | Displays message in snackbar popup on session start. Set to "DISABLED" to hide it. | `Any element React can compile` or `string`                              | `Share your session key {sessionKey} with whoever wants to join `                                | Optional |
 | `cstmOptionBtns`  | React elements that will be displayed in the Video Chat toolbar | `Array of anything React can compile` | `[<div className="ct-btn-container"><button className="ct-hover-btn ct-tooltip ct-not-selectable" onClick={() => console.log('do something')}><FontAwesomeIcon icon={faSync} /><span>Do Something</span></button></div>,]`                                | Optional |

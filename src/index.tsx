@@ -44,12 +44,11 @@ import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 // Types
 import {
   DefaultSettings,
-  HeaderType,
   HiddenSettings,
   VideoChatData,
 } from './typings/interfaces';
 
-const VideoChat = ({
+const CatalystChat = ({
   sessionKey,
   uniqueAppId,
   cstmServerAddress,
@@ -395,4 +394,4 @@ const VideoChat = ({
   else return <IncompatibleAlert />;
 };
 
-export default VideoChat;
+export default CatalystChat;
