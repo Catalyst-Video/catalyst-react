@@ -18,9 +18,9 @@
   z-index: 3;
   /* position: relative;  */
 }
-.ct-chat {
-  width: calc(100% - 240px);
-}
+/* .ct-chat {
+  width: calc(100% - 340px);
+} */
 /* @media (max-width: 800px) {
   #remote-vid-wrapper {
           top: 2%;

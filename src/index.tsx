@@ -121,7 +121,7 @@ const CatalystChat = ({
   }, [themeColor]);
 
   useEffect(() => {
-    ResizeWrapper();
+    // ResizeWrapper();
     setUnseenChats(0);
   }, [showChat]);
 
@@ -206,7 +206,6 @@ const CatalystChat = ({
       <div id="catalyst" className={`ct-body ${dark ? 'dark' : ''}`}>
         <FullScreen handle={fsHandle} className={dark ? 'dark' : ''}>
           <Header VC={VC} sessionKey={sessionKey} alwaysBanner={alwaysBanner} />
-          <Chat showChat={showChat} setShowChat={setShowChat} />
           <div id="ct-call-section">
             <Draggable
               defaultPosition={{ x: 30, y: 150 }}
@@ -411,6 +410,7 @@ const CatalystChat = ({
               />
             )}
           </div>
+          <Chat showChat={showChat} setShowChat={setShowChat} />
         </FullScreen>
       </div>
     );
