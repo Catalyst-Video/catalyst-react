@@ -1,122 +1,121 @@
-    #remote-vid-wrapper {
-        display: flex;
-        align-content: center;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
-        vertical-align: middle;
-        /* position: absolute; */
-        /* left: 0px;
+#remote-vid-wrapper {
+  display: flex;
+  align-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  /* position: absolute; */
+  /* left: 0px;
         bottom: 0px;
         top: 0px;
         right: 0px; */
-        width:inherit;
-        height:inherit;
-        max-width: 100vw;
-        max-height: 100vh;
-        position: relative;
-        z-index: 3;
-         /* position: relative;  */
-    }
-    .ct-chat {
-        width: calc(100% - 240px);
-    }
-    @media (max-width: 800px) {
-        /* #remote-vid-wrapper {
+  /* width:inherit; */
+  height: inherit;
+  max-width: 100vw;
+  max-height: 100vh;
+  position: relative;
+  z-index: 3;
+  /* position: relative;  */
+}
+.ct-chat {
+  width: calc(100% - 240px);
+}
+@media (max-width: 800px) {
+  /* #remote-vid-wrapper {
           top: 2%;
           height: 92%;
           bottom: 6%;
         } */
-       .ct-chat  {
-            width: 100%;
-        }
-    }
+  .ct-chat {
+    width: 100%;
+  }
+}
 
-div#remote-div{
-    position: relative;
-    z-index: 0;
-    display: inline-block;
-    animation: show 0.4s ease; 
-    vertical-align: middle;
-    align-self: center;
-    text-align: center;
+div#remote-div {
+  position: relative;
+  z-index: 0;
+  display: inline-block;
+  animation: show 0.4s ease;
+  vertical-align: middle;
+  align-self: center;
+  text-align: center;
 }
 
 video#remote-video {
-    width: 100%;
-    /* margin: 2px; */
-    height: 100%;
-    position: relative;
-    z-index: 1;
-    border-radius: 10px;
-    overflow: hidden;
-    display: inline-block;
-    box-shadow: 0px 12px 22px rgba(0, 0, 0, 0.1);
-    background: #16171a;
+  width: 100%;
+  /* margin: 2px; */
+  height: 100%;
+  position: relative;
+  z-index: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  display: inline-block;
+  box-shadow: 0px 12px 22px rgba(0, 0, 0, 0.1);
+  background: #16171a;
 }
 
 div#indicator {
-font-size:12px;
-font-family: sans-serif;
-color: white;
-background: black;
-min-height: 4px;
-min-width:4px;
-font-size: small;
-border-radius: 50%;
-padding: 4px;
-position: absolute;
-bottom:  0.5rem;
-left:  0.6rem;
-z-index: 10;
+  font-size: 12px;
+  font-family: sans-serif;
+  color: white;
+  background: black;
+  min-height: 4px;
+  min-width: 4px;
+  font-size: small;
+  border-radius: 50%;
+  padding: 4px;
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0.6rem;
+  z-index: 10;
 }
 
 div#local-indicator {
-font-size:12px;
-font-family: sans-serif;
-color: white;
-background: black;
-min-height: 4px;
-min-width: 4px;
-font-size: small;
-border-radius: 50%;
-padding: 4px;
-position: absolute;
-top: 0.6rem;
-left:  0.5rem;
-z-index: 10;
+  font-size: 12px;
+  font-family: sans-serif;
+  color: white;
+  background: black;
+  min-height: 4px;
+  min-width: 4px;
+  font-size: small;
+  border-radius: 50%;
+  padding: 4px;
+  position: absolute;
+  top: 0.6rem;
+  left: 0.5rem;
+  z-index: 10;
 }
-
 
 /* animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; */
 
 /* animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite; */
 
-
 /* Animation */
-    @keyframes show {
-        0% {
-            opacity: 0;
-            transform: scale(0.4) translateY(20px);
-        }
-        100% {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-    }
-
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
+@keyframes show {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) translateY(20px);
   }
-  50% {
-    opacity: .5;
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }
 
-    @keyframes ping {
-  75%, 100% {
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes ping {
+  75%,
+  100% {
     transform: scale(2);
     opacity: 0;
   }
