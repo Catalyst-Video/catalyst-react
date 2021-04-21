@@ -57,8 +57,8 @@ export function initialBrowserCheck(
   window.addEventListener(
     'load',
     (e: Event) => {
-      // ResizeWrapper();
-      // window.onresize = ResizeWrapper;
+      ResizeWrapper();
+      window.onresize = ResizeWrapper;
     },
     false
   );

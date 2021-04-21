@@ -201,7 +201,7 @@ export default class VCDataStream implements VideoChatData {
       this?.remoteVideoWrapper?.removeChild(
         document.querySelectorAll(`[uuid="${uuid}"]`)[0]
       );
-      // ResizeWrapper();
+      ResizeWrapper();
     } catch (e) {
       logger(e);
     }
@@ -489,7 +489,7 @@ export default class VCDataStream implements VideoChatData {
 
         vidDiv.appendChild(vidNode);
         this.remoteVideoWrapper.appendChild(vidDiv);
-        // ResizeWrapper();
+        ResizeWrapper();
 
         if (this.onAddPeer) this.onAddPeer();
         closeAllToasts();
