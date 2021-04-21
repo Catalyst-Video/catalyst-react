@@ -69,12 +69,11 @@ export function Area(
 export function ResizeWrapper(): void {
   let Margin = 2;
   let Wrapper = document.getElementById('remote-vid-wrapper');
-  let ContentSection = document.getElementById('content-section');
   let Width = 0;
   let Height = 0;
-  if (Wrapper && ContentSection) {
-    Width = ContentSection.offsetWidth - Margin * 2;
-    Height = ContentSection.offsetHeight - Margin * 2;
+  if (Wrapper) {
+    Width = Wrapper.offsetWidth - Margin * 2;
+    Height = Wrapper.offsetHeight - Margin * 2;
   }
   let RemoteVideos = document.querySelectorAll('#remote-div');
   let max = 0;

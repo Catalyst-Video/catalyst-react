@@ -121,7 +121,7 @@ const CatalystChat = ({
   }, [themeColor]);
 
   useEffect(() => {
-    ResizeWrapper();
+    // ResizeWrapper();
     setUnseenChats(0);
   }, [showChat]);
 
@@ -218,14 +218,10 @@ const CatalystChat = ({
                 {showDotColors && <div id="local-indicator"></div>}
               </div>
             </Draggable>
-
             <div
-              id="content-section"
-              style={{ maxWidth: '100%', height: '100%' }}
+              id="remote-vid-wrapper"
               className={showChat ? 'ct-chat' : ''}
-            >
-              <div id="remote-vid-wrapper"></div>
-            </div>
+            ></div>
 
             <div id="ct-toolbar">
               <div className="ct-multi-btn">
