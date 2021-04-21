@@ -18,19 +18,22 @@
   z-index: 3;
   /* position: relative;  */
 }
-/* .ct-chat {
+
+/* Sets the width of the content container */
+.ct-chat {
   width: calc(100% - 340px);
-} */
-/* @media (max-width: 800px) {
-  #remote-vid-wrapper {
+}
+
+@media (max-width: 800px) {
+  /* #remote-vid-wrapper {
           top: 2%;
           height: 92%;
           bottom: 6%;
-        }
+        } */
   .ct-chat {
     width: 100%;
   }
-} */
+}
 
 div#remote-div {
   position: relative;
