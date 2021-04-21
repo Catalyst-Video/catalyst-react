@@ -451,9 +451,18 @@ a {
   overflow: -moz-scrollbars-none;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  transition: transform 0.3s ease-out;
-  -webkit-transition: -webkit-transform 0.3s ease-out;
+  /* transition: transform 0.3s ease-out;
+  -webkit-transition: -webkit-transform 0.3s ease-out; */
   will-change: transform;
+
+  /* transition: transform 0.24s cubic-bezier(0.4, 0, 0.6, 1) 0s; */
+  box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%);
+
+  -webkit-transform: translate3d(0px, 0px, 0px);
+  transform: translate3d(0px, 0px, 0px);
+  visibility: visible;
+  transition: all 0.5s ease 0s;
+  -webkit-transition: all 0.5s ease 0s;
 }
 
 #catalyst .dark #chat-entire {
@@ -593,7 +602,11 @@ a {
 }
 
 #catalyst .hide-chat {
-  display: none !important;
+  max-width: 0px !important;
+
+  transition: all 0.5s linear;
+
+  visibility: visible;
 }
 
 #catalyst .chat-messages {
@@ -791,6 +804,8 @@ a {
     padding: 0;
     text-align: center;
     z-index: 12;
+
+    transition: all 0.5s linear;
   }
 
   #catalyst #chat-zone {
