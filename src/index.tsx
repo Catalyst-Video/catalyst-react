@@ -1,9 +1,4 @@
-import React, { useEffect, useState } from 'react';
-
-// import joinSound from './assets/sound/join.mp3';
-// import leaveSound from './assets/sound/leave.mp3';
-// const joinSound = require('./assets/sound/join.mp3');
-// const leaveSound = require('./assets/sound/leave.mp3');
+import React, { useEffect, useRef, useState } from 'react';
 
 // Styles
 import './styles/catalyst.css';
@@ -19,11 +14,7 @@ import IncompatibleAlert from './components/IncompatibleAlert';
 import VCDataStream from './vc_datastream';
 import { ResizeWrapper, setThemeColor } from './utils/ui';
 import { displayWelcomeMessage } from './utils/messages';
-import {
-  initialBrowserCheck,
-  logger,
-  sendToAllDataChannels,
-} from './utils/general';
+import { initialBrowserCheck, sendToAllDataChannels } from './utils/general';
 import { handleMute, handlePauseVideo, handleSharing } from './utils/stream';
 
 // Other packages
@@ -112,6 +103,9 @@ const CatalystChat = ({
     defaults?.showChatArea ?? false
   );
 
+  const localVidRef = useRef<HTMLVideoElement>(null);
+  const remoteVidRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     initialBrowserCheck(setBrowserSupported, autoFade ? autoFade : 600);
   }, []);
@@ -129,7 +123,7 @@ const CatalystChat = ({
     if (VC && VC?.startedCall) {
       if (onStartCall) onStartCall();
       if (!audioEnabled && VC.localAudio) VC.localAudio.enabled = false;
-      if (!videoEnabled && VC.localVideo)
+      if (!videoEnabled && VC.localStream)
         VC.localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
           track.enabled = false;
         });
@@ -145,6 +139,8 @@ const CatalystChat = ({
     const VCData = new VCDataStream(
       sessionKey,
       uniqueAppId,
+      localVidRef,
+      remoteVidRef,
       incrementUnseenChats,
       setNumPeers,
       cstmServerAddress,
@@ -158,7 +154,7 @@ const CatalystChat = ({
     setVCData(VCData);
     VCData?.requestMediaStream();
     displayWelcomeMessage(sessionKey, VCData.connected, cstmWelcomeMsg);
-    VCData.localVideo.addEventListener('playing', () => {
+    VCData.localVidRef.current?.addEventListener('playing', () => {
       setLocalVideoText(disableLocalVidDrag ? '' : 'Drag Me');
       if (!videoEnabled && !VCData.startedCall)
         handlePauseVideo(
@@ -190,7 +186,7 @@ const CatalystChat = ({
       if (numPeers === 0)
         displayWelcomeMessage(sessionKey, VC.connected, cstmWelcomeMsg);
       if (!audioEnabled && VC.localAudio) VC.localAudio.enabled = false;
-      if (!videoEnabled && VC.localVideo)
+      if (!videoEnabled && VC.localStream)
         VC.localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
           track.enabled = false;
         });
@@ -215,12 +211,19 @@ const CatalystChat = ({
             >
               <div id="local-vid-wrapper" className="video-1">
                 <p id="ct-local-text">{localVideoText}</p>
-                <video id="local-video" autoPlay muted playsInline></video>
+                <video
+                  id="local-video"
+                  ref={localVidRef}
+                  autoPlay
+                  muted
+                  playsInline
+                ></video>
                 {showDotColors && <div id="local-indicator"></div>}
               </div>
             </Draggable>
             <div
               id="remote-vid-wrapper"
+              ref={remoteVidRef}
               className={showChat ? 'ct-chat' : ''}
             ></div>
 
@@ -380,18 +383,6 @@ const CatalystChat = ({
                     </button>
                   </div>
                 )}
-                {/* <audio
-                  id="join-sound"
-                  preload="auto"
-                  crossOrigin="anonymous"
-                  src={joinSound}
-                ></audio>
-                <audio
-                  id="leave-sound"
-                  preload="auto"
-                  crossOrigin="anonymous"
-                  src={leaveSound}
-                ></audio> */}
               </div>
             </div>
             {(defaults?.showToastArea ?? true) && (

@@ -23,7 +23,7 @@ export function handlePauseVideo(
   disableLocalVidDrag: boolean | undefined
 ): void {
   setVideo(!videoEnabled);
-  if (VC && VC.localVideo) {
+  if (VC && VC.localStream) {
     sendToAllDataChannels(`vid:${videoEnabled}`, VC.dataChannel);
     if (videoEnabled) {
       VC.localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
@@ -83,7 +83,7 @@ export function handleSwitchStreamHelper(
   );
   // Update local video stream, local video object, unpause video on swap
   VC.localStream = stream;
-  VC.localVideo.srcObject = stream;
+  VC.localVidRef.current.srcObject = stream;
   if (!videoEnabled)
     handlePauseVideo(
       videoEnabled,
@@ -181,7 +181,7 @@ export function handleSharing(
       });
   } else {
     // Stop the screen share video track. (We don't want to stop the audio track obviously.)
-    (VC.localVideo?.srcObject as MediaStream)
+    (VC.localVidRef.current?.srcObject as MediaStream)
       ?.getVideoTracks()
       .forEach((track: MediaStreamTrack) => track.stop());
     // Get webcam input

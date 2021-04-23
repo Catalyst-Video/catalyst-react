@@ -21,6 +21,7 @@ import {
   displayMessage,
 } from './utils/messages';
 import './utils/autolink.js';
+import { RefObject } from 'react';
 
 const DEFAULT_SERVER_ADDRESS = 'https://server.catalyst.chat/';
 
@@ -30,8 +31,8 @@ export default class VCDataStream implements VideoChatData {
   connected: Map<string, boolean>;
   localICECandidates: Record<string, RTCIceCandidate[]>;
   socket: any;
-  remoteVideoWrapper: HTMLDivElement;
-  localVideo: HTMLMediaElement;
+  localVidRef: RefObject<HTMLVideoElement>;
+  remoteVidRef: RefObject<HTMLDivElement>;
   peerConnections: Map<string, RTCPeerConnection>;
   localStream: MediaStream | undefined;
   localAudio: MediaStreamTrack | undefined;
@@ -50,6 +51,8 @@ export default class VCDataStream implements VideoChatData {
   constructor(
     sessionKey: string,
     uniqueAppId: string,
+    localVidRef: RefObject<HTMLVideoElement>,
+    remoteVidRef: RefObject<HTMLDivElement>,
     incrementUnseenChats: Function,
     setNumPeers: Function,
     cstmServerAddress?: string,
@@ -65,12 +68,8 @@ export default class VCDataStream implements VideoChatData {
     this.connected = new Map();
     this.localICECandidates = {};
     this.socket = io(cstmServerAddress ?? DEFAULT_SERVER_ADDRESS);
-    this.remoteVideoWrapper = document.getElementById(
-      'remote-vid-wrapper'
-    ) as HTMLDivElement;
-    this.localVideo = document.getElementById(
-      'local-video'
-    ) as HTMLMediaElement;
+    this.remoteVidRef = remoteVidRef;
+    this.localVidRef = localVidRef;
     this.peerConnections = new Map();
     this.picInPic = picInPic ?? 'dblclick';
     this.peerColors = new Map();
@@ -113,19 +112,16 @@ export default class VCDataStream implements VideoChatData {
 
     /* When a video stream is added to VideoChat, we need to store the local audio track, because the screen sharing MediaStream doesn't have audio by default, which is problematic for peer C who joins while another peer A/B is screen sharing (C won't receive A/Bs audio). */
     this.localAudio = stream.getAudioTracks()[0];
-    if (!this.localVideo)
-      this.localVideo = document.getElementById(
-        'local-vid-wrapper'
-      ) as HTMLMediaElement;
-
-    if (!this.localVideo.srcObject) this.localVideo.srcObject = stream;
+    if (this.localVidRef.current && !this.localVidRef.current.srcObject)
+      this.localVidRef.current.srcObject = stream;
     // Join the chat room
     this.socket.emit('join', this.sessionId, () => {
       if (this.showBorderColors) {
         this.localColor = hueToColor(
           uuidToHue(this.socket.id, this).toString()
         );
-        this.localVideo.style.border = `2px solid ${this.localColor}`;
+        if (this.localVidRef.current)
+          this.localVidRef.current.style.border = `2px solid ${this.localColor}`;
       }
       if (this.showDotColors) {
         let localIndicator = document.getElementById(
@@ -198,7 +194,7 @@ export default class VCDataStream implements VideoChatData {
         'leave-sound'
       ) as HTMLAudioElement;
        if (leaveSound) leaveSound?.play(); */
-      this?.remoteVideoWrapper?.removeChild(
+      this?.remoteVidRef.current?.removeChild(
         document.querySelectorAll(`[uuid="${uuid}"]`)[0]
       );
       ResizeWrapper();
@@ -466,12 +462,7 @@ export default class VCDataStream implements VideoChatData {
       // TODO: easiest way to add optional names?
       // indicatorNode.textContent = 'John Doe';
 
-      if (!this.remoteVideoWrapper)
-        this.remoteVideoWrapper = document.getElementById(
-          'remote-vid-wrapper'
-        ) as HTMLDivElement;
-
-      if (this.remoteVideoWrapper !== null) {
+      if (this.remoteVidRef.current) {
         vidNode.srcObject = e.streams.slice(-1)[0];
 
         if (this.picInPic !== 'disabled') {
@@ -488,7 +479,7 @@ export default class VCDataStream implements VideoChatData {
         }
 
         vidDiv.appendChild(vidNode);
-        this.remoteVideoWrapper.appendChild(vidDiv);
+        this.remoteVidRef.current.appendChild(vidDiv);
         ResizeWrapper();
 
         if (this.onAddPeer) this.onAddPeer();
