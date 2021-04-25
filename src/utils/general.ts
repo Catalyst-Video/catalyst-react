@@ -1,4 +1,5 @@
 import DetectRTC from 'detectrtc';
+import { WebRTCPermissions } from '../typings/interfaces';
 import { ResizeWrapper } from './ui';
 
 export function logger(data: string): void {
@@ -22,31 +23,50 @@ export function getBrowserName(): string {
   return name;
 }
 
-export function initialBrowserCheck(
-  setBrowserSupported: Function,
-  autoFade: number
-): void {
-  var ua: string = navigator.userAgent || navigator.vendor;
-  if (
-    DetectRTC.isMobileDevice &&
-    (ua.indexOf('FBAN') > -1 ||
-      ua.indexOf('FBAV') > -1 ||
-      ua.indexOf('Instagram') > -1)
-  ) {
-    if (DetectRTC.osName === 'iOS') {
-      setBrowserSupported(false);
-    }
-  }
-  if (DetectRTC.isMobileDevice) {
-    if (DetectRTC.osName === 'iOS' && !DetectRTC.browser.isSafari) {
-      setBrowserSupported(false);
-    }
-  }
-  const isWebRTCSupported = navigator.getUserMedia || window.RTCPeerConnection;
-  const browserName: string = getBrowserName();
-  if (!isWebRTCSupported || browserName === 'MSIE') {
-    setBrowserSupported(false);
-  }
+export function detectRTC(): typeof DetectRTC {
+  DetectRTC.load(() => {
+    DetectRTC.hasWebcam; // (has webcam device!)
+    DetectRTC.hasMicrophone; // (has microphone device!)
+    DetectRTC.hasSpeakers; // (has speakers!)
+    DetectRTC.isScreenCapturingSupported; // Chrome, Firefox, Opera, Edge and Android
+    DetectRTC.isSctpDataChannelsSupported;
+    DetectRTC.isRtpDataChannelsSupported;
+    DetectRTC.isAudioContextSupported;
+    DetectRTC.isWebRTCSupported;
+    DetectRTC.isDesktopCapturingSupported;
+    DetectRTC.isMobileDevice;
+
+    DetectRTC.isWebSocketsSupported;
+    DetectRTC.isWebSocketsBlocked;
+
+    DetectRTC.isWebsiteHasWebcamPermissions; // getUserMedia allowed for HTTPs domain in Chrome?
+    DetectRTC.isWebsiteHasMicrophonePermissions; // getUserMedia allowed for HTTPs domain in Chrome?
+
+    DetectRTC.audioInputDevices; // microphones
+    DetectRTC.audioOutputDevices; // speakers
+    DetectRTC.videoInputDevices; // cameras
+
+    DetectRTC.osName;
+    DetectRTC.osVersion;
+
+    DetectRTC.browser.name === 'Edge' || 'Chrome' || 'Firefox';
+    DetectRTC.browser.version;
+    DetectRTC.browser.isChrome;
+    DetectRTC.browser.isFirefox;
+    DetectRTC.browser.isOpera;
+    DetectRTC.browser.isIE;
+    DetectRTC.browser.isSafari;
+    DetectRTC.browser.isEdge;
+
+    DetectRTC.browser.isPrivateBrowsing; // incognito or private modes
+
+    DetectRTC.isCanvasSupportsStreamCapturing;
+    DetectRTC.isVideoSupportsStreamCapturing;
+  });
+  return DetectRTC;
+}
+
+export function initChat(autoFade: number): void {
   navigator.mediaDevices.ondevicechange = () => window.location.reload();
 
   let catalystNode = document.getElementById('catalyst');

@@ -139,40 +139,6 @@ export default class VCDataStream implements VideoChatData {
     // Set up listeners on the socket
     this.socket.on('candidate', this.onCandidate);
     this.socket.on('answer', this.onAnswer);
-
-    const handleSendMsg = (msg: string) => {
-      logger('textarea ' + msg);
-      // Send message over data channel, add message to screen, auto scroll chat down
-      if (msg && msg.length > 0) {
-        // Prevent cross site scripting
-        msg = msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        msg = msg.autolink();
-        sendToAllDataChannels('mes:' + msg, this.dataChannel);
-        displayMsg(msg, this.localColor, true);
-        document.getElementById('chat-end')?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'start',
-        });
-        TextInput.value = '';
-      }
-    };
-
-    const TextInput = document.querySelector(
-      'textarea.chat-compose'
-    ) as HTMLTextAreaElement;
-    TextInput?.addEventListener('keypress', (e: any) => {
-      if (e.keyCode === 13) {
-        e.preventDefault();
-        handleSendMsg(TextInput.value);
-      }
-    });
-
-    const TextSend = document.getElementById('chat-send');
-    TextSend?.addEventListener('click', (e: any) => {
-      e.preventDefault();
-      handleSendMsg(TextInput.value);
-    });
   };
 
   call = (uuid: string, room: string) => {

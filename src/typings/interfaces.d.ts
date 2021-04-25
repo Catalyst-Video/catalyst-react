@@ -72,6 +72,47 @@ export interface TwilioToken {
   username: string;
 }
 
+export interface WebRTCPermissions {
+  hasWebcam: boolean;
+  hasMicrophone: boolean;
+  hasSpeakers: boolean;
+  isScreenCapturingSupported: boolean;
+  isSctpDataChannelsSupported: boolean;
+  isRtpDataChannelsSupported: boolean;
+  isAudioContextSupported: boolean;
+  isWebRTCSupported: boolean;
+  isDesktopCapturingSupported: boolean;
+  isMobileDevice: boolean;
+
+  isWebSocketsSupported: boolean;
+  isWebSocketsBlocked: boolean;
+
+  isWebsiteHasWebcamPermissions: boolean;
+  isWebsiteHasMicrophonePermissions: boolean;
+
+  audioInputDevices; // microphones
+  audioOutputDevices; // speakers
+  videoInputDevices; // cameras
+
+  osName: string;
+  osVersion: string;
+
+  browser: {
+    name: string;
+    version: string | number;
+    isChrome?: boolean | undefined;
+    isFirefox?: boolean | undefined;
+    isOpera?: boolean | undefined;
+    isIE?: boolean | undefined;
+    isSafari?: boolean | undefined;
+    isEdge?: boolean | undefined;
+    isPrivateBrowsing: boolean;
+  };
+
+  isCanvasSupportsStreamCapturing: boolean;
+  isVideoSupportsStreamCapturing: boolean;
+}
+
 export enum HeaderType {
   Logo,
   Banner,
