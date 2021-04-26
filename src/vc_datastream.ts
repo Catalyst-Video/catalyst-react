@@ -23,8 +23,6 @@ import {
 import './utils/autolink.js';
 import { RefObject } from 'react';
 
-const DEFAULT_SERVER_ADDRESS = 'https://server.catalyst.chat/';
-
 export default class VCDataStream implements VideoChatData {
   sessionId: string;
   dataChannel: Map<string, RTCDataChannel>;
@@ -55,7 +53,7 @@ export default class VCDataStream implements VideoChatData {
     remoteVidRef: RefObject<HTMLDivElement>,
     incrementUnseenChats: Function,
     setNumPeers: Function,
-    cstmServerAddress?: string,
+    cstmServerAddress: string,
     picInPic?: string,
     onAddPeer?: Function,
     onRemovePeer?: Function,
@@ -67,7 +65,7 @@ export default class VCDataStream implements VideoChatData {
     this.dataChannel = new Map();
     this.connected = new Map();
     this.localICECandidates = {};
-    this.socket = io(cstmServerAddress ?? DEFAULT_SERVER_ADDRESS);
+    this.socket = io(cstmServerAddress);
     this.remoteVidRef = remoteVidRef;
     this.localVidRef = localVidRef;
     this.peerConnections = new Map();

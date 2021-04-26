@@ -4,13 +4,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import './styles/catalyst.css';
 import './styles/toast.css';
 import './styles/video_grid.css';
+import './styles/perms.css';
 
 // Types
-import {
-  DefaultSettings,
-  HiddenSettings,
-  VideoChatData,
-} from './typings/interfaces';
+import { DefaultSettings, HiddenSettings } from './typings/interfaces';
 import VideoChat from './components/VideoChat';
 import PermsComponent from './components/Perms';
 import DetectRTC from 'detectrtc';
@@ -39,6 +36,7 @@ const CatalystChat = ({
   alwaysBanner,
   darkMode,
   disableLocalVidDrag,
+  setupRoom,
 }: {
   sessionKey: string;
   uniqueAppId: string;
@@ -61,8 +59,10 @@ const CatalystChat = ({
   alwaysBanner?: boolean;
   darkMode?: boolean;
   disableLocalVidDrag?: boolean;
+  setupRoom?: boolean;
 }) => {
   const [hasPerms, setPermissions] = useState(false);
+  const [isUserReady, setUserReady] = useState(setupRoom ?? false);
   const [dark, setDark] = useState(darkMode ?? false);
 
   useEffect(() => {
@@ -73,6 +73,8 @@ const CatalystChat = ({
           DetectRTC.isWebsiteHasMicrophonePermissions
       );
     });
+
+    navigator.mediaDevices.ondevicechange = () => window.location.reload();
   }, []);
 
   useEffect(() => {
@@ -81,6 +83,7 @@ const CatalystChat = ({
 
   if (
     hasPerms &&
+    isUserReady &&
     (DetectRTC.browser.isChrome ||
       DetectRTC.browser.isEdge ||
       DetectRTC.browser.isSafari)
@@ -89,7 +92,7 @@ const CatalystChat = ({
       <VideoChat
         sessionKey={sessionKey}
         uniqueAppId={uniqueAppId}
-        cstmServerAddress={cstmServerAddress}
+        cstmServerAddress={cstmServerAddress ?? 'https://server.catalyst.chat/'}
         defaults={defaults}
         hidden={hidden}
         picInPic={picInPic}
@@ -103,7 +106,7 @@ const CatalystChat = ({
         cstmOptionBtns={cstmOptionBtns}
         showDotColors={showDotColors}
         showBorderColors={showBorderColors}
-        autoFade={autoFade}
+        autoFade={autoFade ?? 600}
         alwaysBanner={alwaysBanner}
         disableLocalVidDrag={disableLocalVidDrag}
         dark={dark}
@@ -116,7 +119,14 @@ const CatalystChat = ({
       DetectRTC.browser.isEdge ||
       DetectRTC.browser.isSafari)
   ) {
-    return <PermsComponent />;
+    return (
+      <PermsComponent
+        sessionKey={sessionKey}
+        hasPerms={hasPerms}
+        setPermissions={setPermissions}
+        setUserReady={setUserReady}
+      />
+    );
   } else {
     return <IncompatibleAlert />;
   }

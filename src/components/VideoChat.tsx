@@ -23,9 +23,9 @@ import {
   HiddenSettings,
   VideoChatData,
 } from '../typings/interfaces';
-import { ResizeWrapper, setThemeColor } from '../utils/ui';
+import { ResizeWrapper } from '../utils/ui';
 import VCDataStream from '../vc_datastream';
-import { initChat, sendToAllDataChannels } from '../utils/general';
+import { sendToAllDataChannels } from '../utils/general';
 import { handleMute, handlePauseVideo, handleSharing } from '../utils/stream';
 import { displayWelcomeMessage } from '../utils/messages';
 import Header from './Header';
@@ -56,7 +56,8 @@ const VideoChat = ({
 }: {
   sessionKey: string;
   uniqueAppId: string;
-  cstmServerAddress?: string;
+  autoFade: number;
+  cstmServerAddress: string;
   defaults?: DefaultSettings;
   hidden?: HiddenSettings;
   picInPic?: string;
@@ -70,7 +71,6 @@ const VideoChat = ({
   cstmOptionBtns?: JSX.Element[];
   showDotColors?: boolean;
   showBorderColors?: boolean;
-  autoFade?: number;
   alwaysBanner?: boolean;
   dark?: boolean;
   setDark?: Function;
@@ -89,11 +89,28 @@ const VideoChat = ({
     defaults?.showChatArea ?? false
   );
 
+  const catalystRef = useRef<HTMLDivElement>(null);
   const localVidRef = useRef<HTMLVideoElement>(null);
   const remoteVidRef = useRef<HTMLDivElement>(null);
+  const toolbarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    initChat(autoFade ? autoFade : 600);
+    if (
+      catalystRef &&
+      catalystRef.current?.parentNode?.parentNode?.nodeName === 'BODY'
+    )
+      catalystRef.current.style.position = 'fixed';
+
+    // Load and resize Event
+    window.addEventListener(
+      'load',
+      (e: Event) => {
+        ResizeWrapper();
+        window.onresize = ResizeWrapper;
+      },
+      false
+    );
+
     const VCData = new VCDataStream(
       sessionKey,
       uniqueAppId,
@@ -177,9 +194,19 @@ const VideoChat = ({
   };
 
   return (
-    <div id="catalyst" className={`ct-body ${dark ? 'dark' : ''}`}>
+    <div
+      id="catalyst"
+      ref={catalystRef}
+      className={`ct-body ${dark ? 'dark' : ''}`}
+    >
       <FullScreen handle={fsHandle} className={dark ? 'dark' : ''}>
-        <Header VC={VC} sessionKey={sessionKey} alwaysBanner={alwaysBanner} />
+        <Header
+          autoFade={autoFade}
+          toolbarRef={toolbarRef}
+          sessionKey={sessionKey}
+          alwaysBanner={alwaysBanner}
+          uniqueAppId={uniqueAppId}
+        />
         {VC && (
           <Chat
             showChat={showChat}
@@ -212,7 +239,7 @@ const VideoChat = ({
             className={showChat ? 'ct-chat' : ''}
           ></div>
 
-          <div id="ct-toolbar">
+          <div id="ct-toolbar" ref={toolbarRef}>
             <div className="ct-multi-btn">
               {!hidden?.mute && (
                 <div className="ct-btn-container">
