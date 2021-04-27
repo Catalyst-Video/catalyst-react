@@ -967,3 +967,14 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
           user-select: none;
 }
 
+
+/* Perms  */
+#opt li>ul                 { transform: translatex(100%) scale(0) }
+#opt li:hover>ul           { transform: translatex(101%) scale(1) }
+#opt li > button svg       { transform: rotate(-90deg) }
+#opt li:hover > button svg { transform: rotate(-270deg) }
+
+#opt.group:hover .group-hover\:scale-100 { transform: scale(1) }
+#opt.group:hover .group-hover\:-rotate-180 { transform: rotate(180deg) }
+#opt .scale-0 { transform: scale(0) }
+#opt .min-w-32 { min-width: 8rem }

@@ -32,8 +32,9 @@ const PermsComponent = ({
 }) => {
   const permsRef = useRef<HTMLDivElement>(null);
   const testVideoRef = useRef<HTMLVideoElement>(null);
-
   const [testStream, setStream] = useState<MediaStream>();
+  const [audioInput, setAudioInput] = useState<MediaDeviceInfo>();
+  const [vidInput, setVidInput] = useState<MediaDeviceInfo>();
 
   useEffect(() => {
     if (videoEnabled) reqStream();
@@ -45,16 +46,20 @@ const PermsComponent = ({
   }, []);
 
   useEffect(() => {
-    if (testVideoRef.current && testVideoRef.current.srcObject)
-      testStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
-        track.enabled = false;
-        track.stop();
-      });
+    if (!videoEnabled) endStream();
   }, [videoEnabled]);
+
+  useEffect(() => {
+    endStream();
+    if (videoEnabled) reqStream();
+  }, [vidInput, audioInput]);
 
   const reqStream = () => {
     navigator.mediaDevices
-      .getUserMedia({ audio: true, video: true })
+      .getUserMedia({
+        audio: { deviceId: audioInput?.deviceId },
+        video: { deviceId: vidInput?.deviceId },
+      })
       .then(stream => {
         setPermissions(true);
         if (testVideoRef.current) testVideoRef.current.srcObject = stream;
@@ -62,6 +67,14 @@ const PermsComponent = ({
       })
       .catch(err => {
         logger(err);
+      });
+  };
+
+  const endStream = () => {
+    if (testVideoRef.current && testVideoRef.current.srcObject)
+      testStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
+        track.enabled = false;
+        track.stop();
       });
   };
 
@@ -120,7 +133,12 @@ const PermsComponent = ({
                     size="lg"
                   />
                 </button>
-                Microphone
+                <DeviceSelector
+                  device={audioInput}
+                  setDevice={setAudioInput}
+                  type="audioinput"
+                  defaultText="Microphone"
+                />
                 <span
                   className={`block text-xs uppercase font-bold text-${themeColor}-500`}
                 >
@@ -143,7 +161,12 @@ const PermsComponent = ({
                     size="lg"
                   />
                 </button>
-                Camera
+                <DeviceSelector
+                  device={vidInput}
+                  setDevice={setVidInput}
+                  type="videoinput"
+                  defaultText="Camera"
+                />
                 <span
                   className={`block text-xs uppercase font-bold text-${themeColor}-500`}
                 >
@@ -185,3 +208,77 @@ const PermsComponent = ({
   );
 };
 export default PermsComponent;
+
+const DeviceSelector = ({
+  device,
+  setDevice,
+  type,
+  defaultText,
+}: {
+  device?: MediaDeviceInfo;
+  setDevice: Function;
+  type: string;
+  defaultText: string;
+}) => {
+  const [devices, setDevices] = useState<MediaDeviceInfo[]>();
+
+  useEffect(() => {
+    setMediaDevices();
+  }, []);
+
+  const setMediaDevices = () => {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+      console.log('enumerateDevices() not supported.');
+      return;
+    }
+    navigator.mediaDevices
+      .enumerateDevices()
+      .then(devs => {
+        let typedDevs: MediaDeviceInfo[] = [];
+        devs.forEach(device => {
+          if (device.kind.toString() === type) typedDevs.push(device);
+        });
+        setDevices(typedDevs);
+      })
+      .catch(err => {
+        logger(err.name + ': ' + err.message);
+      });
+  };
+
+  return (
+    <div id="opt" className="group inline-block my-1">
+      <button className="outline-none focus:outline-none border px-3 py-1 bg-white rounded-sm flex items-center min-w-32">
+        <span className="pr-1 text-base flex-1">
+          {device?.label.substring(0, device.label.indexOf(' (')) ??
+            defaultText}
+        </span>
+        <span>
+          <svg
+            className="fill-current h-4 w-4 transform group-hover:-rotate-180
+        transition duration-150 ease-in-out"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+          >
+            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+          </svg>
+        </span>
+      </button>
+
+      <ul
+        className="bg-white border rounded-sm transform scale-0 group-hover:scale-100 absolute 
+  transition duration-150 ease-in-out origin-top min-w-32 cursor-pointer"
+      >
+        {devices?.map(dev => {
+          return (
+            <li
+              onClick={() => setDevice(dev)}
+              className="rounded-sm px-3 py-1 hover:bg-gray-100 cursor-pointer"
+            >
+              {dev.label.substring(0, dev.label.indexOf(' ('))}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+};
