@@ -66,6 +66,8 @@ const CatalystChat = ({
   const [dark, setDark] = useState(darkMode ?? false);
   const [audioEnabled, setAudio] = useState<boolean>(defaults?.audioOn ?? true);
   const [videoEnabled, setVideo] = useState<boolean>(defaults?.videoOn ?? true);
+  const [audioInput, setAudioInput] = useState<MediaDeviceInfo>();
+  const [vidInput, setVidInput] = useState<MediaDeviceInfo>();
 
   useEffect(() => {
     DetectRTC.load(() => {
@@ -136,6 +138,10 @@ const CatalystChat = ({
         videoEnabled={videoEnabled}
         setVideo={setVideo}
         themeColor={themeColor ?? 'blue'}
+        audioInput={audioInput}
+        vidInput={vidInput}
+        setAudioInput={setAudioInput}
+        setVidInput={setVidInput}
       />
     );
   } else {

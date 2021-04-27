@@ -19,6 +19,10 @@ const PermsComponent = ({
   setAudio,
   setVideo,
   themeColor,
+  audioInput,
+  vidInput,
+  setAudioInput,
+  setVidInput,
 }: {
   sessionKey: string;
   hasPerms: boolean;
@@ -29,12 +33,14 @@ const PermsComponent = ({
   setAudio: Function;
   setVideo: Function;
   themeColor: string;
+  audioInput?: MediaDeviceInfo;
+  vidInput?: MediaDeviceInfo;
+  setAudioInput: Function;
+  setVidInput: Function;
 }) => {
   const permsRef = useRef<HTMLDivElement>(null);
   const testVideoRef = useRef<HTMLVideoElement>(null);
   const [testStream, setStream] = useState<MediaStream>();
-  const [audioInput, setAudioInput] = useState<MediaDeviceInfo>();
-  const [vidInput, setVidInput] = useState<MediaDeviceInfo>();
 
   useEffect(() => {
     if (videoEnabled) reqStream();
@@ -248,7 +254,10 @@ const DeviceSelector = ({
   return (
     <div id="opt" className="group inline-block my-1">
       <button className="outline-none focus:outline-none border px-3 py-1 bg-white rounded-sm flex items-center min-w-32">
-        <span className="pr-1 text-base flex-1">
+        <span
+          className="pr-1 text-base flex-1 truncate"
+          style={{ maxWidth: '7rem' }}
+        >
           {device?.label.substring(0, device.label.indexOf(' (')) ??
             defaultText}
         </span>
