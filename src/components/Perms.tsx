@@ -72,26 +72,26 @@ const PermsComponent = ({
   return (
     <div
       id="perms"
-      className="h-full w-full flex justify-center items-center flex-col p-4"
+      className="h-full w-full flex justify-center items-center flex-col p-4 "
+      style={{
+        background: '#f3f5fd', // TODO: dark/light theme
+      }}
       ref={permsRef}
     >
       <span id="cat-header" className="mx-2 my-3 ">
         <HeaderImg themeColor={themeColor} />
       </span>
       {hasPerms && (
-        <span id="welcome-msg" className="block m-auto text-lg my-5">
+        <span id="welcome-msg" className="block m-auto text-lg mt-3">
           Welcome to{' '}
-          <span
-            style={{ color: 'var(--themeColor)' }}
-            className="font-semibold"
-          >
+          <span className={`font-semibold text-${themeColor}-500`}>
             {sessionKey}
           </span>
         </span>
       )}
       <div
         id="perms-cont"
-        className="flex-col text-center flex-1 mx-3 my-2 rounded-md flex justify-center"
+        className="flex-col text-center flex-1 mx-3 mb-2 rounded-md flex justify-center"
       >
         {hasPerms && (
           <div id="perms-comp" className="bg-white rounded-xl my-2 mx-1">

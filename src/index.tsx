@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import './styles/catalyst.css';
 import './styles/toast.css';
 import './styles/video_grid.css';
-import './styles/perms.css';
 import './styles/tailwind.output.css';
 
 // Types
