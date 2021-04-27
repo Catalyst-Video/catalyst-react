@@ -5,6 +5,7 @@ import './styles/catalyst.css';
 import './styles/toast.css';
 import './styles/video_grid.css';
 import './styles/perms.css';
+import './styles/tailwind.output.css';
 
 // Types
 import { DefaultSettings, HiddenSettings } from './typings/interfaces';
@@ -64,6 +65,8 @@ const CatalystChat = ({
   const [hasPerms, setPermissions] = useState(false);
   const [isUserReady, setUserReady] = useState(setupRoom ?? false);
   const [dark, setDark] = useState(darkMode ?? false);
+  const [audioEnabled, setAudio] = useState<boolean>(defaults?.audioOn ?? true);
+  const [videoEnabled, setVideo] = useState<boolean>(defaults?.videoOn ?? true);
 
   useEffect(() => {
     DetectRTC.load(() => {
@@ -111,6 +114,10 @@ const CatalystChat = ({
         disableLocalVidDrag={disableLocalVidDrag}
         dark={dark}
         setDark={setDark}
+        audioEnabled={audioEnabled}
+        setAudio={setAudio}
+        videoEnabled={videoEnabled}
+        setVideo={setVideo}
       />
     );
   } else if (
@@ -125,6 +132,11 @@ const CatalystChat = ({
         hasPerms={hasPerms}
         setPermissions={setPermissions}
         setUserReady={setUserReady}
+        audioEnabled={audioEnabled}
+        setAudio={setAudio}
+        videoEnabled={videoEnabled}
+        setVideo={setVideo}
+        themeColor={themeColor ?? 'blue'}
       />
     );
   } else {

@@ -1,25 +1,42 @@
-import { faCamera, faMicrophone } from '@fortawesome/free-solid-svg-icons';
+import {
+  faMicrophone,
+  faMicrophoneSlash,
+  faVideo,
+  faVideoSlash,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useEffect, useRef } from 'react';
-
-import { HeaderImg } from './Header';
+import React, { useEffect, useRef, useState } from 'react';
+import { logger } from '../utils/general';
+import HeaderImg from './HeaderImg';
 
 const PermsComponent = ({
   sessionKey,
   hasPerms,
   setPermissions,
   setUserReady,
+  audioEnabled,
+  videoEnabled,
+  setAudio,
+  setVideo,
+  themeColor,
 }: {
   sessionKey: string;
   hasPerms: boolean;
   setPermissions: Function;
   setUserReady: Function;
+  audioEnabled: boolean;
+  videoEnabled: boolean;
+  setAudio: Function;
+  setVideo: Function;
+  themeColor: string;
 }) => {
   const permsRef = useRef<HTMLDivElement>(null);
   const testVideoRef = useRef<HTMLVideoElement>(null);
 
+  const [testStream, setStream] = useState<MediaStream>();
+
   useEffect(() => {
-    reqPerms();
+    if (videoEnabled) reqStream();
     if (
       permsRef &&
       permsRef.current?.parentNode?.parentNode?.nodeName === 'BODY'
@@ -27,82 +44,118 @@ const PermsComponent = ({
       permsRef.current.style.position = 'fixed';
   }, []);
 
-  // useEffect(() => {
-  //   if (hasPerms) reqPerms();
-  // }, [hasPerms]);
+  useEffect(() => {
+    if (testVideoRef.current && testVideoRef.current.srcObject)
+      testStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
+        track.enabled = false;
+        track.stop();
+      });
+  }, [videoEnabled]);
 
-  const reqPerms = () => {
+  const reqStream = () => {
     navigator.mediaDevices
       .getUserMedia({ audio: true, video: true })
       .then(stream => {
         setPermissions(true);
         if (testVideoRef.current) testVideoRef.current.srcObject = stream;
-        /* use the stream */
+        setStream(stream);
       })
       .catch(err => {
-        /* handle the error */
+        logger(err);
       });
   };
-
-  const setTestVideo = () => {};
 
   const joinCall = () => {
     setUserReady(true);
   };
 
   return (
-    <div id="perms" className="perms" ref={permsRef}>
-      <span className="header">
-        <HeaderImg />
+    <div
+      id="perms"
+      className="h-full w-full flex justify-center items-center flex-col p-4"
+      ref={permsRef}
+    >
+      <span id="cat-header" className="mx-2 my-3 ">
+        <HeaderImg themeColor={themeColor} />
       </span>
       {hasPerms && (
-        <span className="perms-msg">
-          Welcome to <span className="text-color">{sessionKey}</span>
+        <span id="welcome-msg" className="block m-auto text-lg my-5">
+          Welcome to{' '}
+          <span
+            style={{ color: 'var(--themeColor)' }}
+            className="font-semibold"
+          >
+            {sessionKey}
+          </span>
         </span>
       )}
-      <div className="perms-cont">
+      <div
+        id="perms-cont"
+        className="flex-col text-center flex-1 mx-3 my-2 rounded-md flex justify-center"
+      >
         {hasPerms && (
-          <div className="perms-comp">
-            {/* <span className="perms-header">
-              Welcome to <span className="text-color">{sessionKey}</span>
-            </span>
-            <span className="perms-msg">
-              Join the call when you're happy with your audio/video settings
-            </span> */}
-            <div className="video-div">
+          <div id="perms-comp" className="bg-white rounded-xl my-2 mx-1">
+            <div className="md:w-96 md:h-72 bg-gray-900 rounded-t-xl">
               <video
-                id="test-video"
+                id="samp-video"
+                className="w-auto rounded-t-xl max-h-72"
                 ref={testVideoRef}
                 autoPlay
                 muted
                 playsInline
               />
             </div>
-            <div className="opts">
-              <div className="opt-item">
-                <span className="opt-span">
+
+            <div id="opts" className="flex justify-center items-center m-1">
+              <div id="opt-mic" className="text-center text-base my-2 mr-5">
+                <button
+                  onClick={() => setAudio(!audioEnabled)}
+                  className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
+                    !audioEnabled ? 'bg-red-50 text-red-500' : ''
+                  }`}
+                >
                   <FontAwesomeIcon
-                    icon={faMicrophone}
+                    icon={audioEnabled ? faMicrophone : faMicrophoneSlash}
                     className="opt-icon"
                     size="lg"
                   />
-                </span>
+                </button>
                 Microphone
-                <span className="opt-tog">On</span>
+                <span
+                  className={`block text-xs uppercase font-bold text-${themeColor}-500`}
+                >
+                  {audioEnabled ? 'ON' : 'OFF'}
+                </span>
               </div>
-              <div className="opt-item">
-                <span className="opt-span">
+              <div id="opt-cam" className="text-center text-base my-2 ml-5">
+                <button
+                  onClick={() => {
+                    if (!videoEnabled) reqStream();
+                    setVideo(!videoEnabled);
+                  }}
+                  className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
+                    !videoEnabled ? 'bg-red-50 text-red-500' : ''
+                  }`}
+                >
                   <FontAwesomeIcon
-                    icon={faCamera}
+                    icon={videoEnabled ? faVideo : faVideoSlash}
                     className="opt-icon"
                     size="lg"
                   />
-                </span>
+                </button>
                 Camera
-                <span className="opt-tog">On</span>
+                <span
+                  className={`block text-xs uppercase font-bold text-${themeColor}-500`}
+                >
+                  {videoEnabled ? 'ON' : 'OFF'}
+                </span>
               </div>
             </div>
-            <button className="perms-but" onClick={() => joinCall()}>
+            <button
+              id="perms-but"
+              className={`rounded-b-xl cursor-pointer block outline-none border-0 font-bold text-md h-14 text-white w-full focus:outline-none focus:border-0 bg-${themeColor}-500`}
+              onClick={() => joinCall()}
+            >
               Join Call
             </button>
           </div>
@@ -110,23 +163,21 @@ const PermsComponent = ({
 
         {!hasPerms && (
           <>
-            <span className="perms-msg">
-              <span className="text-color">Click “allow” above</span>
+            <span id="perms-msg" className="block m-auto text-xl m-auto">
+              <span className={`text-${themeColor}-500 font-semibold text-2xl`}>
+                Click “allow” above
+              </span>
               <br />
               to give Catalyst camera and microphone access
               <br />
-              <a
-                href="https://docs.catalyst.chat/docs-permissions"
-                target="_blank"
-                className="help"
-              >
-                I need help!
-              </a>
             </span>
-
-            {/* <button className="perms-but" onClick={() => reqPerms()}>
-              Allow permissions
-            </button> */}
+            <a
+              href="https://docs.catalyst.chat/docs-permissions"
+              target="_blank"
+              className="text-base underline mt-10"
+            >
+              I need help!
+            </a>
           </>
         )}
       </div>

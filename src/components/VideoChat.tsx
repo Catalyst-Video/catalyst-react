@@ -53,6 +53,10 @@ const VideoChat = ({
   dark,
   setDark,
   disableLocalVidDrag,
+  audioEnabled,
+  videoEnabled,
+  setAudio,
+  setVideo,
 }: {
   sessionKey: string;
   uniqueAppId: string;
@@ -75,12 +79,14 @@ const VideoChat = ({
   dark?: boolean;
   setDark?: Function;
   disableLocalVidDrag?: boolean;
+  audioEnabled: boolean;
+  videoEnabled: boolean;
+  setAudio: Function;
+  setVideo: Function;
 }) => {
   const fsHandle = useFullScreenHandle();
 
   const [VC, setVCData] = useState<VideoChatData>();
-  const [audioEnabled, setAudio] = useState<boolean>(defaults?.audioOn ?? true);
-  const [videoEnabled, setVideo] = useState<boolean>(defaults?.videoOn ?? true);
   const [sharing, setSharing] = useState(false);
   const [unseenChats, setUnseenChats] = useState(0);
   const [localVideoText, setLocalVideoText] = useState('No webcam input');

@@ -22,11 +22,11 @@ flex-direction: column;
     margin: 2rem;
 }
 
-#test-video {
+/* #test-video {
     border-radius: 15px 15px 0px 0px;
     max-width: 100%;
     max-height: 20rem;
-}
+} */
 
 .video-div {
     color: black;
@@ -79,37 +79,4 @@ cursor: pointer;
     background-color: white;
     border-radius: 15px;
     margin: 1.5rem 0.5rem;
-}
-
-.opts {
-display: flex;
-justify-content: space-around;
-align-items: center;
-margin: 0.2rem 0;
-}
-
-.opt-item {
-    font-family: "Fira Sans", sans-serif;
-    text-align: center;
-    font-size: 16px;
-    margin: 0.75rem 0;
-}
-
-.opt-tog {
-    display: block;
-    color: var(--themeColor);
-}
-
-.opt-span {
-    display: block;
-    height: 55px;
-    width: 55px;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 0.5px solid #888;
-    border-radius: 50%;
-    margin: 0 auto 0.5rem;
-    cursor: pointer;
 }
