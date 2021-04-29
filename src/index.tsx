@@ -110,6 +110,7 @@ const CatalystChat = ({
         onReceiveArbitraryData={onReceiveArbitraryData}
         cstmWelcomeMsg={cstmWelcomeMsg}
         cstmOptionBtns={cstmOptionBtns}
+        themeColor={themeColor ?? 'blue'}
         showDotColors={showDotColors}
         showBorderColors={showBorderColors}
         autoFade={autoFade ?? 600}

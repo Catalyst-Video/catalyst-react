@@ -61,6 +61,7 @@ const VideoChat = ({
   vidInput,
   setAudioInput,
   setVidInput,
+  themeColor,
 }: {
   sessionKey: string;
   uniqueAppId: string;
@@ -91,6 +92,7 @@ const VideoChat = ({
   vidInput?: MediaDeviceInfo;
   setAudioInput: Function;
   setVidInput: Function;
+  themeColor: string;
 }) => {
   const fsHandle = useFullScreenHandle();
 
@@ -220,6 +222,7 @@ const VideoChat = ({
           sessionKey={sessionKey}
           alwaysBanner={alwaysBanner}
           uniqueAppId={uniqueAppId}
+          themeColor={themeColor}
         />
         {VC && (
           <Chat

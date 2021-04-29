@@ -292,7 +292,7 @@ const DeviceSelector = ({
 
   return (
     <div id="opt" className="group inline-block my-1">
-      <button className="outline-none focus:outline-none border px-3 py-1 bg-white rounded-sm flex items-center min-w-32">
+      <button className="outline-none focus:outline-none px-3 bg-white rounded-sm flex items-center min-w-32">
         <span
           className="pr-1 text-base flex-1 truncate"
           style={{ maxWidth: '7rem' }}

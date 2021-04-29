@@ -9,12 +9,14 @@ const Header = ({
   alwaysBanner,
   toolbarRef,
   uniqueAppId,
+  themeColor,
 }: {
   autoFade: number;
   sessionKey: string;
   alwaysBanner: boolean | undefined;
   toolbarRef: RefObject<HTMLDivElement>;
   uniqueAppId: string;
+  themeColor: string;
 }) => {
   const [showSessionDetails, setShowSessionDetails] = useState(false);
   const headerRef = useRef<HTMLDivElement>(null);
@@ -57,7 +59,7 @@ const Header = ({
               style={{ display: 'inline' }}
               onClick={() => setShowSessionDetails(!showSessionDetails)}
             >
-              <HeaderImg />
+              <HeaderImg themeColor={themeColor} />
             </button>
           </div>
           {showSessionDetails && (
