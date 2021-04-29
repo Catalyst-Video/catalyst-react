@@ -23,6 +23,7 @@ const PermsComponent = ({
   vidInput,
   setAudioInput,
   setVidInput,
+  disableGradient,
 }: {
   sessionKey: string;
   hasPerms: boolean;
@@ -37,13 +38,28 @@ const PermsComponent = ({
   vidInput?: MediaDeviceInfo;
   setAudioInput: Function;
   setVidInput: Function;
+  disableGradient?: boolean;
 }) => {
   const permsRef = useRef<HTMLDivElement>(null);
   const testVideoRef = useRef<HTMLVideoElement>(null);
+
   const [testStream, setStream] = useState<MediaStream>();
+  const [gradient] = useState(`linear-gradient(217deg, hsla(${~~(
+    360 * Math.random()
+  )},70%,70%,0.8),hsla(${~~(360 * Math.random())},70%,70%,0.8) 70.71%), 
+              linear-gradient(127deg, hsla(${~~(
+                360 * Math.random()
+              )},70%,70%,0.8),hsla(${~~(
+    360 * Math.random()
+  )},70%,70%,0.8) 70.71%),
+            linear-gradient(336deg, hsla(${~~(
+              360 * Math.random()
+            )},70%,70%,0.8),hsla(${~~(
+    360 * Math.random()
+  )},70%,70%,0.8) 70.71%)`);
 
   useEffect(() => {
-    if (videoEnabled) reqStream();
+    if (videoEnabled || audioEnabled) reqStream();
     if (
       permsRef &&
       permsRef.current?.parentNode?.parentNode?.nodeName === 'BODY'
@@ -52,35 +68,38 @@ const PermsComponent = ({
   }, []);
 
   useEffect(() => {
-    if (!videoEnabled) endStream();
-  }, [videoEnabled]);
+    if (videoEnabled || audioEnabled) reqStream();
+  }, [videoEnabled, audioEnabled]);
 
   useEffect(() => {
-    endStream();
-    if (videoEnabled) reqStream();
+    if (videoEnabled || audioEnabled) reqStream();
   }, [vidInput, audioInput]);
 
   const reqStream = () => {
+    let audioProp: boolean | { deviceId: string | undefined } = false;
+    let videoProp: boolean | { deviceId: string | undefined } = false;
+    if (audioEnabled) audioProp = { deviceId: audioInput?.deviceId };
+    if (videoEnabled) videoProp = { deviceId: vidInput?.deviceId };
     navigator.mediaDevices
       .getUserMedia({
-        audio: { deviceId: audioInput?.deviceId },
-        video: { deviceId: vidInput?.deviceId },
+        audio: audioProp,
+        video: videoProp,
       })
       .then(stream => {
         setPermissions(true);
         if (testVideoRef.current) testVideoRef.current.srcObject = stream;
+        testStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
+          track.enabled = false;
+          track.stop();
+        });
+        testStream?.getAudioTracks().forEach((track: MediaStreamTrack) => {
+          track.enabled = false;
+          track.stop();
+        });
         setStream(stream);
       })
       .catch(err => {
         logger(err);
-      });
-  };
-
-  const endStream = () => {
-    if (testVideoRef.current && testVideoRef.current.srcObject)
-      testStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
-        track.enabled = false;
-        track.stop();
       });
   };
 
@@ -91,39 +110,50 @@ const PermsComponent = ({
   return (
     <div
       id="perms"
-      className="h-full w-full flex justify-center items-center flex-col flex-1"
-      style={{
-        background: '#f3f5fd', // TODO: dark/light theme
-      }}
+      className="h-full w-full flex justify-between items-center flex-col flex-1 "
+      style={
+        disableGradient
+          ? {
+              background: '#f3f5fd', // TODO: dark/light theme
+            }
+          : {
+              background: gradient,
+            }
+      }
       ref={permsRef}
     >
-      <span id="cat-header" className="mx-2">
-        <HeaderImg themeColor={themeColor} />
+      <span id="cat-header" className="mx-2 mt-5">
+        <HeaderImg themeColor={disableGradient ? themeColor : undefined} />
       </span>
+      {/* TODO: determine if room name is desired
       {hasPerms && (
-        <span id="welcome-msg" className="block text-lg mt-10 mb-4">
+        <span id="welcome-msg" className="block text-lg my-3">
           Welcome to{' '}
           <span className={`font-semibold text-${themeColor}-500`}>
             {sessionKey}
           </span>
         </span>
-      )}
+      )} */}
       <div
         id="perms-cont"
-        className="flex-col text-center mx-3 my-3 rounded-md flex justify-center"
+        className="flex-col flex-1 text-center mx-3 my-3 rounded-md flex justify-center"
       >
         {hasPerms && (
-          <div id="perms-comp" className="bg-white rounded-xl my-2 mx-1">
-            <div className="md:w-96 md:h-72 bg-gray-900 rounded-t-xl">
+          <div
+            id="perms-comp"
+            className="bg-white rounded-xl my-2 mx-1 shadow-md"
+          >
+            <div className="md:w-96 md:h-72 bg-gray-900 rounded-t-xl z-1">
               <video
                 id="samp-video"
-                className="w-auto rounded-t-xl max-h-72"
+                className="w-auto rounded-t-xl max-h-72 z-3"
                 ref={testVideoRef}
                 autoPlay
                 muted
                 playsInline
               />
             </div>
+            {/* <AudioAnalyser audio={testStream} /> */}
 
             <div id="opts" className="flex justify-center items-center m-1">
               <div id="opt-mic" className="text-center text-base my-2 mr-5">
@@ -192,8 +222,17 @@ const PermsComponent = ({
 
         {!hasPerms && (
           <>
-            <span id="perms-msg" className="block m-auto text-xl m-auto">
-              <span className={`text-${themeColor}-500 font-semibold text-2xl`}>
+            <span
+              id="perms-msg"
+              className={`block m-auto text-xl m-auto ${`text-${
+                disableGradient ? `black` : `white`
+              }`}`}
+            >
+              <span
+                className={`text-${
+                  disableGradient ? themeColor + `-500` : `white`
+                } font-semibold text-2xl`}
+              >
                 Click “allow” above
               </span>
               <br />
@@ -203,7 +242,9 @@ const PermsComponent = ({
             <a
               href="https://docs.catalyst.chat/docs-permissions"
               target="_blank"
-              className="text-base underline mt-10"
+              className={`text-base underline mt-10 ${`text-${
+                disableGradient ? `black` : `white`
+              }`}`}
             >
               I need help!
             </a>
@@ -233,10 +274,8 @@ const DeviceSelector = ({
   }, []);
 
   const setMediaDevices = () => {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-      console.log('enumerateDevices() not supported.');
+    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices)
       return;
-    }
     navigator.mediaDevices
       .enumerateDevices()
       .then(devs => {
@@ -290,4 +329,84 @@ const DeviceSelector = ({
       </ul>
     </div>
   );
+};
+
+const AudioAnalyser = ({ audio }: { audio?: MediaStream }) => {
+  const [audioData, setAudioData] = useState(new Uint8Array(0));
+  const [analyser, setAnalyzer] = useState<AnalyserNode>();
+  const [dataArray, setDataArray] = useState<Uint8Array>();
+  const [rafId, setRaf] = useState<number>();
+  const [source, setSource] = useState<MediaStreamAudioSourceNode>();
+
+  useEffect(() => {
+    // cancelAudioVisual();
+    if (audio && audio?.getAudioTracks()?.length > 0) {
+      let audioContext = new window.AudioContext();
+      let anal = audioContext.createAnalyser();
+      setAnalyzer(anal);
+      let data = new Uint8Array(anal.frequencyBinCount);
+      setDataArray(data);
+      let so: MediaStreamAudioSourceNode;
+      so = audioContext.createMediaStreamSource(audio);
+      setSource(so);
+      so.connect(anal);
+      tick();
+
+      return () => {
+        cancelAnimationFrame(rafId ?? 0);
+        anal?.disconnect();
+        so?.disconnect();
+      };
+    }
+    return () => {};
+  }, [audio]);
+
+  const cancelAudioVisual = () => {
+    cancelAnimationFrame(rafId ?? 0);
+    analyser?.disconnect();
+    source?.disconnect();
+  };
+
+  const tick = () => {
+    if (analyser && dataArray) {
+      analyser.getByteTimeDomainData(dataArray);
+      setAudioData(dataArray);
+      setRaf(requestAnimationFrame(tick));
+    }
+  };
+
+  return <AudioVisualizer audioData={audioData} />;
+};
+
+const AudioVisualizer = ({ audioData }: { audioData: Uint8Array }) => {
+  const audioCanvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    draw();
+  }, [audioData]);
+
+  const draw = () => {
+    const canvas = audioCanvasRef.current;
+    const context = canvas?.getContext('2d');
+    if (canvas && context) {
+      const height = canvas.height;
+      const width = canvas.width;
+      let x = 0;
+      const sliceWidth = (width * 1.0) / audioData.length;
+      context.lineWidth = 2;
+      context.strokeStyle = '#000';
+      context.clearRect(0, 0, width, height);
+      context.beginPath();
+      context.moveTo(0, height / 2);
+      for (const item of audioData) {
+        const y = (item / 255.0) * height;
+        context.lineTo(x, y);
+        x += sliceWidth;
+      }
+      context.lineTo(x, height / 2);
+      context.stroke();
+    }
+  };
+
+  return <canvas className="w-full h-20 z-5" ref={audioCanvasRef} />;
 };

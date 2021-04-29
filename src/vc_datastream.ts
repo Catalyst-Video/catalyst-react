@@ -16,7 +16,6 @@ import { logger, sendToAllDataChannels } from './utils/general';
 import { TwilioToken, VideoChatData } from './typings/interfaces';
 import {
   displayWebcamErrorMessage,
-  displayMsg,
   handlereceiveMessage,
   displayMessage,
 } from './utils/messages';

@@ -57,6 +57,10 @@ const VideoChat = ({
   videoEnabled,
   setAudio,
   setVideo,
+  audioInput,
+  vidInput,
+  setAudioInput,
+  setVidInput,
 }: {
   sessionKey: string;
   uniqueAppId: string;
@@ -83,6 +87,10 @@ const VideoChat = ({
   videoEnabled: boolean;
   setAudio: Function;
   setVideo: Function;
+  audioInput?: MediaDeviceInfo;
+  vidInput?: MediaDeviceInfo;
+  setAudioInput: Function;
+  setVidInput: Function;
 }) => {
   const fsHandle = useFullScreenHandle();
 
