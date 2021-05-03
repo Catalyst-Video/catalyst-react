@@ -1,0 +1,247 @@
+
+
+#catalyst video {
+  background: #16171a;
+}
+
+#catalyst .none {
+  display: none !important;
+}
+
+
+/* ct-header  */
+#catalyst #ct-header {
+  color: white;
+  padding: 20px;
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
+  position: absolute; 
+  /* relative  */
+  float: left;
+  z-index: 4;
+  display: block;
+}
+
+#catalyst #ct-header {
+  float: left;
+  padding: 7px;
+}
+
+#catalyst #ct-header,
+a {
+  color: white;
+  text-decoration: none;
+}
+
+#catalyst .mobile-banner {
+  display: none;
+}
+
+#catalyst #permanent-ct-header {
+  width: 100%;
+  height: 50px;
+  background-color: black;
+  color: white;
+  display: flex;
+  font-family: "Montserrat", sans-serif;
+  align-items: center;
+  justify-content: center;
+}
+
+ #catalyst .header-banner {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    display: block;
+    text-align: center;
+    background:  var(--themeColor);
+    padding: 1.5px;
+    color: white;
+    min-height: 1rem;
+    max-height: 1.5rem;
+    font-size: 13px;
+    z-index: 4;
+    opacity: .8;
+    font-family: "Fira Sans", sans-serif;
+  }
+
+#catalyst .incomp {
+  display: flex;
+  text-align: center;
+  align-self: center;
+}
+
+
+ /* ct-header logo  */
+#catalyst .ct-header-logo {
+  fill: var(--themeColor);
+}
+
+#catalyst #support-link {
+  color: var(--themeColor);
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+
+/* #catalyst #local-video {
+  width: 100%;
+  height: auto;
+  min-width: 100px;
+  position: absolute;
+  text-align: center;
+  border-radius: 10px;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  background: #16171a;
+  border: 3px solid var(--themeColor);
+} */
+
+/*Text inside local video*/
+/* #catalyst #local-vid-wrapper p {
+  z-index: 10;
+  position: absolute;
+  color: white;
+  opacity: 0.4;
+  font-family: "Heebo", sans-serif;
+  white-space: nowrap;
+  height: 100%;
+  font-weight: bold;
+} */
+
+/* #catalyst #room-text {
+  margin: 0;
+  max-height: 300px;
+  width: 40%;
+  z-index: 1;
+  color: black;
+  font-family: "Heebo", sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 0 0 2px var(--themeColor);
+  border-radius: 10px;
+  padding: 25px 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  opacity: 0.5;
+} */
+
+#catalyst #ct-captions-text {
+  margin: 0;
+  position: absolute;
+  max-height: 300px;
+  top: 78%;
+  left: 50%;
+  width: 400px;
+  margin-left: -210px;
+  z-index: 1;
+  color: #fff;
+  font-family: "Heebo", sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  background-color:rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+/* buttons */
+/* #catalyst .multi-btn button {
+  border: none;
+  font-size: 1.5rem !important;
+  transition: all 0.3s ease-in-out;
+  color: black;
+  background: transparent;
+  cursor: pointer;
+  padding: 7px 15px;
+  border-radius: 5px;
+} */
+/* 
+#catalyst .dark .ct-multi-btn button {
+  color: #ddd;
+} */
+
+/* #catalyst .ct-btn-on {
+ color: var(--themeColor) !important;
+} */
+
+/* #catalyst button:focus {
+  outline: none;
+} */
+
+/* #catalyst button:hover {
+  color: var(--themeColor);
+} */
+
+ /* #catalyst .ct-multi-btn {
+  position: fixed;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 1);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 15px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  max-width: 100vw;
+  margin-bottom: 0.5rem;
+  min-width: 35%;
+  justify-content: space-evenly;
+}
+
+#catalyst .dark .ct-multi-btn {
+  background: #252429;
+} */
+
+/* #catalyst #ct-toolbar {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center; 
+  flex-direction: row;
+  max-width: inherit; 
+}  */
+
+/* #catalyst .ct-btn-container {
+  position: relative;
+ 
+} */
+
+#catalyst .justify-between {
+  justify-content: space-between !important;
+}
+
+#catalyst .snack-btn {
+  margin-top: 0.5rem;
+  margin-left: 1.5rem;
+	background: var(--themeColor);
+	border-radius: 7px;
+	border: none;
+	color: white;
+	padding: 8px;
+  font-weight: 600;
+}
+@media (min-width: 640px) {
+  .snackbar-container {
+    min-width: 288px;
+    max-width: 568px;
+    display: inline-flex;
+    border-radius: 5px;
+    margin: 24px;
+  }
+}
+
+
+@media (min-width: 1200px){
+  .chat-offset {
+  /* left: calc(50% - 120px) !important; */
+    right: calc(50% + 120px)!important;
+}
+}
