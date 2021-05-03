@@ -53,7 +53,7 @@ const WrapperComp = ({
       defaults={{
         audioOn: false,
         videoOn: false,
-        // showChatArea: true,
+        showChatArea: true,
         // showToastArea: false,
       }}
       // cstmWelcomeMsg="DISABLED"

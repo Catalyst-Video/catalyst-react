@@ -217,10 +217,10 @@ const VideoChat = ({
         dark ? 'dark' : ''
       } box-border h-full w-full m-0 p-0 opacity-0 overflow-hidden max-h-screen max-w-screen relative`}
     >
-      <div id="bg-theme" className="h-full w-full bg-gray-50 dark:bg-gray-800">
+      <div id="bg-theme" className="h-full w-full bg-gray-200 dark:bg-gray-800">
         <FullScreen
           handle={fsHandle}
-          className="h-full w-full bg-gray-50 dark:bg-gray-800"
+          className="h-full w-full bg-gray-200 dark:bg-gray-800"
         >
           <Header
             autoFade={autoFade}
@@ -281,7 +281,7 @@ const VideoChat = ({
             >
               <div
                 id="multi-btn"
-                className="rounded-xl text-2xl bg-white dark:bg-gray-700 shadow-md p-6 flex flex-row items-center content-evenly mb-1 max-w-screen min-w-min" // fixed
+                className="rounded-xl text-2xl bg-white dark:bg-gray-700 shadow-sm px-6 py-3 flex flex-row items-center content-evenly mb-1 max-w-screen min-w-min" // fixed
               >
                 {!hidden?.mute && (
                   <div className="relative h-full w-full flex flex-col items-center m-0">
@@ -363,7 +363,7 @@ const VideoChat = ({
                         setShowChat(!showChat);
                       }}
                     >
-                      <span className="hidden text-white bg-gray-700 font-semibold absolute p-2 rounded-lg top-0 left-12  z-10 whitespace-nowrap text-sm">
+                      <span className="hidden text-white bg-gray-700 font-semibold absolute p-2 rounded-lg top-0 left-12 z-10 whitespace-nowrap text-sm">
                         {showChat ? 'Hide Chat' : 'Show Chat'}
                       </span>
                       <FontAwesomeIcon icon={faComment} />

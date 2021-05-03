@@ -23,7 +23,6 @@ const Header = ({
 
   // fade or show UI on mouse move
   if (autoFade > 0 && toolbarRef) {
-    console.log(toolbarRef.current);
     var timedelay = 1;
     const delayCheck = () => {
       if (timedelay === 5) {

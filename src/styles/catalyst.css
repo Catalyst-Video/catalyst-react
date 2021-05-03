@@ -158,7 +158,7 @@ display: none;
 #catalyst .dark .chat-close-btn {
   color: #eee; 
 }
-
+/* 
 #catalyst #chat-entire {
   position: absolute;
   right: 0;
@@ -178,7 +178,7 @@ display: none;
   transition: transform .3s ease-out;
   -webkit-transition: -webkit-transform .3s ease-out;
   will-change: transform;
-}
+} */
 
 #catalyst .dark #chat-entire {
   background: #252429;
@@ -321,9 +321,6 @@ display: none;
   max-width: 100%;
 }
 
-#catalyst .hide-chat {
-  display: none !important;
-}
 
 #catalyst .chat-messages {
   width: 100%;
