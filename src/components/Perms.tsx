@@ -110,7 +110,7 @@ const PermsComponent = ({
   return (
     <div
       id="perms"
-      className="h-full w-full flex justify-between items-center flex-col flex-1 "
+      className="h-full w-full flex justify-between items-center flex-col flex-1"
       style={
         disableGradient
           ? {
@@ -221,10 +221,10 @@ const PermsComponent = ({
         )}
 
         {!hasPerms && (
-          <>
+          <div className="h-full w-full flex flex-col content-evenly">
             <span
               id="perms-msg"
-              className={`block m-auto text-xl m-auto ${`text-${
+              className={`block m-auto text-xl  ${`text-${
                 disableGradient ? `black` : `white`
               }`}`}
             >
@@ -242,13 +242,13 @@ const PermsComponent = ({
             <a
               href="https://docs.catalyst.chat/docs-permissions"
               target="_blank"
-              className={`text-base underline mt-10 ${`text-${
+              className={`text-base underline mb-4 mt-10 ${`text-${
                 disableGradient ? `black` : `white`
               }`}`}
             >
               I need help!
             </a>
-          </>
+          </div>
         )}
       </div>
     </div>

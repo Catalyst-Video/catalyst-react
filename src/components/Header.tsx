@@ -1,4 +1,4 @@
-import React, { RefObject, useRef, useState } from 'react';
+import React, { RefObject, useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import HeaderImg from './HeaderImg';
@@ -23,6 +23,7 @@ const Header = ({
 
   // fade or show UI on mouse move
   if (autoFade > 0 && toolbarRef) {
+    console.log(toolbarRef.current);
     var timedelay = 1;
     const delayCheck = () => {
       if (timedelay === 5) {

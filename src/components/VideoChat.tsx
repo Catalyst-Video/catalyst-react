@@ -213,223 +213,257 @@ const VideoChat = ({
     <div
       id="catalyst"
       ref={catalystRef}
-      className={`ct-body ${dark ? 'dark' : ''}`}
+      className={`${
+        dark ? 'dark' : ''
+      } box-border h-full w-full m-0 p-0 opacity-0 overflow-hidden max-h-screen max-w-screen relative`}
     >
-      <FullScreen handle={fsHandle} className={dark ? 'dark' : ''}>
-        <Header
-          autoFade={autoFade}
-          toolbarRef={toolbarRef}
-          sessionKey={sessionKey}
-          alwaysBanner={alwaysBanner}
-          uniqueAppId={uniqueAppId}
-          themeColor={themeColor}
-        />
-        {VC && (
-          <Chat
-            showChat={showChat}
-            setShowChat={setShowChat}
-            dataChannel={VC.dataChannel}
-            localColor={VC.localColor}
+      <div id="bg-theme" className="h-full w-full bg-gray-50 dark:bg-gray-800">
+        <FullScreen
+          handle={fsHandle}
+          className="h-full w-full bg-gray-50 dark:bg-gray-800"
+        >
+          <Header
+            autoFade={autoFade}
+            toolbarRef={toolbarRef}
+            sessionKey={sessionKey}
+            alwaysBanner={alwaysBanner}
+            uniqueAppId={uniqueAppId}
+            themeColor={themeColor}
           />
-        )}
-        <div id="ct-call-section">
-          <Draggable
-            defaultPosition={{ x: 30, y: 150 }}
-            bounds="parent"
-            disabled={disableLocalVidDrag ?? false}
-          >
-            <div id="local-vid-wrapper" className="video-1">
-              <p id="ct-local-text">{localVideoText}</p>
-              <video
-                id="local-video"
-                ref={localVidRef}
-                autoPlay
-                muted
-                playsInline
-              ></video>
-              {showDotColors && <div id="local-indicator"></div>}
-            </div>
-          </Draggable>
-          <div
-            id="remote-vid-wrapper"
-            ref={remoteVidRef}
-            className={showChat ? 'ct-chat' : ''}
-          ></div>
-
-          <div id="ct-toolbar" ref={toolbarRef}>
-            <div className="ct-multi-btn">
-              {!hidden?.mute && (
-                <div className="ct-btn-container">
-                  <button
-                    className={`${
-                      audioEnabled ? '' : 'ct-btn-on'
-                    } ct-hover-btn ct-tooltip ct-not-selectable`}
-                    onClick={() => {
-                      if (VC) handleMute(audioEnabled, setAudio, VC);
-                    }}
-                  >
-                    <span>{audioEnabled ? 'Mute Audio' : 'Unmute Audio'}</span>
-                    <FontAwesomeIcon
-                      icon={audioEnabled ? faMicrophone : faMicrophoneSlash}
-                    />
-                  </button>
-                </div>
-              )}
-              {!hidden?.pausevideo && (
-                <div className="ct-btn-container">
-                  <button
-                    className={`${
-                      videoEnabled ? '' : 'ct-btn-on'
-                    } ct-hover-btn ct-tooltip ct-not-selectable`}
-                    onClick={() => {
-                      if (VC)
-                        handlePauseVideo(
-                          videoEnabled,
-                          setVideo,
-                          VC,
-                          setLocalVideoText,
-                          disableLocalVidDrag
-                        );
-                    }}
-                  >
-                    <span>
-                      {videoEnabled ? 'Pause Video' : 'Unpause Video'}
-                    </span>
-                    <FontAwesomeIcon
-                      icon={videoEnabled ? faVideo : faVideoSlash}
-                    />
-                  </button>
-                </div>
-              )}
-              {!hidden?.fullscreen && (
-                <div className="ct-btn-container mobile-none">
-                  <button
-                    className={`${
-                      !fsHandle.active ? '' : 'ct-btn-on'
-                    } ct-hover-btn ct-tooltip ct-not-selectable`}
-                    onClick={() => {
-                      if (fsHandle.active) {
-                        fsHandle.exit();
-                      } else {
-                        fsHandle.enter();
-                      }
-                    }}
-                  >
-                    <span>
-                      {!fsHandle.active
-                        ? 'Enter Full Screen'
-                        : 'Exit Full Screen'}
-                    </span>
-                    <FontAwesomeIcon
-                      icon={!fsHandle.active ? faExpand : faCompress}
-                    />
-                  </button>
-                </div>
-              )}
-              {!hidden?.chat && (
-                <div className="ct-btn-container">
-                  <button
-                    className={`${
-                      !showChat ? '' : 'ct-btn-on'
-                    } ct-hover-btn ct-tooltip ct-not-selectable`}
-                    onClick={() => {
-                      setShowChat(!showChat);
-                    }}
-                  >
-                    <span>{showChat ? 'Hide Chat' : 'Show Chat'}</span>
-                    <FontAwesomeIcon icon={faComment} />
-                    {!showChat && unseenChats !== 0 && (
-                      <i
-                        className="chat-indicator"
-                        aria-valuetext={unseenChats.toString()}
-                      ></i>
-                    )}
-                  </button>
-                </div>
-              )}
-
-              {!hidden?.darkmode && (
-                <div className="ct-btn-container">
-                  <button
-                    className={`${
-                      !showChat ? '' : 'ct-btn-on'
-                    } ct-hover-btn ct-tooltip ct-not-selectable`}
-                    onClick={() => {
-                      if (setDark) setDark(!dark);
-                    }}
-                  >
-                    <span>{!dark ? 'Dark Mode' : 'Light Mode'}</span>
-                    <FontAwesomeIcon icon={dark ? faMoon : faSun} />
-                  </button>
-                </div>
-              )}
-
-              {!hidden?.screenshare && (
-                <div className="ct-btn-container mobile-none">
-                  <button
-                    className={`${
-                      !sharing ? '' : 'ct-btn-on'
-                    } ct-hover-btn ct-tooltip ct-not-selectable`}
-                    id="share-button"
-                    onClick={() => {
-                      if (VC)
-                        handleSharing(
-                          VC,
-                          sharing,
-                          setSharing,
-                          videoEnabled,
-                          setVideo,
-                          setLocalVideoText,
-                          disableLocalVidDrag
-                        );
-                    }}
-                  >
-                    <span>
-                      {!sharing ? 'Share Screen' : 'Stop Sharing Screen'}
-                    </span>
-
-                    <FontAwesomeIcon icon={faDesktop} />
-                  </button>
-                </div>
-              )}
-
-              {cstmOptionBtns?.map((component, idx) => (
-                <React.Fragment key={idx}>{component}</React.Fragment>
-              ))}
-
-              {!hidden?.endcall && (
-                <div className="ct-btn-container">
-                  <button
-                    className="ct-hover-btn ct-tooltip ct-not-selectable"
-                    onClick={() =>
-                      onEndCall ? onEndCall() : console.log('call ended')
-                    }
-                  >
-                    <FontAwesomeIcon icon={faPhoneSlash} />
-                    <span>End Call</span>
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-          {(defaults?.showToastArea ?? true) && (
-            <ToastContainer
-              position="top-center"
-              autoClose={50000}
-              hideProgressBar={true}
-              className={showChat ? 'chat-offset' : ''}
-              newestOnTop={true}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              toastClassName={dark ? 'dark' : ''}
-              pauseOnHover
-              limit={2}
+          {VC && (
+            <Chat
+              showChat={showChat}
+              setShowChat={setShowChat}
+              dataChannel={VC.dataChannel}
+              localColor={VC.localColor}
             />
           )}
-        </div>
-      </FullScreen>
+          <div id="call-section" className="w-full h-full items-end">
+            <Draggable
+              defaultPosition={{ x: 30, y: 150 }}
+              bounds="parent"
+              disabled={disableLocalVidDrag ?? false}
+            >
+              <div
+                id="local-vid-wrapper"
+                className="z-3 flex justify-center items-center cursor-move"
+              >
+                <p
+                  id="local-text"
+                  className="absolute text-white opacity-40 whitespace-nowrap h-full font-bold z-5"
+                >
+                  {localVideoText}
+                </p>
+                <video
+                  id="local-video"
+                  ref={localVidRef}
+                  className="w-full h-auto rounded-lg bg-black " //TODO: border?
+                  style={{ borderRadius: '23px' }}
+                  autoPlay
+                  muted
+                  playsInline
+                ></video>
+                {showDotColors && <div id="local-indicator"></div>}
+              </div>
+            </Draggable>
+            <div
+              id="remote-vid-wrapper"
+              ref={remoteVidRef}
+              className={`flex justify-center items-center absolute top-0 left-0 w-full h-full max-h-screen max-w-screen z-2 ${
+                showChat ? 'ct-chat' : ''
+              }`}
+            ></div>
+
+            <div
+              id="toolbar"
+              ref={toolbarRef}
+              className="fixed bottom-2 z-6 flex justify-center flex-row w-full"
+            >
+              <div
+                id="multi-btn"
+                className="rounded-xl text-2xl bg-white dark:bg-gray-700 shadow-md p-6 flex flex-row items-center content-evenly mb-1 max-w-screen min-w-min" // fixed
+              >
+                {!hidden?.mute && (
+                  <div className="relative h-full w-full flex flex-col items-center m-0">
+                    <button
+                      className={`${
+                        audioEnabled ? '' : `text-${themeColor}-500`
+                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 not-selectable tooltip`}
+                      onClick={() => {
+                        if (VC) handleMute(audioEnabled, setAudio, VC);
+                      }}
+                    >
+                      <span className="hidden text-white bg-gray-700 font-semibold absolute p-2 rounded-lg top-0 left-12 z-10 whitespace-nowrap text-sm">
+                        {audioEnabled ? 'Mute Audio' : 'Unmute Audio'}
+                      </span>
+                      <FontAwesomeIcon
+                        icon={audioEnabled ? faMicrophone : faMicrophoneSlash}
+                      />
+                    </button>
+                  </div>
+                )}
+                {!hidden?.pausevideo && (
+                  <div className="relative h-full w-full flex flex-col items-center m-0">
+                    <button
+                      className={`${
+                        videoEnabled ? '' : `text-${themeColor}-500`
+                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 not-selectable tooltip`}
+                      onClick={() => {
+                        if (VC)
+                          handlePauseVideo(
+                            videoEnabled,
+                            setVideo,
+                            VC,
+                            setLocalVideoText,
+                            disableLocalVidDrag
+                          );
+                      }}
+                    >
+                      <span className="hidden text-white bg-gray-700 font-semibold absolute p-2 rounded-lg top-0 left-12 z-10 whitespace-nowrap text-sm">
+                        {videoEnabled ? 'Pause Video' : 'Unpause Video'}
+                      </span>
+                      <FontAwesomeIcon
+                        icon={videoEnabled ? faVideo : faVideoSlash}
+                      />
+                    </button>
+                  </div>
+                )}
+                {!hidden?.fullscreen && (
+                  <div className=" relative h-full w-full flex flex-col items-center m-0">
+                    <button
+                      className={`${
+                        !fsHandle.active ? '' : `text-${themeColor}-500`
+                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 not-selectable tooltip`}
+                      onClick={() => {
+                        if (fsHandle.active) {
+                          fsHandle.exit();
+                        } else {
+                          fsHandle.enter();
+                        }
+                      }}
+                    >
+                      <span className="hidden text-white bg-gray-700 font-semibold absolute p-2 rounded-lg top-0 left-12 z-10 whitespace-nowrap text-sm">
+                        {!fsHandle.active
+                          ? 'Enter Full Screen'
+                          : 'Exit Full Screen'}
+                      </span>
+                      <FontAwesomeIcon
+                        icon={!fsHandle.active ? faExpand : faCompress}
+                      />
+                    </button>
+                  </div>
+                )}
+                {!hidden?.chat && (
+                  <div className="relative h-full w-full flex flex-col items-center m-0">
+                    <button
+                      className={`${
+                        !showChat ? '' : `text-${themeColor}-500`
+                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 not-selectable tooltip`}
+                      onClick={() => {
+                        setShowChat(!showChat);
+                      }}
+                    >
+                      <span className="hidden text-white bg-gray-700 font-semibold absolute p-2 rounded-lg top-0 left-12  z-10 whitespace-nowrap text-sm">
+                        {showChat ? 'Hide Chat' : 'Show Chat'}
+                      </span>
+                      <FontAwesomeIcon icon={faComment} />
+                      {!showChat && unseenChats !== 0 && (
+                        <i
+                          className="chat-indicator"
+                          aria-valuetext={unseenChats.toString()}
+                        ></i>
+                      )}
+                    </button>
+                  </div>
+                )}
+
+                {!hidden?.darkmode && (
+                  <div className="relative h-full w-full flex flex-col items-center m-0">
+                    <button
+                      className={`${
+                        !dark ? '' : `text-${themeColor}-500`
+                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 not-selectable tooltip`}
+                      onClick={() => {
+                        if (setDark) setDark(!dark);
+                      }}
+                    >
+                      <span className="hidden text-white bg-gray-700 font-semibold absolute p-2 rounded-lg top-0 left-12  z-10 whitespace-nowrap text-sm">
+                        {!dark ? 'Dark Mode' : 'Light Mode'}
+                      </span>
+                      <FontAwesomeIcon icon={dark ? faMoon : faSun} />
+                    </button>
+                  </div>
+                )}
+
+                {!hidden?.screenshare && (
+                  <div className="relative h-full w-full flex flex-col items-center m-0">
+                    <button
+                      className={`${
+                        !sharing ? '' : `text-${themeColor}-500`
+                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 not-selectable tooltip`}
+                      id="share-button"
+                      onClick={() => {
+                        if (VC)
+                          handleSharing(
+                            VC,
+                            sharing,
+                            setSharing,
+                            videoEnabled,
+                            setVideo,
+                            setLocalVideoText,
+                            disableLocalVidDrag
+                          );
+                      }}
+                    >
+                      <span className="hidden text-white bg-gray-700 font-semibold absolute p-2 rounded-lg top-0 left-12  z-10 whitespace-nowrap text-sm">
+                        {!sharing ? 'Share Screen' : 'Stop Sharing Screen'}
+                      </span>
+
+                      <FontAwesomeIcon icon={faDesktop} />
+                    </button>
+                  </div>
+                )}
+
+                {cstmOptionBtns?.map((component, idx) => (
+                  <React.Fragment key={idx}>{component}</React.Fragment>
+                ))}
+
+                {!hidden?.endcall && (
+                  <div className="relative h-full w-full flex flex-col items-center m-0">
+                    <button
+                      className={`text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 not-selectable tooltip`}
+                      onClick={() =>
+                        onEndCall ? onEndCall() : console.log('call ended')
+                      }
+                    >
+                      <FontAwesomeIcon icon={faPhoneSlash} />
+                      <span className="hidden text-white bg-gray-700 font-semibold absolute p-2 rounded-lg top-0 left-12  z-10 whitespace-nowrap text-sm">
+                        End Call
+                      </span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+            {/* {(defaults?.showToastArea ?? true) && (
+              <ToastContainer
+                position="top-center"
+                autoClose={50000}
+                hideProgressBar={true}
+                className={showChat ? 'chat-offset' : ''}
+                newestOnTop={true}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                toastClassName={dark ? 'dark' : ''}
+                pauseOnHover
+                limit={2}
+              />
+            )} */}
+          </div>
+        </FullScreen>
+      </div>
     </div>
   );
 };

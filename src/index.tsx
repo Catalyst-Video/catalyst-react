@@ -36,7 +36,7 @@ const CatalystChat = ({
   alwaysBanner,
   darkMode,
   disableLocalVidDrag,
-  setupRoom,
+  disableSetupRoom,
   disableGradient,
 }: {
   sessionKey: string;
@@ -60,11 +60,11 @@ const CatalystChat = ({
   alwaysBanner?: boolean;
   darkMode?: boolean;
   disableLocalVidDrag?: boolean;
-  setupRoom?: boolean;
+  disableSetupRoom?: boolean;
   disableGradient?: boolean;
 }) => {
   const [hasPerms, setPermissions] = useState(false);
-  const [isUserReady, setUserReady] = useState(setupRoom ?? false);
+  const [isUserReady, setUserReady] = useState(disableSetupRoom ?? false);
   const [dark, setDark] = useState(darkMode ?? false);
   const [audioEnabled, setAudio] = useState<boolean>(defaults?.audioOn ?? true);
   const [videoEnabled, setVideo] = useState<boolean>(defaults?.videoOn ?? true);

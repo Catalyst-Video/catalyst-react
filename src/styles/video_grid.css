@@ -1,23 +1,17 @@
-    #remote-vid-wrapper {
+    /* #remote-vid-wrapper {
         display: flex;
         align-content: center;
         flex-wrap: wrap;
         align-items: center;
         justify-content: center;
         vertical-align: middle;
-        /* position: absolute; */
-        /* left: 0px;
-        bottom: 0px;
-        top: 0px;
-        right: 0px; */
         width:inherit;
         height:inherit;
         max-width: 100vw;
         max-height: 100vh;
         position: relative;
         z-index: 3;
-         /* position: relative;  */
-    }
+    } */
     .ct-chat {
         width: calc(100% - 240px);
     }
