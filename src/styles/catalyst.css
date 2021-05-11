@@ -87,6 +87,23 @@ body {
   display: block;
 } 
 
+/* chat message animations */
+#catalyst .fade-in-bottom {
+  animation-name: fadeInBottom;
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+@keyframes fadeInBottom {
+  from {
+    opacity: 0;
+    transform: translateY(200%);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
 /* display chat indicator when unread messages  */
 #catalyst .chat-indicator:after{
 content:attr(aria-valuetext);
@@ -268,7 +285,7 @@ display: none;
 
 
 
-#catalyst #chat-zone .chat-messages .message-item {
+/* #catalyst #chat-zone .chat-messages .message-item {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -278,10 +295,10 @@ display: none;
 }
 #catalyst #chat-zone .chat-messages .message-item.customer {
   padding-left: 40px;
-}
+} */
 
 /* received messages */
-#catalyst #chat-zone .message-item.moderator .message-bloc {
+/* #catalyst #chat-zone .message-item.moderator .message-bloc {
   background-color: white;
   color: black;
   position: relative;
@@ -295,10 +312,10 @@ display: none;
   border-color: var(--themeColor);
   border-radius: 20px 20px 20px 5px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-}
+} */
 
 /* sent messages */
-#catalyst #chat-zone .message-item.customer .message-bloc {
+/* #catalyst #chat-zone .message-item.customer .message-bloc {
   background-color: white;
   color: black;
   border-style: solid;
@@ -306,56 +323,38 @@ display: none;
   border-color: var(--themeColor);
   border-radius: 20px 20px 5px 20px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-}
-
+} */
+/* 
 #catalyst #chat-zone .chat-messages .message-item.customer .message-bloc {
   margin-left: auto;
-}
+} */
 
-#catalyst #chat-zone .chat-messages .message-item .message-bloc {
+/* #catalyst #chat-zone .chat-messages .message-item .message-bloc {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 7px;
   max-width: 100%;
-}
+} */
 
 
-#catalyst .chat-messages {
+/* #catalyst .chat-messages {
   width: 100%;
   margin-top: 10%;
   min-height: 90%;
   overflow-x: hidden;
   padding: 35px 0px 5px 0px;
   overflow: -moz-scrollbars-none;
-}
-
+} */
+/* 
 #catalyst .message {
   word-break: break-all;
-}
+} */
 
 #catalyst .message a {
   text-decoration: underline;
   color: var(--themeColor);
-}
-
-#catalyst .cssanimation {
-  animation-duration: 1s;
-  animation-fill-mode: both;
-}
-
-#catalyst .fadeInBottom {
-  animation-name: fadeInBottom;
-}
-@keyframes fadeInBottom {
-  from {
-    opacity: 0;
-    transform: translateY(200%);
-  }
-  to {
-    opacity: 1;
-  }
 }
 
 /* ct-tooltips */

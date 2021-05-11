@@ -70,17 +70,21 @@ const ChatComponent = ({
         <FontAwesomeIcon icon={faTimes} size="lg" title="Close Chat Panel" />
       </button>
       <div id="chat-zone" className="flex-1">
-        <div className="chat-messages"></div>
+        <div
+          id="chat-messages"
+          className="w-full overflow-x-none pt-10 pb-5"
+        ></div>
         <div
           ref={chatEndRef}
           id="chat-end"
           style={{ visibility: 'hidden' }}
         ></div>
       </div>
-      {/*     <div className="chat-compose-wrapper">
+      <div id="chat-compose-wrapper" className="">
         <textarea
+          id="chat-compose"
           ref={textInputRef}
-          className="chat-compose"
+          className="absolute bottom-0 left-0"
           placeholder="Send Message"
           rows={2}
         ></textarea>
@@ -93,15 +97,15 @@ const ChatComponent = ({
             className="chat-btn"
           />
         </span>
-
+        {/* 
          <FontAwesomeIcon
           icon={faFileUpload}
           size="lg"
           title="Upload File"
           id="upload-send"
           className="chat-btn"
-        /> 
-      </div> */}
+        /> */}
+      </div>
     </div>
   );
 };

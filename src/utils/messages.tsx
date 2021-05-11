@@ -68,19 +68,19 @@ export function displayMsg(
   if (msg.length > 0)
     if (isOwnMessage)
       document
-        .querySelector('.chat-messages')
+        .querySelector('#chat-messages')
         ?.insertAdjacentHTML(
           'beforeend',
-          `<div class="message-item customer cssanimation fadeInBottom"><div class="message-bloc" style="border: 3px solid ${border}"><div class="message">` +
+          `<div class="sent-message relative flex flex-col items-start content-end p-1 pl-20 fade-in-bottom"><div class="bg-gray-50 text-black relative shadow-sm rounded-tl-full rounded-tr-full rounded-br-sm rounded-bl-full border-2 border-${border}-500 ml-auto p-2"><div class="message break-all">` +
             msg +
             '</div></div></div>'
         );
     else
       document
-        .querySelector('.chat-messages')
+        .querySelector('#chat-messages')
         ?.insertAdjacentHTML(
           'beforeend',
-          `<div class="message-item moderator cssanimation fadeInBottom"><div class="message-bloc" style="border: 3px solid ${border}"><div class="message">` +
+          `<div class="received-message relative flex flex-col items-start content-end p-1 pl-20 fade-in-bottom"><div class="bg-gray-50 text-black relative flex items-center justify-center shadow-sm rounded-tl-full rounded-tr-full rounded-br-full rounded-bl-sm border-2 p-2 border-${border}-500"><div class="message break-all">` +
             msg +
             '</div></div></div>'
         );
