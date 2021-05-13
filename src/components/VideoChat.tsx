@@ -64,6 +64,7 @@ const VideoChat = ({
   setAudioInput,
   setVidInput,
   themeColor,
+  redIndicators,
 }: {
   sessionKey: string;
   uniqueAppId: string;
@@ -95,6 +96,7 @@ const VideoChat = ({
   setAudioInput: Function;
   setVidInput: Function;
   themeColor: string;
+  redIndicators?: boolean;
 }) => {
   const fsHandle = useFullScreenHandle();
 
@@ -291,8 +293,16 @@ const VideoChat = ({
                       className={`${
                         audioEnabled
                           ? ''
-                          : `text-${themeColor}-500 dark:text-${themeColor}-500`
-                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
+                          : `text-${
+                              redIndicators ? 'red' : themeColor
+                            }-500 dark:text-${
+                              redIndicators ? 'red' : themeColor
+                            }-500`
+                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${
+                        redIndicators ? 'red' : themeColor
+                      }-500 dark:hover:text-${
+                        redIndicators ? 'red' : themeColor
+                      }-500 not-selectable tooltip`}
                       onClick={() => {
                         if (VC) handleMute(audioEnabled, setAudio, VC);
                       }}
@@ -312,8 +322,16 @@ const VideoChat = ({
                       className={`${
                         videoEnabled
                           ? ''
-                          : `text-${themeColor}-500 dark:text-${themeColor}-500`
-                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
+                          : `text-${
+                              redIndicators ? 'red' : themeColor
+                            }-500 dark:text-${
+                              redIndicators ? 'red' : themeColor
+                            }-500`
+                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${
+                        redIndicators ? 'red' : themeColor
+                      }-500 dark:hover:text-${
+                        redIndicators ? 'red' : themeColor
+                      }-500 not-selectable tooltip`}
                       onClick={() => {
                         if (VC)
                           handlePauseVideo(
@@ -449,7 +467,11 @@ const VideoChat = ({
                 {!hidden?.endcall && (
                   <div className="relative h-full w-full flex flex-col items-center m-0">
                     <button
-                      className={`text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
+                      className={`text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${
+                        redIndicators ? 'red' : themeColor
+                      }-500 dark:hover:text-${
+                        redIndicators ? 'red' : themeColor
+                      }-500 not-selectable tooltip`}
                       onClick={() =>
                         onEndCall ? onEndCall() : console.log('call ended')
                       }

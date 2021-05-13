@@ -56,6 +56,7 @@ const WrapperComp = ({
         // showChatArea: true,
         // showToastArea: false,
       }}
+      redIndicators={true}
       // cstmWelcomeMsg="DISABLED"
       // alwaysBanner={true}
       // hidden={{ chat: true, mute: true }}

@@ -38,6 +38,7 @@ const CatalystChat = ({
   disableLocalVidDrag,
   disableSetupRoom,
   disableGradient,
+  redIndicators,
 }: {
   sessionKey: string;
   uniqueAppId: string;
@@ -62,6 +63,7 @@ const CatalystChat = ({
   disableLocalVidDrag?: boolean;
   disableSetupRoom?: boolean;
   disableGradient?: boolean;
+  redIndicators?: boolean;
 }) => {
   const [hasPerms, setPermissions] = useState(false);
   const [isUserReady, setUserReady] = useState(disableSetupRoom ?? false);
@@ -126,6 +128,7 @@ const CatalystChat = ({
         vidInput={vidInput}
         setAudioInput={setAudioInput}
         setVidInput={setVidInput}
+        redIndicators={redIndicators}
       />
     );
   } else if (

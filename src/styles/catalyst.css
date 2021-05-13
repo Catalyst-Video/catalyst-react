@@ -161,8 +161,22 @@ z-index: 10;
 display: none;
 }
 
+/* hide tooltips on mobile  */
+@media (hover: none) {
+  #catalyst button:hover span {
+    display: none !important;
+  }
+}
+
+
+
+
+
+
+
+
 /* mobile layout */
-@media (max-width: 640px) {
+/* @media (max-width: 640px) {
   html,
   body #catalyst .catalyst-body {
     width: 100%;
@@ -215,7 +229,7 @@ display: none;
 #catalyst #ct-toolbar {
     max-width: inherit; 
   
-} 
+}  */
 
  /* #catalyst .ct-multi-btn {
     margin: 0;
@@ -371,8 +385,7 @@ font-size: 20px;
   z-index: 5;
 }  */
 
-}
-
+/* 
  @media (hover: hover) {
   
   #catalyst  .show {
@@ -383,21 +396,11 @@ font-size: 20px;
       opacity: 0;
       transition: opacity 400ms;
     }
-  }
+  } */
 
 
-  @media (hover: none) {
-    #catalyst button.ct-tooltip:hover span {
-      display: none;
-      z-index: 999;
-    }
 
-   #catalyst .mobile-none {
-    display: none;
-  }
-  }
-
-#catalyst .ct-header-btn {
+/* #catalyst .ct-header-btn {
   border: none !important;
   outline: none !important;
   background: none;
@@ -431,7 +434,7 @@ font-size: 20px;
 #catalyst .session-details-title {
   display: flex;
   margin-bottom: 5px;
-}
+} */
 
 /* Hide video controls on mobile
 TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away after you press pause then play again */
