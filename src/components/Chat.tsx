@@ -34,7 +34,8 @@ const ChatComponent = ({
       msg = msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
       msg = msg.autolink();
       sendToAllDataChannels('mes:' + msg, dataChannel);
-      displayMsg(msg, localColor ?? 'var(--themeColor)', true);
+      displayMsg('mes:' + msg, themeColor, true);
+      // displayMsg(msg, localColor ?? 'var(--themeColor)', true);
       chatEndRef.current?.scrollIntoView({
         behavior: 'smooth',
         block: 'nearest',
@@ -59,7 +60,7 @@ const ChatComponent = ({
   return (
     <div
       id="chat-entire"
-      className={`absolute right-4 flex flex-row content-end z-10 max-h-screen w-72 p-0 overflow-none bg-white dark:bg-gray-800 rounded-2xl mb-20 mt-3 items-stretch ${
+      className={`absolute top-7 sm:top-0 m-0 right-0 p-0 sm:right-4 flex flex-row content-end z-40 shadow-sm max-h-screen w-full sm:w-72 sm:p-0 overflow-none bg-white dark:bg-gray-800 sm:rounded-2xl sm:mb-20 sm:mt-4 items-stretch ${
         showChat ? '' : 'hidden'
       }`}
       //rounded-tl-xl rounded-bl-xl
@@ -73,7 +74,7 @@ const ChatComponent = ({
       </span>
       <button
         id="chat-close-btn"
-        className="rounded-full bg-transparent z-20 fixed right-8 pt-3 focus:border-0 focus:outline-none text-left cursor-pointer text-black dark:text-white"
+        className="rounded-full bg-transparent z-20 fixed right-4 sm:right-8 pt-3 focus:border-0 focus:outline-none text-left cursor-pointer text-black dark:text-white"
         onClick={() => setShowChat(!showChat)}
       >
         <FontAwesomeIcon
@@ -95,7 +96,7 @@ const ChatComponent = ({
       </div>
       <div
         id="chat-compose-wrapper"
-        className="absolute bottom-3 left-0 ml-3 flex items-center border-0 shadow-lg outline-none w-full rounded-2xl p-2 h-16 max-h-20 bg-white dark:bg-gray-700"
+        className="absolute bottom-3 left-0 sm:ml-3 flex items-center border-0 sm:shadow-lg outline-none w-full shadow-inner sm:rounded-2xl p-2 h-16 max-h-20 bg-white dark:bg-gray-700"
       >
         <textarea
           id="chat-compose"

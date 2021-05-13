@@ -62,7 +62,7 @@ export function displayWelcomeMessage(
 
 export function displayMsg(
   msg: string,
-  border: string,
+  themeColor: string,
   isOwnMessage: boolean
 ): void {
   if (msg.length > 0)
@@ -71,7 +71,7 @@ export function displayMsg(
         .querySelector('#chat-messages')
         ?.insertAdjacentHTML(
           'beforeend',
-          `<div class="sent-message relative flex flex-col items-start content-end p-1 pr-2 pl-20 fade-in-bottom"><div class="bg-blue-500 text-white relative rounded-tl-2xl rounded-tr-2xl rounded-br-sm rounded-bl-2xl  ml-auto p-2"><div class="message break-all px-2 py-1 text-xs">` +
+          `<div class="sent-message relative flex flex-col items-start content-end p-1 pr-2 pl-20 fade-in-bottom"><div class="bg-${themeColor}-500 text-white relative rounded-tl-2xl rounded-tr-2xl rounded-br-sm rounded-bl-2xl  ml-auto p-2"><div class="message break-all px-2 py-1 text-xs">` +
             msg +
             '</div></div></div>'
         );

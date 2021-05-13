@@ -278,9 +278,9 @@ display: none;
     border-radius: 5px;
   }
 
-.chat-offset {
+/* .chat-offset {
   left: 0px !important;
-}
+} */
 
  /* TODO: don't hide random icons like this #catalyst .ct-btn-container:nth-child(3),
  #catalyst .ct-btn-container:nth-child(5) {
@@ -288,7 +288,7 @@ display: none;
   } */
 
   /* chat  */
- #catalyst #entire-chat {
+ /* #catalyst #entire-chat {
     pointer-events: none;
     position: absolute;
     top: 3rem;
@@ -298,9 +298,9 @@ display: none;
     padding: 0;
     text-align: center;
     z-index: 12;
-  }
+  } */
 
- #catalyst #chat-zone {
+ /* #catalyst #chat-zone {
     position: absolute;
     padding-top: 20px;
     width: 100%;
@@ -312,9 +312,9 @@ display: none;
   #catalyst #chat-entire {
     width: 96%;
     z-index: 12;
-  }
+  } */
 
-
+/* 
   #catalyst div.chat-compose-wrapper {
   min-width: 100%;
   max-height: 30%;
@@ -356,9 +356,9 @@ font-size: 20px;
   font-size: 1.5rem;
   left: 1rem;
   top: 1rem;
-}
+} */
 
-
+/* 
 #catalyst textarea.chat-compose {
   height: 30%;
   z-index: 5;
@@ -369,7 +369,7 @@ font-size: 20px;
 #catalyst #chat-zone {
   height: 75%;
   z-index: 5;
-} 
+}  */
 
 }
 
