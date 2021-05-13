@@ -279,11 +279,11 @@ const VideoChat = ({
             <div
               id="toolbar"
               ref={toolbarRef}
-              className="fixed bottom-2 z-6 flex justify-center flex-row w-full"
+              className="fixed min-w-screen max-w-screen bottom-0 left-0 right-0 sm:bottom-2 z-6 flex justify-center flex-row"
             >
               <div
                 id="multi-btn"
-                className="rounded-2xl text-2xl bg-white dark:bg-gray-800 shadow-sm px-6 py-3 flex flex-row items-center content-evenly mb-1 max-w-screen min-w-min" // fixed
+                className="sm:rounded-2xl text-2xl bg-white dark:bg-gray-800 shadow-sm px-6 py-3 flex flex-row items-center content-evenly sm:mb-1 min-w-screen max-w-screen w-screen sm:w-auto" // fixed
               >
                 {!hidden?.mute && (
                   <div className="relative h-full w-full flex flex-col items-center m-0">
@@ -335,7 +335,7 @@ const VideoChat = ({
                   </div>
                 )}
                 {!hidden?.fullscreen && (
-                  <div className=" relative h-full w-full flex flex-col items-center m-0">
+                  <div className="hidden sm:flex relative h-full w-full flex-col items-center m-0">
                     <button
                       className={`${
                         !fsHandle.active
@@ -412,7 +412,7 @@ const VideoChat = ({
                 )}
 
                 {!hidden?.screenshare && (
-                  <div className="relative h-full w-full flex flex-col items-center m-0">
+                  <div className="hidden sm:flex relative h-full w-full flex-col items-center m-0">
                     <button
                       className={`${
                         !sharing

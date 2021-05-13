@@ -217,13 +217,13 @@ display: none;
   
 } 
 
- #catalyst .ct-multi-btn {
+ /* #catalyst .ct-multi-btn {
     margin: 0;
     padding: 3px 6px;
     position: absolute;
     left: 0;
     right: 0;
-  } 
+  }  */
   
 /* text inside local video */
 #catalyst #local-vid-wrapper p {
@@ -245,7 +245,7 @@ display: none;
   position: absolute;
 }
 
- #catalyst #ct-captions-text {
+ /* #catalyst #ct-captions-text {
     width: 90%;
     top: 80%;
     left: 0px;
@@ -276,7 +276,7 @@ display: none;
     cursor: pointer;
     padding: 7px;
     border-radius: 5px;
-  }
+  } */
 
 /* .chat-offset {
   left: 0px !important;
