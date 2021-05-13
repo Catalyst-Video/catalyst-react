@@ -251,18 +251,18 @@ const VideoChat = ({
             >
               <div
                 id="local-vid-wrapper"
-                className="z-3 flex justify-center items-center cursor-move z-20 relative"
+                className="cursor-move z-20 relative flex justify-center w-full h-auto"
               >
                 <p
                   id="local-text"
-                  className="absolute text-white opacity-40 whitespace-nowrap h-full font-bold z-5"
+                  className="absolute flex items-center text-white opacity-40 whitespace-nowrap h-full font-bold z-5 text-xs sm:text-sm"
                 >
                   {localVideoText}
                 </p>
                 <video
                   id="local-video"
                   ref={localVidRef}
-                  className={`w-full h-auto rounded-2xl bg-black border-2 border-${themeColor}-500`} //TODO: border?
+                  className={`w-full h-full rounded-2xl bg-black border-2 border-${themeColor}-500`} //TODO: border?
                   autoPlay
                   muted
                   playsInline

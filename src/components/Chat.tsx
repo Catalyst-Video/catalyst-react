@@ -34,7 +34,7 @@ const ChatComponent = ({
       msg = msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
       msg = msg.autolink();
       sendToAllDataChannels('mes:' + msg, dataChannel);
-      displayMsg('mes:' + msg, themeColor, true);
+      displayMsg(msg, themeColor, true);
       // displayMsg(msg, localColor ?? 'var(--themeColor)', true);
       chatEndRef.current?.scrollIntoView({
         behavior: 'smooth',
@@ -96,7 +96,7 @@ const ChatComponent = ({
       </div>
       <div
         id="chat-compose-wrapper"
-        className="absolute bottom-3 left-0 sm:ml-3 flex items-center border-0 sm:shadow-lg outline-none w-full shadow-inner sm:rounded-2xl p-2 h-16 max-h-20 bg-white dark:bg-gray-700"
+        className="absolute bottom-3 left-0 sm:ml-2 flex items-center border-0 sm:shadow-lg outline-none w-full shadow-inner sm:rounded-2xl p-2 h-16 max-h-20 bg-white dark:bg-gray-700"
       >
         <textarea
           id="chat-compose"
