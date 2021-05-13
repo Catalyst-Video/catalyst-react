@@ -5,8 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faComment,
   faCompress,
+  faCompressArrowsAlt,
   faDesktop,
   faExpand,
+  faExpandArrowsAlt,
   faMicrophone,
   faMicrophoneSlash,
   faMoon,
@@ -217,10 +219,10 @@ const VideoChat = ({
         dark ? 'dark' : ''
       } box-border h-full w-full m-0 p-0 opacity-0 overflow-hidden max-h-screen max-w-screen relative`}
     >
-      <div id="bg-theme" className="h-full w-full bg-gray-200 dark:bg-gray-800">
+      <div id="bg-theme" className="h-full w-full bg-gray-200 dark:bg-gray-900">
         <FullScreen
           handle={fsHandle}
-          className="h-full w-full bg-gray-200 dark:bg-gray-800"
+          className="h-full w-full bg-gray-200 dark:bg-gray-900"
         >
           <Header
             autoFade={autoFade}
@@ -281,7 +283,7 @@ const VideoChat = ({
             >
               <div
                 id="multi-btn"
-                className="rounded-2xl text-2xl bg-white dark:bg-gray-700 shadow-sm px-6 py-3 flex flex-row items-center content-evenly mb-1 max-w-screen min-w-min" // fixed
+                className="rounded-2xl text-2xl bg-white dark:bg-gray-800 shadow-sm px-6 py-3 flex flex-row items-center content-evenly mb-1 max-w-screen min-w-min" // fixed
               >
                 {!hidden?.mute && (
                   <div className="relative h-full w-full flex flex-col items-center m-0">
@@ -295,7 +297,7 @@ const VideoChat = ({
                         if (VC) handleMute(audioEnabled, setAudio, VC);
                       }}
                     >
-                      <span className="hidden text-white bg-gray-700 dark:bg-gray-500 font-semibold absolute p-2 rounded-lg top-0 left-12 z-10 whitespace-nowrap text-sm">
+                      <span className="hidden text-white bg-gray-500 dark:bg-gray-500 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
                         {audioEnabled ? 'Mute Audio' : 'Unmute Audio'}
                       </span>
                       <FontAwesomeIcon
@@ -323,7 +325,7 @@ const VideoChat = ({
                           );
                       }}
                     >
-                      <span className="hidden text-white bg-gray-700 dark:bg-gray-500 font-semibold absolute p-2 rounded-lg top-0 left-12 z-10 whitespace-nowrap text-sm">
+                      <span className="hidden text-white bg-gray-500 dark:bg-gray-500 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
                         {videoEnabled ? 'Pause Video' : 'Unpause Video'}
                       </span>
                       <FontAwesomeIcon
@@ -348,13 +350,17 @@ const VideoChat = ({
                         }
                       }}
                     >
-                      <span className="hidden text-white bg-gray-700 dark:bg-gray-500 font-semibold absolute p-2 rounded-lg top-0 left-12 z-10 whitespace-nowrap text-sm">
+                      <span className="hidden text-white bg-gray-500 dark:bg-gray-500 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
                         {!fsHandle.active
                           ? 'Enter Full Screen'
                           : 'Exit Full Screen'}
                       </span>
                       <FontAwesomeIcon
-                        icon={!fsHandle.active ? faExpand : faCompress}
+                        icon={
+                          !fsHandle.active
+                            ? faExpandArrowsAlt
+                            : faCompressArrowsAlt
+                        }
                       />
                     </button>
                   </div>
@@ -371,7 +377,7 @@ const VideoChat = ({
                         setShowChat(!showChat);
                       }}
                     >
-                      <span className="hidden text-white bg-gray-700 dark:bg-gray-500 font-semibold absolute p-2 rounded-lg top-0 left-12 z-10 whitespace-nowrap text-sm">
+                      <span className="hidden text-white bg-gray-500 dark:bg-gray-500 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
                         {showChat ? 'Hide Chat' : 'Show Chat'}
                       </span>
                       <FontAwesomeIcon icon={faComment} />
@@ -397,7 +403,7 @@ const VideoChat = ({
                         if (setDark) setDark(!dark);
                       }}
                     >
-                      <span className="hidden text-white bg-gray-700 dark:bg-gray-500 font-semibold absolute p-2 rounded-lg top-0 left-12  z-10 whitespace-nowrap text-sm">
+                      <span className="hidden text-white bg-gray-500 dark:bg-gray-500 font-semibold absolute p-2 rounded-xl top-0 left-12  z-10 whitespace-nowrap text-sm">
                         {!dark ? 'Dark Mode' : 'Light Mode'}
                       </span>
                       <FontAwesomeIcon icon={dark ? faMoon : faSun} />
@@ -427,7 +433,7 @@ const VideoChat = ({
                           );
                       }}
                     >
-                      <span className="hidden text-white bg-gray-700 dark:bg-gray-500 font-semibold absolute p-2 rounded-lg top-0 left-12  z-10 whitespace-nowrap text-sm">
+                      <span className="hidden text-white bg-gray-500 dark:bg-gray-500 font-semibold absolute p-2 rounded-xl top-0 left-12  z-10 whitespace-nowrap text-sm">
                         {!sharing ? 'Share Screen' : 'Stop Sharing Screen'}
                       </span>
 
@@ -449,7 +455,7 @@ const VideoChat = ({
                       }
                     >
                       <FontAwesomeIcon icon={faPhoneSlash} />
-                      <span className="hidden text-white bg-gray-700 dark:bg-gray-500 font-semibold absolute p-2 rounded-lg top-0 left-12  z-10 whitespace-nowrap text-sm">
+                      <span className="hidden text-white bg-gray-500 dark:bg-gray-500 font-semibold absolute p-2 rounded-xl top-0 left-12  z-10 whitespace-nowrap text-sm">
                         End Call
                       </span>
                     </button>

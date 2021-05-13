@@ -85,7 +85,7 @@ const ChatComponent = ({
       <div
         id="chat-zone"
         className="flex flex-1 relative flex-row justify-end text-sm overflow-y-auto"
-        style={{ height: '86%' }}
+        style={{ height: '88%' }}
       >
         <div
           id="chat-messages"
@@ -100,7 +100,7 @@ const ChatComponent = ({
         <textarea
           id="chat-compose"
           ref={textInputRef}
-          className="text-sm border-0 outline-none w-full bg-white dark:bg-gray-600 resize-none"
+          className="text-sm border-0 outline-none w-full bg-white dark:bg-gray-600 dark:text-white resize-none"
           placeholder="Type your message"
           rows={2}
         ></textarea>
