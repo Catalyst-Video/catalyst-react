@@ -141,7 +141,7 @@ const PermsComponent = ({
         {hasPerms && (
           <div
             id="perms-comp"
-            className="bg-white rounded-xl my-2 mx-1 shadow-md"
+            className="bg-white rounded-2xl my-2 mx-1 shadow-md"
           >
             <div className="md:w-96 md:h-72 bg-gray-900 rounded-t-xl z-1">
               <video

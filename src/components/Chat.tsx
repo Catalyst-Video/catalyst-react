@@ -59,10 +59,11 @@ const ChatComponent = ({
   return (
     <div
       id="chat-entire"
-      className={`absolute right-0 flex flex-row content-end z-10 max-h-screen w-72 p-0 overflow-none bg-white dark:bg-gray-700 rounded-tl-xl rounded-bl-xl mb-20 mt-5 items-stretch ${
+      className={`absolute right-4 flex flex-row content-end z-10 max-h-screen w-72 p-0 overflow-none bg-white dark:bg-gray-700 rounded-2xl mb-20 mt-3 items-stretch ${
         showChat ? '' : 'hidden'
       }`}
-      style={{ height: '90%' }}
+      //rounded-tl-xl rounded-bl-xl
+      style={{ height: '95%' }}
     >
       <span
         id="chat-title"
@@ -72,7 +73,7 @@ const ChatComponent = ({
       </span>
       <button
         id="chat-close-btn"
-        className="rounded-full bg-transparent z-20 fixed right-3 pt-3 focus:border-0 focus:outline-none text-left cursor-pointer text-black dark:text-white"
+        className="rounded-full bg-transparent z-20 fixed right-8 pt-3 focus:border-0 focus:outline-none text-left cursor-pointer text-black dark:text-white"
         onClick={() => setShowChat(!showChat)}
       >
         <FontAwesomeIcon
@@ -83,8 +84,8 @@ const ChatComponent = ({
       </button>
       <div
         id="chat-zone"
-        className="flex flex-1 relative flex-row justify-end text-sm overflow-y-scroll"
-        style={{ height: '85%' }}
+        className="flex flex-1 relative flex-row justify-end text-sm overflow-y-auto"
+        style={{ height: '86%' }}
       >
         <div
           id="chat-messages"
@@ -94,18 +95,18 @@ const ChatComponent = ({
       </div>
       <div
         id="chat-compose-wrapper"
-        className="absolute -bottom-6 left-0 -ml-3 flex items-center border-0 shadow-md outline-none w-full rounded-xl p-4 h-20 max-h-20 bg-white dark:bg-gray-600"
+        className="absolute bottom-3 left-0 ml-3 flex items-center border-0 shadow-lg outline-none w-full rounded-2xl p-2 h-16 max-h-20 bg-white dark:bg-gray-600"
       >
         <textarea
           id="chat-compose"
           ref={textInputRef}
           className="text-sm border-0 outline-none w-full bg-white dark:bg-gray-600 resize-none"
           placeholder="Type your message"
-          rows={3}
+          rows={2}
         ></textarea>
         <span
           ref={textSendRef}
-          className={`bg-${themeColor}-500 ml-3 p-2 rounded-xl text-white`}
+          className={`bg-${themeColor}-500 ml-2 p-2 cursor-pointer rounded-xl text-white`}
         >
           <FontAwesomeIcon
             id="chat-send"

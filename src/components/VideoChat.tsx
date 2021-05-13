@@ -258,7 +258,7 @@ const VideoChat = ({
                 <video
                   id="local-video"
                   ref={localVidRef}
-                  className={`w-full h-auto rounded-xl bg-black border-2 border-${themeColor}-500`} //TODO: border?
+                  className={`w-full h-auto rounded-2xl bg-black border-2 border-${themeColor}-500`} //TODO: border?
                   autoPlay
                   muted
                   playsInline
@@ -281,7 +281,7 @@ const VideoChat = ({
             >
               <div
                 id="multi-btn"
-                className="rounded-xl text-2xl bg-white dark:bg-gray-700 shadow-sm px-6 py-3 flex flex-row items-center content-evenly mb-1 max-w-screen min-w-min" // fixed
+                className="rounded-2xl text-2xl bg-white dark:bg-gray-700 shadow-sm px-6 py-3 flex flex-row items-center content-evenly mb-1 max-w-screen min-w-min" // fixed
               >
                 {!hidden?.mute && (
                   <div className="relative h-full w-full flex flex-col items-center m-0">

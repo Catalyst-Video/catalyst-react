@@ -71,7 +71,7 @@ export function displayMsg(
         .querySelector('#chat-messages')
         ?.insertAdjacentHTML(
           'beforeend',
-          `<div class="sent-message relative flex flex-col items-start content-end p-1 pl-20 fade-in-bottom"><div class="bg-gray-50 text-black relative shadow-sm rounded-tl-full rounded-tr-full rounded-br-sm rounded-bl-full border-2 border-${border}-500 ml-auto p-2"><div class="message break-all p-1">` +
+          `<div class="sent-message relative flex flex-col items-start content-end p-1 pr-2 pl-20 fade-in-bottom"><div class="bg-blue-500 text-white relative rounded-tl-2xl rounded-tr-2xl rounded-br-sm rounded-bl-2xl  ml-auto p-2"><div class="message break-all px-2 py-1 text-xs">` +
             msg +
             '</div></div></div>'
         );
@@ -80,7 +80,7 @@ export function displayMsg(
         .querySelector('#chat-messages')
         ?.insertAdjacentHTML(
           'beforeend',
-          `<div class="received-message relative flex flex-col items-start content-end p-1 pl-2 fade-in-bottom"><div class="bg-gray-50 text-black relative flex items-center justify-center shadow-sm rounded-tl-full rounded-tr-full rounded-br-full rounded-bl-sm border-2 p-2 border-${border}-500"><div class="message break-all p-1">` +
+          `<div class="received-message relative flex flex-col items-start content-end p-1 pl-2 fade-in-bottom"><div class="bg-gray-100 text-black relative flex items-center justify-center rounded-tl-2xl rounded-tr-2xl rounded-br-2xl rounded-bl-sm p-2"><div class="message break-all px-2 py-1 text-xs">` +
             msg +
             '</div></div></div>'
         );
