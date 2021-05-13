@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 // Other packages
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faCog,
   faComment,
   faCompress,
   faCompressArrowsAlt,
@@ -255,7 +256,7 @@ const VideoChat = ({
               >
                 <p
                   id="local-text"
-                  className="absolute flex items-center text-white opacity-40 whitespace-nowrap h-full font-bold z-5 text-xs sm:text-sm"
+                  className="absolute flex items-center text-white opacity-40 whitespace-nowrap h-full font-bold z-5 text-xs sm:text-sm not-selectable"
                 >
                   {localVideoText}
                 </p>
@@ -277,7 +278,11 @@ const VideoChat = ({
                 showChat ? 'ct-chat' : ''
               }`}
             ></div>
-
+            {/* TODO: settings
+            <button className="absolute bottom-4 left-4 text-black dark:text-white cursor-pointer focus:border-0 focus:outline-none">
+              <FontAwesomeIcon icon={faCog} size="lg" className="" />
+            </button>
+ */}
             <div
               id="toolbar"
               ref={toolbarRef}

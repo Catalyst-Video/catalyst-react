@@ -135,7 +135,8 @@ const CatalystChat = ({
     DetectRTC.isWebRTCSupported &&
     (DetectRTC.browser.isChrome ||
       DetectRTC.browser.isEdge ||
-      DetectRTC.browser.isSafari)
+      DetectRTC.browser.isSafari) &&
+    !disableSetupRoom
   ) {
     return (
       <PermsComponent

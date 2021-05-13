@@ -68,39 +68,37 @@ const PermsComponent = ({
   }, []);
 
   useEffect(() => {
-    if (videoEnabled || audioEnabled) reqStream();
-  }, [videoEnabled, audioEnabled]);
-
-  useEffect(() => {
-    if (videoEnabled || audioEnabled) reqStream();
-  }, [vidInput, audioInput]);
+    reqStream();
+  }, [vidInput, audioInput, videoEnabled, audioEnabled]);
 
   const reqStream = () => {
-    let audioProp: boolean | { deviceId: string | undefined } = false;
-    let videoProp: boolean | { deviceId: string | undefined } = false;
-    if (audioEnabled) audioProp = { deviceId: audioInput?.deviceId };
-    if (videoEnabled) videoProp = { deviceId: vidInput?.deviceId };
-    navigator.mediaDevices
-      .getUserMedia({
-        audio: audioProp,
-        video: videoProp,
-      })
-      .then(stream => {
-        setPermissions(true);
-        if (testVideoRef.current) testVideoRef.current.srcObject = stream;
-        testStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
-          track.enabled = false;
-          track.stop();
+    testStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
+      track.enabled = false;
+      track.stop();
+    });
+    testStream?.getAudioTracks().forEach((track: MediaStreamTrack) => {
+      track.enabled = false;
+      track.stop();
+    });
+    if (videoEnabled || audioEnabled) {
+      let audioProp: boolean | { deviceId: string | undefined } = false;
+      let videoProp: boolean | { deviceId: string | undefined } = false;
+      if (audioEnabled) audioProp = { deviceId: audioInput?.deviceId };
+      if (videoEnabled) videoProp = { deviceId: vidInput?.deviceId };
+      navigator.mediaDevices
+        .getUserMedia({
+          audio: audioProp,
+          video: videoProp,
+        })
+        .then(stream => {
+          setPermissions(true);
+          if (testVideoRef.current) testVideoRef.current.srcObject = stream;
+          setStream(stream);
+        })
+        .catch(err => {
+          logger(err);
         });
-        testStream?.getAudioTracks().forEach((track: MediaStreamTrack) => {
-          track.enabled = false;
-          track.stop();
-        });
-        setStream(stream);
-      })
-      .catch(err => {
-        logger(err);
-      });
+    }
   };
 
   const joinCall = () => {
