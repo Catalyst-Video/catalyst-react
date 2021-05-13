@@ -103,6 +103,12 @@ body {
   }
 }
 
+/* color message links */
+#catalyst .message a {
+  text-decoration: underline;
+  color: var(--themeColor);
+}
+
 
 /* display chat indicator when unread messages  */
 #catalyst .chat-indicator:after{
@@ -157,7 +163,7 @@ display: none;
 
 
 
-
+/* 
 #catalyst .chat-close-btn {
 	border-radius: 10px;
   background: transparent;
@@ -170,11 +176,11 @@ display: none;
   outline: none !important;
   text-align: left;
   cursor: pointer; 
-}
+} */
 
-#catalyst .dark .chat-close-btn {
+/* #catalyst .dark .chat-close-btn {
   color: #eee; 
-}
+} */
 /* 
 #catalyst #chat-entire {
   position: absolute;
@@ -197,17 +203,9 @@ display: none;
   will-change: transform;
 } */
 
-#catalyst .dark #chat-entire {
-  background: #252429;
-  color: #eee; 
-}
 
-#catalyst  .dark textarea.chat-compose {
- background: #252429;
- color: #eee; 
-}
 
-#catalyst #chat-zone {
+/* #catalyst #chat-zone {
   box-sizing: border-box;
   position: relative;
   justify-content: flex-end;
@@ -217,14 +215,14 @@ display: none;
   overflow: scroll;
   font-family: "Heebo", sans-serif;
   font-size: 0.8rem;
-}
-
+} */
+/* 
 #catalyst #chat-zone::-webkit-scrollbar {
   width: 0 !important;
   background: transparent !important; 
-}
+} */
 
-#catalyst div.chat-compose-wrapper {
+/* #catalyst div.chat-compose-wrapper {
   min-width: 100%;
   max-height: 27%;
   min-height: 25%;
@@ -237,7 +235,7 @@ display: none;
   outline: none;
   box-shadow: 0px -4px 3px rgba(50, 50, 50, 5%);
   border-radius: 2px 2px 0 0;
-}
+} */
 
 
 #catalyst .chat-btn {
@@ -255,8 +253,7 @@ display: none;
 }
 
 
-#catalyst textarea.chat-compose {
-  /* min-width: calc(100% - 1rem); */
+/* #catalyst textarea.chat-compose {
   max-height: 27%;
   min-height: 25%;
   font-family: "Heebo", sans-serif;
@@ -271,7 +268,7 @@ display: none;
   border: none;
   outline: none;
   resize: none;
-}
+} */
 
 
 #catalyst span.chat-title {
@@ -352,10 +349,6 @@ display: none;
   word-break: break-all;
 } */
 
-#catalyst .message a {
-  text-decoration: underline;
-  color: var(--themeColor);
-}
 
 /* ct-tooltips */
 /* #catalyst button.ct-tooltip span {

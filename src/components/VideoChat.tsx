@@ -236,6 +236,7 @@ const VideoChat = ({
               setShowChat={setShowChat}
               dataChannel={VC.dataChannel}
               localColor={VC.localColor}
+              themeColor={themeColor}
             />
           )}
           <div id="call-section" className="w-full h-full items-end">

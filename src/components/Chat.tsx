@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faArrowCircleRight,
   faFileUpload,
+  faPaperPlane,
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import { sendToAllDataChannels } from '../utils/general';
@@ -13,11 +14,13 @@ const ChatComponent = ({
   setShowChat,
   dataChannel,
   localColor,
+  themeColor,
 }: {
   showChat: boolean;
   setShowChat: Function;
   dataChannel: Map<string, RTCDataChannel>;
   localColor: string;
+  themeColor: string;
 }) => {
   const textInputRef = useRef<HTMLTextAreaElement>(null);
   const textSendRef = useRef<HTMLSpanElement>(null);
@@ -69,32 +72,38 @@ const ChatComponent = ({
       >
         <FontAwesomeIcon icon={faTimes} size="lg" title="Close Chat Panel" />
       </button>
-      <div id="chat-zone" className="flex-1">
+      <div
+        id="chat-zone"
+        className="flex flex-1 relative flex-row justify-end text-sm overflow-y-scroll"
+        style={{ height: '85%' }}
+      >
         <div
           id="chat-messages"
           className="w-full overflow-x-none pt-10 pb-5"
         ></div>
-        <div
-          ref={chatEndRef}
-          id="chat-end"
-          style={{ visibility: 'hidden' }}
-        ></div>
+        <div ref={chatEndRef} id="chat-end" className="invisible"></div>
       </div>
-      <div id="chat-compose-wrapper" className="">
+      <div
+        id="chat-compose-wrapper"
+        className="absolute bottom-4 left-0 -ml-3 flex items-center border-0 shadow-md outline-none w-full rounded-xl p-4 h-20 max-h-20 bg-white dark:bg-gray-600"
+      >
         <textarea
           id="chat-compose"
           ref={textInputRef}
-          className="absolute bottom-0 left-0"
-          placeholder="Send Message"
-          rows={2}
+          className="text-sm border-0 outline-none w-full bg-white dark:bg-gray-600 resize-none"
+          placeholder="Type your message"
+          rows={3}
         ></textarea>
-        <span ref={textSendRef}>
+        <span
+          ref={textSendRef}
+          className={`bg-${themeColor}-500 ml-3 p-2 rounded-xl text-white`}
+        >
           <FontAwesomeIcon
             id="chat-send"
-            icon={faArrowCircleRight}
+            icon={faPaperPlane}
             size="lg"
-            title="Send Message"
-            className="chat-btn"
+            // title="Send Message"
+            className={`text-white`}
           />
         </span>
         {/* 
