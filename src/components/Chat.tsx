@@ -59,7 +59,7 @@ const ChatComponent = ({
   return (
     <div
       id="chat-entire"
-      className={`absolute right-4 flex flex-row content-end z-10 max-h-screen w-72 p-0 overflow-none bg-white dark:bg-gray-700 rounded-2xl mb-20 mt-3 items-stretch ${
+      className={`absolute right-4 flex flex-row content-end z-10 max-h-screen w-72 p-0 overflow-none bg-white dark:bg-gray-800 rounded-2xl mb-20 mt-3 items-stretch ${
         showChat ? '' : 'hidden'
       }`}
       //rounded-tl-xl rounded-bl-xl
@@ -95,12 +95,12 @@ const ChatComponent = ({
       </div>
       <div
         id="chat-compose-wrapper"
-        className="absolute bottom-3 left-0 ml-3 flex items-center border-0 shadow-lg outline-none w-full rounded-2xl p-2 h-16 max-h-20 bg-white dark:bg-gray-600"
+        className="absolute bottom-3 left-0 ml-3 flex items-center border-0 shadow-lg outline-none w-full rounded-2xl p-2 h-16 max-h-20 bg-white dark:bg-gray-700"
       >
         <textarea
           id="chat-compose"
           ref={textInputRef}
-          className="text-sm border-0 outline-none w-full bg-white dark:bg-gray-600 dark:text-white resize-none"
+          className="text-sm border-0 outline-none w-full bg-white dark:bg-gray-700 dark:text-white resize-none"
           placeholder="Type your message"
           rows={2}
         ></textarea>
