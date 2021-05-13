@@ -42,7 +42,7 @@ video#remote-video {
     height: 100%;
     position: relative;
     z-index: 1;
-    border-radius: 10px;
+    border-radius: 1rem;
     overflow: hidden;
     display: inline-block;
     box-shadow: 0px 12px 22px rgba(0, 0, 0, 0.1);

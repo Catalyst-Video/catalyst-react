@@ -80,7 +80,7 @@ export function displayMsg(
         .querySelector('#chat-messages')
         ?.insertAdjacentHTML(
           'beforeend',
-          `<div class="received-message relative flex flex-col items-start content-end p-1 pl-20 fade-in-bottom"><div class="bg-gray-50 text-black relative flex items-center justify-center shadow-sm rounded-tl-full rounded-tr-full rounded-br-full rounded-bl-sm border-2 p-2 border-${border}-500"><div class="message break-all p-1">` +
+          `<div class="received-message relative flex flex-col items-start content-end p-1 pl-2 fade-in-bottom"><div class="bg-gray-50 text-black relative flex items-center justify-center shadow-sm rounded-tl-full rounded-tr-full rounded-br-full rounded-bl-sm border-2 p-2 border-${border}-500"><div class="message break-all p-1">` +
             msg +
             '</div></div></div>'
         );

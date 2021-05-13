@@ -64,13 +64,22 @@ const ChatComponent = ({
       }`}
       style={{ height: '90%' }}
     >
-      <span className="chat-title">Chat</span>
+      <span
+        id="chat-title"
+        className="absolute left-3 pt-3 text-md font-bold text-black dark:text-white"
+      >
+        Chat
+      </span>
       <button
         id="chat-close-btn"
         className="rounded-full bg-transparent z-20 fixed right-3 pt-3 focus:border-0 focus:outline-none text-left cursor-pointer text-black dark:text-white"
         onClick={() => setShowChat(!showChat)}
       >
-        <FontAwesomeIcon icon={faTimes} size="lg" title="Close Chat Panel" />
+        <FontAwesomeIcon
+          icon={faTimes}
+          size="lg"
+          // TODO:  title="Close Chat Panel"
+        />
       </button>
       <div
         id="chat-zone"
@@ -85,7 +94,7 @@ const ChatComponent = ({
       </div>
       <div
         id="chat-compose-wrapper"
-        className="absolute bottom-4 left-0 -ml-3 flex items-center border-0 shadow-md outline-none w-full rounded-xl p-4 h-20 max-h-20 bg-white dark:bg-gray-600"
+        className="absolute -bottom-6 left-0 -ml-3 flex items-center border-0 shadow-md outline-none w-full rounded-xl p-4 h-20 max-h-20 bg-white dark:bg-gray-600"
       >
         <textarea
           id="chat-compose"

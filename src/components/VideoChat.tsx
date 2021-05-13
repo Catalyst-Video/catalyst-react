@@ -247,7 +247,7 @@ const VideoChat = ({
             >
               <div
                 id="local-vid-wrapper"
-                className="z-3 flex justify-center items-center cursor-move"
+                className="z-3 flex justify-center items-center cursor-move z-20 relative"
               >
                 <p
                   id="local-text"
@@ -258,8 +258,7 @@ const VideoChat = ({
                 <video
                   id="local-video"
                   ref={localVidRef}
-                  className="w-full h-auto rounded-lg bg-black " //TODO: border?
-                  style={{ borderRadius: '23px' }}
+                  className={`w-full h-auto rounded-xl bg-black border-2 border-${themeColor}-500`} //TODO: border?
                   autoPlay
                   muted
                   playsInline
@@ -270,7 +269,7 @@ const VideoChat = ({
             <div
               id="remote-vid-wrapper"
               ref={remoteVidRef}
-              className={`flex justify-center items-center absolute top-0 left-0 w-full h-full max-h-screen max-w-screen z-2 ${
+              className={`flex justify-center items-center absolute z-2 top-0 left-0 w-full h-full max-h-screen max-w-screen z-2 ${
                 showChat ? 'ct-chat' : ''
               }`}
             ></div>
@@ -288,13 +287,15 @@ const VideoChat = ({
                   <div className="relative h-full w-full flex flex-col items-center m-0">
                     <button
                       className={`${
-                        audioEnabled ? '' : `text-${themeColor}-500`
-                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 not-selectable tooltip`}
+                        audioEnabled
+                          ? ''
+                          : `text-${themeColor}-500 dark:text-${themeColor}-500`
+                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
                       onClick={() => {
                         if (VC) handleMute(audioEnabled, setAudio, VC);
                       }}
                     >
-                      <span className="hidden text-white bg-gray-700 font-semibold absolute p-2 rounded-lg top-0 left-12 z-10 whitespace-nowrap text-sm">
+                      <span className="hidden text-white bg-gray-700 dark:bg-gray-500 font-semibold absolute p-2 rounded-lg top-0 left-12 z-10 whitespace-nowrap text-sm">
                         {audioEnabled ? 'Mute Audio' : 'Unmute Audio'}
                       </span>
                       <FontAwesomeIcon
@@ -307,8 +308,10 @@ const VideoChat = ({
                   <div className="relative h-full w-full flex flex-col items-center m-0">
                     <button
                       className={`${
-                        videoEnabled ? '' : `text-${themeColor}-500`
-                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 not-selectable tooltip`}
+                        videoEnabled
+                          ? ''
+                          : `text-${themeColor}-500 dark:text-${themeColor}-500`
+                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
                       onClick={() => {
                         if (VC)
                           handlePauseVideo(
@@ -320,7 +323,7 @@ const VideoChat = ({
                           );
                       }}
                     >
-                      <span className="hidden text-white bg-gray-700 font-semibold absolute p-2 rounded-lg top-0 left-12 z-10 whitespace-nowrap text-sm">
+                      <span className="hidden text-white bg-gray-700 dark:bg-gray-500 font-semibold absolute p-2 rounded-lg top-0 left-12 z-10 whitespace-nowrap text-sm">
                         {videoEnabled ? 'Pause Video' : 'Unpause Video'}
                       </span>
                       <FontAwesomeIcon
@@ -333,8 +336,10 @@ const VideoChat = ({
                   <div className=" relative h-full w-full flex flex-col items-center m-0">
                     <button
                       className={`${
-                        !fsHandle.active ? '' : `text-${themeColor}-500`
-                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 not-selectable tooltip`}
+                        !fsHandle.active
+                          ? ''
+                          : `text-${themeColor}-500 dark:text-${themeColor}-500`
+                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
                       onClick={() => {
                         if (fsHandle.active) {
                           fsHandle.exit();
@@ -343,7 +348,7 @@ const VideoChat = ({
                         }
                       }}
                     >
-                      <span className="hidden text-white bg-gray-700 font-semibold absolute p-2 rounded-lg top-0 left-12 z-10 whitespace-nowrap text-sm">
+                      <span className="hidden text-white bg-gray-700 dark:bg-gray-500 font-semibold absolute p-2 rounded-lg top-0 left-12 z-10 whitespace-nowrap text-sm">
                         {!fsHandle.active
                           ? 'Enter Full Screen'
                           : 'Exit Full Screen'}
@@ -358,13 +363,15 @@ const VideoChat = ({
                   <div className="relative h-full w-full flex flex-col items-center m-0">
                     <button
                       className={`${
-                        !showChat ? '' : `text-${themeColor}-500`
-                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 not-selectable tooltip`}
+                        !showChat
+                          ? ''
+                          : `text-${themeColor}-500 dark:text-${themeColor}-500`
+                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
                       onClick={() => {
                         setShowChat(!showChat);
                       }}
                     >
-                      <span className="hidden text-white bg-gray-700 font-semibold absolute p-2 rounded-lg top-0 left-12 z-10 whitespace-nowrap text-sm">
+                      <span className="hidden text-white bg-gray-700 dark:bg-gray-500 font-semibold absolute p-2 rounded-lg top-0 left-12 z-10 whitespace-nowrap text-sm">
                         {showChat ? 'Hide Chat' : 'Show Chat'}
                       </span>
                       <FontAwesomeIcon icon={faComment} />
@@ -382,13 +389,15 @@ const VideoChat = ({
                   <div className="relative h-full w-full flex flex-col items-center m-0">
                     <button
                       className={`${
-                        !dark ? '' : `text-${themeColor}-500`
-                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 not-selectable tooltip`}
+                        !dark
+                          ? ''
+                          : `text-${themeColor}-500 dark:text-${themeColor}-500`
+                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
                       onClick={() => {
                         if (setDark) setDark(!dark);
                       }}
                     >
-                      <span className="hidden text-white bg-gray-700 font-semibold absolute p-2 rounded-lg top-0 left-12  z-10 whitespace-nowrap text-sm">
+                      <span className="hidden text-white bg-gray-700 dark:bg-gray-500 font-semibold absolute p-2 rounded-lg top-0 left-12  z-10 whitespace-nowrap text-sm">
                         {!dark ? 'Dark Mode' : 'Light Mode'}
                       </span>
                       <FontAwesomeIcon icon={dark ? faMoon : faSun} />
@@ -400,8 +409,10 @@ const VideoChat = ({
                   <div className="relative h-full w-full flex flex-col items-center m-0">
                     <button
                       className={`${
-                        !sharing ? '' : `text-${themeColor}-500`
-                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 not-selectable tooltip`}
+                        !sharing
+                          ? ''
+                          : `text-${themeColor}-500 dark:text-${themeColor}-500`
+                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
                       id="share-button"
                       onClick={() => {
                         if (VC)
@@ -416,7 +427,7 @@ const VideoChat = ({
                           );
                       }}
                     >
-                      <span className="hidden text-white bg-gray-700 font-semibold absolute p-2 rounded-lg top-0 left-12  z-10 whitespace-nowrap text-sm">
+                      <span className="hidden text-white bg-gray-700 dark:bg-gray-500 font-semibold absolute p-2 rounded-lg top-0 left-12  z-10 whitespace-nowrap text-sm">
                         {!sharing ? 'Share Screen' : 'Stop Sharing Screen'}
                       </span>
 
@@ -432,13 +443,13 @@ const VideoChat = ({
                 {!hidden?.endcall && (
                   <div className="relative h-full w-full flex flex-col items-center m-0">
                     <button
-                      className={`text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 not-selectable tooltip`}
+                      className={`text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
                       onClick={() =>
                         onEndCall ? onEndCall() : console.log('call ended')
                       }
                     >
                       <FontAwesomeIcon icon={faPhoneSlash} />
-                      <span className="hidden text-white bg-gray-700 font-semibold absolute p-2 rounded-lg top-0 left-12  z-10 whitespace-nowrap text-sm">
+                      <span className="hidden text-white bg-gray-700 dark:bg-gray-500 font-semibold absolute p-2 rounded-lg top-0 left-12  z-10 whitespace-nowrap text-sm">
                         End Call
                       </span>
                     </button>
