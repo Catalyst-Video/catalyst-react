@@ -1,7 +1,6 @@
 /* VIDEO CHAT DATASTREAM: track video/audio streams, peer connections, handle webrtc */
 import io from 'socket.io-client';
 import {
-  closeAllToasts,
   createMuteNode,
   createPauseNode,
   hueToColor,
@@ -14,11 +13,7 @@ import {
 import { handlePictureInPicture } from './utils/stream';
 import { logger, sendToAllDataChannels } from './utils/general';
 import { TwilioToken, VideoChatData } from './typings/interfaces';
-import {
-  displayWebcamErrorMessage,
-  handlereceiveMessage,
-  displayMessage,
-} from './utils/messages';
+import { handlereceiveMessage } from './utils/messages';
 import './utils/autolink.js';
 import { RefObject } from 'react';
 
@@ -104,7 +99,6 @@ export default class VCDataStream implements VideoChatData {
       })
       .catch(error => {
         logger(error);
-        displayWebcamErrorMessage(this.connected);
         logger(
           'Failed to get local webcam video, check webcam privacy settings'
         );
@@ -272,10 +266,7 @@ export default class VCDataStream implements VideoChatData {
 
       this.peerConnections.get(uuid)!.ontrack = (e: RTCTrackEvent) => {
         this.onAddStream(e, uuid);
-
         if (!this.startedCall) this.startedCall = true;
-        displayMessage('Session connected successfully', 500);
-        setTimeout(() => closeAllToasts(), 1000);
       };
       // Called when there is a change in connection state
       this.peerConnections.get(uuid)!.oniceconnectionstatechange = (
@@ -326,8 +317,6 @@ export default class VCDataStream implements VideoChatData {
   };
   // When receiving a candidate over the socket, turn it back into a real RTCIceCandidate and add it to the peerConnection.
   onCandidate = (candidate: RTCIceCandidate, uuid: string) => {
-    if (this.peerConnections.size === 0)
-      displayMessage('Found other user. Connecting...');
     var rtcCandidate: RTCIceCandidate = new RTCIceCandidate(
       JSON.parse(candidate.toString())
     );
@@ -456,7 +445,6 @@ export default class VCDataStream implements VideoChatData {
         ResizeWrapper();
 
         if (this.onAddPeer) this.onAddPeer();
-        closeAllToasts();
         this.connected.set(uuid, true);
       }
     }

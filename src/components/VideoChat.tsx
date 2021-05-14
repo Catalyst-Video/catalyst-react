@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 // Other packages
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faCog,
   faComment,
   faCompressArrowsAlt,
   faDesktop,
@@ -438,7 +439,8 @@ const VideoChat = ({
                       <span className="hidden text-white bg-gray-500 dark:bg-gray-500 font-semibold absolute p-2 rounded-xl top-0 left-12  z-10 whitespace-nowrap text-sm">
                         {!dark ? 'Dark Mode' : 'Light Mode'}
                       </span>
-                      <FontAwesomeIcon icon={dark ? faMoon : faSun} />
+                      <FontAwesomeIcon icon={faCog} />
+                      {/* <FontAwesomeIcon icon={dark ? faMoon : faSun} /> */}
                     </button>
                   </div>
                 )}
