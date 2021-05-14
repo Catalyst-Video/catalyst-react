@@ -141,8 +141,6 @@ const CatalystChat = ({
     return (
       <SetupRoomComponent
         sessionKey={sessionKey}
-        hasPerms={hasPerms}
-        setPermissions={setPermissions}
         setUserReady={setUserReady}
         audioEnabled={audioEnabled}
         setAudio={setAudio}
@@ -160,6 +158,7 @@ const CatalystChat = ({
     return (
       <PermsLoadingComponent
         hasPerms={hasPerms}
+        setPermissions={setPermissions}
         disableGradient={disableGradient}
         themeColor={themeColor ?? 'blue'}
         browserSupported={

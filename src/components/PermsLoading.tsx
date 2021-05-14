@@ -1,13 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { logger } from '../utils/general';
 import HeaderImg from './HeaderImg';
 
 const PermsLoadingComponent = ({
   hasPerms,
+  setPermissions,
+
   browserSupported,
   themeColor,
   disableGradient,
 }: {
   hasPerms: boolean;
+  setPermissions: Function;
   browserSupported: boolean;
   themeColor: string;
   disableGradient?: boolean;
@@ -35,6 +39,26 @@ const PermsLoadingComponent = ({
     )
       permsRef.current.style.position = 'fixed';
   }, []);
+
+  useEffect(() => {
+    reqPerms();
+  }, []);
+
+  const reqPerms = () => {
+    if (browserSupported)
+      navigator.mediaDevices
+        .getUserMedia({
+          audio: true,
+          video: true,
+        })
+        .then(stream => {
+          setPermissions(true);
+          logger(stream.id);
+        })
+        .catch(err => {
+          logger(err);
+        });
+  };
 
   return (
     <>
@@ -122,15 +146,25 @@ const PermsLoadingComponent = ({
                 to give Catalyst camera and microphone access
                 <br />
               </span>
-              <a
-                href="https://docs.catalyst.chat/docs-permissions"
-                target="_blank"
-                className={`text-base underline mb-4 mt-10 ${`text-${
-                  disableGradient ? `black` : `white`
-                }`}`}
-              >
-                I need help!
-              </a>
+              <span className=" mb-4 mt-10 inline">
+                <button
+                  onClick={() => reqPerms()}
+                  className={`text-base focus:border-0 focus:outline-none underline mr-3 ${`text-${
+                    disableGradient ? `black` : `white`
+                  }`}`}
+                >
+                  Ask again
+                </button>
+                <a
+                  href="https://docs.catalyst.chat/docs-permissions"
+                  target="_blank"
+                  className={`text-base underline ${`text-${
+                    disableGradient ? `black` : `white`
+                  }`}`}
+                >
+                  I need help!
+                </a>
+              </span>
             </div>
           </div>
         )}

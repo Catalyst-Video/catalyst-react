@@ -11,8 +11,6 @@ import HeaderImg from './HeaderImg';
 
 const SetupRoomComponent = ({
   sessionKey,
-  hasPerms,
-  setPermissions,
   setUserReady,
   audioEnabled,
   videoEnabled,
@@ -26,8 +24,6 @@ const SetupRoomComponent = ({
   disableGradient,
 }: {
   sessionKey: string;
-  hasPerms: boolean;
-  setPermissions: Function;
   setUserReady: Function;
   audioEnabled: boolean;
   videoEnabled: boolean;
@@ -59,7 +55,6 @@ const SetupRoomComponent = ({
   )},70%,70%,0.8) 70.71%)`);
 
   useEffect(() => {
-    if (videoEnabled || audioEnabled) reqStream();
     if (
       setupRoomRef &&
       setupRoomRef.current?.parentNode?.parentNode?.nodeName === 'BODY'
@@ -91,7 +86,6 @@ const SetupRoomComponent = ({
           video: videoProp,
         })
         .then(stream => {
-          setPermissions(true);
           if (testVideoRef.current) testVideoRef.current.srcObject = stream;
           setStream(stream);
         })
@@ -136,87 +130,85 @@ const SetupRoomComponent = ({
         id="setuproom-cont"
         className="flex-col flex-1 text-center mx-3 my-3 rounded-md flex justify-center"
       >
-        {hasPerms && (
-          <div
-            id="setuproom-comp"
-            className="bg-white rounded-2xl my-2 mx-1 shadow-md"
-          >
-            <div className="md:w-96 md:h-72 bg-gray-900 rounded-t-xl z-1">
-              <video
-                id="setuproom-samp-video"
-                className="w-auto rounded-t-xl max-h-72 z-3"
-                ref={testVideoRef}
-                autoPlay
-                muted
-                playsInline
-              />
-            </div>
-            {/* <AudioAnalyser audio={testStream} /> */}
-
-            <div id="opts" className="flex justify-center items-center m-1">
-              <div id="opt-mic" className="text-center text-base my-2 mr-5">
-                <button
-                  onClick={() => setAudio(!audioEnabled)}
-                  className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
-                    !audioEnabled ? 'bg-red-50 text-red-500' : ''
-                  }`}
-                >
-                  <FontAwesomeIcon
-                    icon={audioEnabled ? faMicrophone : faMicrophoneSlash}
-                    className="opt-icon"
-                    size="lg"
-                  />
-                </button>
-                <DeviceSelector
-                  device={audioInput}
-                  setDevice={setAudioInput}
-                  type="audioinput"
-                  defaultText="Microphone"
-                />
-                <span
-                  className={`block text-xs uppercase font-bold text-${themeColor}-500`}
-                >
-                  {audioEnabled ? 'ON' : 'OFF'}
-                </span>
-              </div>
-              <div id="opt-cam" className="text-center text-base my-2 ml-5">
-                <button
-                  onClick={() => {
-                    if (!videoEnabled) reqStream();
-                    setVideo(!videoEnabled);
-                  }}
-                  className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
-                    !videoEnabled ? 'bg-red-50 text-red-500' : ''
-                  }`}
-                >
-                  <FontAwesomeIcon
-                    icon={videoEnabled ? faVideo : faVideoSlash}
-                    className="opt-icon"
-                    size="lg"
-                  />
-                </button>
-                <DeviceSelector
-                  device={vidInput}
-                  setDevice={setVidInput}
-                  type="videoinput"
-                  defaultText="Camera"
-                />
-                <span
-                  className={`block text-xs uppercase font-bold text-${themeColor}-500`}
-                >
-                  {videoEnabled ? 'ON' : 'OFF'}
-                </span>
-              </div>
-            </div>
-            <button
-              id="setuproom-but"
-              className={`rounded-b-xl cursor-pointer block outline-none border-0 font-bold text-md h-14 text-white w-full focus:outline-none focus:border-0 bg-${themeColor}-500`}
-              onClick={() => joinCall()}
-            >
-              Join Call
-            </button>
+        <div
+          id="setuproom-comp"
+          className="bg-white rounded-2xl my-2 mx-1 shadow-md"
+        >
+          <div className="md:w-96 md:h-72 bg-gray-900 rounded-t-xl z-1">
+            <video
+              id="setuproom-samp-video"
+              className="w-auto rounded-t-xl max-h-72 z-3"
+              ref={testVideoRef}
+              autoPlay
+              muted
+              playsInline
+            />
           </div>
-        )}
+          {/* <AudioAnalyser audio={testStream} /> */}
+
+          <div id="opts" className="flex justify-center items-center m-1">
+            <div id="opt-mic" className="text-center text-base my-2 mr-5">
+              <button
+                onClick={() => setAudio(!audioEnabled)}
+                className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
+                  !audioEnabled ? 'bg-red-50 text-red-500' : ''
+                }`}
+              >
+                <FontAwesomeIcon
+                  icon={audioEnabled ? faMicrophone : faMicrophoneSlash}
+                  className="opt-icon"
+                  size="lg"
+                />
+              </button>
+              <DeviceSelector
+                device={audioInput}
+                setDevice={setAudioInput}
+                type="audioinput"
+                defaultText="Microphone"
+              />
+              <span
+                className={`block text-xs uppercase font-bold text-${themeColor}-500`}
+              >
+                {audioEnabled ? 'ON' : 'OFF'}
+              </span>
+            </div>
+            <div id="opt-cam" className="text-center text-base my-2 ml-5">
+              <button
+                onClick={() => {
+                  if (!videoEnabled) reqStream();
+                  setVideo(!videoEnabled);
+                }}
+                className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
+                  !videoEnabled ? 'bg-red-50 text-red-500' : ''
+                }`}
+              >
+                <FontAwesomeIcon
+                  icon={videoEnabled ? faVideo : faVideoSlash}
+                  className="opt-icon"
+                  size="lg"
+                />
+              </button>
+              <DeviceSelector
+                device={vidInput}
+                setDevice={setVidInput}
+                type="videoinput"
+                defaultText="Camera"
+              />
+              <span
+                className={`block text-xs uppercase font-bold text-${themeColor}-500`}
+              >
+                {videoEnabled ? 'ON' : 'OFF'}
+              </span>
+            </div>
+          </div>
+          <button
+            id="setuproom-but"
+            className={`rounded-b-xl cursor-pointer block outline-none border-0 font-bold text-md h-14 text-white w-full focus:outline-none focus:border-0 bg-${themeColor}-500`}
+            onClick={() => joinCall()}
+          >
+            Join Call
+          </button>
+        </div>
       </div>
     </div>
   );
