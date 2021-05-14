@@ -305,7 +305,7 @@ const VideoChat = ({
                     onClick={() => {
                       setSettings(!showSettings);
                     }}
-                    className="absolute top-4 right-4 text-black dark:text-white cursor-pointer z-10 focus:border-0 focus:outline-none"
+                    className="absolute top-10 sm:top-4 right-4 text-black dark:text-white cursor-pointer z-10 focus:border-0 focus:outline-none"
                   >
                     <FontAwesomeIcon
                       icon={faEllipsisV}
