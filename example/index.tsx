@@ -48,7 +48,7 @@ const WrapperComp = ({
     <CatalystChat
       sessionKey={sessionKey}
       uniqueAppId="demo"
-      // disableSetupRoom={true}
+      disableSetupRoom={true}
       // disableLocalVidDrag={true}
       defaults={{
         audioOn: false,

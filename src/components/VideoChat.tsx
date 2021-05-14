@@ -3,12 +3,9 @@ import React, { useEffect, useRef, useState } from 'react';
 // Other packages
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faCog,
   faComment,
-  faCompress,
   faCompressArrowsAlt,
   faDesktop,
-  faExpand,
   faExpandArrowsAlt,
   faMicrophone,
   faMicrophoneSlash,
@@ -277,12 +274,13 @@ const VideoChat = ({
               className={`flex justify-center items-center absolute z-2 top-0 left-0 w-full h-full max-h-screen max-w-screen z-2 ${
                 showChat ? 'ct-chat' : ''
               }`}
-            ></div>
+            >
+              <div className="relative z-0 inline-block align-middle self-center text-center bg-yellow-500"></div>
+            </div>
             {/* TODO: settings
             <button className="absolute bottom-4 left-4 text-black dark:text-white cursor-pointer focus:border-0 focus:outline-none">
               <FontAwesomeIcon icon={faCog} size="lg" className="" />
-            </button>
- */}
+            </button>*/}
             <div
               id="toolbar"
               ref={toolbarRef}

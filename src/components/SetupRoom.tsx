@@ -9,7 +9,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { logger } from '../utils/general';
 import HeaderImg from './HeaderImg';
 
-const PermsComponent = ({
+const SetupRoomComponent = ({
   sessionKey,
   hasPerms,
   setPermissions,
@@ -40,7 +40,7 @@ const PermsComponent = ({
   setVidInput: Function;
   disableGradient?: boolean;
 }) => {
-  const permsRef = useRef<HTMLDivElement>(null);
+  const setupRoomRef = useRef<HTMLDivElement>(null);
   const testVideoRef = useRef<HTMLVideoElement>(null);
 
   const [testStream, setStream] = useState<MediaStream>();
@@ -61,10 +61,10 @@ const PermsComponent = ({
   useEffect(() => {
     if (videoEnabled || audioEnabled) reqStream();
     if (
-      permsRef &&
-      permsRef.current?.parentNode?.parentNode?.nodeName === 'BODY'
+      setupRoomRef &&
+      setupRoomRef.current?.parentNode?.parentNode?.nodeName === 'BODY'
     )
-      permsRef.current.style.position = 'fixed';
+      setupRoomRef.current.style.position = 'fixed';
   }, []);
 
   useEffect(() => {
@@ -107,7 +107,7 @@ const PermsComponent = ({
 
   return (
     <div
-      id="perms"
+      id="setuproom"
       className="h-full w-full flex justify-between items-center flex-col flex-1"
       style={
         disableGradient
@@ -118,9 +118,9 @@ const PermsComponent = ({
               background: gradient,
             }
       }
-      ref={permsRef}
+      ref={setupRoomRef}
     >
-      <span id="cat-header" className="mx-2 mt-5">
+      <span id="setuproom-header" className="mx-2 mt-5">
         <HeaderImg themeColor={disableGradient ? themeColor : undefined} />
       </span>
       {/* TODO: determine if room name is desired
@@ -133,17 +133,17 @@ const PermsComponent = ({
         </span>
       )} */}
       <div
-        id="perms-cont"
+        id="setuproom-cont"
         className="flex-col flex-1 text-center mx-3 my-3 rounded-md flex justify-center"
       >
         {hasPerms && (
           <div
-            id="perms-comp"
+            id="setuproom-comp"
             className="bg-white rounded-2xl my-2 mx-1 shadow-md"
           >
             <div className="md:w-96 md:h-72 bg-gray-900 rounded-t-xl z-1">
               <video
-                id="samp-video"
+                id="setuproom-samp-video"
                 className="w-auto rounded-t-xl max-h-72 z-3"
                 ref={testVideoRef}
                 autoPlay
@@ -209,7 +209,7 @@ const PermsComponent = ({
               </div>
             </div>
             <button
-              id="perms-but"
+              id="setuproom-but"
               className={`rounded-b-xl cursor-pointer block outline-none border-0 font-bold text-md h-14 text-white w-full focus:outline-none focus:border-0 bg-${themeColor}-500`}
               onClick={() => joinCall()}
             >
@@ -217,42 +217,11 @@ const PermsComponent = ({
             </button>
           </div>
         )}
-
-        {!hasPerms && (
-          <div className="h-full w-full flex flex-col content-evenly">
-            <span
-              id="perms-msg"
-              className={`block m-auto text-xl  ${`text-${
-                disableGradient ? `black` : `white`
-              }`}`}
-            >
-              <span
-                className={`text-${
-                  disableGradient ? themeColor + `-500` : `white`
-                } font-semibold text-2xl`}
-              >
-                Click “allow” above
-              </span>
-              <br />
-              to give Catalyst camera and microphone access
-              <br />
-            </span>
-            <a
-              href="https://docs.catalyst.chat/docs-permissions"
-              target="_blank"
-              className={`text-base underline mb-4 mt-10 ${`text-${
-                disableGradient ? `black` : `white`
-              }`}`}
-            >
-              I need help!
-            </a>
-          </div>
-        )}
       </div>
     </div>
   );
 };
-export default PermsComponent;
+export default SetupRoomComponent;
 
 const DeviceSelector = ({
   device,

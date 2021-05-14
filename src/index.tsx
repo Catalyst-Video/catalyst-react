@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Styles
 import './styles/catalyst.css';
@@ -9,9 +9,9 @@ import './styles/tailwind.output.css';
 // Types
 import { DefaultSettings, HiddenSettings } from './typings/interfaces';
 import VideoChat from './components/VideoChat';
-import PermsComponent from './components/Perms';
+import SetupRoomComponent from './components/SetupRoom';
 import DetectRTC from 'detectrtc';
-import IncompatibleAlert from './components/IncompatibleAlert';
+import PermsLoadingComponent from './components/PermsLoading';
 import { setThemeColor } from './utils/ui';
 
 const CatalystChat = ({
@@ -139,7 +139,7 @@ const CatalystChat = ({
     !disableSetupRoom
   ) {
     return (
-      <PermsComponent
+      <SetupRoomComponent
         sessionKey={sessionKey}
         hasPerms={hasPerms}
         setPermissions={setPermissions}
@@ -157,7 +157,20 @@ const CatalystChat = ({
       />
     );
   } else {
-    return <IncompatibleAlert />;
+    return (
+      <PermsLoadingComponent
+        hasPerms={hasPerms}
+        disableGradient={disableGradient}
+        themeColor={themeColor ?? 'blue'}
+        browserSupported={
+          (DetectRTC.isWebRTCSupported &&
+            (DetectRTC.browser.isChrome ||
+              DetectRTC.browser.isEdge ||
+              DetectRTC.browser.isSafari)) ??
+          true
+        }
+      />
+    );
   }
 };
 
