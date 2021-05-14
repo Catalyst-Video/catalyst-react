@@ -65,6 +65,7 @@ const DeviceSelector = ({
           return (
             <li
               onClick={() => setDevice(dev)}
+              key={dev.label}
               className="rounded-sm px-3 py-1 hover:bg-gray-100 dark:hover:bg-gray-500 cursor-pointer dark:text-white"
             >
               {dev.label.substring(0, dev.label.indexOf(' ('))}

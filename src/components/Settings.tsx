@@ -88,12 +88,14 @@ const Settings = ({
                     if (VC) handleMute(audioEnabled, setAudio, VC);
                   }}
                   className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
-                    !audioEnabled ? 'bg-red-50 text-red-500' : ''
+                    !audioEnabled
+                      ? 'bg-red-50 text-red-500'
+                      : 'dark:text-gray-100'
                   }`}
                 >
                   <FontAwesomeIcon
                     icon={audioEnabled ? faMicrophone : faMicrophoneSlash}
-                    className="opt-icon"
+                    className="opt-icon "
                     size="lg"
                   />
                 </button>
@@ -122,7 +124,9 @@ const Settings = ({
                       );
                   }}
                   className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
-                    !videoEnabled ? 'bg-red-50 text-red-500' : ''
+                    !videoEnabled
+                      ? 'bg-red-50 text-red-500'
+                      : 'dark:text-gray-100'
                   }`}
                 >
                   <FontAwesomeIcon

@@ -117,14 +117,15 @@ font-size:12px;
 font-family: sans-serif;
 background: var(--themeColor);
 color: white;
-font-size: small;
+font-size: 12px;
 border-radius: 50%;
-padding: 2px 7px;
+padding: 1px 13px;
 position:absolute;
-right: 10px;
-top: -2px;
-z-index: -1;
+right: 30px;
+top: -5px;
+z-index: 1;
 opacity:0.9;
+font-weight: 500;
 font-style: normal;
 }
 

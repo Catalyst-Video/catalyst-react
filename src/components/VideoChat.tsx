@@ -272,7 +272,7 @@ const VideoChat = ({
             <div
               id="remote-vid-wrapper"
               ref={remoteVidRef}
-              className={`flex justify-center items-center absolute z-2 top-0 left-0 w-full h-full max-h-screen max-w-screen z-2 ${
+              className={`flex justify-center content-center items-center absolute flex-wrap align-middle z-2 top-0 left-0 w-full h-full max-h-screen max-w-screen z-2 ${
                 showChat ? 'ct-chat' : ''
               }`}
             >
@@ -345,7 +345,7 @@ const VideoChat = ({
                 className="sm:rounded-2xl text-2xl bg-white dark:bg-gray-800 shadow-sm px-6 py-3 flex flex-row items-center content-evenly sm:mb-1 min-w-screen max-w-screen w-screen sm:w-auto" // fixed
               >
                 {!hidden?.mute && (
-                  <div className="relative h-full w-full flex flex-col items-center m-0">
+                  <div className="relative h-full w-full flex flex-col items-center m-0 z-2">
                     <button
                       className={`${
                         audioEnabled
@@ -355,7 +355,7 @@ const VideoChat = ({
                             }-500 dark:text-${
                               redIndicators ? 'red' : themeColor
                             }-500`
-                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${
+                      } text-black dark:text-white cursor-pointer px-4 z-3 py-1 focus:border-0 focus:outline-none hover:text-${
                         redIndicators ? 'red' : themeColor
                       }-500 dark:hover:text-${
                         redIndicators ? 'red' : themeColor
@@ -374,7 +374,7 @@ const VideoChat = ({
                   </div>
                 )}
                 {!hidden?.pausevideo && (
-                  <div className="relative h-full w-full flex flex-col items-center m-0">
+                  <div className="relative h-full w-full flex flex-col items-center m-0 z-2">
                     <button
                       className={`${
                         videoEnabled
@@ -384,7 +384,7 @@ const VideoChat = ({
                             }-500 dark:text-${
                               redIndicators ? 'red' : themeColor
                             }-500`
-                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${
+                      } text-black dark:text-white cursor-pointer px-4 z-3 py-1 focus:border-0 focus:outline-none hover:text-${
                         redIndicators ? 'red' : themeColor
                       }-500 dark:hover:text-${
                         redIndicators ? 'red' : themeColor
@@ -410,13 +410,13 @@ const VideoChat = ({
                   </div>
                 )}
                 {!hidden?.fullscreen && (
-                  <div className="hidden sm:flex relative h-full w-full flex-col items-center m-0">
+                  <div className="hidden sm:flex relative h-full w-full flex-col items-center m-0 z-2">
                     <button
                       className={`${
                         !fsHandle.active
                           ? ''
                           : `text-${themeColor}-500 dark:text-${themeColor}-500`
-                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
+                      } text-black dark:text-white cursor-pointer px-4 z-3 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
                       onClick={() => {
                         if (fsHandle.active) {
                           fsHandle.exit();
@@ -441,13 +441,13 @@ const VideoChat = ({
                   </div>
                 )}
                 {!hidden?.chat && (
-                  <div className="relative h-full w-full flex flex-col items-center m-0">
+                  <div className="relative h-full w-full flex flex-col items-center m-0 z-2">
                     <button
                       className={`${
                         !showChat
                           ? ''
                           : `text-${themeColor}-500 dark:text-${themeColor}-500`
-                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
+                      } text-black dark:text-white cursor-pointer px-4 z-3 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
                       onClick={() => {
                         setShowChat(!showChat);
                       }}
@@ -467,13 +467,13 @@ const VideoChat = ({
                 )}
 
                 {!hidden?.screenshare && (
-                  <div className="hidden sm:flex relative h-full w-full flex-col items-center m-0">
+                  <div className="hidden sm:flex relative h-full w-full flex-col items-center m-0 z-2">
                     <button
                       className={`${
                         !sharing
                           ? ''
                           : `text-${themeColor}-500 dark:text-${themeColor}-500`
-                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
+                      } text-black dark:text-white cursor-pointer px-4 z-3 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
                       id="share-button"
                       onClick={() => {
                         if (VC)
@@ -502,9 +502,9 @@ const VideoChat = ({
                 ))}
 
                 {!hidden?.endcall && (
-                  <div className="relative h-full w-full flex flex-col items-center m-0">
+                  <div className="relative h-full w-full flex flex-col items-center m-0 z-2">
                     <button
-                      className={`text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${
+                      className={`text-black dark:text-white cursor-pointer px-4 z-3 py-1 focus:border-0 focus:outline-none hover:text-${
                         redIndicators ? 'red' : themeColor
                       }-500 dark:hover:text-${
                         redIndicators ? 'red' : themeColor
@@ -522,13 +522,13 @@ const VideoChat = ({
                 )}
 
                 {/* {!hidden?.darkmode && (
-                  <div className="relative h-full w-full flex flex-col items-center m-0">
+                  <div className="relative h-full w-full flex flex-col items-center m-0 z-2">
                     <button
                       className={`${
                         !dark
                           ? ''
                           : `text-${themeColor}-500 dark:text-${themeColor}-500`
-                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
+                      } text-black dark:text-white cursor-pointer px-4 z-3 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
                       onClick={() => {
                         if (setDark) setDark(!dark);
                       }}
