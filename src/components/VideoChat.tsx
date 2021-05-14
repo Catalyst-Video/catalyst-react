@@ -15,7 +15,6 @@ import {
   faVideo,
   faVideoSlash,
 } from '@fortawesome/free-solid-svg-icons';
-import { ToastContainer } from 'react-toastify';
 import Draggable from 'react-draggable';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import {
@@ -27,7 +26,6 @@ import { ResizeWrapper } from '../utils/ui';
 import VCDataStream from '../vc_datastream';
 import { sendToAllDataChannels } from '../utils/general';
 import { handleMute, handlePauseVideo, handleSharing } from '../utils/stream';
-import { displayWelcomeMessage } from '../utils/messages';
 import Header from './Header';
 import Chat from './Chat';
 
@@ -140,13 +138,14 @@ const VideoChat = ({
       picInPic,
       onAddPeer,
       onRemovePeer,
+      audioInput,
+      vidInput,
       showBorderColors,
       showDotColors,
       onReceiveArbitraryData
     );
     setVCData(VCData);
     VCData?.requestMediaStream();
-    displayWelcomeMessage(sessionKey, VCData.connected, cstmWelcomeMsg);
     VCData.localVidRef.current?.addEventListener('playing', () => {
       setLocalVideoText(disableLocalVidDrag ? '' : 'Drag Me');
       if (!videoEnabled && !VCData.startedCall)
@@ -197,8 +196,6 @@ const VideoChat = ({
       }
     }, 2000);
     if (VC) {
-      if (numPeers === 0)
-        displayWelcomeMessage(sessionKey, VC.connected, cstmWelcomeMsg);
       if (!audioEnabled && VC.localAudio) VC.localAudio.enabled = false;
       if (!videoEnabled && VC.localStream)
         VC.localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
@@ -289,7 +286,7 @@ const VideoChat = ({
                   </span>
                 </div>
               )}
-              {/* <div className="relative z-0 inline-block align-middle self-center text-center bg-yellow-500"></div> */}
+              {/* <div className="relative h-full w-full rounded-2xl mx-40 my-40 z-0 inline-block align-middle self-center text-center bg-yellow-500"></div> */}
             </div>
             {/* TODO: settings
             <button className="absolute bottom-4 left-4 text-black dark:text-white cursor-pointer focus:border-0 focus:outline-none">
@@ -502,22 +499,6 @@ const VideoChat = ({
                 )}
               </div>
             </div>
-            {/* {(defaults?.showToastArea ?? true) && (
-              <ToastContainer
-                position="top-center"
-                autoClose={50000}
-                hideProgressBar={true}
-                className={showChat ? 'chat-offset' : ''}
-                newestOnTop={true}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                toastClassName={dark ? 'dark' : ''}
-                pauseOnHover
-                limit={2}
-              />
-            )} */}
           </div>
         </FullScreen>
       </div>

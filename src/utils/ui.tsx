@@ -1,4 +1,3 @@
-import { toast } from 'react-toastify';
 import React from 'react';
 import { VideoChatData } from '../typings/interfaces';
 
@@ -38,10 +37,6 @@ export function setThemeColor(color: string): void {
   var style = document.createElement('style');
   document.head.appendChild(style);
   style.sheet?.insertRule(`:root { --themeColor: ${themeColor}}`);
-}
-
-export function closeAllToasts(): void {
-  toast.dismiss();
 }
 
 export function Area(

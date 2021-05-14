@@ -2,7 +2,6 @@ import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import CatalystChat from '../dist/index';
-import { toast } from 'react-toastify';
 
 const App = () => {
   const [showVideoCall, setShowVideoCall] = React.useState(true);

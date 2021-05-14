@@ -20,6 +20,8 @@ export interface VideoChatData {
   onRemovePeer: Function | undefined;
   handleArbitraryData: Function | undefined;
   startedCall: boolean;
+  audioInput: MediaDeviceInfo | undefined;
+  vidInput: MediaDeviceInfo | undefined;
 
   requestMediaStream(e?: Event): void;
   onMediaStream(e: MediaStream): void;

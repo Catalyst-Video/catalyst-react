@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faArrowCircleRight,
   faFileUpload,
   faPaperPlane,
   faTimes,

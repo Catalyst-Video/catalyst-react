@@ -44,7 +44,6 @@
     "react-draggable": "^4.4.3",
     "react-full-screen": "^1.0.1",
     "react-scripts": "4.0.3",
-    "react-toastify": "^7.0.3",
     "socket.io-client": "^2.3.1"
   },
   "devDependencies": {

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 // Styles
 import './styles/catalyst.css';
-import './styles/toast.css';
 import './styles/video_grid.css';
 import './styles/tailwind.output.css';
 

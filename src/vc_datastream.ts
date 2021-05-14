@@ -44,6 +44,8 @@ export default class VCDataStream implements VideoChatData {
   onRemovePeer: Function | undefined;
   handleArbitraryData: Function | undefined;
   startedCall: boolean;
+  audioInput: MediaDeviceInfo | undefined;
+  vidInput: MediaDeviceInfo | undefined;
 
   constructor(
     sessionKey: string,
@@ -56,6 +58,8 @@ export default class VCDataStream implements VideoChatData {
     picInPic?: string,
     onAddPeer?: Function,
     onRemovePeer?: Function,
+    audioInput?: MediaDeviceInfo,
+    vidInput?: MediaDeviceInfo,
     showBorderColors?: boolean,
     showDotColors?: boolean,
     handleArbitraryData?: Function
@@ -68,6 +72,8 @@ export default class VCDataStream implements VideoChatData {
     this.remoteVidRef = remoteVidRef;
     this.localVidRef = localVidRef;
     this.peerConnections = new Map();
+    this.audioInput = audioInput;
+    this.vidInput = vidInput;
     this.picInPic = picInPic ?? 'dblclick';
     this.peerColors = new Map();
     this.localColor = 'var(--themeColor)';
@@ -84,10 +90,14 @@ export default class VCDataStream implements VideoChatData {
   /* Call to getUserMedia requesting access to video and audio streams. If the request is accepted callback to the onMediaStream function, otherwise callback to the noMediaStream function. */
   requestMediaStream = () => {
     logger('requestMediaStream');
+    let audioProp: boolean | { deviceId: string | undefined } = true;
+    let videoProp: boolean | { deviceId: string | undefined } = true;
+    audioProp = { deviceId: this.audioInput?.deviceId };
+    videoProp = { deviceId: this.vidInput?.deviceId };
     navigator.mediaDevices
       .getUserMedia({
-        video: true,
-        audio: true,
+        audio: audioProp,
+        video: videoProp,
       })
       .then(stream => {
         this.onMediaStream(stream);
