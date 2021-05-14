@@ -279,11 +279,17 @@ const VideoChat = ({
                     id="welcome-msg"
                     className={`text-lg text-gray-800 dark:text-white`}
                   >
-                    Welcome to{' '}
-                    <span className="font-semibold">{sessionKey}</span>
-                    !
-                    <br />
-                    Waiting for others to join
+                    {cstmWelcomeMsg ? (
+                      cstmWelcomeMsg
+                    ) : (
+                      <>
+                        Welcome to{' '}
+                        <span className="font-semibold">{sessionKey}</span>
+                        !
+                        <br />
+                        Waiting for others to join
+                      </>
+                    )}
                   </span>
                 </div>
               )}
