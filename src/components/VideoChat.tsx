@@ -7,6 +7,7 @@ import {
   faComment,
   faCompressArrowsAlt,
   faDesktop,
+  faEllipsisV,
   faExpandArrowsAlt,
   faMicrophone,
   faMicrophoneSlash,
@@ -29,6 +30,7 @@ import { sendToAllDataChannels } from '../utils/general';
 import { handleMute, handlePauseVideo, handleSharing } from '../utils/stream';
 import Header from './Header';
 import Chat from './Chat';
+import Settings from './Settings';
 
 const VideoChat = ({
   sessionKey,
@@ -105,6 +107,7 @@ const VideoChat = ({
   const [showChat, setShowChat] = useState<boolean>(
     defaults?.showChatArea ?? false
   );
+  const [showSettings, setSettings] = useState(false);
 
   const catalystRef = useRef<HTMLDivElement>(null);
   const localVidRef = useRef<HTMLVideoElement>(null);
@@ -277,7 +280,7 @@ const VideoChat = ({
                 <div className="relative m-auto h-full w-full flex justify-center items-center content-evenly text-center">
                   <span
                     id="welcome-msg"
-                    className={`text-lg text-gray-800 dark:text-white`}
+                    className={`text-lg text-gray-800 dark:text-white not-selectable`}
                   >
                     {cstmWelcomeMsg ? (
                       cstmWelcomeMsg
@@ -295,10 +298,43 @@ const VideoChat = ({
               )}
               {/* <div className="relative h-full w-full rounded-2xl mx-40 my-40 z-0 inline-block align-middle self-center text-center bg-yellow-500"></div> */}
             </div>
-            {/* TODO: settings
-            <button className="absolute bottom-4 left-4 text-black dark:text-white cursor-pointer focus:border-0 focus:outline-none">
-              <FontAwesomeIcon icon={faCog} size="lg" className="" />
-            </button>*/}
+            {!showChat && (
+              <>
+                {!showSettings && (
+                  <button
+                    onClick={() => {
+                      setSettings(!showSettings);
+                    }}
+                    className="absolute top-4 right-4 text-black dark:text-white cursor-pointer z-10 focus:border-0 focus:outline-none"
+                  >
+                    <FontAwesomeIcon
+                      icon={faEllipsisV}
+                      size="lg"
+                      className=""
+                    />
+                  </button>
+                )}
+                {showSettings && (
+                  <Settings
+                    themeColor={themeColor}
+                    vidInput={vidInput}
+                    audioInput={audioInput}
+                    setAudioInput={setAudioInput}
+                    setVidInput={setVidInput}
+                    setSettings={setSettings}
+                    audioEnabled={audioEnabled}
+                    setAudio={setAudio}
+                    videoEnabled={videoEnabled}
+                    setVideo={setVideo}
+                    dark={dark}
+                    setDark={setDark}
+                    VC={VC}
+                    setLocalVideoText={setLocalVideoText}
+                    disableLocalVidDrag={disableLocalVidDrag}
+                  />
+                )}
+              </>
+            )}
             <div
               id="toolbar"
               ref={toolbarRef}
@@ -430,27 +466,6 @@ const VideoChat = ({
                   </div>
                 )}
 
-                {!hidden?.darkmode && (
-                  <div className="relative h-full w-full flex flex-col items-center m-0">
-                    <button
-                      className={`${
-                        !dark
-                          ? ''
-                          : `text-${themeColor}-500 dark:text-${themeColor}-500`
-                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
-                      onClick={() => {
-                        if (setDark) setDark(!dark);
-                      }}
-                    >
-                      <span className="hidden text-white bg-gray-500 dark:bg-gray-500 font-semibold absolute p-2 rounded-xl top-0 left-12  z-10 whitespace-nowrap text-sm">
-                        {!dark ? 'Dark Mode' : 'Light Mode'}
-                      </span>
-                      <FontAwesomeIcon icon={faCog} />
-                      {/* <FontAwesomeIcon icon={dark ? faMoon : faSun} /> */}
-                    </button>
-                  </div>
-                )}
-
                 {!hidden?.screenshare && (
                   <div className="hidden sm:flex relative h-full w-full flex-col items-center m-0">
                     <button
@@ -505,6 +520,27 @@ const VideoChat = ({
                     </button>
                   </div>
                 )}
+
+                {/* {!hidden?.darkmode && (
+                  <div className="relative h-full w-full flex flex-col items-center m-0">
+                    <button
+                      className={`${
+                        !dark
+                          ? ''
+                          : `text-${themeColor}-500 dark:text-${themeColor}-500`
+                      } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
+                      onClick={() => {
+                        if (setDark) setDark(!dark);
+                      }}
+                    >
+                      <span className="hidden text-white bg-gray-500 dark:bg-gray-500 font-semibold absolute p-2 rounded-xl top-0 left-12  z-10 whitespace-nowrap text-sm">
+                        {!dark ? 'Dark Mode' : 'Light Mode'}
+                      </span>
+                      <FontAwesomeIcon icon={faEllipsisV} />
+                      <FontAwesomeIcon icon={dark ? faMoon : faSun} />
+                    </button>
+                  </div>
+                )} */}
               </div>
             </div>
           </div>

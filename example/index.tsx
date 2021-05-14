@@ -48,13 +48,13 @@ const WrapperComp = ({
       sessionKey={sessionKey}
       uniqueAppId="demo"
       disableSetupRoom={true}
-      // disableLocalVidDrag={true}
       defaults={{
         audioOn: false,
         videoOn: false,
         // showChatArea: true,
         // showToastArea: false,
       }}
+      // disableLocalVidDrag={true}
       redIndicators={true}
       // cstmWelcomeMsg="DISABLED"
       // alwaysBanner={true}
