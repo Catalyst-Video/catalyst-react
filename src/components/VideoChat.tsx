@@ -31,6 +31,7 @@ import { handleMute, handlePauseVideo, handleSharing } from '../utils/stream';
 import Header from './Header';
 import Chat from './Chat';
 import Settings from './Settings';
+import WelcomeMessage from './WelcomeMessage';
 
 const VideoChat = ({
   sessionKey,
@@ -277,24 +278,10 @@ const VideoChat = ({
               }`}
             >
               {numPeers === 0 && (
-                <div className="relative m-auto h-full w-full flex justify-center items-center content-evenly text-center">
-                  <span
-                    id="welcome-msg"
-                    className={`text-lg text-gray-800 dark:text-white not-selectable`}
-                  >
-                    {cstmWelcomeMsg ? (
-                      cstmWelcomeMsg
-                    ) : (
-                      <>
-                        Welcome to{' '}
-                        <span className="font-semibold">{sessionKey}</span>
-                        !
-                        <br />
-                        Waiting for others to join...
-                      </>
-                    )}
-                  </span>
-                </div>
+                <WelcomeMessage
+                  cstmWelcomeMsg={cstmWelcomeMsg}
+                  sessionKey={sessionKey}
+                />
               )}
               {/* <div className="relative h-full w-full rounded-2xl mx-40 my-40 z-0 inline-block align-middle self-center text-center bg-yellow-500"></div> */}
             </div>
