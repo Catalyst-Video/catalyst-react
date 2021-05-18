@@ -213,6 +213,16 @@ const VideoChat = ({
     setUnseenChats(unseenChats => unseenChats + 1);
   };
 
+  const SettingsButton = () => (
+    <button
+      onClick={() => {
+        setSettings(!showSettings);
+      }}
+      className="absolute top-10 sm:top-4 right-4 text-black dark:text-white cursor-pointer z-10 focus:border-0 focus:outline-none"
+    >
+      <FontAwesomeIcon icon={faEllipsisV} size="lg" className="" />
+    </button>
+  );
   return (
     <div
       id="catalyst"
@@ -287,20 +297,7 @@ const VideoChat = ({
             </div>
             {!showChat && (
               <>
-                {!showSettings && (
-                  <button
-                    onClick={() => {
-                      setSettings(!showSettings);
-                    }}
-                    className="absolute top-10 sm:top-4 right-4 text-black dark:text-white cursor-pointer z-10 focus:border-0 focus:outline-none"
-                  >
-                    <FontAwesomeIcon
-                      icon={faEllipsisV}
-                      size="lg"
-                      className=""
-                    />
-                  </button>
-                )}
+                <SettingsButton />
                 {showSettings && (
                   <Settings
                     themeColor={themeColor}
