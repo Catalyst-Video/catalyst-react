@@ -95,7 +95,7 @@ export function setWidth(width: number, margin: number): void {
   for (var s = 0; s < RemoteVideos.length; s++) {
     RemoteVideos[s].style.width = width + 'px';
     RemoteVideos[s].style.margin = margin + 'px';
-    RemoteVideos[s].style.height = width * 0.75 + 'px';
+    RemoteVideos[s].style.height = width * 0.5625 + 'px'; // Enforce 16:9 ratio
   }
 }
 
