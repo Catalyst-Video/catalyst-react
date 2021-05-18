@@ -364,7 +364,7 @@ const VideoChat = ({
                         if (VC) handleMute(audioEnabled, setAudio, VC);
                       }}
                     >
-                      <span className="hidden text-white bg-gray-500 dark:bg-gray-500 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
+                      <span className="hidden pointer-events-none text-white bg-black dark:bg-black-500 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
                         {audioEnabled ? 'Mute Audio' : 'Unmute Audio'}
                       </span>
                       <FontAwesomeIcon
@@ -400,7 +400,7 @@ const VideoChat = ({
                           );
                       }}
                     >
-                      <span className="hidden text-white bg-gray-500 dark:bg-gray-500 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
+                      <span className="hidden pointer-events-none text-white bg-black dark:bg-black-500 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
                         {videoEnabled ? 'Pause Video' : 'Unpause Video'}
                       </span>
                       <FontAwesomeIcon
@@ -425,7 +425,7 @@ const VideoChat = ({
                         }
                       }}
                     >
-                      <span className="hidden text-white bg-gray-500 dark:bg-gray-500 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
+                      <span className="hidden pointer-events-none text-white bg-black dark:bg-black-500 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
                         {!fsHandle.active
                           ? 'Enter Full Screen'
                           : 'Exit Full Screen'}
@@ -452,7 +452,7 @@ const VideoChat = ({
                         setShowChat(!showChat);
                       }}
                     >
-                      <span className="hidden text-white bg-gray-500 dark:bg-gray-500 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
+                      <span className="hidden pointer-events-none text-white bg-black dark:bg-black-500 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
                         {showChat ? 'Hide Chat' : 'Show Chat'}
                       </span>
                       <FontAwesomeIcon icon={faComment} />
@@ -488,7 +488,7 @@ const VideoChat = ({
                           );
                       }}
                     >
-                      <span className="hidden text-white bg-gray-500 dark:bg-gray-500 font-semibold absolute p-2 rounded-xl top-0 left-12  z-10 whitespace-nowrap text-sm">
+                      <span className="hidden pointer-events-none text-white bg-black dark:bg-black-500 font-semibold absolute p-2 rounded-xl top-0 left-12  z-10 whitespace-nowrap text-sm">
                         {!sharing ? 'Share Screen' : 'Stop Sharing Screen'}
                       </span>
 
@@ -514,7 +514,7 @@ const VideoChat = ({
                       }
                     >
                       <FontAwesomeIcon icon={faPhoneSlash} />
-                      <span className="hidden text-white bg-gray-500 dark:bg-gray-500 font-semibold absolute p-2 rounded-xl top-0 left-12  z-10 whitespace-nowrap text-sm">
+                      <span className="hidden pointer-events-none text-white bg-black dark:bg-black-500 font-semibold absolute p-2 rounded-xl top-0 left-12  z-10 whitespace-nowrap text-sm">
                         End Call
                       </span>
                     </button>
@@ -533,7 +533,7 @@ const VideoChat = ({
                         if (setDark) setDark(!dark);
                       }}
                     >
-                      <span className="hidden text-white bg-gray-500 dark:bg-gray-500 font-semibold absolute p-2 rounded-xl top-0 left-12  z-10 whitespace-nowrap text-sm">
+                      <span className="hidden pointer-events-none text-white bg-black dark:bg-black-500 font-semibold absolute p-2 rounded-xl top-0 left-12  z-10 whitespace-nowrap text-sm">
                         {!dark ? 'Dark Mode' : 'Light Mode'}
                       </span>
                       <FontAwesomeIcon icon={faEllipsisV} />
