@@ -290,7 +290,7 @@ const VideoChat = ({
                         <span className="font-semibold">{sessionKey}</span>
                         !
                         <br />
-                        Waiting for others to join
+                        Waiting for others to join...
                       </>
                     )}
                   </span>
