@@ -37,7 +37,7 @@ const DeviceSelector = ({
 
   return (
     <div id="opt" className="group inline-block my-1">
-      <button className="outline-none focus:outline-none px-3 bg-white dark:bg-gray-600 rounded-sm flex items-center min-w-32">
+      <button className="outline-none focus:outline-none px-3 bg-white dark:bg-gray-800 rounded-sm flex items-center min-w-32">
         <span
           className="pr-1 text-base flex-1 truncate dark:text-white"
           style={{ maxWidth: '7rem' }}
@@ -47,7 +47,7 @@ const DeviceSelector = ({
         </span>
         <span>
           <svg
-            className="fill-current h-4 w-4 transform group-hover:-rotate-180
+            className="fill-current dark:text-white h-4 w-4 transform group-hover:-rotate-180
         transition duration-150 ease-in-out"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
@@ -58,7 +58,7 @@ const DeviceSelector = ({
       </button>
 
       <ul
-        className="bg-white dark:bg-gray-600 border dark:border-gray-800 rounded-sm transform scale-0 group-hover:scale-100 absolute 
+        className="bg-white dark:bg-gray-800 border dark:border-gray-600 rounded-sm transform scale-0 group-hover:scale-100 absolute 
   transition duration-150 ease-in-out origin-top min-w-32 cursor-pointer"
       >
         {devices?.map(dev => {
@@ -66,7 +66,7 @@ const DeviceSelector = ({
             <li
               onClick={() => setDevice(dev)}
               key={dev.label}
-              className="rounded-sm px-3 py-1 hover:bg-gray-100 dark:hover:bg-gray-500 cursor-pointer dark:text-white"
+              className="rounded-sm px-3 py-1 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer dark:text-white"
             >
               {dev.label.substring(0, dev.label.indexOf(' ('))}
             </li>

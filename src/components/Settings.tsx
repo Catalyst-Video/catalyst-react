@@ -81,7 +81,10 @@ const Settings = ({
               </div>
             </div>
             <br />
-            <div id="opts" className="flex justify-center items-center m-1">
+            <div
+              id="opts"
+              className="flex justify-center items-center m-1 bg-white dark:bg-gray-800"
+            >
               <div id="opt-mic" className="text-center text-base my-2 mr-5">
                 <button
                   onClick={() => {
@@ -90,7 +93,7 @@ const Settings = ({
                   className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
                     !audioEnabled
                       ? 'bg-red-50 text-red-500'
-                      : 'dark:text-gray-100'
+                      : 'dark:text-gray-100 bg-gray-500'
                   }`}
                 >
                   <FontAwesomeIcon
@@ -126,7 +129,7 @@ const Settings = ({
                   className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
                     !videoEnabled
                       ? 'bg-red-50 text-red-500'
-                      : 'dark:text-gray-100'
+                      : 'dark:text-gray-100 bg-gray-500'
                   }`}
                 >
                   <FontAwesomeIcon
@@ -149,13 +152,13 @@ const Settings = ({
               </div>
             </div>
           </div>
-          <div className="w-full text-center mb-4 px-4 sm:px-0">
+          <div className="w-full text-center mb-4 px-4 sm:px-0 bg-white dark:bg-gray-800">
             <button
               onClick={() => {
                 if (setDark) setDark(!dark);
               }}
               type="button"
-              className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-${themeColor}-600 text-base font-medium text-white hover:bg-${themeColor}-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-${themeColor}-500 sm:ml-3 sm:w-auto sm:text-sm`}
+              className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-${themeColor}-600 text-base font-medium text-white hover:bg-${themeColor}-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-400 focus:ring-${themeColor}-500 sm:ml-3 sm:w-auto sm:text-sm`}
             >
               <FontAwesomeIcon
                 icon={dark ? faMoon : faSun}
@@ -177,7 +180,7 @@ const Settings = ({
             <button
               onClick={() => setSettings(false)}
               type="button"
-              className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-${themeColor}-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}
+              className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-300 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-${themeColor}-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}
             >
               Close Settings
             </button>

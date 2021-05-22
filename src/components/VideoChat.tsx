@@ -284,7 +284,7 @@ const VideoChat = ({
             <div
               id="remote-vid-wrapper"
               ref={remoteVidRef}
-              className={`flex justify-center content-center items-center absolute flex-wrap align-middle z-2 top-0 left-0 w-full h-full max-h-screen max-w-screen z-2 ${
+              className={`flex justify-center content-center items-center absolute flex-wrap align-middle z-2 top-0 left-0 w-full h-full max-h-screen max-w-screen ${
                 showChat ? 'ct-chat' : ''
               }`}
             >
