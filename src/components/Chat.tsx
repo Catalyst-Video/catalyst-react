@@ -95,7 +95,7 @@ const ChatComponent = ({
       </div>
       <div
         id="chat-compose-wrapper"
-        className="absolute bottom-3 left-0 sm:ml-2 flex items-center border-0 sm:shadow-lg outline-none w-full shadow-inner sm:rounded-2xl p-2 h-16 max-h-20 bg-white dark:bg-gray-700"
+        className="absolute bottom-0 sm:bottom-3 left-0 sm:ml-2 flex items-center border-0 sm:shadow-lg outline-none w-full shadow-inner sm:rounded-2xl p-2 h-20 sm:h-16 max-h-20 bg-white dark:bg-gray-700"
       >
         <textarea
           id="chat-compose"

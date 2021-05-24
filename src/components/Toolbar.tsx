@@ -74,7 +74,7 @@ export default function Toolbar({
                   : `text-${redIndicators ? 'red' : themeColor}-500 dark:text-${
                       redIndicators ? 'red' : themeColor
                     }-500`
-              } text-black dark:text-white cursor-pointer px-4 z-3 py-1 focus:border-0 focus:outline-none hover:text-${
+              } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${
                 redIndicators ? 'red' : themeColor
               }-500 dark:hover:text-${
                 redIndicators ? 'red' : themeColor
@@ -83,7 +83,7 @@ export default function Toolbar({
                 if (VC) handleMute(audioEnabled, setAudio, VC);
               }}
             >
-              <span className="hidden pointer-events-none text-white bg-black dark:bg-black-500 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
+              <span className="hidden pointer-events-none text-white bg-gray-500 dark:bg-gray-700 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
                 {audioEnabled ? 'Mute Audio' : 'Unmute Audio'}
               </span>
               <FontAwesomeIcon
@@ -101,7 +101,7 @@ export default function Toolbar({
                   : `text-${redIndicators ? 'red' : themeColor}-500 dark:text-${
                       redIndicators ? 'red' : themeColor
                     }-500`
-              } text-black dark:text-white cursor-pointer px-4 z-3 py-1 focus:border-0 focus:outline-none hover:text-${
+              } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${
                 redIndicators ? 'red' : themeColor
               }-500 dark:hover:text-${
                 redIndicators ? 'red' : themeColor
@@ -117,7 +117,7 @@ export default function Toolbar({
                   );
               }}
             >
-              <span className="hidden pointer-events-none text-white bg-black dark:bg-black-500 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
+              <span className="hidden pointer-events-none text-white bg-gray-500 dark:bg-gray-700 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
                 {videoEnabled ? 'Pause Video' : 'Unpause Video'}
               </span>
               <FontAwesomeIcon icon={videoEnabled ? faVideo : faVideoSlash} />
@@ -131,7 +131,7 @@ export default function Toolbar({
                 !fsHandle.active
                   ? ''
                   : `text-${themeColor}-500 dark:text-${themeColor}-500`
-              } text-black dark:text-white cursor-pointer px-4 z-3 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
+              } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
               onClick={() => {
                 if (fsHandle.active) {
                   fsHandle.exit();
@@ -140,7 +140,7 @@ export default function Toolbar({
                 }
               }}
             >
-              <span className="hidden pointer-events-none text-white bg-black dark:bg-black-500 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
+              <span className="hidden pointer-events-none text-white bg-gray-500 dark:bg-gray-700 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
                 {!fsHandle.active ? 'Enter Full Screen' : 'Exit Full Screen'}
               </span>
               <FontAwesomeIcon
@@ -158,20 +158,23 @@ export default function Toolbar({
                 !showChat
                   ? ''
                   : `text-${themeColor}-500 dark:text-${themeColor}-500`
-              } text-black dark:text-white cursor-pointer px-4 z-3 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
+              } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
               onClick={() => {
                 setShowChat(!showChat);
               }}
             >
-              <span className="hidden pointer-events-none text-white bg-black dark:bg-black-500 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
+              <span className="hidden pointer-events-none text-white bg-gray-500 dark:bg-gray-700 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
                 {showChat ? 'Hide Chat' : 'Show Chat'}
               </span>
               <FontAwesomeIcon icon={faComment} />
               {!showChat && unseenChats !== 0 && (
                 <i
-                  className="chat-indicator"
+                  id="chat-indicator"
+                  className={`absolute top-0 right-0 z-0 not-italic text-white bg-${themeColor}-500 rounded-full text-sm px-2 opacity-90 `}
                   aria-valuetext={unseenChats.toString()}
-                ></i>
+                >
+                  {unseenChats.toString()}
+                </i>
               )}
             </button>
           </div>
@@ -184,7 +187,7 @@ export default function Toolbar({
                 !sharing
                   ? ''
                   : `text-${themeColor}-500 dark:text-${themeColor}-500`
-              } text-black dark:text-white cursor-pointer px-4 z-3 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
+              } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
               id="share-button"
               onClick={() => {
                 if (VC)
@@ -199,7 +202,7 @@ export default function Toolbar({
                   );
               }}
             >
-              <span className="hidden pointer-events-none text-white bg-black dark:bg-black-500 font-semibold absolute p-2 rounded-xl top-0 left-12  z-10 whitespace-nowrap text-sm">
+              <span className="hidden pointer-events-none text-white bg-gray-500 dark:bg-gray-700 font-semibold absolute p-2 rounded-xl top-0 left-12  z-10 whitespace-nowrap text-sm">
                 {!sharing ? 'Share Screen' : 'Stop Sharing Screen'}
               </span>
 
@@ -215,7 +218,7 @@ export default function Toolbar({
         {!hidden?.endcall && (
           <div className="relative h-full w-full flex flex-col items-center m-0 z-2">
             <button
-              className={`text-black dark:text-white cursor-pointer px-4 z-3 py-1 focus:border-0 focus:outline-none hover:text-${
+              className={`text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${
                 redIndicators ? 'red' : themeColor
               }-500 dark:hover:text-${
                 redIndicators ? 'red' : themeColor
@@ -225,7 +228,7 @@ export default function Toolbar({
               }
             >
               <FontAwesomeIcon icon={faPhoneSlash} />
-              <span className="hidden pointer-events-none text-white bg-black dark:bg-black-500 font-semibold absolute p-2 rounded-xl top-0 left-12  z-10 whitespace-nowrap text-sm">
+              <span className="hidden pointer-events-none text-white bg-gray-500 dark:bg-gray-700 font-semibold absolute p-2 rounded-xl top-0 left-12  z-10 whitespace-nowrap text-sm">
                 End Call
               </span>
             </button>

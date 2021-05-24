@@ -111,24 +111,37 @@ body {
 
 
 /* display chat indicator when unread messages  */
-#catalyst .chat-indicator:after{
-content:attr(aria-valuetext);
-font-size:12px;
-font-family: sans-serif;
-background: var(--themeColor);
-color: white;
-font-size: 12px;
-border-radius: 50%;
-padding: 1px 13px;
-position:absolute;
-right: 30px;
-top: -5px;
-z-index: 1;
-opacity:0.9;
-font-weight: 500;
-font-style: normal;
+#catalyst .chat-indicator::before{
+  content: attr(aria-valuetext);
+  font-family: sans-serif;
+  background: var(--themeColor);
+  color: #fff;
+  font-size: 14px;
+  border-radius: 50%;
+  padding: 0.5px 12px;
+  position: absolute;
+  right: 0px;
+  top: -6px;
+  z-index: -1;
+  opacity: .9;
+  font-weight: 500;
+  font-style: normal;
 }
 
+/*     content: attr(aria-valuetext);
+    font-family: sans-serif;
+    background: var(--themeColor);
+    color: #fff;
+    font-size: 14px;
+    border-radius: 50%;
+    padding: .5px 12px;
+    position: fixed;
+    transform: translate(-15px, -10px);
+    z-index: 0;
+    opacity: .9;
+    font-weight: 500;
+    font-style: normal;
+ */
 
 #catalyst i#remote-muted {
 font-family: sans-serif;

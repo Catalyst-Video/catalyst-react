@@ -93,7 +93,7 @@ const Settings = ({
                   className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
                     !audioEnabled
                       ? 'bg-red-50 text-red-500'
-                      : 'dark:text-gray-100 bg-gray-500'
+                      : 'dark:text-gray-100 dark:bg-gray-500'
                   }`}
                 >
                   <FontAwesomeIcon
@@ -129,7 +129,7 @@ const Settings = ({
                   className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
                     !videoEnabled
                       ? 'bg-red-50 text-red-500'
-                      : 'dark:text-gray-100 bg-gray-500'
+                      : 'dark:text-gray-100 dark:bg-gray-500'
                   }`}
                 >
                   <FontAwesomeIcon
@@ -161,11 +161,11 @@ const Settings = ({
               className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-${themeColor}-600 text-base font-medium text-white hover:bg-${themeColor}-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-400 focus:ring-${themeColor}-500 sm:ml-3 sm:w-auto sm:text-sm`}
             >
               <FontAwesomeIcon
-                icon={dark ? faMoon : faSun}
+                icon={dark ? faSun : faMoon}
                 size="lg"
                 className="mr-5 inline"
               />
-              Dark Mode
+              {dark ? 'Light Mode' : 'Dark Mode'}
             </button>
           </div>
 

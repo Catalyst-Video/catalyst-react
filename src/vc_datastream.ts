@@ -193,6 +193,24 @@ export default class VCDataStream implements VideoChatData {
       );
       // Add the local video stream to the peerConnection
       this.localStream?.getTracks().forEach((track: MediaStreamTrack) => {
+        /* TODO: Request 16:9 standard high definition (HD) video size
+        track
+          .applyConstraints({
+            width: 1920,
+            height: 1080,
+            aspectRatio: 1.777777778,
+          })
+          .then(() => {
+            this.peerConnections
+              .get(uuid)
+              ?.addTrack(track, this.localStream as MediaStream);
+          })
+          .catch(err => {
+            logger(err);
+            this.peerConnections
+              .get(uuid)
+              ?.addTrack(track, this.localStream as MediaStream);
+          }); */
         this.peerConnections
           .get(uuid)
           ?.addTrack(track, this.localStream as MediaStream);
@@ -407,13 +425,21 @@ export default class VCDataStream implements VideoChatData {
       if (joinSound) joinSound?.play(); */
       var vidDiv = document.createElement('div');
       vidDiv.setAttribute('id', 'remote-div');
+      vidDiv.setAttribute(
+        'class',
+        'relative z-0 inline-block align-middle self-center overflow-hidden text-center h-auto'
+      );
       vidDiv.setAttribute('uuid', uuid);
 
       var vidNode = document.createElement('video');
       vidNode.setAttribute('autoplay', '');
       vidNode.setAttribute('playsinline', '');
       vidNode.setAttribute('id', 'remote-video');
-      vidNode.setAttribute('className', 'RemoteVideo');
+      vidNode.setAttribute(
+        'class',
+        'w-full h-full relative z-1 rounded-2xl overflow-hidden inline-block shadow-md'
+      );
+      vidNode.setAttribute('style', 'background: #16171a;');
       vidNode.setAttribute('vid-uuid', uuid);
 
       var muteNode = createMuteNode(uuid);
