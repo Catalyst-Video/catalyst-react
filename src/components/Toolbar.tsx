@@ -11,8 +11,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
-import { HiddenSettings, VideoChatData } from '../typings/interfaces';
-import { handleMute, handlePauseVideo, handleSharing } from '../utils/stream';
+import { HiddenSettings } from '../typings/interfaces';
+import { isConnected, logger, sendToAllDataChannels } from '../utils/general';
 
 export default function Toolbar({
   toolbarRef,
@@ -20,7 +20,6 @@ export default function Toolbar({
   audioEnabled,
   redIndicators,
   themeColor,
-  VC,
   setAudio,
   videoEnabled,
   setVideo,
@@ -34,27 +33,198 @@ export default function Toolbar({
   setSharing,
   cstmOptionBtns,
   onEndCall,
+  localAudio,
+  setLocalAudio,
+  setLocalStream,
+  localStream,
+  dataChannel,
 }: {
   toolbarRef: React.RefObject<HTMLDivElement>;
-  hidden: HiddenSettings | undefined;
+  hidden?: HiddenSettings;
   audioEnabled: boolean;
-  redIndicators: boolean | undefined;
+  redIndicators?: boolean;
   themeColor: string;
-  VC: VideoChatData | undefined;
   setAudio: Function;
   videoEnabled: boolean;
   setVideo: Function;
   setLocalVideoText: React.Dispatch<React.SetStateAction<string>>;
-  disableLocalVidDrag: boolean | undefined;
+  disableLocalVidDrag?: boolean;
   fsHandle;
   showChat: boolean;
   setShowChat: React.Dispatch<React.SetStateAction<boolean>>;
   unseenChats: number;
   sharing: boolean;
   setSharing: React.Dispatch<React.SetStateAction<boolean>>;
-  cstmOptionBtns: JSX.Element[] | undefined;
-  onEndCall: Function | undefined;
+  cstmOptionBtns?: JSX.Element[];
+  onEndCall?: Function;
+  localAudio?: MediaStreamTrack;
+  setLocalAudio: Function;
+  setLocalStream: Function;
+  localStream?: MediaStream;
+  dataChannel?: Map<string, RTCDataChannel>;
 }) {
+  const handleMute = (
+    setAudio: Function,
+    setLocalAudio: Function,
+    localAudio?: MediaStreamTrack,
+    dataChannel?: Map<string, RTCDataChannel>
+  ) => {
+    setAudio(audioEnabled => !audioEnabled);
+    if (localAudio && dataChannel) {
+      sendToAllDataChannels(`mut:${localAudio.enabled}`, dataChannel);
+      if (localAudio.enabled) localAudio.enabled = false;
+      else localAudio.enabled = true;
+      setLocalAudio(localAudio);
+    }
+  };
+
+  const handlePauseVideo = (
+    videoEnabled: boolean,
+    setVideo: Function,
+    setLocalVideoText: Function,
+    setLocalStream: Function,
+    dataChannel?: Map<string, RTCDataChannel>,
+    localStream?: MediaStream,
+    disableLocalVidDrag?: boolean
+  ) => {
+    setVideo(videoEnabled => !videoEnabled);
+    if (localStream && dataChannel) {
+      sendToAllDataChannels(`vid:${videoEnabled}`, dataChannel);
+      if (videoEnabled) {
+        localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
+          track.enabled = false;
+          // TODO: experiment with track.stop(); to remove recording indicator on PC
+        });
+        // if (localVideo.srcObject && localStream)
+        //   localVideo.srcObject = localStream;
+        setLocalVideoText('Video Paused');
+      } else {
+        localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
+          track.enabled = true;
+        });
+        setLocalVideoText(disableLocalVidDrag ? '' : 'Drag Me');
+      }
+      setLocalStream(localStream);
+    }
+  };
+
+  /* TODO: screen share
+
+const handleSharing = (
+       sharing: boolean,
+       setSharing: Function,
+       videoEnabled: boolean,
+       setVideo: Function,
+       setLocalVideoText: Function,
+       disableLocalVidDrag: boolean | undefined
+     ) => {
+       // Handle swap video before video call is connected by checking that there's at least one peer connected
+       if (!isConnected(connected)) {
+         logger('You must join a call before you can screen share');
+         return;
+       }
+       if (!sharing) {
+         navigator.mediaDevices
+           .getDisplayMedia({
+             video: true,
+             audio: true,
+           })
+           .then((stream: MediaStream) => {
+             setSharing(true);
+             if (stream.getAudioTracks()[0])
+               stream.addTrack(stream.getAudioTracks()[0]);
+             logger(stream.toString());
+             handleSwitchStreamHelper(
+               stream,
+               videoEnabled,
+               setVideo,
+               VC,
+               setLocalVideoText,
+               disableLocalVidDrag
+             );
+             setLocalVideoText('Sharing Screen');
+           })
+           .catch((e: Event) => {
+             // Request screen share, note: we can request to capture audio for screen sharing video content.
+             logger('Error sharing screen' + e);
+           });
+       } else {
+         // Stop the screen share video track. (We don't want to stop the audio track obviously.)
+         (localVidRef.current?.srcObject as MediaStream)
+           ?.getVideoTracks()
+           .forEach((track: MediaStreamTrack) => track.stop());
+         // Get webcam input
+         navigator.mediaDevices
+           .getUserMedia({
+             video: true,
+             audio: true,
+           })
+           .then(stream => {
+             setSharing(false);
+             handleSwitchStreamHelper(
+               stream,
+               videoEnabled,
+               setVideo,
+               VC,
+               setLocalVideoText,
+               disableLocalVidDrag
+             );
+             setLocalVideoText(disableLocalVidDrag ? '' : 'Drag Me');
+           });
+       }
+     };
+
+     // Swap current video track with passed in stream by getting current track, swapping video for each peer connection
+     export function handleSwitchStreamHelper(
+       stream: MediaStream,
+       videoEnabled: boolean,
+       setVideo: Function,
+       setLocalVideoText: Function,
+       disableLocalVidDrag: boolean | undefined
+     ): void {
+       let videoTrack = stream.getVideoTracks()[0];
+       let audioTrack = stream.getAudioTracks()[0];
+
+       connected.forEach(
+         (value: boolean, key: string, map: Map<string, boolean>) => {
+           if (connected.get(key)) {
+             const sender = peerConnections
+               ?.get(key)
+               ?.getSenders()
+               .find((s: any) => {
+                 return s.track.kind === videoTrack.kind;
+               });
+             if (sender) sender.replaceTrack(videoTrack);
+             if (stream.getAudioTracks()[0]) {
+               logger('Audio track is' + audioTrack.toString());
+               const sender2 = peerConnections
+                 ?.get(key)
+                 ?.getSenders()
+                 .find((s: any) => {
+                   if (s.track.kind === audioTrack.kind) {
+                     logger('Found matching track: ' + s.track.toString());
+                   }
+                   return s.track.kind === audioTrack.kind;
+                 });
+               // add track instead of replacing
+               if (sender2) sender2.replaceTrack(audioTrack);
+             }
+           }
+         }
+       );
+       // Update local video stream, local video object, unpause video on swap
+       localStream = stream;
+       localVidRef.current.srcObject = stream;
+       if (!videoEnabled)
+         handlePauseVideo(
+           videoEnabled,
+           setVideo,
+           VC,
+           setLocalVideoText,
+           disableLocalVidDrag
+         );
+     } */
+
   return (
     <div
       id="toolbar"
@@ -80,7 +250,7 @@ export default function Toolbar({
                 redIndicators ? 'red' : themeColor
               }-500 not-selectable tooltip`}
               onClick={() => {
-                if (VC) handleMute(audioEnabled, setAudio, VC);
+                handleMute(setAudio, setLocalAudio, localAudio, dataChannel);
               }}
             >
               <span className="hidden pointer-events-none text-white bg-gray-500 dark:bg-gray-700 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
@@ -107,14 +277,15 @@ export default function Toolbar({
                 redIndicators ? 'red' : themeColor
               }-500 not-selectable tooltip`}
               onClick={() => {
-                if (VC)
-                  handlePauseVideo(
-                    videoEnabled,
-                    setVideo,
-                    VC,
-                    setLocalVideoText,
-                    disableLocalVidDrag
-                  );
+                handlePauseVideo(
+                  videoEnabled,
+                  setVideo,
+                  setLocalVideoText,
+                  setLocalStream,
+                  dataChannel,
+                  localStream,
+                  disableLocalVidDrag
+                );
               }}
             >
               <span className="hidden pointer-events-none text-white bg-gray-500 dark:bg-gray-700 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
@@ -170,8 +341,7 @@ export default function Toolbar({
               {!showChat && unseenChats !== 0 && (
                 <i
                   id="chat-indicator"
-                  className={`absolute top-0 right-0 z-0 not-italic text-white bg-${themeColor}-500 rounded-full text-sm px-2 opacity-90 `}
-                  aria-valuetext={unseenChats.toString()}
+                  className={`absolute top-0 right-6 sm:right-0 z-0 not-italic text-white bg-${themeColor}-500 rounded-full text-sm px-2 opacity-90 `}
                 >
                   {unseenChats.toString()}
                 </i>
@@ -190,16 +360,14 @@ export default function Toolbar({
               } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
               id="share-button"
               onClick={() => {
-                if (VC)
-                  handleSharing(
-                    VC,
-                    sharing,
-                    setSharing,
-                    videoEnabled,
-                    setVideo,
-                    setLocalVideoText,
-                    disableLocalVidDrag
-                  );
+                // TODO: handleSharing(
+                //   sharing,
+                //   setSharing,
+                //   videoEnabled,
+                //   setVideo,
+                //   setLocalVideoText,
+                //   disableLocalVidDrag
+                // );
               }}
             >
               <span className="hidden pointer-events-none text-white bg-gray-500 dark:bg-gray-700 font-semibold absolute p-2 rounded-xl top-0 left-12  z-10 whitespace-nowrap text-sm">

@@ -4,15 +4,12 @@ export interface VideoChatData {
   connected: Map<string, boolean>;
   localICECandidates: Record<string, RTCIceCandidate[]>;
   socket: any;
-  localVidRef: RefObject<HTMLVideoElement>;
-  remoteVidRef: RefObject<HTMLDivElement>;
+  setLocalStream: Function;
+  setRemoteStreams: Function;
+  setPeerConnections: Function;
   peerConnections: Map<string, RTCPeerConnection>;
   localStream: MediaStream | undefined;
   localAudio: MediaStreamTrack | undefined;
-  picInPic: string;
-  setNumPeers: Function;
-  showDotColors: boolean;
-  showBorderColors: boolean;
   peerColors: Map<string, number>;
   localColor: string;
   incrementUnseenChats: Function;

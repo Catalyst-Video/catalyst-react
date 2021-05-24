@@ -12,13 +12,13 @@ const ChatComponent = ({
   showChat,
   setShowChat,
   dataChannel,
-  localColor,
+  // localColor,
   themeColor,
 }: {
   showChat: boolean;
   setShowChat: Function;
   dataChannel: Map<string, RTCDataChannel>;
-  localColor: string;
+  // localColor: string;
   themeColor: string;
 }) => {
   const textInputRef = useRef<HTMLTextAreaElement>(null);

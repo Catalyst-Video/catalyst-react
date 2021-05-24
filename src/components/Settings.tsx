@@ -28,7 +28,6 @@ const Settings = ({
   setSettings,
   dark,
   setDark,
-  VC,
   setLocalVideoText,
   disableLocalVidDrag,
 }: {
@@ -44,7 +43,6 @@ const Settings = ({
   setVideo: Function;
   dark?: boolean;
   setDark?: Function;
-  VC?: VideoChatData;
   setLocalVideoText: Function;
   disableLocalVidDrag?: boolean;
 }) => {
@@ -88,7 +86,7 @@ const Settings = ({
               <div id="opt-mic" className="text-center text-base my-2 mr-5">
                 <button
                   onClick={() => {
-                    if (VC) handleMute(audioEnabled, setAudio, VC);
+                    //  handleMute(audioEnabled, setAudio, VC);
                   }}
                   className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
                     !audioEnabled
@@ -117,14 +115,14 @@ const Settings = ({
               <div id="opt-cam" className="text-center text-base my-2 ml-5">
                 <button
                   onClick={() => {
-                    if (VC)
-                      handlePauseVideo(
-                        videoEnabled,
-                        setVideo,
-                        VC,
-                        setLocalVideoText,
-                        disableLocalVidDrag
-                      );
+                    // if (VC)
+                    //   handlePauseVideo(
+                    //     videoEnabled,
+                    //     setVideo,
+                    //     VC,
+                    //     setLocalVideoText,
+                    //     disableLocalVidDrag
+                    //   );
                   }}
                   className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
                     !videoEnabled
