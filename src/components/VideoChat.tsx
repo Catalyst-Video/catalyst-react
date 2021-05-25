@@ -2,11 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 
 // Other packages
 import io from 'socket.io-client';
-
 import '../utils/autolink.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-import Draggable from 'react-draggable';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import {
   DefaultSettings,
@@ -94,14 +92,12 @@ const VideoChat = ({
   redIndicators?: boolean;
 }) => {
   const fsHandle = useFullScreenHandle();
-  // const [VC, setVCData] = useState<VideoChatData>();
   const [sharing, setSharing] = useState(false);
   const [unseenChats, setUnseenChats] = useState(0);
   const [localVideoText, setLocalVideoText] = useState('No webcam input');
   const [showChat, setShowChat] = useState<boolean>(
     defaults?.showChatArea ?? false
   );
-  const [showSettings, setSettings] = useState(false);
   const [peerColors, setPeerColors] = useState<Map<string, number>>(new Map());
 
   // video chat data
@@ -123,10 +119,7 @@ const VideoChat = ({
   const [socket] = useState<any>(io(cstmServerAddress));
   const [startedCall, setStartedCall] = useState(false);
 
-  // refs
   const catalystRef = useRef<HTMLDivElement>(null);
-  // const localVidRef = useRef<HTMLVideoElement>(null);
-  // const remoteVidRef = useRef<HTMLDivElement>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
 
   const requestMediaStream = () => {
@@ -164,8 +157,6 @@ const VideoChat = ({
       /* When a video stream is added to VideoChat, we need to store the local audio track, because the screen sharing MediaStream doesn't have audio by default, which is problematic for peer C who joins while another peer A/B is screen sharing (C won't receive A/Bs audio). */
       let localAudio = localStream.getAudioTracks()[0];
       setLocalAudio(localAudio);
-      /*  if (localVidRef.current && !localVidRef.current.srcObject)
-      localVidRef.current.srcObject = stream; */
       // Join the chat room
       socket.emit('join', uniqueAppId + sessionKey, () => {
         /*TODO: border/dot colors
@@ -475,7 +466,6 @@ const VideoChat = ({
     if (!remoteStreams.get(uuid)) {
       logger('onAddStream <<< Received new stream from remote. Adding it...');
       setRemoteStreams(
-        // remoteStreams =>
         new Map(remoteStreams.set(uuid, e.streams.slice(-1)[0]))
       );
       if (onAddPeer) onAddPeer();
@@ -504,10 +494,6 @@ const VideoChat = ({
   }, []);
 
   useEffect(() => {
-    setUnseenChats(0);
-  }, [showChat]);
-
-  useEffect(() => {
     if (arbitraryData && remoteStreams.size > 0)
       sendToAllDataChannels(arbitraryData, dataChannel);
   }, [arbitraryData]);
@@ -526,22 +512,12 @@ const VideoChat = ({
       localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
         track.enabled = false;
       });
-  }, [peerConnections]);
+  }, [remoteStreams]);
 
   const incrementUnseenChats = () => {
     setUnseenChats(unseenChats => unseenChats + 1);
   };
 
-  const SettingsButton = () => (
-    <button
-      onClick={() => {
-        setSettings(!showSettings);
-      }}
-      className="absolute top-10 sm:top-4 right-4 text-black dark:text-white cursor-pointer z-10 focus:border-0 focus:outline-none"
-    >
-      <FontAwesomeIcon icon={faEllipsisV} size="lg" className="" />
-    </button>
-  );
   return (
     <div
       id="catalyst"
@@ -591,27 +567,26 @@ const VideoChat = ({
             />
 
             {!showChat && (
-              <>
-                <SettingsButton />
-                {showSettings && (
-                  <Settings
-                    themeColor={themeColor}
-                    vidInput={vidInput}
-                    audioInput={audioInput}
-                    setAudioInput={setAudioInput}
-                    setVidInput={setVidInput}
-                    setSettings={setSettings}
-                    audioEnabled={audioEnabled}
-                    setAudio={setAudio}
-                    videoEnabled={videoEnabled}
-                    setVideo={setVideo}
-                    dark={dark}
-                    setDark={setDark}
-                    setLocalVideoText={setLocalVideoText}
-                    disableLocalVidDrag={disableLocalVidDrag}
-                  />
-                )}
-              </>
+              <Settings
+                themeColor={themeColor}
+                vidInput={vidInput}
+                audioInput={audioInput}
+                setAudioInput={setAudioInput}
+                setVidInput={setVidInput}
+                audioEnabled={audioEnabled}
+                setAudio={setAudio}
+                videoEnabled={videoEnabled}
+                setVideo={setVideo}
+                dark={dark}
+                setDark={setDark}
+                setLocalVideoText={setLocalVideoText}
+                disableLocalVidDrag={disableLocalVidDrag}
+                localAudio={localAudio}
+                localStream={localStream}
+                setLocalAudio={setLocalAudio}
+                setLocalStream={setLocalStream}
+                dataChannel={dataChannel}
+              />
             )}
 
             <Toolbar
@@ -629,6 +604,7 @@ const VideoChat = ({
               showChat={showChat}
               setShowChat={setShowChat}
               unseenChats={unseenChats}
+              setUnseenChats={setUnseenChats}
               sharing={sharing}
               setSharing={setSharing}
               cstmOptionBtns={cstmOptionBtns}

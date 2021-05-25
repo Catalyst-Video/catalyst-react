@@ -12,7 +12,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { HiddenSettings } from '../typings/interfaces';
-import { isConnected, logger, sendToAllDataChannels } from '../utils/general';
+import { sendToAllDataChannels } from '../utils/general';
 
 export default function Toolbar({
   toolbarRef,
@@ -29,6 +29,7 @@ export default function Toolbar({
   showChat,
   setShowChat,
   unseenChats,
+  setUnseenChats,
   sharing,
   setSharing,
   cstmOptionBtns,
@@ -53,6 +54,7 @@ export default function Toolbar({
   showChat: boolean;
   setShowChat: React.Dispatch<React.SetStateAction<boolean>>;
   unseenChats: number;
+  setUnseenChats: Function;
   sharing: boolean;
   setSharing: React.Dispatch<React.SetStateAction<boolean>>;
   cstmOptionBtns?: JSX.Element[];
@@ -69,12 +71,23 @@ export default function Toolbar({
     localAudio?: MediaStreamTrack,
     dataChannel?: Map<string, RTCDataChannel>
   ) => {
+    // console.log(localStream?.getAudioTracks(), audioEnabled);
     setAudio(audioEnabled => !audioEnabled);
     if (localAudio && dataChannel) {
       sendToAllDataChannels(`mut:${localAudio.enabled}`, dataChannel);
-      if (localAudio.enabled) localAudio.enabled = false;
-      else localAudio.enabled = true;
+      if (localAudio.enabled) {
+        localAudio.enabled = false;
+        localStream?.getAudioTracks().forEach((track: MediaStreamTrack) => {
+          track.enabled = false;
+        });
+      } else {
+        localAudio.enabled = true;
+        localStream?.getAudioTracks().forEach((track: MediaStreamTrack) => {
+          track.enabled = true;
+        });
+      }
       setLocalAudio(localAudio);
+      setLocalStream(localStream);
     }
   };
 
@@ -332,6 +345,7 @@ const handleSharing = (
               } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
               onClick={() => {
                 setShowChat(!showChat);
+                setUnseenChats(0);
               }}
             >
               <span className="hidden pointer-events-none text-white bg-gray-500 dark:bg-gray-700 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">

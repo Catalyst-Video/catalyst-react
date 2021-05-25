@@ -1,54 +1,12 @@
 import { isConnected, logger, sendToAllDataChannels } from './general';
 
-export function handleMute(
-  setAudio: Function,
-  localAudio: MediaStreamTrack,
-  dataChannel: Map<string, RTCDataChannel>
-): void {
-  setAudio(audioEnabled => !audioEnabled);
-  if (localAudio) {
-    sendToAllDataChannels(`mut:${localAudio.enabled}`, dataChannel);
-    if (localAudio.enabled) localAudio.enabled = false;
-    else localAudio.enabled = true;
-    setLocalAudio(localAudio)
-  }
-}
-
-export function handlePauseVideo(
-  videoEnabled: boolean,
-  localStream: MediaStream,
-  setVideo: Function,
-  setLocalVideoText: Function,
-  disableLocalVidDrag: boolean | undefined,
-  dataChannel: Map<string, RTCDataChannel>
-): void {
-  setVideo(videoEnabled => !videoEnabled);
-  if (localStream) {
-    sendToAllDataChannels(`vid:${videoEnabled}`, dataChannel);
-    if (videoEnabled) {
-      localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
-        track.enabled = false;
-        // TODO: experiment with track.stop(); to remove recording indicator on PC
-      });
-      // if (localVideo.srcObject && localStream)
-      //   localVideo.srcObject = localStream;
-      setLocalVideoText('Video Paused');
-    } else {
-      localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
-        track.enabled = true;
-      });
-      setLocalVideoText(disableLocalVidDrag ? '' : 'Drag Me');
-    }
-  }
-}
-
 // Swap current video track with passed in stream by getting current track, swapping video for each peer connection
 export function handleSwitchStreamHelper(
   stream: MediaStream,
-  videoEnabled: boolean,
-  setVideo: Function,
-  setLocalVideoText: Function,
-  disableLocalVidDrag: boolean | undefined
+  localStream: MediaStream,
+  connected: Map<string, boolean>,
+  peerConnections: Map<string, RTCPeerConnection>,
+  disableLocalVidDrag?: boolean
 ): void {
   let videoTrack = stream.getVideoTracks()[0];
   let audioTrack = stream.getAudioTracks()[0];
@@ -83,14 +41,7 @@ export function handleSwitchStreamHelper(
   // Update local video stream, local video object, unpause video on swap
   localStream = stream;
   localVidRef.current.srcObject = stream;
-  if (!videoEnabled)
-    handlePauseVideo(
-      videoEnabled,
-      setVideo,
-      VC,
-      setLocalVideoText,
-      disableLocalVidDrag
-    );
+  
 }
 
 

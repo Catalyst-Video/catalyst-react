@@ -165,7 +165,6 @@ const RemoteVideos = React.memo(
                 }}
                 key={idx}
                 autoPlay
-                muted
                 playsInline
                 vid-uuid={uuid}
               ></video>

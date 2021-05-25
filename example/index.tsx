@@ -49,7 +49,7 @@ const WrapperComp = ({
       uniqueAppId="demo1"
       disableSetupRoom={true}
       defaults={{
-        audioOn: false,
+        audioOn: true,
         videoOn: false,
         // showChatArea: true,
         // showToastArea: false,
