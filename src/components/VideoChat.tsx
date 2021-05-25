@@ -15,7 +15,6 @@ import {
 } from '../typings/interfaces';
 import {
   hueToColor,
-  ResizeWrapper,
   setMutedIndicator,
   setPausedIndicator,
   setStreamColor,
@@ -536,7 +535,7 @@ const VideoChat = ({
   }, []);
 
   useEffect(() => {
-    ResizeWrapper();
+    // ResizeWrapper();
     setUnseenChats(0);
   }, [showChat]);
 
@@ -615,6 +614,7 @@ const VideoChat = ({
               peerConnections={peerConnections}
               remoteStreams={remoteStreams}
               showDotColors={showDotColors}
+              redIndicators={redIndicators}
               showChat={showChat}
               cstmWelcomeMsg={cstmWelcomeMsg}
               sessionKey={sessionKey}

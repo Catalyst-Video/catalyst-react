@@ -50,7 +50,7 @@ const WrapperComp = ({
       disableSetupRoom={true}
       defaults={{
         audioOn: false,
-        videoOn: true,
+        videoOn: false,
         // showChatArea: true,
         // showToastArea: false,
       }}
