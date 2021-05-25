@@ -93,38 +93,6 @@ export function handleSwitchStreamHelper(
     );
 }
 
-export function handlePictureInPicture(): void {
-  if ('pictureInPictureEnabled' in document) {
-    // @ts-ignore
-    if (document && document.pictureInPictureElement) {
-      // @ts-ignore
-      document.exitPictureInPicture().catch((e: string) => {
-        logger('Error exiting pip.' + e);
-      });
-    } else {
-      // @ts-ignore
-      switch (video?.webkitPresentationMode) {
-        case 'inline':
-          // @ts-ignore
-          video?.webkitSetPresentationMode('picture-in-picture');
-          break;
-        case 'picture-in-picture':
-          // @ts-ignore
-          video?.webkitSetPresentationMode('inline');
-          break;
-        default:
-          // @ts-ignore
-          video.requestPictureInPicture().catch((e: string) => {
-            if (!isConnected(connected))
-              logger('You must join a call to enter picture in picture');
-          });
-      }
-    }
-  } else {
-    if (!isConnected(connected))
-      logger('You must join a call to enter picture in picture');
-  }
-}
 
 export function handleSharing(
   ,

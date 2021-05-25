@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { handlePictureInPicture } from '../utils/stream';
+import { logger } from '../utils/general';
 import WelcomeMessage from './WelcomeMessage';
 
 const RemoteVideos = React.memo(
@@ -25,6 +25,7 @@ const RemoteVideos = React.memo(
     redIndicators?: boolean;
   }) => {
     const vidRef = useRef<HTMLDivElement>(null);
+
     const [vidDims, setVidDims] = useState({
       width: '0px',
       height: '0px',
@@ -95,6 +96,37 @@ const RemoteVideos = React.memo(
       });
     };
 
+    const handlePictureInPicture = () => {
+      if ('pictureInPictureEnabled' in document) {
+        // @ts-ignore
+        if (document && document.pictureInPictureElement) {
+          // @ts-ignore
+          document.exitPictureInPicture().catch((e: string) => {
+            logger('Error exiting pip.' + e);
+          });
+        } else {
+          // @ts-ignore
+          switch (video?.webkitPresentationMode) {
+            case 'inline':
+              // @ts-ignore
+              video?.webkitSetPresentationMode('picture-in-picture');
+              break;
+            case 'picture-in-picture':
+              // @ts-ignore
+              video?.webkitSetPresentationMode('inline');
+              break;
+            default:
+              // @ts-ignore
+              video.requestPictureInPicture().catch((e: string) => {
+                logger('You must join a call to enter picture in picture');
+              });
+          }
+        }
+      } else {
+        logger('You must join a call to enter picture in picture');
+      }
+    };
+
     return (
       <div
         id="remote-vid-wrapper"
@@ -119,10 +151,9 @@ const RemoteVideos = React.memo(
               }}
             >
               <video
-                // id="remote-video"
+                id="remote-video"
                 className="w-full h-full relative z-0 overflow-hidden inline-block shadow-md"
-                //TODO: onDoubleClick={() => handlePictureInPicture(VC)}
-                //   src={remoteStreams.get(uuid)}
+                onDoubleClick={handlePictureInPicture}
                 ref={vid => {
                   if (vid) vid.srcObject = track as MediaProvider;
                 }}

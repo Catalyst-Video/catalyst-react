@@ -212,22 +212,17 @@ const VideoChat = ({
   const onPeerLeave = (uuid: string) => {
     try {
       logger('disconnected - UUID ' + uuid);
-      /* TODO:  let leaveSound = document.getElementById(
-        'leave-sound'
-      ) as HTMLAudioElement;
-       if (leaveSound) leaveSound?.play(); */
-      /* this?.remoteVidRef.current?.removeChild(
-        document.querySelectorAll(`[uuid="${uuid}"]`)[0]
-      ); 
-      ResizeWrapper();*/
     } catch (e) {
       logger(e);
     }
-    connected?.delete(uuid);
-    peerConnections?.get(uuid)?.close(); // necessary b/c otherwise the RTC connection isn't closed
-    peerConnections?.delete(uuid);
-    dataChannel?.delete(uuid);
-    // setNumPeers(peerConnections?.size);
+    connected.delete(uuid);
+    peerConnections.get(uuid)?.close(); // necessary b/c otherwise the RTC connection isn't closed
+    peerConnections.delete(uuid);
+    remoteStreams.delete(uuid);
+    dataChannel.delete(uuid);
+    setRemoteStreams(remoteStreams);
+    setPeerConnections(peerConnections);
+    setDataChannel(dataChannel);
     if (onRemovePeer) onRemovePeer();
   };
 
@@ -253,24 +248,6 @@ const VideoChat = ({
 
       // Add the local video stream to the peerConnection
       localStream?.getTracks().forEach((track: MediaStreamTrack) => {
-        /* TODO: Request 16:9 standard high definition (HD) video size
-        track
-          .applyConstraints({
-            width: 1920,
-            height: 1080,
-            aspectRatio: 1.777777778,
-          })
-          .then(() => {
-            peerConnections?
-              .get(uuid)
-              ?.addTrack(track, localStream as MediaStream);
-          })
-          .catch(err => {
-            logger(err);
-            peerConnections?
-              .get(uuid)
-              ?.addTrack(track, localStream as MediaStream);
-          }); */
         peerConnections?.get(uuid)?.addTrack(track, localStream);
       });
 
@@ -513,17 +490,6 @@ const VideoChat = ({
     )
       catalystRef.current.style.position = 'fixed';
 
-    /* TODO:  // Load and resize Event
-    window.addEventListener(
-      'load',
-      (e: Event) => {
-        ResizeWrapper();
-        window.onresize = ResizeWrapper;
-      },
-      false
-    ); */
-
-    // start call
     requestMediaStream();
 
     return () => {
@@ -531,11 +497,13 @@ const VideoChat = ({
       socket.disconnect();
       localStream?.getTracks().forEach(track => track.stop());
       peerConnections?.forEach(peer => peer.close());
+      setPeerConnections(new Map())
+      setRemoteStreams(new Map());
+      setDataChannel(new Map());
     };
   }, []);
 
   useEffect(() => {
-    // ResizeWrapper();
     setUnseenChats(0);
   }, [showChat]);
 
