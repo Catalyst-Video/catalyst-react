@@ -13,6 +13,7 @@ const RemoteVideos = React.memo(
     themeColor,
     fourThreeAspectRatioEnabled,
     redIndicators,
+    picInPic,
   }: {
     remoteStreams: Map<string, MediaStream>;
     peerConnections: Map<string, RTCPeerConnection>;
@@ -23,6 +24,7 @@ const RemoteVideos = React.memo(
     themeColor: string;
     fourThreeAspectRatioEnabled?: boolean;
     redIndicators?: boolean;
+    picInPic?: string;
   }) => {
     const vidRef = useRef<HTMLDivElement>(null);
 
@@ -96,7 +98,7 @@ const RemoteVideos = React.memo(
       });
     };
 
-    const handlePictureInPicture = () => {
+    const handlePictureInPicture = (video: HTMLVideoElement) => {
       if ('pictureInPictureEnabled' in document) {
         // @ts-ignore
         if (document && document.pictureInPictureElement) {
@@ -153,9 +155,13 @@ const RemoteVideos = React.memo(
               <video
                 id="remote-video"
                 className="w-full h-full relative z-0 overflow-hidden inline-block shadow-md"
-                onDoubleClick={handlePictureInPicture}
                 ref={vid => {
-                  if (vid) vid.srcObject = track as MediaProvider;
+                  if (vid) {
+                    vid.srcObject = track as MediaProvider;
+                    vid.addEventListener(picInPic ?? 'dblclick', () => {
+                      handlePictureInPicture(vid);
+                    });
+                  }
                 }}
                 key={idx}
                 autoPlay

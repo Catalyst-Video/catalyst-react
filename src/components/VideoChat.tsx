@@ -497,7 +497,7 @@ const VideoChat = ({
       socket.disconnect();
       localStream?.getTracks().forEach(track => track.stop());
       peerConnections?.forEach(peer => peer.close());
-      setPeerConnections(new Map())
+      setPeerConnections(new Map());
       setRemoteStreams(new Map());
       setDataChannel(new Map());
     };
@@ -587,6 +587,7 @@ const VideoChat = ({
               cstmWelcomeMsg={cstmWelcomeMsg}
               sessionKey={sessionKey}
               themeColor={themeColor}
+              picInPic={picInPic}
             />
 
             {!showChat && (
