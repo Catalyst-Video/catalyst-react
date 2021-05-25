@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { HeaderImg } from '.';
+import HeaderImg from './HeaderImg';
 import { logger } from '../utils/general';
 
 const PermsLoading = ({

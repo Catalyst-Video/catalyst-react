@@ -109,34 +109,12 @@ body {
   color: var(--themeColor);
 }
 
-
-/* display chat indicator when unread messages  */
-/* #catalyst .chat-indicator::before{
-  content: attr(aria-valuetext);
-  font-family: sans-serif;
-  background: var(--themeColor);
-  color: #fff;
-  font-size: 14px;
-  border-radius: 50%;
-  padding: 0.5px 12px;
-  position: absolute;
-  right: 0px;
-  top: -6px;
-  z-index: -1;
-  opacity: .9;
-  font-weight: 500;
-  font-style: normal;
-} */
-
-
-
 /* hide tooltips on mobile  */
 @media (hover: none) {
   #catalyst button:hover span {
     display: none !important;
   }
 }
-
 
 
 /* Hide video controls on mobile

@@ -1,10 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-
-// Other packages
 import io from 'socket.io-client';
 import '../utils/autolink.js';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import {
   DefaultSettings,
@@ -156,7 +152,7 @@ const VideoChat = ({
   };
 
   useEffect(() => {
-    if (localStream) {
+    if (localStream && remoteStreams.size < 1) {
       setLocalVideoText(disableLocalVidDrag ? '' : 'Drag Me');
       /* When a video stream is added to VideoChat, we need to store the local audio track, because the screen sharing MediaStream doesn't have audio by default, which is problematic for peer C who joins while another peer A/B is screen sharing (C won't receive A/Bs audio). */
       let localAudio = localStream.getAudioTracks()[0];
@@ -476,6 +472,48 @@ const VideoChat = ({
       setConnected(new Map(connected?.set(uuid, true)));
     }
   };
+
+  const switchInputDevices = () => {
+    logger('switchInputDevices');
+    let audioProp: boolean | { deviceId: string | undefined } = true;
+    let videoProp: boolean | { deviceId: string | undefined } = true;
+    audioProp = { deviceId: audioInput?.deviceId };
+    videoProp = { deviceId: vidInput?.deviceId };
+    navigator.mediaDevices
+      .getUserMedia({
+        audio: audioProp,
+        video: videoProp,
+      })
+      .then(stream => {
+        setLocalStream(stream);
+        let videoTrack = stream.getVideoTracks()[0];
+        let audioTrack = stream.getAudioTracks()[0];
+        peerConnections.forEach(pc => {
+          //  video
+          let vidSender = pc.getSenders().find(s => {
+            return s?.track?.kind == videoTrack.kind;
+          });
+          if (!videoEnabled) videoTrack.enabled = false;
+          if (vidSender) vidSender.replaceTrack(videoTrack);
+          // audio
+          let audSender = pc.getSenders().find(s => {
+            return s?.track?.kind == audioTrack.kind;
+          });
+          if (!audioEnabled) audioTrack.enabled = false;
+          if (audSender) audSender.replaceTrack(audioTrack);
+        });
+      })
+      .catch(error => {
+        logger(error);
+        logger(
+          'Failed to get local webcam video, check webcam privacy settings'
+        );
+      });
+  };
+
+  useEffect(() => {
+    if (localStream && remoteStreams.size >= 1) switchInputDevices();
+  }, [audioInput, vidInput]);
 
   useEffect(() => {
     if (

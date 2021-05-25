@@ -6,7 +6,6 @@ import RemoteVideos from './RemoteVideos';
 import LocalVideo from './LocalVideo';
 import PermsLoading from './PermsLoading';
 import SetupRoom from './SetupRoom';
-import VideoChat from './VideoChat';
 import HeaderImg from './HeaderImg';
 import WelcomeMessage from './WelcomeMessage';
 import DeviceSelector from './DeviceSelector';
@@ -19,7 +18,6 @@ export {
   RemoteVideos,
   LocalVideo,
   PermsLoading,
-  VideoChat,
   SetupRoom,
   HeaderImg,
   WelcomeMessage,

@@ -8,8 +8,9 @@ import './styles/tailwind.output.css';
 // Types
 import { DefaultSettings, HiddenSettings } from './typings/interfaces';
 import DetectRTC from 'detectrtc';
-import { PermsLoading, SetupRoom, VideoChat } from './components';
+import { PermsLoading, SetupRoom } from './components';
 import { setThemeColor } from './utils/ui';
+import VideoChat from './components/VideoChat';
 
 const CatalystChat = ({
   sessionKey,

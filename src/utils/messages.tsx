@@ -1,6 +1,3 @@
-import React from 'react';
-import { isConnected } from './general';
-
 export function displayMsg(
   msg: string,
   themeColor: string,
