@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { WelcomeMessage } from '.';
 import { logger } from '../utils/general';
-import WelcomeMessage from './WelcomeMessage';
 
 const RemoteVideos = React.memo(
   ({

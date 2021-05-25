@@ -7,10 +7,8 @@ import './styles/tailwind.output.css';
 
 // Types
 import { DefaultSettings, HiddenSettings } from './typings/interfaces';
-import VideoChat from './components/VideoChat';
-import SetupRoomComponent from './components/SetupRoom';
 import DetectRTC from 'detectrtc';
-import PermsLoadingComponent from './components/PermsLoading';
+import { PermsLoading, SetupRoom, VideoChat } from './components';
 import { setThemeColor } from './utils/ui';
 
 const CatalystChat = ({
@@ -38,6 +36,7 @@ const CatalystChat = ({
   disableSetupRoom,
   disableGradient,
   redIndicators,
+  fourThreeAspectRatioEnabled,
 }: {
   sessionKey: string;
   uniqueAppId: string;
@@ -63,6 +62,7 @@ const CatalystChat = ({
   disableSetupRoom?: boolean;
   disableGradient?: boolean;
   redIndicators?: boolean;
+  fourThreeAspectRatioEnabled?: boolean;
 }) => {
   const [hasPerms, setPermissions] = useState(false);
   const [isUserReady, setUserReady] = useState(disableSetupRoom ?? false);
@@ -128,6 +128,7 @@ const CatalystChat = ({
         setAudioInput={setAudioInput}
         setVidInput={setVidInput}
         redIndicators={redIndicators}
+        fourThreeAspectRatioEnabled={fourThreeAspectRatioEnabled}
       />
     );
   } else if (
@@ -138,7 +139,7 @@ const CatalystChat = ({
     !disableSetupRoom
   ) {
     return (
-      <SetupRoomComponent
+      <SetupRoom
         sessionKey={sessionKey}
         setUserReady={setUserReady}
         audioEnabled={audioEnabled}
@@ -155,7 +156,7 @@ const CatalystChat = ({
     );
   } else {
     return (
-      <PermsLoadingComponent
+      <PermsLoading
         hasPerms={hasPerms}
         setPermissions={setPermissions}
         disableGradient={disableGradient}

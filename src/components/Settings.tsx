@@ -10,8 +10,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
+import { DeviceSelector } from '.';
 import { sendToAllDataChannels } from '../utils/general';
-import DeviceSelector from './DeviceSelector';
 
 // TODO: changing input sources actually changes output
 const Settings = ({

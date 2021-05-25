@@ -10,7 +10,7 @@ import { logger } from '../utils/general';
 import DeviceSelector from './DeviceSelector';
 import HeaderImg from './HeaderImg';
 
-const SetupRoomComponent = ({
+const SetupRoom = ({
   sessionKey,
   setUserReady,
   audioEnabled,
@@ -214,7 +214,7 @@ const SetupRoomComponent = ({
     </div>
   );
 };
-export default SetupRoomComponent;
+export default SetupRoom;
 
 const AudioAnalyser = ({ audio }: { audio?: MediaStream }) => {
   const [audioData, setAudioData] = useState(new Uint8Array(0));

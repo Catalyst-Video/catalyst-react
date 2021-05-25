@@ -18,13 +18,15 @@ import {
   setStreamColor,
 } from '../utils/ui';
 import { logger, sendToAllDataChannels } from '../utils/general';
-import Header from './Header';
-import Chat from './Chat';
-import Settings from './Settings';
-import Toolbar from './Toolbar';
-import RemoteVideos from './RemoteVideos';
 import { handlereceiveMessage } from '../utils/messages';
-import LocalVideo from './LocalVideo.js';
+import {
+  Chat,
+  Header,
+  LocalVideo,
+  RemoteVideos,
+  Settings,
+  Toolbar,
+} from './index.js';
 
 const VideoChat = ({
   sessionKey,
@@ -58,6 +60,7 @@ const VideoChat = ({
   setVidInput,
   themeColor,
   redIndicators,
+  fourThreeAspectRatioEnabled,
 }: {
   sessionKey: string;
   uniqueAppId: string;
@@ -90,6 +93,7 @@ const VideoChat = ({
   setVidInput: Function;
   themeColor: string;
   redIndicators?: boolean;
+  fourThreeAspectRatioEnabled?: boolean;
 }) => {
   const fsHandle = useFullScreenHandle();
   const [sharing, setSharing] = useState(false);
@@ -555,6 +559,7 @@ const VideoChat = ({
             />
 
             <RemoteVideos
+              fourThreeAspectRatioEnabled={fourThreeAspectRatioEnabled}
               peerConnections={peerConnections}
               remoteStreams={remoteStreams}
               showDotColors={showDotColors}

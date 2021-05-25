@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { HeaderImg } from '.';
 import { logger } from '../utils/general';
-import HeaderImg from './HeaderImg';
 
-const PermsLoadingComponent = ({
+const PermsLoading = ({
   hasPerms,
   setPermissions,
 
@@ -172,4 +172,4 @@ const PermsLoadingComponent = ({
     </>
   );
 };
-export default PermsLoadingComponent;
+export default PermsLoading;
