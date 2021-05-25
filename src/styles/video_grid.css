@@ -1,3 +1,17 @@
+/* .vid-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(var(200px), 1fr));
+  box-sizing: border-box;
+}
+
+.vid-item {
+  background-color: gainsboro;
+  aspect-ratio: var(16/9);
+  width: 100%; */
+
+    
+    
     /* #remote-vid-wrapper {
         display: flex;
         align-content: center;

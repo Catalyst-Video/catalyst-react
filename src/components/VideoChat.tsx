@@ -514,7 +514,7 @@ const VideoChat = ({
     )
       catalystRef.current.style.position = 'fixed';
 
-    // Load and resize Event
+    /* TODO:  // Load and resize Event
     window.addEventListener(
       'load',
       (e: Event) => {
@@ -522,7 +522,7 @@ const VideoChat = ({
         window.onresize = ResizeWrapper;
       },
       false
-    );
+    ); */
 
     // start call
     requestMediaStream();
