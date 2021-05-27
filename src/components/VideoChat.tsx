@@ -153,10 +153,19 @@ const VideoChat = ({
 
   useEffect(() => {
     if (localStream && remoteStreams.size < 1) {
-      setLocalVideoText(disableLocalVidDrag ? '' : 'Drag Me');
+      // TODO: setLocalVideoText(disableLocalVidDrag ? '' : 'Drag Me');
+      setLocalVideoText('');
       /* When a video stream is added to VideoChat, we need to store the local audio track, because the screen sharing MediaStream doesn't have audio by default, which is problematic for peer C who joins while another peer A/B is screen sharing (C won't receive A/Bs audio). */
-      let localAudio = localStream.getAudioTracks()[0];
-      setLocalAudio(localAudio);
+      let audio = localStream.getAudioTracks()[0];
+      if (!audioEnabled) audio.enabled = false;
+      setLocalAudio(audio);
+
+      if (!videoEnabled) {
+        setLocalVideoText('Video Paused');
+        localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
+          track.enabled = false;
+        });
+      }
       // Join the chat room
       socket.emit('join', uniqueAppId + sessionKey, () => {
         /*TODO: border/dot colors

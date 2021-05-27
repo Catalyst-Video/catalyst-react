@@ -121,7 +121,8 @@ export default function Toolbar({
         localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
           track.enabled = true;
         });
-        setLocalVideoText(disableLocalVidDrag ? '' : 'Drag Me');
+        // TODO: setLocalVideoText(disableLocalVidDrag ? '' : 'Drag Me');
+        setLocalVideoText('');
       }
       setLocalStream(localStream);
     }
@@ -331,17 +332,6 @@ export default function Toolbar({
               } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
               id="share-button"
               onClick={() => {
-                // if (!videoEnabled) {
-                //   handlePauseVideo(
-                //     videoEnabled,
-                //     setVideo,
-                //     setLocalVideoText,
-                //     setLocalStream,
-                //     dataChannel,
-                //     localStream,
-                //     disableLocalVidDrag
-                //   );
-                // }
                 handleSharing(
                   sharing,
                   setSharing,
