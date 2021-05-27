@@ -164,7 +164,7 @@ const Settings = ({
                       className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
                         !audioEnabled
                           ? 'bg-red-50 text-red-500'
-                          : 'dark:text-gray-100 dark:bg-gray-500'
+                          : 'dark:text-gray-100 dark:bg-gray-700'
                       }`}
                     >
                       <FontAwesomeIcon
@@ -201,7 +201,7 @@ const Settings = ({
                       className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
                         !videoEnabled
                           ? 'bg-red-50 text-red-500'
-                          : 'dark:text-gray-100 dark:bg-gray-500'
+                          : 'dark:text-gray-100 dark:bg-gray-700'
                       }`}
                     >
                       <FontAwesomeIcon
