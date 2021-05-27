@@ -19,7 +19,9 @@ const LocalVideo = React.memo(
       <>
         {localStream && (
           <Draggable
-            defaultPosition={{ x: 30, y: 150 }}
+            defaultPosition={
+              disableLocalVidDrag ? { x: 5, y: 35 } : { x: 30, y: 150 }
+            }
             bounds="parent"
             disabled={disableLocalVidDrag ?? false}
           >

@@ -141,6 +141,7 @@ const RemoteVideos = React.memo(
             sessionKey={sessionKey}
           />
         )}
+
         {Array.from(remoteStreams.entries(), ([uuid, track], idx) => {
           return (
             <div
@@ -150,6 +151,7 @@ const RemoteVideos = React.memo(
                 width: vidDims.width,
                 height: vidDims.height,
                 margin: vidDims.margin,
+                maxHeight: vidDims.height,
               }}
             >
               <video

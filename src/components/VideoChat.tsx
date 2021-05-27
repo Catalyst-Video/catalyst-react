@@ -657,6 +657,9 @@ const VideoChat = ({
               setLocalAudio={setLocalAudio}
               setLocalStream={setLocalStream}
               dataChannel={dataChannel}
+              switchInputDevices={switchInputDevices}
+              connected={connected}
+              peerConnections={peerConnections}
             />
           </div>
         </FullScreen>
