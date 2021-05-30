@@ -1,5 +1,4 @@
 import React from 'react';
-import { VideoChatData } from '../typings/interfaces';
 
 export function setThemeColor(color: string): void {
   var themeColor: string;
@@ -39,7 +38,7 @@ export function setThemeColor(color: string): void {
   style.sheet?.insertRule(`:root { --themeColor: ${themeColor}}`);
 }
 
-export function uuidToHue(uuid: string, VC: VideoChatData): number {
+export function uuidToHue(uuid: string, VC): number {
   // Using uuid to generate random, unique pastel color
   var hash = 0;
   for (var i = 0; i < uuid.length; i++) {
@@ -78,7 +77,7 @@ export function hueToColor(hue: string): string {
 
 export function setStreamColor(
   uuid: string,
-  VC: VideoChatData,
+  VC,
   showDotColors: boolean,
   showBorderColors: boolean
 ): void {

@@ -1,7 +1,8 @@
 export function displayMsg(
   msg: string,
-  themeColor: string,
-  isOwnMessage: boolean
+  isOwnMessage: boolean,
+  themeColor?: string,
+  name?: string
 ): void {
   if (msg.length > 0)
     if (isOwnMessage)
@@ -24,8 +25,8 @@ export function displayMsg(
         );
 }
 
-export function handlereceiveMessage(msg: string, color?: string): void {
-  displayMsg(msg, color ? color : 'var(--themeColor)', false);
+export function handlereceiveMessage(msg: string, name?: string): void {
+  displayMsg(msg, false, undefined, name);
   document
     .getElementById('chat-end')
     ?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });

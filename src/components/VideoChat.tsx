@@ -7,14 +7,9 @@ import {
   HiddenSettings,
   TwilioToken,
 } from '../typings/interfaces';
-import {
-  hueToColor,
-  setMutedIndicator,
-  setPausedIndicator,
-  setStreamColor,
-} from '../utils/ui';
+import { setMutedIndicator, setPausedIndicator } from '../utils/ui';
 import { logger, sendToAllDataChannels } from '../utils/general';
-import { handlereceiveMessage } from '../utils/messages';
+// import { handlereceiveMessage } from '../utils/messages';
 import {
   Chat,
   Header,
@@ -39,8 +34,7 @@ const VideoChat = ({
   onReceiveArbitraryData,
   cstmWelcomeMsg,
   cstmOptionBtns,
-  showDotColors,
-  showBorderColors,
+  name,
   autoFade,
   alwaysBanner,
   dark,
@@ -73,8 +67,7 @@ const VideoChat = ({
   onReceiveArbitraryData?: Function;
   cstmWelcomeMsg?: JSX.Element | string;
   cstmOptionBtns?: JSX.Element[];
-  showDotColors?: boolean;
-  showBorderColors?: boolean;
+  name?: string;
   alwaysBanner?: boolean;
   dark?: boolean;
   setDark?: Function;
@@ -98,7 +91,10 @@ const VideoChat = ({
   const [showChat, setShowChat] = useState<boolean>(
     defaults?.showChatArea ?? false
   );
-  const [peerColors, setPeerColors] = useState<Map<string, number>>(new Map());
+  // uuid, name, msg
+  const [chatMessages, setChatMessages] = useState<[string, string, string][]>(
+    []
+  );
 
   // video chat data
   const [localStream, setLocalStream] = useState<MediaStream>();
@@ -112,6 +108,7 @@ const VideoChat = ({
   const [dataChannel, setDataChannel] = useState<Map<string, RTCDataChannel>>(
     new Map()
   );
+  const [peerNames, setPeerNames] = useState<Map<string, string>>(new Map());
   const [connected, setConnected] = useState<Map<string, boolean>>(new Map());
   const [localICECandidates, setLocalICECandidates] = useState<
     Record<string, RTCIceCandidate[]>
@@ -168,22 +165,6 @@ const VideoChat = ({
       }
       // Join the chat room
       socket.emit('join', uniqueAppId + sessionKey, () => {
-        /*TODO: border/dot colors
-       if (showBorderColors) {
-        localColor = hueToColor(
-          uuidToHue(socket.id, this).toString()
-        );
-        if (localVidRef.current)
-          localVidRef.current.style.border = `2px solid ${localColor}`;
-      } 
-      
-      if (showDotColors) {
-        let localIndicator = document.getElementById(
-          'local-indicator'
-        ) as HTMLDivElement;
-        localIndicator.style.background = localColor;
-      }
-      */
         logger('joined');
       });
       // Add listeners to the websocket
@@ -263,19 +244,19 @@ const VideoChat = ({
           )
         )
       );
-      // Handle different dataChannel? types: First 4 chars represent data type
-      if (dataChannel)
+      // Handle different dataChannel types: First 4 chars represent data type
+      if (dataChannel) {
         dataChannel.get(uuid)!.onmessage = (e: MessageEvent) => {
           const dataId = e.data.substring(0, 4);
           const msg = e.data.slice(4);
           switch (dataId) {
             case 'mes:':
-              if (showBorderColors || showDotColors)
-                handlereceiveMessage(
-                  msg,
-                  hueToColor(peerColors?.get(uuid)?.toString() ?? '')
-                );
-              else handlereceiveMessage(msg);
+              console.log(peerNames);
+              // handlereceiveMessage(msg, peerNames?.get(uuid)?.toString() ?? '');
+              setChatMessages(chatMessages => [
+                ...chatMessages,
+                [uuid, peerNames.get(uuid) ?? '', msg],
+              ]);
               incrementUnseenChats();
               break;
             case 'mut:':
@@ -284,8 +265,8 @@ const VideoChat = ({
             case 'vid:':
               setPausedIndicator(uuid, msg);
               break;
-            case 'clr:' && (showBorderColors || showDotColors):
-              //  setStreamColor(uuid, msg, showDotColors, showBorderColors);
+            case 'nam:':
+              setPeerNames(new Map(peerNames.set(uuid, msg)));
               break;
             default:
               logger('Received arbitrary data: ' + e.data);
@@ -294,26 +275,31 @@ const VideoChat = ({
           }
         };
 
-      /* POST MESSAGING - handle arbitrary data in iFrames by forwarding post messaging from one peer to the other */
-      window.onmessage = (e: MessageEvent) => {
-        try {
-          if (
-            JSON.parse(e.data).type === 'arbitrary_data' &&
-            dataChannel &&
-            remoteStreams.size > 0
-          )
-            sendToAllDataChannels(e.data, dataChannel);
-        } catch (e) {
-          logger(e);
-        }
-      };
+        /* POST MESSAGING - handle arbitrary data in iFrames by forwarding post messaging from one peer to the other */
+        window.onmessage = (e: MessageEvent) => {
+          try {
+            if (
+              JSON.parse(e.data).type === 'arbitrary_data' &&
+              dataChannel &&
+              remoteStreams.size > 0
+            )
+              sendToAllDataChannels(e.data, dataChannel);
+          } catch (e) {
+            logger(e);
+          }
+        };
 
-      /* Called when dataChannel? is successfully opened - Set up callbacks for the connection generating iceCandidates or receiving the remote media stream. Wrapping callback functions to pass in the peer uuids. */
-      /* TODO: dataChannel?.get(uuid)!.onopen = () => {
-       logger('dataChannel? opened');
-       if (showBorderColors || showDotColors)
-         setStreamColor(uuid, this, showDotColors, showBorderColors);
-     }; */
+        /* Called when dataChannel? is successfully opened - Set up callbacks for the connection generating iceCandidates or receiving the remote media stream. Wrapping callback functions to pass in the peer uuids. */
+        dataChannel.get(uuid)!.onopen = e => {
+          logger('dataChannel opened');
+          // logger('uuid ' + uuid + 'msg' + e);
+          if (name) sendToAllDataChannels(`nam:${name}`, dataChannel);
+          if (!audioEnabled && remoteStreams.size > 0)
+            sendToAllDataChannels(`mut:true`, dataChannel);
+          if (!videoEnabled && remoteStreams.size > 0)
+            sendToAllDataChannels(`vid:true`, dataChannel);
+        };
+      }
       if (peerConnections?.get(uuid) !== undefined) {
         peerConnections.get(uuid)!.onicecandidate = (
           e: RTCPeerConnectionIceEvent
@@ -550,14 +536,6 @@ const VideoChat = ({
   }, [arbitraryData]);
 
   useEffect(() => {
-    setTimeout(() => {
-      if (dataChannel) {
-        if (!audioEnabled && remoteStreams.size > 0)
-          sendToAllDataChannels(`mut:true`, dataChannel);
-        if (!videoEnabled && remoteStreams.size > 0)
-          sendToAllDataChannels(`vid:true`, dataChannel);
-      }
-    }, 2000);
     if (!audioEnabled && localAudio) localAudio.enabled = false;
     if (!videoEnabled && localStream)
       localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
@@ -591,10 +569,12 @@ const VideoChat = ({
             themeColor={themeColor}
           />
           <Chat
+            localName={name ?? ''}
+            chatMessages={chatMessages}
+            setChatMessages={setChatMessages}
             showChat={showChat}
             setShowChat={setShowChat}
             dataChannel={dataChannel}
-            // localColor={localColor}
             themeColor={themeColor}
           />
           <div id="call-section" className="w-full h-full items-end">
@@ -609,9 +589,9 @@ const VideoChat = ({
               fourThreeAspectRatioEnabled={fourThreeAspectRatioEnabled}
               peerConnections={peerConnections}
               remoteStreams={remoteStreams}
-              showDotColors={showDotColors}
               disableRedIndicators={disableRedIndicators}
               showChat={showChat}
+              peerNames={peerNames}
               cstmWelcomeMsg={cstmWelcomeMsg}
               sessionKey={sessionKey}
               themeColor={themeColor}

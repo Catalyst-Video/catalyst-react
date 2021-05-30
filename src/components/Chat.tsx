@@ -1,28 +1,31 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faFileUpload,
   faPaperPlane,
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
-import { sendToAllDataChannels } from '../utils/general';
-import { displayMsg } from '../utils/messages';
+import { logger, sendToAllDataChannels } from '../utils/general';
+// import { displayMsg } from '../utils/messages';
 
 const ChatComponent = ({
   showChat,
   setShowChat,
   dataChannel,
-  // localColor,
+  localName,
   themeColor,
+  chatMessages,
+  setChatMessages,
 }: {
   showChat: boolean;
   setShowChat: Function;
   dataChannel: Map<string, RTCDataChannel>;
-  // localColor: string;
+  localName: string;
+  chatMessages: [string, string, string][];
+  setChatMessages: Function;
   themeColor: string;
 }) => {
   const textInputRef = useRef<HTMLTextAreaElement>(null);
-  const textSendRef = useRef<HTMLSpanElement>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const handleSendMsg = (msg: string) => {
@@ -33,7 +36,10 @@ const ChatComponent = ({
       msg = msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
       msg = msg.autolink();
       sendToAllDataChannels('mes:' + msg, dataChannel);
-      displayMsg(msg, themeColor, true);
+      // displayMsg(msg, true);
+      // console.log(localName, msg);
+      setChatMessages(chatMessages => [...chatMessages, ['', localName, msg]]);
+      // logger(chatMessages.toString());
       // displayMsg(msg, localColor ?? 'var(--themeColor)', true);
       chatEndRef.current?.scrollIntoView({
         behavior: 'smooth',
@@ -51,10 +57,10 @@ const ChatComponent = ({
     }
   });
 
-  textSendRef.current?.addEventListener('click', (e: any) => {
-    e.preventDefault();
-    handleSendMsg(textInputRef.current?.value ?? '');
-  });
+  // textSendRef.current?.addEventListener('click', (e: any) => {
+  //   e.preventDefault();
+  //   handleSendMsg(textInputRef.current?.value ?? '');
+  // });
 
   return (
     <div
@@ -87,10 +93,49 @@ const ChatComponent = ({
         className="flex flex-1 relative flex-row justify-end text-sm overflow-y-auto"
         style={{ height: '88%' }}
       >
-        <div
-          id="chat-messages"
-          className="w-full overflow-x-none pt-10 pb-5"
-        ></div>
+        <div id="chat-messages" className="w-full overflow-x-none pt-10 pb-5">
+          {chatMessages.map(([uuid, name, msg], idx) => {
+            // console.log('in loop ', name, msg, localName);
+            if (uuid.length <= 0)
+              return (
+                <div
+                  className="sent-message relative flex flex-col items-start content-end p-1 pr-2 pl-20 fade-in-bottom"
+                  key={idx}
+                >
+                  {(idx == 0 || chatMessages[idx - 1][0] !== uuid) && (
+                    <span className="text-black font-semibold text-xs ml-auto p-1 not-selectable">
+                      {name}
+                    </span>
+                  )}
+                  <div
+                    className={`bg-${themeColor}-500 text-white relative rounded-tl-2xl rounded-tr-2xl rounded-br-sm rounded-bl-2xl  ml-auto p-2`}
+                  >
+                    <div className="message break-all px-2 py-1 text-xs">
+                      {msg}
+                    </div>
+                  </div>
+                </div>
+              );
+            else
+              return (
+                <div
+                  className="received-message relative flex flex-col items-start content-end p-1 pl-2 fade-in-bottom"
+                  key={idx}
+                >
+                  {(idx == 0 || chatMessages[idx - 1][0] !== uuid) && (
+                    <span className="text-black font-semibold text-xs p-1 not-selectable">
+                      {name}
+                    </span>
+                  )}
+                  <div className="bg-gray-100 text-black relative flex items-center justify-center rounded-tl-2xl rounded-tr-2xl rounded-br-2xl rounded-bl-sm p-2">
+                    <div className="message break-all px-2 py-1 text-xs">
+                      {msg}
+                    </div>
+                  </div>
+                </div>
+              );
+          })}
+        </div>
         <div ref={chatEndRef} id="chat-end" className="invisible"></div>
       </div>
       <div
@@ -103,9 +148,13 @@ const ChatComponent = ({
           className="text-sm border-0 outline-none w-full bg-white dark:bg-gray-700 dark:text-white resize-none"
           placeholder="Type your message"
           rows={2}
+          // value={textValue}
+          // onChange={() => setTextValue()}
         ></textarea>
         <span
-          ref={textSendRef}
+          onClick={() => {
+            handleSendMsg(textInputRef.current?.value ?? '');
+          }}
           className={`bg-${themeColor}-500 ml-2 p-2 cursor-pointer rounded-xl text-white`}
         >
           <FontAwesomeIcon

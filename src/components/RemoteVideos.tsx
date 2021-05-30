@@ -6,7 +6,7 @@ const RemoteVideos = React.memo(
   ({
     peerConnections,
     remoteStreams,
-    showDotColors,
+    peerNames,
     showChat,
     cstmWelcomeMsg,
     sessionKey,
@@ -17,7 +17,7 @@ const RemoteVideos = React.memo(
   }: {
     remoteStreams: Map<string, MediaStream>;
     peerConnections: Map<string, RTCPeerConnection>;
-    showDotColors?: boolean;
+    peerNames?: Map<string, string>;
     showChat: boolean;
     cstmWelcomeMsg?: string | JSX.Element;
     sessionKey: string;
@@ -160,9 +160,10 @@ const RemoteVideos = React.memo(
                 ref={vid => {
                   if (vid) {
                     vid.srcObject = track as MediaProvider;
-                    vid.addEventListener(picInPic ?? 'dblclick', () => {
-                      handlePictureInPicture(vid);
-                    });
+                    if (picInPic && picInPic.length > 0)
+                      vid.addEventListener(picInPic ?? 'dblclick', () => {
+                        handlePictureInPicture(vid);
+                      });
                   }
                 }}
                 key={idx}
@@ -225,9 +226,20 @@ const RemoteVideos = React.memo(
                   </svg>
                 </i>
               </div>
-              {showDotColors && (
-                <div id="indicator" indicator-uuid={uuid}></div>
-              )}
+              <div
+                id="remote-name"
+                className="absolute bottom-2 right-3 flex justify-around items-center z-20 text-md rounded-full"
+              >
+                {peerNames && (
+                  <div
+                    id="name"
+                    indicator-uuid={uuid}
+                    className="text-white font-semibold text-xs"
+                  >
+                    {peerNames.get(uuid)}
+                  </div>
+                )}
+              </div>
             </div>
           );
         })}

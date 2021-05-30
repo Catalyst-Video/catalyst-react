@@ -32,9 +32,8 @@ const CatalystChat = ({
   cstmWelcomeMsg,
   cstmOptionBtns,
   themeColor,
-  showDotColors,
-  showBorderColors,
   autoFade,
+  name,
   alwaysBanner,
   darkMode,
   disableLocalVidDrag,
@@ -49,6 +48,7 @@ const CatalystChat = ({
   defaults?: DefaultSettings;
   hidden?: HiddenSettings;
   picInPic?: string;
+  name?: string;
   onStartCall?: Function;
   onAddPeer?: Function;
   onRemovePeer?: Function;
@@ -58,8 +58,6 @@ const CatalystChat = ({
   cstmWelcomeMsg?: JSX.Element | string;
   cstmOptionBtns?: JSX.Element[];
   themeColor?: string;
-  showDotColors?: boolean;
-  showBorderColors?: boolean;
   autoFade?: number;
   alwaysBanner?: boolean;
   darkMode?: boolean;
@@ -116,13 +114,12 @@ const CatalystChat = ({
         onAddPeer={onAddPeer}
         onRemovePeer={onRemovePeer}
         onEndCall={onEndCall}
+        name={name}
         arbitraryData={arbitraryData}
         onReceiveArbitraryData={onReceiveArbitraryData}
         cstmWelcomeMsg={cstmWelcomeMsg}
         cstmOptionBtns={cstmOptionBtns}
         themeColor={themeColor ?? DEFAULT_THEMECOLOR}
-        showDotColors={showDotColors}
-        showBorderColors={showBorderColors}
         autoFade={autoFade ?? DEFAULT_AUTOFADE}
         alwaysBanner={alwaysBanner}
         disableLocalVidDrag={disableLocalVidDrag}
