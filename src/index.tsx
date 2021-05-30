@@ -7,10 +7,14 @@ import './styles/tailwind.output.css';
 
 // Types
 import { DefaultSettings, HiddenSettings } from './typings/interfaces';
-import DetectRTC from 'detectrtc';
 import { PermsLoading, SetupRoom } from './components';
 import { setThemeColor } from './utils/ui';
 import VideoChat from './components/VideoChat';
+import DetectRTC from 'detectrtc';
+
+const DEFAULT_SERVER_ADDRESS = 'https://server.catalyst.chat/';
+const DEFAULT_THEMECOLOR = 'blue';
+const DEFAULT_AUTOFADE = 600;
 
 const CatalystChat = ({
   sessionKey,
@@ -35,8 +39,8 @@ const CatalystChat = ({
   darkMode,
   disableLocalVidDrag,
   disableSetupRoom,
-  disableGradient,
-  redIndicators,
+  cstmBackground,
+  disableRedIndicators,
   fourThreeAspectRatioEnabled,
 }: {
   sessionKey: string;
@@ -61,16 +65,20 @@ const CatalystChat = ({
   darkMode?: boolean;
   disableLocalVidDrag?: boolean;
   disableSetupRoom?: boolean;
-  disableGradient?: boolean;
-  redIndicators?: boolean;
+  cstmBackground?: string;
+  disableRedIndicators?: boolean;
   fourThreeAspectRatioEnabled?: boolean;
 }) => {
   const [hasPerms, setPermissions] = useState(false);
   const [isUserReady, setUserReady] = useState(disableSetupRoom ?? false);
   const [dark, setDark] = useState(darkMode ?? false);
-  const [audioEnabled, setAudio] = useState<boolean>(defaults?.audioOn ?? true);
-  const [videoEnabled, setVideo] = useState<boolean>(defaults?.videoOn ?? true);
-  const [audioInput, setAudioInput] = useState<MediaDeviceInfo>();
+  const [audioEnabled, setAudioEnabled] = useState<boolean>(
+    defaults?.audioOn ?? true
+  );
+  const [videoEnabled, setVideoEnabled] = useState<boolean>(
+    defaults?.videoOn ?? true
+  );
+  const [audInput, setAudInput] = useState<MediaDeviceInfo>();
   const [vidInput, setVidInput] = useState<MediaDeviceInfo>();
 
   useEffect(() => {
@@ -86,7 +94,7 @@ const CatalystChat = ({
   }, []);
 
   useEffect(() => {
-    setThemeColor(themeColor ?? 'blue');
+    setThemeColor(themeColor ?? DEFAULT_THEMECOLOR);
   }, [themeColor]);
 
   if (
@@ -100,7 +108,7 @@ const CatalystChat = ({
       <VideoChat
         sessionKey={sessionKey}
         uniqueAppId={uniqueAppId}
-        cstmServerAddress={cstmServerAddress ?? 'https://server.catalyst.chat/'}
+        cstmServerAddress={cstmServerAddress ?? DEFAULT_SERVER_ADDRESS}
         defaults={defaults}
         hidden={hidden}
         picInPic={picInPic}
@@ -112,23 +120,23 @@ const CatalystChat = ({
         onReceiveArbitraryData={onReceiveArbitraryData}
         cstmWelcomeMsg={cstmWelcomeMsg}
         cstmOptionBtns={cstmOptionBtns}
-        themeColor={themeColor ?? 'blue'}
+        themeColor={themeColor ?? DEFAULT_THEMECOLOR}
         showDotColors={showDotColors}
         showBorderColors={showBorderColors}
-        autoFade={autoFade ?? 600}
+        autoFade={autoFade ?? DEFAULT_AUTOFADE}
         alwaysBanner={alwaysBanner}
         disableLocalVidDrag={disableLocalVidDrag}
         dark={dark}
         setDark={setDark}
         audioEnabled={audioEnabled}
-        setAudio={setAudio}
+        setAudioEnabled={setAudioEnabled}
         videoEnabled={videoEnabled}
-        setVideo={setVideo}
-        audioInput={audioInput}
+        setVideoEnabled={setVideoEnabled}
+        audInput={audInput}
         vidInput={vidInput}
-        setAudioInput={setAudioInput}
+        setAudInput={setAudInput}
         setVidInput={setVidInput}
-        redIndicators={redIndicators}
+        disableRedIndicators={disableRedIndicators}
         fourThreeAspectRatioEnabled={fourThreeAspectRatioEnabled}
       />
     );
@@ -144,15 +152,15 @@ const CatalystChat = ({
         sessionKey={sessionKey}
         setUserReady={setUserReady}
         audioEnabled={audioEnabled}
-        setAudio={setAudio}
+        setAudioEnabled={setAudioEnabled}
         videoEnabled={videoEnabled}
-        setVideo={setVideo}
+        setVideoEnabled={setVideoEnabled}
         themeColor={themeColor ?? 'blue'}
-        audioInput={audioInput}
+        audInput={audInput}
         vidInput={vidInput}
-        setAudioInput={setAudioInput}
+        setAudInput={setAudInput}
         setVidInput={setVidInput}
-        disableGradient={disableGradient}
+        cstmBackground={cstmBackground}
       />
     );
   } else {
@@ -160,7 +168,7 @@ const CatalystChat = ({
       <PermsLoading
         hasPerms={hasPerms}
         setPermissions={setPermissions}
-        disableGradient={disableGradient}
+        cstmBackground={cstmBackground}
         themeColor={themeColor ?? 'blue'}
         browserSupported={
           (DetectRTC.isWebRTCSupported &&

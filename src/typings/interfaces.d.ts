@@ -1,3 +1,90 @@
+export interface DefaultSettings {
+  audioOn?: boolean;
+  videoOn?: boolean;
+  showChatArea?: boolean;
+}
+
+export interface HiddenSettings {
+  mute?: boolean;
+  pausevideo?: boolean;
+  fullscreen?: boolean;
+  screenshare?: boolean;
+  chat?: boolean;
+  darkmode?: boolean;
+  endcall?: boolean;
+}
+
+export interface TwilioToken {
+  accountSid: string;
+  dateCreated: string;
+  dateUpdated: string;
+  iceServers: RTCIceServer[];
+  password: string;
+  ttl: number;
+  username: string;
+}
+
+declare global {
+  interface String {
+    autolink(): string;
+  }
+}
+
+/* 
+
+export interface WebRTCPermissions {
+  hasWebcam: boolean;
+  hasMicrophone: boolean;
+  hasSpeakers: boolean;
+  isScreenCapturingSupported: boolean;
+  isSctpDataChannelsSupported: boolean;
+  isRtpDataChannelsSupported: boolean;
+  isAudioContextSupported: boolean;
+  isWebRTCSupported: boolean;
+  isDesktopCapturingSupported: boolean;
+  isMobileDevice: boolean;
+
+  isWebSocketsSupported: boolean;
+  isWebSocketsBlocked: boolean;
+
+  isWebsiteHasWebcamPermissions: boolean;
+  isWebsiteHasMicrophonePermissions: boolean;
+
+  audInputDevices; // microphones
+  audioOutputDevices; // speakers
+  videoInputDevices; // cameras
+
+  osName: string;
+  osVersion: string;
+
+  browser: {
+    name: string;
+    version: string | number;
+    isChrome?: boolean | undefined;
+    isFirefox?: boolean | undefined;
+    isOpera?: boolean | undefined;
+    isIE?: boolean | undefined;
+    isSafari?: boolean | undefined;
+    isEdge?: boolean | undefined;
+    isPrivateBrowsing: boolean;
+  };
+
+  isCanvasSupportsStreamCapturing: boolean;
+  isVideoSupportsStreamCapturing: boolean;
+}
+
+
+
+
+
+
+
+export enum HeaderType {
+  Logo,
+  Banner,
+  Responsive,
+}
+
 export interface VideoChatData {
   sessionId: string;
   dataChannel: Map<string, RTCDataChannel>;
@@ -17,7 +104,7 @@ export interface VideoChatData {
   onRemovePeer: Function | undefined;
   handleArbitraryData: Function | undefined;
   startedCall: boolean;
-  audioInput: MediaDeviceInfo | undefined;
+  audInput: MediaDeviceInfo | undefined;
   vidInput: MediaDeviceInfo | undefined;
 
   requestMediaStream(e?: Event): void;
@@ -41,93 +128,4 @@ export interface VideoChatData {
 
   onCandidate(candidate: RTCIceCandidate, uuid: string): void;
   onIceCandidate(e: RTCPeerConnectionIceEvent, uuid: string): void;
-}
-
-export interface DefaultSettings {
-  audioOn?: boolean;
-  videoOn?: boolean;
-  showChatArea?: boolean;
-  showToastArea?: boolean;
-  // darkMode?: boolean
-}
-
-export interface HiddenSettings {
-  mute?: boolean;
-  pausevideo?: boolean;
-  fullscreen?: boolean;
-  screenshare?: boolean;
-  chat?: boolean;
-  darkmode?: boolean;
-  endcall?: boolean;
-}
-
-export interface TwilioToken {
-  accountSid: string;
-  dateCreated: string;
-  dateUpdated: string;
-  iceServers: RTCIceServer[];
-  password: string;
-  ttl: number;
-  username: string;
-}
-
-export interface WebRTCPermissions {
-  hasWebcam: boolean;
-  hasMicrophone: boolean;
-  hasSpeakers: boolean;
-  isScreenCapturingSupported: boolean;
-  isSctpDataChannelsSupported: boolean;
-  isRtpDataChannelsSupported: boolean;
-  isAudioContextSupported: boolean;
-  isWebRTCSupported: boolean;
-  isDesktopCapturingSupported: boolean;
-  isMobileDevice: boolean;
-
-  isWebSocketsSupported: boolean;
-  isWebSocketsBlocked: boolean;
-
-  isWebsiteHasWebcamPermissions: boolean;
-  isWebsiteHasMicrophonePermissions: boolean;
-
-  audioInputDevices; // microphones
-  audioOutputDevices; // speakers
-  videoInputDevices; // cameras
-
-  osName: string;
-  osVersion: string;
-
-  browser: {
-    name: string;
-    version: string | number;
-    isChrome?: boolean | undefined;
-    isFirefox?: boolean | undefined;
-    isOpera?: boolean | undefined;
-    isIE?: boolean | undefined;
-    isSafari?: boolean | undefined;
-    isEdge?: boolean | undefined;
-    isPrivateBrowsing: boolean;
-  };
-
-  isCanvasSupportsStreamCapturing: boolean;
-  isVideoSupportsStreamCapturing: boolean;
-}
-
-export enum HeaderType {
-  Logo,
-  Banner,
-  Responsive,
-}
-
-declare global {
-  interface String {
-    autolink(): string;
-  }
-}
-
-// String.prototype.autolink = function(length: number) {
-//   let d = String(this);
-//   while (d.length < length) {
-//     d = '0' + d;
-//   }
-//   return d;
-// };
+} */

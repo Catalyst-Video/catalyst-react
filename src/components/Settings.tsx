@@ -17,12 +17,12 @@ import { sendToAllDataChannels } from '../utils/general';
 const Settings = ({
   themeColor,
   vidInput,
-  audioInput,
+  audInput,
   audioEnabled,
   videoEnabled,
-  setAudio,
-  setVideo,
-  setAudioInput,
+  setAudioEnabled,
+  setVideoEnabled,
+  setAudInput,
   setVidInput,
   dark,
   setDark,
@@ -36,13 +36,13 @@ const Settings = ({
 }: {
   themeColor: string;
   vidInput?: MediaDeviceInfo;
-  audioInput?: MediaDeviceInfo;
-  setAudioInput: Function;
+  audInput?: MediaDeviceInfo;
+  setAudInput: Function;
   setVidInput: Function;
   audioEnabled: boolean;
   videoEnabled: boolean;
-  setAudio: Function;
-  setVideo: Function;
+  setAudioEnabled: Function;
+  setVideoEnabled: Function;
   dark?: boolean;
   setDark?: Function;
   setLocalVideoText: Function;
@@ -56,12 +56,12 @@ const Settings = ({
   const [showSettings, setSettings] = useState(false);
 
   const handleMute = (
-    setAudio: Function,
+    setAudioEnabled: Function,
     setLocalAudio: Function,
     localAudio?: MediaStreamTrack,
     dataChannel?: Map<string, RTCDataChannel>
   ) => {
-    setAudio(audioEnabled => !audioEnabled);
+    setAudioEnabled(audioEnabled => !audioEnabled);
     if (localAudio && dataChannel) {
       sendToAllDataChannels(`mut:${localAudio.enabled}`, dataChannel);
       if (localAudio.enabled) localAudio.enabled = false;
@@ -72,14 +72,14 @@ const Settings = ({
 
   const handlePauseVideo = (
     videoEnabled: boolean,
-    setVideo: Function,
+    setVideoEnabled: Function,
     setLocalVideoText: Function,
     setLocalStream: Function,
     dataChannel?: Map<string, RTCDataChannel>,
     localStream?: MediaStream,
     disableLocalVidDrag?: boolean
   ) => {
-    setVideo(videoEnabled => !videoEnabled);
+    setVideoEnabled(videoEnabled => !videoEnabled);
     if (localStream && dataChannel) {
       sendToAllDataChannels(`vid:${videoEnabled}`, dataChannel);
       if (videoEnabled) {
@@ -155,7 +155,7 @@ const Settings = ({
                     <button
                       onClick={() => {
                         handleMute(
-                          setAudio,
+                          setAudioEnabled,
                           setLocalAudio,
                           localAudio,
                           dataChannel
@@ -174,9 +174,9 @@ const Settings = ({
                       />
                     </button>
                     <DeviceSelector
-                      device={audioInput}
-                      setDevice={setAudioInput}
-                      type="audioinput"
+                      device={audInput}
+                      setDevice={setAudInput}
+                      type="audInput"
                       defaultText="Microphone"
                     />
                     <span
@@ -190,7 +190,7 @@ const Settings = ({
                       onClick={() => {
                         handlePauseVideo(
                           videoEnabled,
-                          setVideo,
+                          setVideoEnabled,
                           setLocalVideoText,
                           setLocalStream,
                           dataChannel,

@@ -47,7 +47,7 @@ const WrapperComp = ({
     <CatalystChat
       sessionKey={sessionKey}
       uniqueAppId="demo1"
-      disableSetupRoom={true}
+      // disableSetupRoom={true}
       defaults={{
         audioOn: false,
         videoOn: false,
@@ -55,7 +55,7 @@ const WrapperComp = ({
         // showToastArea: false,
       }}
       // disableLocalVidDrag={true}
-      redIndicators={true}
+      // disableRedIndicators={false}
       // cstmWelcomeMsg="DISABLED"
       // alwaysBanner={true}
       // hidden={{ chat: true, mute: true }}

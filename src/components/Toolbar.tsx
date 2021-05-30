@@ -18,11 +18,11 @@ export default function Toolbar({
   toolbarRef,
   hidden,
   audioEnabled,
-  redIndicators,
+  disableRedIndicators,
   themeColor,
-  setAudio,
+  setAudioEnabled,
   videoEnabled,
-  setVideo,
+  setVideoEnabled,
   setLocalVideoText,
   disableLocalVidDrag,
   fsHandle,
@@ -46,11 +46,11 @@ export default function Toolbar({
   toolbarRef: React.RefObject<HTMLDivElement>;
   hidden?: HiddenSettings;
   audioEnabled: boolean;
-  redIndicators?: boolean;
+  disableRedIndicators?: boolean;
   themeColor: string;
-  setAudio: Function;
+  setAudioEnabled: Function;
   videoEnabled: boolean;
-  setVideo: Function;
+  setVideoEnabled: Function;
   setLocalVideoText: React.Dispatch<React.SetStateAction<string>>;
   disableLocalVidDrag?: boolean;
   fsHandle;
@@ -72,13 +72,13 @@ export default function Toolbar({
   peerConnections: Map<string, RTCPeerConnection>;
 }) {
   const handleMute = (
-    setAudio: Function,
+    setAudioEnabled: Function,
     setLocalAudio: Function,
     localAudio?: MediaStreamTrack,
     dataChannel?: Map<string, RTCDataChannel>
   ) => {
     // console.log(localStream?.getAudioTracks(), audioEnabled);
-    setAudio(audioEnabled => !audioEnabled);
+    setAudioEnabled(audioEnabled => !audioEnabled);
     if (localAudio && dataChannel) {
       sendToAllDataChannels(`mut:${localAudio.enabled}`, dataChannel);
       if (localAudio.enabled) {
@@ -99,14 +99,14 @@ export default function Toolbar({
 
   const handlePauseVideo = (
     videoEnabled: boolean,
-    setVideo: Function,
+    setVideoEnabled: Function,
     setLocalVideoText: Function,
     setLocalStream: Function,
     dataChannel?: Map<string, RTCDataChannel>,
     localStream?: MediaStream,
     disableLocalVidDrag?: boolean
   ) => {
-    setVideo(videoEnabled => !videoEnabled);
+    setVideoEnabled(videoEnabled => !videoEnabled);
     if (localStream && dataChannel) {
       sendToAllDataChannels(`vid:${videoEnabled}`, dataChannel);
       if (videoEnabled) {
@@ -212,16 +212,23 @@ export default function Toolbar({
               className={`${
                 audioEnabled
                   ? ''
-                  : `text-${redIndicators ? 'red' : themeColor}-500 dark:text-${
-                      redIndicators ? 'red' : themeColor
+                  : `text-${
+                      disableRedIndicators ? themeColor : 'red'
+                    }-500 dark:text-${
+                      disableRedIndicators ? themeColor : 'red'
                     }-500`
               } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${
-                redIndicators ? 'red' : themeColor
+                disableRedIndicators ? themeColor : 'red'
               }-500 dark:hover:text-${
-                redIndicators ? 'red' : themeColor
+                disableRedIndicators ? themeColor : 'red'
               }-500 not-selectable tooltip`}
               onClick={() => {
-                handleMute(setAudio, setLocalAudio, localAudio, dataChannel);
+                handleMute(
+                  setAudioEnabled,
+                  setLocalAudio,
+                  localAudio,
+                  dataChannel
+                );
               }}
             >
               <span className="hidden pointer-events-none text-white bg-gray-500 dark:bg-gray-700 font-semibold absolute p-2 rounded-xl top-0 left-12 z-10 whitespace-nowrap text-sm">
@@ -239,18 +246,20 @@ export default function Toolbar({
               className={`${
                 videoEnabled
                   ? ''
-                  : `text-${redIndicators ? 'red' : themeColor}-500 dark:text-${
-                      redIndicators ? 'red' : themeColor
+                  : `text-${
+                      disableRedIndicators ? themeColor : 'red'
+                    }-500 dark:text-${
+                      disableRedIndicators ? themeColor : 'red'
                     }-500`
               } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${
-                redIndicators ? 'red' : themeColor
+                disableRedIndicators ? themeColor : 'red'
               }-500 dark:hover:text-${
-                redIndicators ? 'red' : themeColor
+                disableRedIndicators ? themeColor : 'red'
               }-500 not-selectable tooltip`}
               onClick={() => {
                 handlePauseVideo(
                   videoEnabled,
-                  setVideo,
+                  setVideoEnabled,
                   setLocalVideoText,
                   setLocalStream,
                   dataChannel,
@@ -358,9 +367,9 @@ export default function Toolbar({
           <div className="relative h-full w-full flex flex-col items-center m-0 z-2">
             <button
               className={`text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${
-                redIndicators ? 'red' : themeColor
+                disableRedIndicators ? themeColor : 'red'
               }-500 dark:hover:text-${
-                redIndicators ? 'red' : themeColor
+                disableRedIndicators ? themeColor : 'red'
               }-500 not-selectable tooltip`}
               onClick={() =>
                 onEndCall ? onEndCall() : console.log('call ended')

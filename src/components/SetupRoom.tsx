@@ -15,27 +15,27 @@ const SetupRoom = ({
   setUserReady,
   audioEnabled,
   videoEnabled,
-  setAudio,
-  setVideo,
+  setAudioEnabled,
+  setVideoEnabled,
   themeColor,
-  audioInput,
+  audInput,
   vidInput,
-  setAudioInput,
+  setAudInput,
   setVidInput,
-  disableGradient,
+  cstmBackground,
 }: {
   sessionKey: string;
   setUserReady: Function;
   audioEnabled: boolean;
   videoEnabled: boolean;
-  setAudio: Function;
-  setVideo: Function;
+  setAudioEnabled: Function;
+  setVideoEnabled: Function;
   themeColor: string;
-  audioInput?: MediaDeviceInfo;
+  audInput?: MediaDeviceInfo;
   vidInput?: MediaDeviceInfo;
-  setAudioInput: Function;
+  setAudInput: Function;
   setVidInput: Function;
-  disableGradient?: boolean;
+  cstmBackground?: string;
 }) => {
   const setupRoomRef = useRef<HTMLDivElement>(null);
   const testVideoRef = useRef<HTMLVideoElement>(null);
@@ -65,7 +65,7 @@ const SetupRoom = ({
 
   useEffect(() => {
     reqStream();
-  }, [vidInput, audioInput, videoEnabled, audioEnabled]);
+  }, [vidInput, audInput, videoEnabled, audioEnabled]);
 
   const reqStream = () => {
     testStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
@@ -79,7 +79,7 @@ const SetupRoom = ({
     if (videoEnabled || audioEnabled) {
       let audioProp: boolean | { deviceId: string | undefined } = false;
       let videoProp: boolean | { deviceId: string | undefined } = false;
-      if (audioEnabled) audioProp = { deviceId: audioInput?.deviceId };
+      if (audioEnabled) audioProp = { deviceId: audInput?.deviceId };
       if (videoEnabled) videoProp = { deviceId: vidInput?.deviceId };
       navigator.mediaDevices
         .getUserMedia({
@@ -105,10 +105,12 @@ const SetupRoom = ({
       id="setuproom"
       className="h-full w-full flex justify-between items-center flex-col flex-1"
       style={
-        disableGradient
-          ? {
-              background: '#f3f5fd', // TODO: dark/light theme
-            }
+        cstmBackground
+          ? cstmBackground.length > 0
+            ? { background: cstmBackground }
+            : {
+                background: '#f3f5fd', // TODO: dark/light theme
+              }
           : {
               background: gradient,
             }
@@ -116,7 +118,15 @@ const SetupRoom = ({
       ref={setupRoomRef}
     >
       <span id="setuproom-header" className="mx-2 mt-5">
-        <HeaderImg themeColor={disableGradient ? themeColor : undefined} />
+        <HeaderImg
+          themeColor={
+            cstmBackground
+              ? cstmBackground.length > 0
+                ? 'white'
+                : themeColor
+              : 'white'
+          }
+        />
       </span>
       {/* TODO: determine if room name is desired
       {hasPerms && (
@@ -150,7 +160,7 @@ const SetupRoom = ({
           <div id="opts" className="flex justify-center items-center m-1">
             <div id="opt-mic" className="text-center text-base my-2 mr-5">
               <button
-                onClick={() => setAudio(!audioEnabled)}
+                onClick={() => setAudioEnabled(!audioEnabled)}
                 className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
                   !audioEnabled ? 'bg-red-50 text-red-500' : ''
                 }`}
@@ -162,9 +172,9 @@ const SetupRoom = ({
                 />
               </button>
               <DeviceSelector
-                device={audioInput}
-                setDevice={setAudioInput}
-                type="audioinput"
+                device={audInput}
+                setDevice={setAudInput}
+                type="audInput"
                 defaultText="Microphone"
               />
               <span
@@ -177,7 +187,7 @@ const SetupRoom = ({
               <button
                 onClick={() => {
                   // if (!videoEnabled) reqStream();
-                  setVideo(!videoEnabled);
+                  setVideoEnabled(!videoEnabled);
                 }}
                 className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
                   !videoEnabled ? 'bg-red-50 text-red-500' : ''
@@ -217,7 +227,7 @@ const SetupRoom = ({
 export default SetupRoom;
 
 const AudioAnalyser = ({ audio }: { audio?: MediaStream }) => {
-  const [audioData, setAudioData] = useState(new Uint8Array(0));
+  const [audioData, setAudioEnabledData] = useState(new Uint8Array(0));
   const [analyser, setAnalyzer] = useState<AnalyserNode>();
   const [dataArray, setDataArray] = useState<Uint8Array>();
   const [rafId, setRaf] = useState<number>();
@@ -255,7 +265,7 @@ const AudioAnalyser = ({ audio }: { audio?: MediaStream }) => {
   const tick = () => {
     if (analyser && dataArray) {
       analyser.getByteTimeDomainData(dataArray);
-      setAudioData(dataArray);
+      setAudioEnabledData(dataArray);
       setRaf(requestAnimationFrame(tick));
     }
   };

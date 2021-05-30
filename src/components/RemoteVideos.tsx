@@ -12,7 +12,7 @@ const RemoteVideos = React.memo(
     sessionKey,
     themeColor,
     fourThreeAspectRatioEnabled,
-    redIndicators,
+    disableRedIndicators,
     picInPic,
   }: {
     remoteStreams: Map<string, MediaStream>;
@@ -23,7 +23,7 @@ const RemoteVideos = React.memo(
     sessionKey: string;
     themeColor: string;
     fourThreeAspectRatioEnabled?: boolean;
-    redIndicators?: boolean;
+    disableRedIndicators?: boolean;
     picInPic?: string;
   }) => {
     const vidRef = useRef<HTMLDivElement>(null);
@@ -178,7 +178,7 @@ const RemoteVideos = React.memo(
                 <i
                   id="remote-muted"
                   className={`text-${
-                    redIndicators ? 'red' : themeColor
+                    disableRedIndicators ? themeColor : 'red'
                   }-500 h-4 w-4 mr-3`}
                   style={{ display: 'none' }}
                   muted-uuid={uuid}
@@ -203,7 +203,7 @@ const RemoteVideos = React.memo(
                 <i
                   id="remote-paused"
                   className={`text-${
-                    redIndicators ? 'red' : themeColor
+                    disableRedIndicators ? themeColor : 'red'
                   }-500  h-4 w-4 `}
                   style={{ display: 'none' }}
                   paused-uuid={uuid}

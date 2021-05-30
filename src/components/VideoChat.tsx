@@ -48,14 +48,14 @@ const VideoChat = ({
   disableLocalVidDrag,
   audioEnabled,
   videoEnabled,
-  setAudio,
-  setVideo,
-  audioInput,
+  setAudioEnabled,
+  setVideoEnabled,
+  audInput,
   vidInput,
-  setAudioInput,
+  setAudInput,
   setVidInput,
   themeColor,
-  redIndicators,
+  disableRedIndicators,
   fourThreeAspectRatioEnabled,
 }: {
   sessionKey: string;
@@ -81,14 +81,14 @@ const VideoChat = ({
   disableLocalVidDrag?: boolean;
   audioEnabled: boolean;
   videoEnabled: boolean;
-  setAudio: Function;
-  setVideo: Function;
-  audioInput?: MediaDeviceInfo;
+  setAudioEnabled: Function;
+  setVideoEnabled: Function;
+  audInput?: MediaDeviceInfo;
   vidInput?: MediaDeviceInfo;
-  setAudioInput: Function;
+  setAudInput: Function;
   setVidInput: Function;
   themeColor: string;
-  redIndicators?: boolean;
+  disableRedIndicators?: boolean;
   fourThreeAspectRatioEnabled?: boolean;
 }) => {
   const fsHandle = useFullScreenHandle();
@@ -126,7 +126,7 @@ const VideoChat = ({
     logger('requestMediaStream');
     let audioProp: boolean | { deviceId: string | undefined } = true;
     let videoProp: boolean | { deviceId: string | undefined } = true;
-    audioProp = { deviceId: audioInput?.deviceId };
+    audioProp = { deviceId: audInput?.deviceId };
     videoProp = { deviceId: vidInput?.deviceId };
     navigator.mediaDevices
       .getUserMedia({
@@ -486,7 +486,7 @@ const VideoChat = ({
     logger('switchInputDevices');
     let audioProp: boolean | { deviceId: string | undefined } = true;
     let videoProp: boolean | { deviceId: string | undefined } = true;
-    audioProp = { deviceId: audioInput?.deviceId };
+    audioProp = { deviceId: audInput?.deviceId };
     videoProp = { deviceId: vidInput?.deviceId };
     navigator.mediaDevices
       .getUserMedia({
@@ -522,7 +522,7 @@ const VideoChat = ({
 
   useEffect(() => {
     if (localStream && remoteStreams.size >= 1) switchInputDevices();
-  }, [audioInput, vidInput]);
+  }, [audInput, vidInput]);
 
   useEffect(() => {
     if (
@@ -610,7 +610,7 @@ const VideoChat = ({
               peerConnections={peerConnections}
               remoteStreams={remoteStreams}
               showDotColors={showDotColors}
-              redIndicators={redIndicators}
+              disableRedIndicators={disableRedIndicators}
               showChat={showChat}
               cstmWelcomeMsg={cstmWelcomeMsg}
               sessionKey={sessionKey}
@@ -622,13 +622,13 @@ const VideoChat = ({
               <Settings
                 themeColor={themeColor}
                 vidInput={vidInput}
-                audioInput={audioInput}
-                setAudioInput={setAudioInput}
+                audInput={audInput}
+                setAudInput={setAudInput}
                 setVidInput={setVidInput}
                 audioEnabled={audioEnabled}
-                setAudio={setAudio}
+                setAudioEnabled={setAudioEnabled}
                 videoEnabled={videoEnabled}
-                setVideo={setVideo}
+                setVideoEnabled={setVideoEnabled}
                 dark={dark}
                 setDark={setDark}
                 setLocalVideoText={setLocalVideoText}
@@ -645,11 +645,11 @@ const VideoChat = ({
               toolbarRef={toolbarRef}
               hidden={hidden}
               audioEnabled={audioEnabled}
-              redIndicators={redIndicators}
+              disableRedIndicators={disableRedIndicators}
               themeColor={themeColor}
-              setAudio={setAudio}
+              setAudioEnabled={setAudioEnabled}
               videoEnabled={videoEnabled}
-              setVideo={setVideo}
+              setVideoEnabled={setVideoEnabled}
               setLocalVideoText={setLocalVideoText}
               disableLocalVidDrag={disableLocalVidDrag}
               fsHandle={fsHandle}

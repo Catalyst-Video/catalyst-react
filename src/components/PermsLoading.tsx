@@ -8,13 +8,13 @@ const PermsLoading = ({
 
   browserSupported,
   themeColor,
-  disableGradient,
+  cstmBackground,
 }: {
   hasPerms: boolean;
   setPermissions: Function;
   browserSupported: boolean;
   themeColor: string;
-  disableGradient?: boolean;
+  cstmBackground?: string;
 }) => {
   const [gradient] = useState(`linear-gradient(217deg, hsla(${~~(
     360 * Math.random()
@@ -67,17 +67,27 @@ const PermsLoading = ({
         ref={permsRef}
         className="h-full w-full flex justify-between items-center flex-col flex-1"
         style={
-          disableGradient
-            ? {
-                background: '#f3f5fd', // TODO: dark/light theme
-              }
+          cstmBackground
+            ? cstmBackground.length > 0
+              ? { background: cstmBackground }
+              : {
+                  background: '#f3f5fd', // TODO: dark/light theme
+                }
             : {
                 background: gradient,
               }
         }
       >
         <span id="pl-header" className="mx-2 mt-5">
-          <HeaderImg themeColor={disableGradient ? themeColor : undefined} />
+          <HeaderImg
+            themeColor={
+              cstmBackground
+                ? cstmBackground.length > 0
+                  ? 'white'
+                  : themeColor
+                : 'white'
+            }
+          />
         </span>
         {!browserSupported && (
           <div
@@ -87,12 +97,12 @@ const PermsLoading = ({
             <span
               id="perms-msg"
               className={`block m-auto text-xl  ${`text-${
-                disableGradient ? `black` : `white`
+                cstmBackground ? `black` : `white`
               }`}`}
             >
               <span
                 className={`text-${
-                  disableGradient ? themeColor + `-500` : `white`
+                  cstmBackground ? themeColor + `-500` : `white`
                 } font-semibold text-2xl`}
               >
                 Your browser is not supported.
@@ -104,7 +114,7 @@ const PermsLoading = ({
               href="https://caniuse.com/?search=webrtc"
               target="_blank"
               className={`text-base underline mb-4 mt-10 ${`text-${
-                disableGradient ? `black` : `white`
+                cstmBackground ? `black` : `white`
               }`}`}
             >
               Learn More
@@ -132,12 +142,12 @@ const PermsLoading = ({
               <span
                 id="perms-msg"
                 className={`block m-auto text-xl  ${`text-${
-                  disableGradient ? `black` : `white`
+                  cstmBackground ? `black` : `white`
                 }`}`}
               >
                 <span
                   className={`text-${
-                    disableGradient ? themeColor + `-500` : `white`
+                    cstmBackground ? themeColor + `-500` : `white`
                   } font-semibold text-2xl`}
                 >
                   Click “allow” above
@@ -150,7 +160,7 @@ const PermsLoading = ({
                 <button
                   onClick={() => reqPerms()}
                   className={`text-base focus:border-0 focus:outline-none underline mr-3 ${`text-${
-                    disableGradient ? `black` : `white`
+                    cstmBackground ? `black` : `white`
                   }`}`}
                 >
                   Ask again
@@ -159,7 +169,7 @@ const PermsLoading = ({
                   href="https://docs.catalyst.chat/docs-permissions"
                   target="_blank"
                   className={`text-base underline ${`text-${
-                    disableGradient ? `black` : `white`
+                    cstmBackground ? `black` : `white`
                   }`}`}
                 >
                   I need help!
