@@ -12,8 +12,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import DeviceSelector from './DeviceSelector';
 import { sendToAllDataChannels } from '../utils/general';
+import { HiddenSettings } from '../typings/interfaces';
 
-// TODO: changing input sources actually changes output
 const Settings = ({
   themeColor,
   vidInput,
@@ -33,6 +33,7 @@ const Settings = ({
   setLocalStream,
   localStream,
   dataChannel,
+  hidden,
 }: {
   themeColor: string;
   vidInput?: MediaDeviceInfo;
@@ -52,6 +53,7 @@ const Settings = ({
   setLocalStream: Function;
   localStream?: MediaStream;
   dataChannel?: Map<string, RTCDataChannel>;
+  hidden?: HiddenSettings;
 }) => {
   const [showSettings, setSettings] = useState(false);
 
@@ -224,22 +226,24 @@ const Settings = ({
                   </div>
                 </div>
               </div>
-              <div className="w-full text-center mb-4 px-4 sm:px-0 bg-white dark:bg-gray-800">
-                <button
-                  onClick={() => {
-                    if (setDark) setDark(!dark);
-                  }}
-                  type="button"
-                  className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-${themeColor}-600 text-base font-medium text-white hover:bg-${themeColor}-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-400 focus:ring-${themeColor}-500 sm:ml-3 sm:w-auto sm:text-sm`}
-                >
-                  <FontAwesomeIcon
-                    icon={dark ? faSun : faMoon}
-                    size="lg"
-                    className="mr-5 inline"
-                  />
-                  {dark ? 'Light Mode' : 'Dark Mode'}
-                </button>
-              </div>
+              {!hidden?.darkmode ? (
+                <div className="w-full text-center mb-4 px-4 sm:px-0 bg-white dark:bg-gray-800">
+                  <button
+                    onClick={() => {
+                      if (setDark) setDark(!dark);
+                    }}
+                    type="button"
+                    className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-${themeColor}-600 text-base font-medium text-white hover:bg-${themeColor}-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-400 focus:ring-${themeColor}-500 sm:ml-3 sm:w-auto sm:text-sm`}
+                  >
+                    <FontAwesomeIcon
+                      icon={dark ? faSun : faMoon}
+                      size="lg"
+                      className="mr-5 inline"
+                    />
+                    {dark ? 'Light Mode' : 'Dark Mode'}
+                  </button>
+                </div>
+              ) : null}
 
               <div className="bg-gray-50 dark:bg-gray-600 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 {/* <button
