@@ -104,7 +104,7 @@ const ChatComponent = ({
                 >
                   {(idx == 0 || chatMessages[idx - 1][0] !== uuid) && (
                     <span className="text-black font-semibold text-xs ml-auto p-1 not-selectable">
-                      {name}
+                      {name} (You)
                     </span>
                   )}
                   <div
