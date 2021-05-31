@@ -14,7 +14,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
-
+        with:
+          persist-credentials: false
       - name: Use Node ${{ matrix.node }}
         uses: actions/setup-node@v1
         with:
@@ -25,7 +26,7 @@ jobs:
 
       # - name: Lint
       #   run: npm lint
-
+        
       # - name: Test
       #   run: npm test --ci --coverage --maxWorkers=2
 
