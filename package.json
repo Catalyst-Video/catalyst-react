@@ -68,7 +68,6 @@
     "postcss": "^7.0.35",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
-    "rollup-plugin-copy": "github:Catalyst-Video/rollup-plugin-copy#master",
     "rollup-plugin-postcss": "^4.0.0",
     "size-limit": "^4.10.1",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2",

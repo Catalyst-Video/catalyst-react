@@ -2,7 +2,7 @@ const postcss = require('rollup-plugin-postcss');
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
 const strip = require('@rollup/plugin-strip');
-const copy = require('rollup-plugin-copy');
+// const copy = require('rollup-plugin-copy');
 // const url = require('@rollup/plugin-url');
 
 module.exports = {
@@ -31,11 +31,11 @@ module.exports = {
         // only write out CSS for the first bundle (avoids pointless extra files): -> make false if we inject true
         extract: false, // !!options.writeMeta,
       }),
-      copy({
-        targets: [{ src: 'src/assets/sound', dest: 'dist/assets' }],
-        copyOnce: true,
-        verbose: true,
-      }),
+      // copy({
+      //   targets: [{ src: 'src/assets/sound', dest: 'dist/assets' }],
+      //   copyOnce: true,
+      //   verbose: true,
+      // }),
       strip({
         labels: ['unittest'],
       })
