@@ -2,7 +2,6 @@ import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import CatalystChat from '../dist/index';
-import { toast } from 'react-toastify';
 
 const App = () => {
   const [showVideoCall, setShowVideoCall] = React.useState(true);
@@ -47,14 +46,16 @@ const WrapperComp = ({
     //   >
     <CatalystChat
       sessionKey={sessionKey}
-      uniqueAppId="demo"
-      disableLocalVidDrag={true}
+      uniqueAppId="demo1"
+      disableSetupRoom={true}
       defaults={{
         audioOn: false,
         videoOn: false,
-        // showChatArea: true,
-        // showToastArea: false,
+        showChatArea: true,
       }}
+      name={'joe shmo'}
+      // disableLocalVidDrag={true}
+      // disableRedIndicators={false}
       // cstmWelcomeMsg="DISABLED"
       // alwaysBanner={true}
       // hidden={{ chat: true, mute: true }}

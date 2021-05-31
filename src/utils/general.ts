@@ -1,6 +1,3 @@
-import DetectRTC from 'detectrtc';
-import { ResizeWrapper } from './ui';
-
 export function logger(data: string): void {
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     console.log(data);
@@ -20,75 +17,6 @@ export function getBrowserName(): string {
     name = 'Safari';
   }
   return name;
-}
-
-export function initialBrowserCheck(
-  setBrowserSupported: Function,
-  autoFade: number
-): void {
-  var ua: string = navigator.userAgent || navigator.vendor;
-  if (
-    DetectRTC.isMobileDevice &&
-    (ua.indexOf('FBAN') > -1 ||
-      ua.indexOf('FBAV') > -1 ||
-      ua.indexOf('Instagram') > -1)
-  ) {
-    if (DetectRTC.osName === 'iOS') {
-      setBrowserSupported(false);
-    }
-  }
-  if (DetectRTC.isMobileDevice) {
-    if (DetectRTC.osName === 'iOS' && !DetectRTC.browser.isSafari) {
-      setBrowserSupported(false);
-    }
-  }
-  const isWebRTCSupported = navigator.getUserMedia || window.RTCPeerConnection;
-  const browserName: string = getBrowserName();
-  if (!isWebRTCSupported || browserName === 'MSIE') {
-    setBrowserSupported(false);
-  }
-  navigator.mediaDevices.ondevicechange = () => window.location.reload();
-
-  let catalystNode = document.getElementById('catalyst');
-  if (catalystNode && catalystNode.parentNode?.parentNode?.nodeName === 'BODY')
-    catalystNode.style.position = 'fixed';
-
-  // Load and resize Event
-  window.addEventListener(
-    'load',
-    (e: Event) => {
-      ResizeWrapper();
-      window.onresize = ResizeWrapper;
-    },
-    false
-  );
-
-  // fade or show UI on mouse move
-  if (autoFade > 0) {
-    var timedelay = 1;
-    var header = document.getElementById('ct-header');
-    var toolbar = document.getElementById('ct-toolbar');
-    const delayCheck = () => {
-      if (timedelay === 5) {
-        header?.classList.add('hide');
-        header?.classList.remove('show');
-        toolbar?.classList.add('hide');
-        toolbar?.classList.remove('show');
-        timedelay = 1;
-      }
-      timedelay += 1;
-    };
-    document.addEventListener('mousemove', () => {
-      header?.classList.add('show');
-      header?.classList.remove('hide');
-      toolbar?.classList.add('show');
-      toolbar?.classList.remove('hide');
-      timedelay = 1;
-      clearInterval(_delay);
-      _delay = setInterval(delayCheck, autoFade);
-    });
-    var _delay = setInterval(delayCheck, autoFade);
-  }
 }
 
 export function isConnected(connected: Map<string, boolean>): boolean {
