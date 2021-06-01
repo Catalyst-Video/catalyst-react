@@ -24,6 +24,12 @@ export interface TwilioToken {
   username: string;
 }
 
+export interface PeerMetadata {
+  name: string;
+  audioOn: boolean;
+  videoOn: boolean;
+}
+
 declare global {
   interface String {
     autolink(): string;

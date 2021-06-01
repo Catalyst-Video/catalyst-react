@@ -5,11 +5,11 @@ import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import {
   DefaultSettings,
   HiddenSettings,
+  PeerMetadata,
   TwilioToken,
 } from '../typings/interfaces';
-import { setMutedIndicator, setPausedIndicator } from '../utils/ui';
+// import { setMutedIndicator, setPausedIndicator } from '../utils/ui';
 import { logger, sendToAllDataChannels } from '../utils/general';
-// import { handlereceiveMessage } from '../utils/messages';
 import {
   Chat,
   Header,
@@ -34,7 +34,7 @@ const VideoChat = ({
   onReceiveArbitraryData,
   cstmWelcomeMsg,
   cstmOptionBtns,
-  name,
+  localName,
   autoFade,
   alwaysBanner,
   dark,
@@ -67,7 +67,7 @@ const VideoChat = ({
   onReceiveArbitraryData?: Function;
   cstmWelcomeMsg?: JSX.Element | string;
   cstmOptionBtns?: JSX.Element[];
-  name?: string;
+  localName: string;
   alwaysBanner?: boolean;
   dark?: boolean;
   setDark?: Function;
@@ -108,7 +108,9 @@ const VideoChat = ({
   const [dataChannel, setDataChannel] = useState<Map<string, RTCDataChannel>>(
     new Map()
   );
-  const [peerNames, setPeerNames] = useState<Map<string, string>>(new Map());
+  const [peerMetadata, setPeerMetadata] = useState<Map<string, PeerMetadata>>(
+    new Map()
+  );
   const [connected, setConnected] = useState<Map<string, boolean>>(new Map());
   const [localICECandidates, setLocalICECandidates] = useState<
     Record<string, RTCIceCandidate[]>
@@ -247,26 +249,29 @@ const VideoChat = ({
       // Handle different dataChannel types: First 4 chars represent data type
       if (dataChannel) {
         dataChannel.get(uuid)!.onmessage = (e: MessageEvent) => {
-          const dataId = e.data.substring(0, 4);
-          const msg = e.data.slice(4);
+          const dataId: string = e.data.substring(0, 5);
+          const msg: string = e.data.slice(5);
           switch (dataId) {
-            case 'mes:':
-              console.log(peerNames);
+            case 'mesg:':
+              // console.log(peerNames);
               // handlereceiveMessage(msg, peerNames?.get(uuid)?.toString() ?? '');
               setChatMessages(chatMessages => [
                 ...chatMessages,
-                [uuid, peerNames.get(uuid) ?? '', msg],
+                [uuid, peerMetadata.get(uuid)?.name ?? '', msg],
               ]);
               incrementUnseenChats();
               break;
-            case 'mut:':
-              setMutedIndicator(uuid, msg);
-              break;
-            case 'vid:':
-              setPausedIndicator(uuid, msg);
-              break;
-            case 'nam:':
-              setPeerNames(new Map(peerNames.set(uuid, msg)));
+            // case 'mut:':
+            //   setMutedIndicator(uuid, msg);
+            //   break;
+            // case 'vid:':
+            //   setPausedIndicator(uuid, msg);
+            //   break;
+            // case 'nam:':
+            //   setPeerMetadata(new Map(peerMetadata.set(uuid, JSON.parse(msg))));
+            //   break;
+            case 'meta:':
+              setPeerMetadata(new Map(peerMetadata.set(uuid, JSON.parse(msg))));
               break;
             default:
               logger('Received arbitrary data: ' + e.data);
@@ -293,11 +298,19 @@ const VideoChat = ({
         dataChannel.get(uuid)!.onopen = e => {
           logger('dataChannel opened');
           // logger('uuid ' + uuid + 'msg' + e);
-          if (name) sendToAllDataChannels(`nam:${name}`, dataChannel);
-          if (!audioEnabled && remoteStreams.size > 0)
-            sendToAllDataChannels(`mut:true`, dataChannel);
-          if (!videoEnabled && remoteStreams.size > 0)
-            sendToAllDataChannels(`vid:true`, dataChannel);
+          // if (name) sendToAllDataChannels(`nam:${name}`, dataChannel);
+          // if (!audioEnabled && remoteStreams.size > 0)
+          //   sendToAllDataChannels(`mut:true`, dataChannel);
+          // if (!videoEnabled && remoteStreams.size > 0)
+          //   sendToAllDataChannels(`vid:true`, dataChannel);
+          sendToAllDataChannels(
+            `meta:${JSON.stringify({
+              name: name,
+              audioOn: audioEnabled,
+              videoOn: videoEnabled,
+            })}`,
+            dataChannel
+          );
         };
       }
       if (peerConnections?.get(uuid) !== undefined) {
@@ -527,6 +540,8 @@ const VideoChat = ({
       setPeerConnections(new Map());
       setRemoteStreams(new Map());
       setDataChannel(new Map());
+      setConnected(new Map());
+      setPeerMetadata(new Map());
     };
   }, []);
 
@@ -569,7 +584,7 @@ const VideoChat = ({
             themeColor={themeColor}
           />
           <Chat
-            localName={name ?? ''}
+            localName={localName}
             chatMessages={chatMessages}
             setChatMessages={setChatMessages}
             showChat={showChat}
@@ -591,7 +606,7 @@ const VideoChat = ({
               remoteStreams={remoteStreams}
               disableRedIndicators={disableRedIndicators}
               showChat={showChat}
-              peerNames={peerNames}
+              peerMetadata={peerMetadata}
               cstmWelcomeMsg={cstmWelcomeMsg}
               sessionKey={sessionKey}
               themeColor={themeColor}
@@ -618,12 +633,14 @@ const VideoChat = ({
                 setLocalAudio={setLocalAudio}
                 setLocalStream={setLocalStream}
                 dataChannel={dataChannel}
+                localName={localName}
               />
             )}
 
             <Toolbar
               toolbarRef={toolbarRef}
               hidden={hidden}
+              localName={localName}
               audioEnabled={audioEnabled}
               disableRedIndicators={disableRedIndicators}
               themeColor={themeColor}

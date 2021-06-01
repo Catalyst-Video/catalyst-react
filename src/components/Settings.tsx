@@ -34,6 +34,7 @@ const Settings = ({
   localStream,
   dataChannel,
   hidden,
+  localName,
 }: {
   themeColor: string;
   vidInput?: MediaDeviceInfo;
@@ -54,6 +55,7 @@ const Settings = ({
   localStream?: MediaStream;
   dataChannel?: Map<string, RTCDataChannel>;
   hidden?: HiddenSettings;
+  localName: string;
 }) => {
   const [showSettings, setSettings] = useState(false);
 
@@ -65,7 +67,15 @@ const Settings = ({
   ) => {
     setAudioEnabled(audioEnabled => !audioEnabled);
     if (localAudio && dataChannel) {
-      sendToAllDataChannels(`mut:${localAudio.enabled}`, dataChannel);
+      sendToAllDataChannels(
+        `meta:${JSON.stringify({
+          name: localName,
+          audioOn: !audioEnabled,
+          videoOn: videoEnabled,
+        })}`,
+        dataChannel
+      );
+      // sendToAllDataChannels(`mut:${localAudio.enabled}`, dataChannel);
       if (localAudio.enabled) localAudio.enabled = false;
       else localAudio.enabled = true;
       setLocalAudio(localAudio);
@@ -83,7 +93,15 @@ const Settings = ({
   ) => {
     setVideoEnabled(videoEnabled => !videoEnabled);
     if (localStream && dataChannel) {
-      sendToAllDataChannels(`vid:${videoEnabled}`, dataChannel);
+      // sendToAllDataChannels(`vid:${videoEnabled}`, dataChannel);
+        sendToAllDataChannels(
+          `meta:${JSON.stringify({
+            name: localName,
+            audioOn: audioEnabled,
+            videoOn: !videoEnabled,
+          })}`,
+          dataChannel
+        );
       if (videoEnabled) {
         localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
           track.enabled = false;

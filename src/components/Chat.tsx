@@ -28,6 +28,8 @@ const ChatComponent = ({
   const textInputRef = useRef<HTMLTextAreaElement>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+  const [chatBox, setChatBox] = useState('');
+
   const handleSendMsg = (msg: string) => {
     console.log(msg);
     // Send message over data channel, add message to screen, auto scroll chat down
@@ -35,27 +37,24 @@ const ChatComponent = ({
       // Prevent cross site scripting
       msg = msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
       msg = msg.autolink();
-      sendToAllDataChannels('mes:' + msg, dataChannel);
-      // displayMsg(msg, true);
-      // console.log(localName, msg);
+      sendToAllDataChannels('mesg:' + msg, dataChannel);
       setChatMessages(chatMessages => [...chatMessages, ['', localName, msg]]);
-      // logger(chatMessages.toString());
-      // displayMsg(msg, localColor ?? 'var(--themeColor)', true);
       chatEndRef.current?.scrollIntoView({
         behavior: 'smooth',
         block: 'nearest',
         inline: 'start',
       });
-      if (textInputRef.current) textInputRef.current.value = '';
+      setChatBox('');
+      // if (textInputRef.current) textInputRef.current.value = '';
     }
   };
 
-  textInputRef.current?.addEventListener('keypress', (e: any) => {
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      handleSendMsg(textInputRef.current?.value ?? '');
-    }
-  });
+  // textInputRef.current?.addEventListener('keypress', (e: any) => {
+  //   if (e.keyCode === 13) {
+  //     e.preventDefault();
+  //     handleSendMsg(textInputRef.current?.value ?? '');
+  //   }
+  // });
 
   // textSendRef.current?.addEventListener('click', (e: any) => {
   //   e.preventDefault();
@@ -135,25 +134,37 @@ const ChatComponent = ({
                 </div>
               );
           })}
+          <div
+            ref={chatEndRef}
+            id="chat-end"
+            className="invisible w-full h-1"
+          ></div>
         </div>
-        <div ref={chatEndRef} id="chat-end" className="invisible"></div>
       </div>
+
       <div
         id="chat-compose-wrapper"
         className="absolute bottom-0 sm:bottom-3 left-0 sm:ml-2 flex items-center border-0 sm:shadow-lg outline-none w-full shadow-inner sm:rounded-2xl p-2 h-20 sm:h-16 max-h-20 bg-white dark:bg-gray-700"
       >
         <textarea
           id="chat-compose"
-          ref={textInputRef}
+          // ref={textInputRef}
           className="text-sm border-0 outline-none w-full bg-white dark:bg-gray-700 dark:text-white resize-none"
           placeholder="Type your message"
           rows={2}
-          // value={textValue}
-          // onChange={() => setTextValue()}
+          value={chatBox}
+          onKeyUp={e => {
+            if (e.keyCode === 13) {
+              e.preventDefault();
+              handleSendMsg(chatBox);
+            }
+          }}
+          onChange={e => setChatBox(e.target.value)}
         ></textarea>
         <span
           onClick={() => {
-            handleSendMsg(textInputRef.current?.value ?? '');
+            // handleSendMsg(textInputRef.current?.value ?? '');
+            handleSendMsg(chatBox);
           }}
           className={`bg-${themeColor}-500 ml-2 p-2 cursor-pointer rounded-xl text-white`}
         >
