@@ -79,7 +79,6 @@ export default function Toolbar({
     localAudio?: MediaStreamTrack,
     dataChannel?: Map<string, RTCDataChannel>
   ) => {
-    // console.log(localStream?.getAudioTracks(), audioEnabled);
     setAudioEnabled(audioEnabled => !audioEnabled);
     if (localAudio && dataChannel) {
       // sendToAllDataChannels(`mut:${localAudio.enabled}`, dataChannel);

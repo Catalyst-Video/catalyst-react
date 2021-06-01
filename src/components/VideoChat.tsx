@@ -253,7 +253,6 @@ const VideoChat = ({
           const msg: string = e.data.slice(5);
           switch (dataId) {
             case 'mesg:':
-              // console.log(peerNames);
               // handlereceiveMessage(msg, peerNames?.get(uuid)?.toString() ?? '');
               setChatMessages(chatMessages => [
                 ...chatMessages,

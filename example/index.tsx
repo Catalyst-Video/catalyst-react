@@ -47,7 +47,7 @@ const WrapperComp = ({
     <CatalystChat
       sessionKey={sessionKey}
       uniqueAppId="demo1"
-      // disableSetupRoom={true}
+      disableSetupRoom={true}
       defaults={{
         audioOn: false,
         videoOn: false,
@@ -70,7 +70,7 @@ const WrapperComp = ({
       //     <strong>{'Bob'}</strong>
       //   </>
       // }
-      // themeColor="indigo"
+      // themeColor="green"
       // cstmOptionBtns={[
       //   <div className="ct-btn-container">
       //     <button

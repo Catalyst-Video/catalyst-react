@@ -81,7 +81,6 @@ const ChatComponent = ({
       >
         <div id="chat-messages" className="w-full overflow-x-none pt-10 pb-5">
           {chatMessages.map(([uuid, name, msg], idx) => {
-            // console.log('in loop ', name, msg, localName);
             if (uuid.length <= 0)
               return (
                 <div
