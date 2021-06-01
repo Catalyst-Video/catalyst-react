@@ -253,22 +253,12 @@ const VideoChat = ({
           const msg: string = e.data.slice(5);
           switch (dataId) {
             case 'mesg:':
-              // handlereceiveMessage(msg, peerNames?.get(uuid)?.toString() ?? '');
               setChatMessages(chatMessages => [
                 ...chatMessages,
                 [uuid, peerMetadata.get(uuid)?.name ?? '', msg],
               ]);
               incrementUnseenChats();
               break;
-            // case 'mut:':
-            //   setMutedIndicator(uuid, msg);
-            //   break;
-            // case 'vid:':
-            //   setPausedIndicator(uuid, msg);
-            //   break;
-            // case 'nam:':
-            //   setPeerMetadata(new Map(peerMetadata.set(uuid, JSON.parse(msg))));
-            //   break;
             case 'meta:':
               setPeerMetadata(new Map(peerMetadata.set(uuid, JSON.parse(msg))));
               break;
@@ -296,12 +286,6 @@ const VideoChat = ({
         /* Called when dataChannel? is successfully opened - Set up callbacks for the connection generating iceCandidates or receiving the remote media stream. Wrapping callback functions to pass in the peer uuids. */
         dataChannel.get(uuid)!.onopen = e => {
           logger('dataChannel opened');
-          // logger('uuid ' + uuid + 'msg' + e);
-          // if (name) sendToAllDataChannels(`nam:${name}`, dataChannel);
-          // if (!audioEnabled && remoteStreams.size > 0)
-          //   sendToAllDataChannels(`mut:true`, dataChannel);
-          // if (!videoEnabled && remoteStreams.size > 0)
-          //   sendToAllDataChannels(`vid:true`, dataChannel);
           sendToAllDataChannels(
             `meta:${JSON.stringify({
               name: localName,
