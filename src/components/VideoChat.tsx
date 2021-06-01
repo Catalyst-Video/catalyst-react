@@ -304,7 +304,7 @@ const VideoChat = ({
           //   sendToAllDataChannels(`vid:true`, dataChannel);
           sendToAllDataChannels(
             `meta:${JSON.stringify({
-              name: name,
+              name: localName,
               audioOn: audioEnabled,
               videoOn: videoEnabled,
             })}`,

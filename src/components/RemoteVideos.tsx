@@ -182,7 +182,7 @@ const RemoteVideos = React.memo(
                   className={`text-${
                     disableRedIndicators ? themeColor : 'red'
                   }-500 h-4 w-4 mr-3 ${
-                    peerMetadata.get(uuid)?.audioOn ? '' : 'hidden'
+                    peerMetadata.get(uuid)?.audioOn ? 'hidden' : ''
                   }`}
                 >
                   <svg
@@ -207,7 +207,7 @@ const RemoteVideos = React.memo(
                   className={`text-${
                     disableRedIndicators ? themeColor : 'red'
                   }-500  h-4 w-4 ${
-                    peerMetadata.get(uuid)?.videoOn ? '' : 'hidden'
+                    peerMetadata.get(uuid)?.videoOn ? 'hidden' : ''
                   }`}
                 >
                   <svg
