@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faFileUpload,
@@ -6,7 +6,6 @@ import {
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import { logger, sendToAllDataChannels } from '../utils/general';
-// import { displayMsg } from '../utils/messages';
 
 const ChatComponent = ({
   showChat,
@@ -25,41 +24,29 @@ const ChatComponent = ({
   setChatMessages: Function;
   themeColor: string;
 }) => {
-  const textInputRef = useRef<HTMLTextAreaElement>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
-
   const [chatBox, setChatBox] = useState('');
 
   const handleSendMsg = (msg: string) => {
-    console.log(msg);
-    // Send message over data channel, add message to screen, auto scroll chat down
-    if (msg && msg.length > 0) {
+    // Send message over data channel, add message to screen (if message contains content)
+    if (msg && msg.length > 0 && RegExp(`.`).test(msg)) {
+      logger(msg);
       // Prevent cross site scripting
       msg = msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
       msg = msg.autolink();
       sendToAllDataChannels('mesg:' + msg, dataChannel);
       setChatMessages(chatMessages => [...chatMessages, ['', localName, msg]]);
-      chatEndRef.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'start',
-      });
       setChatBox('');
-      // if (textInputRef.current) textInputRef.current.value = '';
     }
   };
 
-  // textInputRef.current?.addEventListener('keypress', (e: any) => {
-  //   if (e.keyCode === 13) {
-  //     e.preventDefault();
-  //     handleSendMsg(textInputRef.current?.value ?? '');
-  //   }
-  // });
-
-  // textSendRef.current?.addEventListener('click', (e: any) => {
-  //   e.preventDefault();
-  //   handleSendMsg(textInputRef.current?.value ?? '');
-  // });
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'start',
+    });
+  }, [chatMessages.length]);
 
   return (
     <div
@@ -148,12 +135,12 @@ const ChatComponent = ({
       >
         <textarea
           id="chat-compose"
-          // ref={textInputRef}
           className="text-sm border-0 outline-none w-full bg-white dark:bg-gray-700 dark:text-white resize-none"
           placeholder="Type your message"
           rows={2}
           value={chatBox}
           onKeyUp={e => {
+            // TODO: this may be deprecated
             if (e.keyCode === 13) {
               e.preventDefault();
               handleSendMsg(chatBox);
@@ -163,7 +150,6 @@ const ChatComponent = ({
         ></textarea>
         <span
           onClick={() => {
-            // handleSendMsg(textInputRef.current?.value ?? '');
             handleSendMsg(chatBox);
           }}
           className={`bg-${themeColor}-500 ml-2 p-2 cursor-pointer rounded-xl text-white`}
