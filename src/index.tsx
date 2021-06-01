@@ -70,6 +70,7 @@ const CatalystChat = ({
   const [hasPerms, setPermissions] = useState(false);
   const [isUserReady, setUserReady] = useState(disableSetupRoom ?? false);
   const [dark, setDark] = useState(darkMode ?? false);
+  const [localName, setLocalName] = useState(name ?? '');
   const [audioEnabled, setAudioEnabled] = useState<boolean>(
     defaults?.audioOn ?? true
   );
@@ -114,7 +115,7 @@ const CatalystChat = ({
         onAddPeer={onAddPeer}
         onRemovePeer={onRemovePeer}
         onEndCall={onEndCall}
-        name={name}
+        localName={localName}
         arbitraryData={arbitraryData}
         onReceiveArbitraryData={onReceiveArbitraryData}
         cstmWelcomeMsg={cstmWelcomeMsg}

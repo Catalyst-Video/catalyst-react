@@ -36,6 +36,7 @@ export default function Toolbar({
   onEndCall,
   localAudio,
   setLocalAudio,
+  localName,
   setLocalStream,
   localStream,
   dataChannel,
@@ -47,6 +48,7 @@ export default function Toolbar({
   hidden?: HiddenSettings;
   audioEnabled: boolean;
   disableRedIndicators?: boolean;
+  localName: string;
   themeColor: string;
   setAudioEnabled: Function;
   videoEnabled: boolean;
@@ -77,10 +79,16 @@ export default function Toolbar({
     localAudio?: MediaStreamTrack,
     dataChannel?: Map<string, RTCDataChannel>
   ) => {
-    // console.log(localStream?.getAudioTracks(), audioEnabled);
     setAudioEnabled(audioEnabled => !audioEnabled);
     if (localAudio && dataChannel) {
-      sendToAllDataChannels(`mut:${localAudio.enabled}`, dataChannel);
+      sendToAllDataChannels(
+        `meta:${JSON.stringify({
+          name: localName,
+          audioOn: !audioEnabled,
+          videoOn: videoEnabled,
+        })}`,
+        dataChannel
+      );
       if (localAudio.enabled) {
         localAudio.enabled = false;
         localStream?.getAudioTracks().forEach((track: MediaStreamTrack) => {
@@ -108,20 +116,25 @@ export default function Toolbar({
   ) => {
     setVideoEnabled(videoEnabled => !videoEnabled);
     if (localStream && dataChannel) {
-      sendToAllDataChannels(`vid:${videoEnabled}`, dataChannel);
+      // sendToAllDataChannels(`vid:${videoEnabled}`, dataChannel);
+      sendToAllDataChannels(
+        `meta:${JSON.stringify({
+          name: localName,
+          audioOn: audioEnabled,
+          videoOn: !videoEnabled,
+        })}`,
+        dataChannel
+      );
       if (videoEnabled) {
         localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
           track.enabled = false;
           // TODO: experiment with track.stop(); to remove recording indicator on PC
         });
-        // if (localVideo.srcObject && localStream)
-        //   localVideo.srcObject = localStream;
         setLocalVideoText('Video Paused');
       } else {
         localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
           track.enabled = true;
         });
-        // TODO: setLocalVideoText(disableLocalVidDrag ? '' : 'Drag Me');
         setLocalVideoText('');
       }
       setLocalStream(localStream);

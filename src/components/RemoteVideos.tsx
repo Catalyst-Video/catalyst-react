@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import WelcomeMessage from './WelcomeMessage';
 import { logger } from '../utils/general';
+import { PeerMetadata } from '../typings/interfaces';
 
 const RemoteVideos = React.memo(
   ({
     peerConnections,
     remoteStreams,
-    peerNames,
+    peerMetadata,
     showChat,
     cstmWelcomeMsg,
     sessionKey,
@@ -17,7 +18,7 @@ const RemoteVideos = React.memo(
   }: {
     remoteStreams: Map<string, MediaStream>;
     peerConnections: Map<string, RTCPeerConnection>;
-    peerNames?: Map<string, string>;
+    peerMetadata: Map<string, PeerMetadata>;
     showChat: boolean;
     cstmWelcomeMsg?: string | JSX.Element;
     sessionKey: string;
@@ -180,9 +181,9 @@ const RemoteVideos = React.memo(
                   id="remote-muted"
                   className={`text-${
                     disableRedIndicators ? themeColor : 'red'
-                  }-500 h-4 w-4 mr-3`}
-                  style={{ display: 'none' }}
-                  muted-uuid={uuid}
+                  }-500 h-4 w-4 mr-3 ${
+                    peerMetadata.get(uuid)?.audioOn ? 'hidden' : ''
+                  }`}
                 >
                   <svg
                     aria-hidden="true"
@@ -205,9 +206,9 @@ const RemoteVideos = React.memo(
                   id="remote-paused"
                   className={`text-${
                     disableRedIndicators ? themeColor : 'red'
-                  }-500  h-4 w-4 `}
-                  style={{ display: 'none' }}
-                  paused-uuid={uuid}
+                  }-500  h-4 w-4 ${
+                    peerMetadata.get(uuid)?.videoOn ? 'hidden' : ''
+                  }`}
                 >
                   <svg
                     aria-hidden="true"
@@ -230,13 +231,13 @@ const RemoteVideos = React.memo(
                 id="remote-name"
                 className="absolute bottom-2 right-3 flex justify-around items-center z-20 text-md rounded-full"
               >
-                {peerNames && (
+                {peerMetadata && peerMetadata.get(uuid) && (
                   <div
                     id="name"
                     indicator-uuid={uuid}
                     className="text-white font-semibold text-xs"
                   >
-                    {peerNames.get(uuid)}
+                    {peerMetadata.get(uuid)?.name}
                   </div>
                 )}
               </div>

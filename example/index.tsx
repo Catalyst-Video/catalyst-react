@@ -70,7 +70,7 @@ const WrapperComp = ({
       //     <strong>{'Bob'}</strong>
       //   </>
       // }
-      // themeColor="indigo"
+      // themeColor="green"
       // cstmOptionBtns={[
       //   <div className="ct-btn-container">
       //     <button
