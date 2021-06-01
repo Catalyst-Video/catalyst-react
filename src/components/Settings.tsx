@@ -94,21 +94,19 @@ const Settings = ({
     setVideoEnabled(videoEnabled => !videoEnabled);
     if (localStream && dataChannel) {
       // sendToAllDataChannels(`vid:${videoEnabled}`, dataChannel);
-        sendToAllDataChannels(
-          `meta:${JSON.stringify({
-            name: localName,
-            audioOn: audioEnabled,
-            videoOn: !videoEnabled,
-          })}`,
-          dataChannel
-        );
+      sendToAllDataChannels(
+        `meta:${JSON.stringify({
+          name: localName,
+          audioOn: audioEnabled,
+          videoOn: !videoEnabled,
+        })}`,
+        dataChannel
+      );
       if (videoEnabled) {
         localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
           track.enabled = false;
           // TODO: experiment with track.stop(); to remove recording indicator on PC
         });
-        // if (localVideo.srcObject && localStream)
-        //   localVideo.srcObject = localStream;
         setLocalVideoText('Video Paused');
       } else {
         localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {

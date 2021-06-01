@@ -81,7 +81,6 @@ export default function Toolbar({
   ) => {
     setAudioEnabled(audioEnabled => !audioEnabled);
     if (localAudio && dataChannel) {
-      // sendToAllDataChannels(`mut:${localAudio.enabled}`, dataChannel);
       sendToAllDataChannels(
         `meta:${JSON.stringify({
           name: localName,
@@ -131,14 +130,11 @@ export default function Toolbar({
           track.enabled = false;
           // TODO: experiment with track.stop(); to remove recording indicator on PC
         });
-        // if (localVideo.srcObject && localStream)
-        //   localVideo.srcObject = localStream;
         setLocalVideoText('Video Paused');
       } else {
         localStream?.getVideoTracks().forEach((track: MediaStreamTrack) => {
           track.enabled = true;
         });
-        // TODO: setLocalVideoText(disableLocalVidDrag ? '' : 'Drag Me');
         setLocalVideoText('');
       }
       setLocalStream(localStream);
