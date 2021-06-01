@@ -89,7 +89,7 @@ const ChatComponent = ({
                   key={idx}
                 >
                   {(idx == 0 || chatMessages[idx - 1][0] !== uuid) && (
-                    <span className="text-black font-semibold text-xs ml-auto p-1 not-selectable">
+                    <span className="text-black dark:text-white font-semibold text-xs ml-auto p-1 not-selectable">
                       {name} (You)
                     </span>
                   )}
@@ -109,7 +109,7 @@ const ChatComponent = ({
                   key={idx}
                 >
                   {(idx == 0 || chatMessages[idx - 1][0] !== uuid) && (
-                    <span className="text-black font-semibold text-xs p-1 not-selectable">
+                    <span className="text-black dark:text-white font-semibold text-xs p-1 not-selectable">
                       {name}
                     </span>
                   )}
