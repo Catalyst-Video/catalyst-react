@@ -2,19 +2,14 @@ import React, { useEffect, useState } from 'react';
 
 // Styles
 import './styles/catalyst.css';
-import './styles/video_grid.css';
 import './styles/tailwind.output.css';
 
 // Types
 import { DefaultSettings, HiddenSettings } from './typings/interfaces';
 import { PermsLoading, SetupRoom } from './components';
-import { setThemeColor } from './utils/ui';
+import { setThemeColor } from './utils/general';
 import VideoChat from './components/VideoChat';
 import DetectRTC from 'detectrtc';
-
-const DEFAULT_SERVER_ADDRESS = 'https://server.catalyst.chat/';
-const DEFAULT_THEMECOLOR = 'blue';
-const DEFAULT_AUTOFADE = 600;
 
 const CatalystChat = ({
   sessionKey,
@@ -29,6 +24,7 @@ const CatalystChat = ({
   onEndCall,
   arbitraryData,
   onReceiveArbitraryData,
+  onSubmitLog,
   cstmWelcomeMsg,
   cstmOptionBtns,
   themeColor,
@@ -53,6 +49,7 @@ const CatalystChat = ({
   onAddPeer?: Function;
   onRemovePeer?: Function;
   onEndCall?: Function;
+  onSubmitLog?: Function;
   arbitraryData?: string;
   onReceiveArbitraryData?: Function;
   cstmWelcomeMsg?: JSX.Element | string;
@@ -115,6 +112,7 @@ const CatalystChat = ({
         onAddPeer={onAddPeer}
         onRemovePeer={onRemovePeer}
         onEndCall={onEndCall}
+        onSubmitLog={onSubmitLog}
         localName={localName}
         arbitraryData={arbitraryData}
         onReceiveArbitraryData={onReceiveArbitraryData}

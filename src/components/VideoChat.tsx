@@ -9,7 +9,11 @@ import {
   TwilioToken,
 } from '../typings/interfaces';
 // import { setMutedIndicator, setPausedIndicator } from '../utils/ui';
-import { logger, sendToAllDataChannels } from '../utils/general';
+import {
+  logger,
+  millisecondsToTime,
+  sendToAllDataChannels,
+} from '../utils/general';
 import {
   Chat,
   Header,
@@ -30,6 +34,7 @@ const VideoChat = ({
   onAddPeer,
   onRemovePeer,
   onEndCall,
+  onSubmitLog,
   arbitraryData,
   onReceiveArbitraryData,
   cstmWelcomeMsg,
@@ -63,6 +68,7 @@ const VideoChat = ({
   onAddPeer?: Function;
   onRemovePeer?: Function;
   onEndCall?: Function;
+  onSubmitLog?: Function;
   arbitraryData?: string;
   onReceiveArbitraryData?: Function;
   cstmWelcomeMsg?: JSX.Element | string;
@@ -118,6 +124,8 @@ const VideoChat = ({
   const [socket] = useState<any>(io(cstmServerAddress));
   const [startedCall, setStartedCall] = useState(false);
 
+  const [startTime, setStartTime] = useState(new Date());
+
   const catalystRef = useRef<HTMLDivElement>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
 
@@ -152,6 +160,8 @@ const VideoChat = ({
 
   useEffect(() => {
     if (localStream && remoteStreams.size < 1) {
+      // officially start session
+      setStartTime(new Date());
       // TODO: setLocalVideoText(disableLocalVidDrag ? '' : 'Drag Me');
       setLocalVideoText('');
       /* When a video stream is added to VideoChat, we need to store the local audio track, because the screen sharing MediaStream doesn't have audio by default, which is problematic for peer C who joins while another peer A/B is screen sharing (C won't receive A/Bs audio). */
@@ -203,9 +213,11 @@ const VideoChat = ({
     peerConnections.delete(uuid);
     remoteStreams.delete(uuid);
     dataChannel.delete(uuid);
+    peerMetadata.delete(uuid);
     setRemoteStreams(remoteStreams);
     setPeerConnections(peerConnections);
     setDataChannel(dataChannel);
+    setPeerMetadata(peerMetadata);
     if (onRemovePeer) onRemovePeer();
   };
 
@@ -505,6 +517,34 @@ const VideoChat = ({
   useEffect(() => {
     if (localStream && remoteStreams.size >= 1) switchInputDevices();
   }, [audInput, vidInput]);
+
+  useEffect(() => {
+    const handleLog = () => {
+      const diff = new Date().getTime() - startTime.getTime();
+      const timestamp = new Date().toLocaleDateString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      });
+      let log = JSON.stringify({
+        timestamp: timestamp,
+        session_id: sessionKey,
+        session_length: millisecondsToTime(diff),
+        session_size: peerConnections.size,
+      });
+      logger('logging: ' + log);
+      if (onSubmitLog) onSubmitLog(log);
+    };
+    // window.addEventListener('beforeunload', alertUser);
+    window.addEventListener('unload', handleLog);
+    return () => {
+      // window.removeEventListener('beforeunload', alertUser);
+      window.removeEventListener('unload', handleLog);
+    };
+  });
 
   useEffect(() => {
     if (
