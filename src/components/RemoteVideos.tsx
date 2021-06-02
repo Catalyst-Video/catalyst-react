@@ -161,7 +161,7 @@ const RemoteVideos = React.memo(
                 ref={vid => {
                   if (vid) {
                     vid.srcObject = track as MediaProvider;
-                    if (picInPic && picInPic.length > 0)
+                    if (picInPic != '')
                       vid.addEventListener(picInPic ?? 'dblclick', () => {
                         handlePictureInPicture(vid);
                       });
