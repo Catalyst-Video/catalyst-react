@@ -158,7 +158,7 @@ const Settings = ({
                     </h3>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500 dark:text-gray-100">
-                        Customize Catalyst to your liking, enable Dark Mode, or
+                        Customize Catalyst to your liking. Enable dark mode, or
                         switch your media input devices.
                       </p>
                     </div>
