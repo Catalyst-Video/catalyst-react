@@ -10,6 +10,11 @@ import { PermsLoading, SetupRoom } from './components';
 import { setThemeColor } from './utils/general';
 import VideoChat from './components/VideoChat';
 import DetectRTC from 'detectrtc';
+import {
+  DEFAULT_AUTOFADE,
+  DEFAULT_SERVER_ADDRESS,
+  DEFAULT_THEMECOLOR,
+} from './utils/globals';
 
 const CatalystChat = ({
   sessionKey,
