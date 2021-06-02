@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import DeviceSelector from './DeviceSelector';
 import { sendToAllDataChannels } from '../utils/general';
-import { HiddenSettings } from '../typings/interfaces';
+import { HiddenToolbarItems } from '../typings/interfaces';
 
 const Settings = ({
   themeColor,
@@ -54,7 +54,7 @@ const Settings = ({
   setLocalStream: Function;
   localStream?: MediaStream;
   dataChannel?: Map<string, RTCDataChannel>;
-  hidden?: HiddenSettings;
+  hidden?: HiddenToolbarItems;
   localName: string;
 }) => {
   const [showSettings, setSettings] = useState(false);

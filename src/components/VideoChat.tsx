@@ -4,7 +4,7 @@ import '../utils/autolink.js';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import {
   DefaultSettings,
-  HiddenSettings,
+  HiddenToolbarItems,
   PeerMetadata,
   TwilioToken,
 } from '../typings/interfaces';
@@ -28,7 +28,7 @@ const VideoChat = ({
   uniqueAppId,
   cstmServerAddress,
   defaults,
-  hidden,
+  hiddenTools,
   picInPic,
   onStartCall,
   onAddPeer,
@@ -62,7 +62,7 @@ const VideoChat = ({
   autoFade: number;
   cstmServerAddress: string;
   defaults?: DefaultSettings;
-  hidden?: HiddenSettings;
+  hiddenTools?: HiddenToolbarItems;
   picInPic?: string;
   onStartCall?: Function;
   onAddPeer?: Function;
@@ -660,7 +660,7 @@ const VideoChat = ({
 
             <Toolbar
               toolbarRef={toolbarRef}
-              hidden={hidden}
+              hiddenTools={hiddenTools}
               localName={localName}
               audioEnabled={audioEnabled}
               disableRedIndicators={disableRedIndicators}

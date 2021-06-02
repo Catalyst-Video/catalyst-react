@@ -53,7 +53,7 @@ const WrapperComp = ({
         videoOn: false,
         showChatArea: true,
       }}
-      // name={'joe shmo'}
+      name={'joe shmo'}
       // disableLocalVidDrag={true}
       // disableRedIndicators={false}
       // cstmWelcomeMsg="DISABLED"

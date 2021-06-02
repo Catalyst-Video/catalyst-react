@@ -5,7 +5,7 @@ import './styles/catalyst.css';
 import './styles/tailwind.output.css';
 
 // Types
-import { DefaultSettings, HiddenSettings } from './typings/interfaces';
+import { CatalystVideoChatProps } from './typings/interfaces';
 import { PermsLoading, SetupRoom } from './components';
 import { setThemeColor } from './utils/general';
 import VideoChat from './components/VideoChat';
@@ -21,7 +21,7 @@ const CatalystChat = ({
   uniqueAppId,
   cstmServerAddress,
   defaults,
-  hidden,
+  hiddenTools,
   picInPic,
   onStartCall,
   onAddPeer,
@@ -36,42 +36,16 @@ const CatalystChat = ({
   autoFade,
   name,
   alwaysBanner,
-  darkMode,
+  darkModeDefault,
   disableLocalVidDrag,
   disableSetupRoom,
   cstmBackground,
   disableRedIndicators,
   fourThreeAspectRatioEnabled,
-}: {
-  sessionKey: string;
-  uniqueAppId: string;
-  cstmServerAddress?: string;
-  defaults?: DefaultSettings;
-  hidden?: HiddenSettings;
-  picInPic?: string;
-  name?: string;
-  onStartCall?: Function;
-  onAddPeer?: Function;
-  onRemovePeer?: Function;
-  onEndCall?: Function;
-  onSubmitLog?: Function;
-  arbitraryData?: string;
-  onReceiveArbitraryData?: Function;
-  cstmWelcomeMsg?: JSX.Element | string;
-  cstmOptionBtns?: JSX.Element[];
-  themeColor?: string;
-  autoFade?: number;
-  alwaysBanner?: boolean;
-  darkMode?: boolean;
-  disableLocalVidDrag?: boolean;
-  disableSetupRoom?: boolean;
-  cstmBackground?: string;
-  disableRedIndicators?: boolean;
-  fourThreeAspectRatioEnabled?: boolean;
-}) => {
+}: CatalystVideoChatProps) => {
   const [hasPerms, setPermissions] = useState(false);
   const [isUserReady, setUserReady] = useState(disableSetupRoom ?? false);
-  const [dark, setDark] = useState(darkMode ?? false);
+  const [dark, setDark] = useState(darkModeDefault ?? false);
   const [localName, setLocalName] = useState(name ?? '');
   const [audioEnabled, setAudioEnabled] = useState<boolean>(
     defaults?.audioOn ?? true
@@ -111,7 +85,7 @@ const CatalystChat = ({
         uniqueAppId={uniqueAppId}
         cstmServerAddress={cstmServerAddress ?? DEFAULT_SERVER_ADDRESS}
         defaults={defaults}
-        hidden={hidden}
+        hiddenTools={hiddenTools}
         picInPic={picInPic}
         onStartCall={onStartCall}
         onAddPeer={onAddPeer}

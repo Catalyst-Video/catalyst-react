@@ -11,12 +11,12 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
-import { HiddenSettings } from '../typings/interfaces';
+import { HiddenToolbarItems } from '../typings/interfaces';
 import { isConnected, logger, sendToAllDataChannels } from '../utils/general';
 
 export default function Toolbar({
   toolbarRef,
-  hidden,
+  hiddenTools: hidden,
   audioEnabled,
   disableRedIndicators,
   themeColor,
@@ -46,7 +46,7 @@ export default function Toolbar({
   handleLog,
 }: {
   toolbarRef: React.RefObject<HTMLDivElement>;
-  hidden?: HiddenSettings;
+  hiddenTools?: HiddenToolbarItems;
   audioEnabled: boolean;
   disableRedIndicators?: boolean;
   localName: string;
@@ -233,7 +233,7 @@ export default function Toolbar({
         id="multi-btn"
         className="sm:rounded-2xl text-2xl bg-white dark:bg-gray-800 shadow-sm px-6 py-3 flex flex-row items-center content-evenly sm:mb-1 min-w-screen max-w-screen w-screen sm:w-auto" // fixed
       >
-        {!hidden?.mute && (
+        {!hidden?.muteaudio && (
           <div className="relative h-full w-full flex flex-col items-center m-0 z-2">
             <button
               className={`${

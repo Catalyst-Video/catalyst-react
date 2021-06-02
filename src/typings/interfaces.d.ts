@@ -1,11 +1,39 @@
+export interface CatalystVideoChatProps {
+  sessionKey: string;
+  uniqueAppId: string;
+  cstmServerAddress?: string;
+  defaults?: DefaultSettings;
+  hiddenTools?: HiddenToolbarItems;
+  name?: string;
+  onStartCall?: Function;
+  onAddPeer?: Function;
+  onRemovePeer?: Function;
+  onEndCall?: Function;
+  onSubmitLog?: Function;
+  arbitraryData?: string;
+  onReceiveArbitraryData?: Function;
+  themeColor?: string;
+  darkModeDefault?: boolean;
+  picInPic?: string;
+  autoFade?: number;
+  alwaysBanner?: boolean;
+  disableSetupRoom?: boolean;
+  disableLocalVidDrag?: boolean;
+  cstmBackground?: string;
+  disableRedIndicators?: boolean;
+  fourThreeAspectRatioEnabled?: boolean;
+  cstmWelcomeMsg?: JSX.Element | string;
+  cstmOptionBtns?: JSX.Element[];
+}
+
 export interface DefaultSettings {
   audioOn?: boolean;
   videoOn?: boolean;
   showChatArea?: boolean;
 }
 
-export interface HiddenSettings {
-  mute?: boolean;
+export interface HiddenToolbarItems {
+  muteaudio?: boolean;
   pausevideo?: boolean;
   fullscreen?: boolean;
   screenshare?: boolean;
