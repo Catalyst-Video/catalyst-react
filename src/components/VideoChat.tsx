@@ -619,6 +619,7 @@ const VideoChat = ({
               disableLocalVidDrag={disableLocalVidDrag}
               localVideoText={localVideoText}
               themeColor={themeColor}
+              localName={localName}
             />
 
             <RemoteVideos

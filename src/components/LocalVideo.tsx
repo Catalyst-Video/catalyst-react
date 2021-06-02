@@ -8,12 +8,14 @@ const LocalVideo = React.memo(
     localVideoText,
     themeColor,
     showDotColors,
+    localName,
   }: {
     localStream?: MediaStream;
     localVideoText: string;
     disableLocalVidDrag?: boolean;
     themeColor: string;
     showDotColors?: boolean;
+    localName?: string;
   }) => {
     return (
       <>
@@ -45,7 +47,14 @@ const LocalVideo = React.memo(
                   if (audio) audio.srcObject = localStream;
                 }}
               ></video>
-              {showDotColors && <div id="local-indicator"></div>}
+              {/* TODO: {localName && (
+                <div
+                  id="local-name"
+                  className="text-white font-semibold opacity-40 text-xs not-selectable absolute bottom-0 right-0  z-20 text-md rounded-full"
+                >
+                  {localName}
+                </div>
+              )} */}
             </div>
           </Draggable>
         )}{' '}
