@@ -10,7 +10,7 @@ import {
   faPhoneSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import React, { useState } from 'react';
 import { HiddenSettings } from '../typings/interfaces';
 import { isConnected, logger, sendToAllDataChannels } from '../utils/general';
 
@@ -75,6 +75,8 @@ export default function Toolbar({
   peerConnections: Map<string, RTCPeerConnection>;
   handleLog: Function;
 }) {
+  const [vidWasPaused, setVidWasPaused] = useState(false);
+
   const handleMute = (
     setAudioEnabled: Function,
     setLocalAudio: Function,
@@ -176,6 +178,11 @@ export default function Toolbar({
           connected.forEach(
             (value: boolean, uuid: string, map: Map<string, boolean>) => {
               if (connected.get(uuid)) {
+                if (!videoEnabled) {
+                  setVidWasPaused(true);
+                  setVideoEnabled(true);
+                  setLocalVideoText('Sharing Video');
+                }
                 const sender = peerConnections
                   ?.get(uuid)
                   ?.getSenders()
@@ -206,6 +213,11 @@ export default function Toolbar({
           logger(err);
         });
     } else if (sharing) {
+      if (vidWasPaused) {
+        setVideoEnabled(false);
+        setVidWasPaused(false);
+        setLocalVideoText('Video Paused');
+      }
       setSharing(false);
       switchInputDevices();
     }
