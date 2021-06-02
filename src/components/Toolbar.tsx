@@ -43,6 +43,7 @@ export default function Toolbar({
   switchInputDevices,
   connected,
   peerConnections,
+  handleLog,
 }: {
   toolbarRef: React.RefObject<HTMLDivElement>;
   hidden?: HiddenSettings;
@@ -72,6 +73,7 @@ export default function Toolbar({
   switchInputDevices: Function;
   connected: Map<string, boolean>;
   peerConnections: Map<string, RTCPeerConnection>;
+  handleLog: Function;
 }) {
   const handleMute = (
     setAudioEnabled: Function,
@@ -384,9 +386,10 @@ export default function Toolbar({
               }-500 dark:hover:text-${
                 disableRedIndicators ? themeColor : 'red'
               }-500 not-selectable tooltip`}
-              onClick={() =>
-                onEndCall ? onEndCall() : console.log('call ended')
-              }
+              onClick={() => {
+                handleLog();
+                onEndCall ? onEndCall() : console.log('call ended');
+              }}
             >
               <FontAwesomeIcon icon={faPhoneSlash} />
               <span className="hidden pointer-events-none text-white bg-gray-500 dark:bg-gray-700 font-semibold absolute p-2 rounded-xl top-0 left-12  z-10 whitespace-nowrap text-sm">

@@ -53,7 +53,7 @@ const WrapperComp = ({
         videoOn: false,
         showChatArea: true,
       }}
-      name={'joe shmo'}
+      // name={'joe shmo'}
       // disableLocalVidDrag={true}
       // disableRedIndicators={false}
       // cstmWelcomeMsg="DISABLED"
@@ -64,6 +64,9 @@ const WrapperComp = ({
       onStartCall={() => console.log('on start call')}
       onRemovePeer={() => console.log('on remove peer')}
       onEndCall={() => setShowVideoCall(false)}
+      onSubmitLog={log => {
+        console.log('received: ' + log);
+      }}
       // cstmWelcomeMsg={
       //   <>
       //     <span>Room ready! Waiting for others to join with session key </span>

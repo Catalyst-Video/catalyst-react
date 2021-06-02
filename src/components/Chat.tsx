@@ -15,6 +15,7 @@ const ChatComponent = ({
   themeColor,
   chatMessages,
   setChatMessages,
+  setUnseenChats,
 }: {
   showChat: boolean;
   setShowChat: Function;
@@ -23,6 +24,7 @@ const ChatComponent = ({
   chatMessages: [string, string, string][];
   setChatMessages: Function;
   themeColor: string;
+  setUnseenChats: Function;
 }) => {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const [chatBox, setChatBox] = useState('');
@@ -66,7 +68,10 @@ const ChatComponent = ({
       <button
         id="chat-close-btn"
         className="rounded-full bg-transparent z-20 fixed right-4 sm:right-8 pt-3 focus:border-0 focus:outline-none text-left cursor-pointer text-black dark:text-white"
-        onClick={() => setShowChat(!showChat)}
+        onClick={() => {
+          setShowChat(!showChat);
+          setUnseenChats(0);
+        }}
       >
         <FontAwesomeIcon
           icon={faTimes}
@@ -87,11 +92,12 @@ const ChatComponent = ({
                   className="sent-message relative flex flex-col items-start content-end p-1 pr-2 pl-20 fade-in-bottom"
                   key={idx}
                 >
-                  {(idx == 0 || chatMessages[idx - 1][0] !== uuid) && (
-                    <span className="text-black dark:text-white font-semibold text-xs ml-auto p-1 not-selectable">
-                      {name} (You)
-                    </span>
-                  )}
+                  {(idx == 0 || chatMessages[idx - 1][0] !== uuid) &&
+                    name.length > 0 && (
+                      <span className="text-black dark:text-white font-semibold text-xs ml-auto p-1 not-selectable">
+                        {name} (You)
+                      </span>
+                    )}
                   <div
                     className={`bg-${themeColor}-500 text-white relative rounded-tl-2xl rounded-tr-2xl rounded-br-sm rounded-bl-2xl  ml-auto p-2`}
                   >
@@ -107,11 +113,12 @@ const ChatComponent = ({
                   className="received-message relative flex flex-col items-start content-end p-1 pl-2 fade-in-bottom"
                   key={idx}
                 >
-                  {(idx == 0 || chatMessages[idx - 1][0] !== uuid) && (
-                    <span className="text-black dark:text-white font-semibold text-xs p-1 not-selectable">
-                      {name}
-                    </span>
-                  )}
+                  {(idx == 0 || chatMessages[idx - 1][0] !== uuid) &&
+                    name.length > 0 && (
+                      <span className="text-black dark:text-white font-semibold text-xs p-1 not-selectable">
+                        {name}
+                      </span>
+                    )}
                   <div className="bg-gray-100 text-black relative flex items-center justify-center rounded-tl-2xl rounded-tr-2xl rounded-br-2xl rounded-bl-sm p-2">
                     <div className="message break-all px-2 py-1 text-xs">
                       {msg}

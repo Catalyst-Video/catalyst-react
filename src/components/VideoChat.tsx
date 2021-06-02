@@ -514,37 +514,30 @@ const VideoChat = ({
       });
   };
 
+  const handleLog = () => {
+    const diff = new Date().getTime() - startTime.getTime();
+    const timestamp = new Date().toLocaleDateString('en-US', {
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
+    let log = JSON.stringify({
+      timestamp: timestamp,
+      session_id: sessionKey,
+      session_length: millisecondsToTime(diff),
+      session_size: peerConnections.size + 1,
+    });
+    logger('logging: ' + log);
+    if (onSubmitLog) onSubmitLog(log);
+    setStartTime(new Date());
+  };
+
   useEffect(() => {
     if (localStream && remoteStreams.size >= 1) switchInputDevices();
   }, [audInput, vidInput]);
-
-  useEffect(() => {
-    const handleLog = () => {
-      const diff = new Date().getTime() - startTime.getTime();
-      const timestamp = new Date().toLocaleDateString('en-US', {
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      });
-      let log = JSON.stringify({
-        timestamp: timestamp,
-        session_id: sessionKey,
-        session_length: millisecondsToTime(diff),
-        session_size: peerConnections.size,
-      });
-      logger('logging: ' + log);
-      if (onSubmitLog) onSubmitLog(log);
-    };
-    // window.addEventListener('beforeunload', alertUser);
-    window.addEventListener('unload', handleLog);
-    return () => {
-      // window.removeEventListener('beforeunload', alertUser);
-      window.removeEventListener('unload', handleLog);
-    };
-  });
 
   useEffect(() => {
     if (
@@ -553,9 +546,13 @@ const VideoChat = ({
     )
       catalystRef.current.style.position = 'fixed';
 
+    window.addEventListener('unload', handleLog);
+    // window.addEventListener('beforeunload', alertUser);
+
     requestMediaStream();
 
     return () => {
+      window.removeEventListener('unload', handleLog);
       socket.emit('disconnecting');
       socket.disconnect();
       localStream?.getTracks().forEach(track => track.stop());
@@ -614,6 +611,7 @@ const VideoChat = ({
             setShowChat={setShowChat}
             dataChannel={dataChannel}
             themeColor={themeColor}
+            setUnseenChats={setUnseenChats}
           />
           <div id="call-section" className="w-full h-full items-end">
             <LocalVideo
@@ -689,6 +687,7 @@ const VideoChat = ({
               switchInputDevices={switchInputDevices}
               connected={connected}
               peerConnections={peerConnections}
+              handleLog={handleLog}
             />
           </div>
         </FullScreen>
