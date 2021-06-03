@@ -51,7 +51,7 @@ const WrapperComp = ({
       defaults={{
         audioOn: false,
         videoOn: false,
-        showChatArea: true,
+        showChatArea: false,
       }}
       name={'joe shmo'}
       // disableLocalVidDrag={true}
@@ -67,6 +67,16 @@ const WrapperComp = ({
       onSubmitLog={log => {
         console.log('received: ' + log);
       }}
+      cstmOptionBtns={[
+        {
+          id: 'test',
+          tooltip: 'Terms of Service',
+          onClick: () => {
+            window.open('https://readtogetheronline.com/tos/', '_blank');
+          },
+          fontAwesomeIcon: ['fas', 'info-circle'],
+        },
+      ]}
       // cstmWelcomeMsg={
       //   <>
       //     <span>Room ready! Waiting for others to join with session key </span>

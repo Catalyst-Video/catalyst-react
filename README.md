@@ -56,7 +56,7 @@ import CatalystChat from "catalyst-vc-react"
 | `disableRedIndicators`  | Use themecolor instead of red for important indicators like mute, pause video, or end call. | `boolean`  | `false` | Optional |
 | `fourThreeAspectRatioEnabled`  | Use 4:3 aspect ratio instead of default 16:9 for video chat. | `boolean`  | `false` | Optional |
 | `cstmWelcomeMsg`  | Displays message in snackbar popup on session start. Set to `"DISABLED"` to hide it. | `Any element React can compile` or `string`                              | `Share your session key {sessionKey} with whoever wants to join `                                | Optional |
-| `cstmOptionBtns`  | React elements that will be displayed in the Video Chat toolbar | `Array of anything React can compile` | `[<div className="ct-btn-container"><button className="ct-hover-btn ct-tooltip ct-not-selectable" onClick={() => console.log('do something')}><FontAwesomeIcon icon={faSync} /><span>Do Something</span></button></div>,]`                                | Optional |
+| `cstmOptionBtns`  | React elements that will be displayed in the Video Chat toolbar | `{ id: string; tooltip: string; onClick: Function: fontAwesomeIcon: [IconPrefix, IconName]; }` | `[{ id: 'test', tooltip: 'Terms of Service', onClick: () => { console.log("cstm") }, fontAwesomeIcon: ['fas', 'info-circle'], }, ]` | Optional |
 
 
 ## Meta

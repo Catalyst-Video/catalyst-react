@@ -10,9 +10,13 @@ import {
   faPhoneSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
 import React, { useState } from 'react';
-import { HiddenToolbarItems } from '../typings/interfaces';
+import { CstmOptionBtn, HiddenToolbarItems } from '../typings/interfaces';
 import { isConnected, logger, sendToAllDataChannels } from '../utils/general';
+
+library.add(fas);
 
 export default function Toolbar({
   toolbarRef,
@@ -63,7 +67,7 @@ export default function Toolbar({
   setUnseenChats: Function;
   sharing: boolean;
   setSharing: React.Dispatch<React.SetStateAction<boolean>>;
-  cstmOptionBtns?: JSX.Element[];
+  cstmOptionBtns?: CstmOptionBtn[];
   onEndCall?: Function;
   localAudio?: MediaStreamTrack;
   setLocalAudio: Function;
@@ -386,8 +390,28 @@ export default function Toolbar({
           </div>
         )}
 
-        {cstmOptionBtns?.map((component, idx) => (
+        {/* {cstmOptionBtns?.map((component, idx) => (
           <React.Fragment key={idx}>{component}</React.Fragment>
+        ))} */}
+
+        {cstmOptionBtns?.map((btn, idx) => (
+          <div
+            className="hidden sm:flex relative h-full w-full flex-col items-center m-0 z-2"
+            key={idx}
+          >
+            <button
+              className={`text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
+              id={btn.id}
+              onClick={() => {
+                btn.onClick();
+              }}
+            >
+              <span className="hidden pointer-events-none text-white bg-gray-500 dark:bg-gray-700 font-semibold absolute p-2 rounded-xl top-0 left-12  z-10 whitespace-nowrap text-sm">
+                {btn.tooltip}
+              </span>
+              <FontAwesomeIcon icon={btn.fontAwesomeIcon} />
+            </button>
+          </div>
         ))}
 
         {!hidden?.endcall && (

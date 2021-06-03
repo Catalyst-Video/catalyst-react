@@ -3,6 +3,7 @@ import io from 'socket.io-client';
 import '../utils/autolink.js';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import {
+  CstmOptionBtn,
   DefaultSettings,
   HiddenToolbarItems,
   PeerMetadata,
@@ -72,7 +73,7 @@ const VideoChat = ({
   arbitraryData?: string;
   onReceiveArbitraryData?: Function;
   cstmWelcomeMsg?: JSX.Element | string;
-  cstmOptionBtns?: JSX.Element[];
+  cstmOptionBtns?: CstmOptionBtn[];
   localName: string;
   alwaysBanner?: boolean;
   dark?: boolean;

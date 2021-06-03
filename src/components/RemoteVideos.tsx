@@ -235,7 +235,7 @@ const RemoteVideos = React.memo(
                   <div
                     id="name"
                     indicator-uuid={uuid}
-                    className="text-white font-semibold text-xs not-selectable"
+                    className="text-white text-xs not-selectable bg-gray-700 bg-opacity-40 px-2 py-1 rounded-xl"
                   >
                     {peerMetadata.get(uuid)?.name}
                   </div>

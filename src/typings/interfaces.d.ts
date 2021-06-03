@@ -23,7 +23,7 @@ export interface CatalystVideoChatProps {
   disableRedIndicators?: boolean;
   fourThreeAspectRatioEnabled?: boolean;
   cstmWelcomeMsg?: JSX.Element | string;
-  cstmOptionBtns?: JSX.Element[];
+  cstmOptionBtns?: CstmOptionBtn[];
 }
 
 export interface DefaultSettings {
@@ -40,6 +40,13 @@ export interface HiddenToolbarItems {
   chat?: boolean;
   darkmode?: boolean;
   endcall?: boolean;
+}
+
+export interface CstmOptionBtn {
+  id: string;
+  tooltip: string;
+  onClick: Function;
+  fontAwesomeIcon: [IconPrefix, IconName];
 }
 
 export interface TwilioToken {
