@@ -134,7 +134,7 @@ const RemoteVideos = React.memo(
       <div
         id="remote-vid-wrapper"
         ref={vidRef}
-        className={`flex justify-center content-center items-center absolute flex-wrap align-middle z-2 top-0 left-0 w-full h-full max-h-screen max-w-screen box-border`}
+        className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border`}
       >
         {peerConnections.size === 0 && (
           <WelcomeMessage

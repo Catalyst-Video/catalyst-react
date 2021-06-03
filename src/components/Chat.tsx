@@ -53,7 +53,7 @@ const ChatComponent = ({
   return (
     <div
       id="chat-entire"
-      className={`absolute top-7 sm:top-0 m-0 right-0 p-0 sm:right-4 flex flex-row content-end z-40 shadow-sm max-h-screen w-full sm:w-72 sm:p-0 overflow-none bg-white dark:bg-gray-800 sm:rounded-2xl sm:mb-20 sm:mt-4 items-stretch ${
+      className={`absolute top-7 sm:top-0 xl:relative m-0 right-0 p-0 sm:right-4 flex flex-row content-end z-40 shadow-sm max-h-screen w-full sm:w-72 sm:p-0 overflow-none bg-white dark:bg-gray-800 sm:rounded-2xl sm:mb-20 sm:mt-4 items-stretch ${
         showChat ? '' : 'hidden'
       }`}
       //rounded-tl-xl rounded-bl-xl

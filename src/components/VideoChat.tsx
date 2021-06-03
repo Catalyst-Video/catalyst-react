@@ -603,16 +603,7 @@ const VideoChat = ({
             uniqueAppId={uniqueAppId}
             themeColor={themeColor}
           />
-          <Chat
-            localName={localName}
-            chatMessages={chatMessages}
-            setChatMessages={setChatMessages}
-            showChat={showChat}
-            setShowChat={setShowChat}
-            dataChannel={dataChannel}
-            themeColor={themeColor}
-            setUnseenChats={setUnseenChats}
-          />
+
           <div id="call-section" className="w-full h-full items-end">
             <LocalVideo
               localStream={localStream}
@@ -622,18 +613,33 @@ const VideoChat = ({
               localName={localName}
             />
 
-            <RemoteVideos
-              fourThreeAspectRatioEnabled={fourThreeAspectRatioEnabled}
-              peerConnections={peerConnections}
-              remoteStreams={remoteStreams}
-              disableRedIndicators={disableRedIndicators}
-              showChat={showChat}
-              peerMetadata={peerMetadata}
-              cstmWelcomeMsg={cstmWelcomeMsg}
-              sessionKey={sessionKey}
-              themeColor={themeColor}
-              picInPic={picInPic}
-            />
+            <div
+              id="vid-chat-cont"
+              className="absolute top-0 left-0 right-0 bottom-0 flex"
+            >
+              <RemoteVideos
+                fourThreeAspectRatioEnabled={fourThreeAspectRatioEnabled}
+                peerConnections={peerConnections}
+                remoteStreams={remoteStreams}
+                disableRedIndicators={disableRedIndicators}
+                showChat={showChat}
+                peerMetadata={peerMetadata}
+                cstmWelcomeMsg={cstmWelcomeMsg}
+                sessionKey={sessionKey}
+                themeColor={themeColor}
+                picInPic={picInPic}
+              />
+              <Chat
+                localName={localName}
+                chatMessages={chatMessages}
+                setChatMessages={setChatMessages}
+                showChat={showChat}
+                setShowChat={setShowChat}
+                dataChannel={dataChannel}
+                themeColor={themeColor}
+                setUnseenChats={setUnseenChats}
+              />
+            </div>
 
             {!showChat && (
               <Settings
