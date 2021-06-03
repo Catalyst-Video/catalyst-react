@@ -24,6 +24,7 @@ export interface CatalystVideoChatProps {
   fourThreeAspectRatioEnabled?: boolean;
   cstmWelcomeMsg?: JSX.Element | string;
   cstmOptionBtns?: CstmOptionBtn[];
+  showSetNameBox?: boolean;
 }
 
 export interface DefaultSettings {

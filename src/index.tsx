@@ -42,6 +42,7 @@ const CatalystChat = ({
   cstmBackground,
   disableRedIndicators,
   fourThreeAspectRatioEnabled,
+  showSetNameBox,
 }: CatalystVideoChatProps) => {
   const [hasPerms, setPermissions] = useState(false);
   const [isUserReady, setUserReady] = useState(disableSetupRoom ?? false);
@@ -137,6 +138,7 @@ const CatalystChat = ({
         setVidInput={setVidInput}
         cstmBackground={cstmBackground}
         setLocalName={setLocalName}
+        showSetNameBox={showSetNameBox}
       />
     );
   } else {

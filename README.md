@@ -57,7 +57,7 @@ import CatalystChat from "catalyst-vc-react"
 | `fourThreeAspectRatioEnabled`  | Use 4:3 aspect ratio instead of default 16:9 for video chat. | `boolean`  | `false` | Optional |
 | `cstmWelcomeMsg`  | Displays message in snackbar popup on session start. Set to `"DISABLED"` to hide it. | `Any element React can compile` or `string`                              | `Share your session key {sessionKey} with whoever wants to join `                                | Optional |
 | `cstmOptionBtns`  | React elements that will be displayed in the Video Chat toolbar | `{ id: string; tooltip: string; onClick: Function: fontAwesomeIcon: [IconPrefix, IconName]; }` | `[{ id: 'test', tooltip: 'Terms of Service', onClick: () => { console.log("cstm") }, fontAwesomeIcon: ['fas', 'info-circle'], }, ]` | Optional |
-
+| `showSetNameBox`  | Show input box on setup screen for user to set their display name | `boolean`  | `false` | Optional |
 
 ## Meta
 

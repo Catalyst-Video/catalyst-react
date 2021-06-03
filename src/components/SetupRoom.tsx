@@ -24,6 +24,7 @@ const SetupRoom = ({
   setVidInput,
   cstmBackground,
   setLocalName,
+  showSetNameBox,
 }: {
   sessionKey: string;
   setUserReady: Function;
@@ -38,6 +39,7 @@ const SetupRoom = ({
   setVidInput: Function;
   cstmBackground?: string;
   setLocalName: Function;
+  showSetNameBox?: boolean;
 }) => {
   const setupRoomRef = useRef<HTMLDivElement>(null);
   const testVideoRef = useRef<HTMLVideoElement>(null);
@@ -160,14 +162,16 @@ const SetupRoom = ({
             />
           </div>
           {/* <AudioAnalyser audio={testStream} /> */}
-          <div className="pt-4 w-full flex justify-center">
-            <input
-              className="outline-none border-0 bg-gray-50 rounded-2xl px-4 py-1 -mt-8 z-10 text-black dark:text-white text-center"
-              placeholder="Enter display name"
-              value={nameBox}
-              onChange={e => setNameBox(e.target.value)}
-            ></input>
-          </div>
+          {showSetNameBox && (
+            <div className="pt-4 w-full flex justify-center">
+              <input
+                className="outline-none border-0 bg-gray-50 rounded-2xl px-4 py-1 -mt-8 z-10 text-black dark:text-white text-center"
+                placeholder="Enter display name"
+                value={nameBox}
+                onChange={e => setNameBox(e.target.value)}
+              ></input>
+            </div>
+          )}
           <div id="opts" className="flex justify-center items-center m-1">
             <div id="opt-mic" className="text-center text-base mb-2 mr-5">
               <button
