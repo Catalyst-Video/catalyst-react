@@ -136,6 +136,7 @@ const CatalystChat = ({
         setAudInput={setAudInput}
         setVidInput={setVidInput}
         cstmBackground={cstmBackground}
+        setLocalName={setLocalName}
       />
     );
   } else {
