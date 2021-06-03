@@ -1,0 +1,234 @@
+@import url("https://fonts.googleapis.com/css?family=Fira+Sans:600|Heebo:400,500,700&display=swap");
+
+html,
+body {
+    margin: 0px; padding: 0px;
+    height: 100%;
+}
+
+/* highlight on drag */
+*::selection {
+    background: var(--themeColor);
+}
+*::-moz-selection {
+  background: var(--themeColor);
+}
+*::-webkit-selection {
+    background: var(--themeColor);
+}
+
+/* util */
+#catalyst .not-selectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+   -khtml-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+/* on page load fade in */
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-moz-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* entrance animation */
+#catalyst {
+  -webkit-animation: fadeIn ease-in 1;
+  -moz-animation: fadeIn ease-in 1;
+  animation: fadeIn ease-in 1;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-duration: 0.3s;
+  -moz-animation-duration: 0.3s;
+  animation-duration: 0.3s;
+}
+
+/* draggable local video */
+#catalyst #local-vid-wrapper {
+  width: 15%;
+  max-height: 100px;
+  min-width: 100px;
+} 
+
+/* show tooltips on hover */
+#catalyst button.tooltip:hover span {
+  display: block;
+} 
+
+/* chat message animations */
+#catalyst .fade-in-bottom {
+  animation-name: fadeInBottom;
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+@keyframes fadeInBottom {
+  from {
+    opacity: 0;
+    transform: translateY(200%);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* color message links */
+#catalyst .message a {
+  text-decoration: underline;
+  color: var(--themeColor);
+}
+
+/* hide tooltips on mobile  */
+@media (hover: none) {
+  #catalyst button:hover span {
+    display: none !important;
+  }
+}
+
+
+/* Hide video controls on mobile
+TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away after you press pause then play again */
+#catalyst video ::-webkit-media-controls-panel {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
+#catalyst video ::--webkit-media-controls-play-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
+#catalyst video ::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
+
+/* Perms  */
+#opt li>ul                 { transform: translatex(100%) scale(0) }
+#opt li:hover>ul           { transform: translatex(101%) scale(1) }
+#opt li > button svg       { transform: rotate(-90deg) }
+#opt li:hover > button svg { transform: rotate(-270deg) }
+
+#opt.group:hover .group-hover\:scale-100 { transform: scale(1) }
+#opt.group:hover .group-hover\:-rotate-180 { transform: rotate(180deg) }
+#opt .scale-0 { transform: scale(0) }
+#opt .min-w-32 { min-width: 8rem }
+
+
+/* animation for initial loading */
+.catalyst-lds-roller {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.catalyst-lds-roller div {
+  animation: catalyst-lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  transform-origin: 40px 40px;
+}
+.catalyst-lds-roller div:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff;
+  margin: -4px 0 0 -4px;
+}
+.catalyst-lds-roller div:nth-child(1) {
+  animation-delay: -0.036s;
+}
+.catalyst-lds-roller div:nth-child(1):after {
+  top: 63px;
+  left: 63px;
+}
+.catalyst-lds-roller div:nth-child(2) {
+  animation-delay: -0.072s;
+}
+.catalyst-lds-roller div:nth-child(2):after {
+  top: 68px;
+  left: 56px;
+}
+.catalyst-lds-roller div:nth-child(3) {
+  animation-delay: -0.108s;
+}
+.catalyst-lds-roller div:nth-child(3):after {
+  top: 71px;
+  left: 48px;
+}
+.catalyst-lds-roller div:nth-child(4) {
+  animation-delay: -0.144s;
+}
+.catalyst-lds-roller div:nth-child(4):after {
+  top: 72px;
+  left: 40px;
+}
+.catalyst-lds-roller div:nth-child(5) {
+  animation-delay: -0.18s;
+}
+.catalyst-lds-roller div:nth-child(5):after {
+  top: 71px;
+  left: 32px;
+}
+.catalyst-lds-roller div:nth-child(6) {
+  animation-delay: -0.216s;
+}
+.catalyst-lds-roller div:nth-child(6):after {
+  top: 68px;
+  left: 24px;
+}
+.catalyst-lds-roller div:nth-child(7) {
+  animation-delay: -0.252s;
+}
+.catalyst-lds-roller div:nth-child(7):after {
+  top: 63px;
+  left: 17px;
+}
+.catalyst-lds-roller div:nth-child(8) {
+  animation-delay: -0.288s;
+}
+.catalyst-lds-roller div:nth-child(8):after {
+  top: 56px;
+  left: 12px;
+}
+@keyframes catalyst-lds-roller {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
