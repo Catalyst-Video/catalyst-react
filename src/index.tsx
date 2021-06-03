@@ -126,6 +126,7 @@ const CatalystChat = ({
     return (
       <SetupRoom
         sessionKey={sessionKey}
+        dark={dark}
         setUserReady={setUserReady}
         audioEnabled={audioEnabled}
         setAudioEnabled={setAudioEnabled}

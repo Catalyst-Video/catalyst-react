@@ -25,6 +25,7 @@ const SetupRoom = ({
   cstmBackground,
   setLocalName,
   showSetNameBox,
+  dark,
 }: {
   sessionKey: string;
   setUserReady: Function;
@@ -40,6 +41,7 @@ const SetupRoom = ({
   cstmBackground?: string;
   setLocalName: Function;
   showSetNameBox?: boolean;
+  dark: boolean;
 }) => {
   const setupRoomRef = useRef<HTMLDivElement>(null);
   const testVideoRef = useRef<HTMLVideoElement>(null);
@@ -109,7 +111,9 @@ const SetupRoom = ({
   return (
     <div
       id="setuproom"
-      className="h-full w-full flex justify-between items-center flex-col flex-1"
+      className={`${
+        dark ? 'dark' : ''
+      } h-full w-full flex justify-between items-center flex-col flex-1`}
       style={
         cstmBackground
           ? cstmBackground.length > 0
@@ -149,7 +153,7 @@ const SetupRoom = ({
       >
         <div
           id="setuproom-comp"
-          className="bg-white rounded-2xl my-2 mx-1 shadow-md"
+          className="bg-white dark:bg-gray-800 rounded-2xl my-2 mx-1 shadow-md"
         >
           <div className="md:w-96 md:h-72 bg-gray-900 rounded-t-xl z-1">
             <video
@@ -165,7 +169,7 @@ const SetupRoom = ({
           {showSetNameBox && (
             <div className="pt-4 w-full flex justify-center">
               <input
-                className="outline-none border-0 bg-gray-50 rounded-2xl px-4 py-1 -mt-8 z-10 text-black dark:text-white text-center"
+                className="outline-none border-0 bg-gray-50 dark:bg-gray-700 rounded-2xl px-4 py-1 -mt-8 z-10 text-black dark:text-white text-center"
                 placeholder="Enter display name"
                 value={nameBox}
                 onChange={e => setNameBox(e.target.value)}
@@ -177,7 +181,9 @@ const SetupRoom = ({
               <button
                 onClick={() => setAudioEnabled(!audioEnabled)}
                 className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
-                  !audioEnabled ? 'bg-red-50 text-red-500' : ''
+                  !audioEnabled
+                    ? 'bg-red-50 text-red-500'
+                    : 'dark:text-gray-100 dark:bg-gray-700'
                 }`}
               >
                 <FontAwesomeIcon
@@ -205,7 +211,9 @@ const SetupRoom = ({
                   setVideoEnabled(!videoEnabled);
                 }}
                 className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
-                  !videoEnabled ? 'bg-red-50 text-red-500' : ''
+                  !videoEnabled
+                    ? 'bg-red-50 text-red-500'
+                    : 'dark:text-gray-100 dark:bg-gray-700'
                 }`}
               >
                 <FontAwesomeIcon
