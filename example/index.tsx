@@ -47,13 +47,13 @@ const WrapperComp = ({
     <CatalystChat
       sessionKey={sessionKey}
       uniqueAppId="demo1"
-      disableSetupRoom={true}
+      // disableSetupRoom={true}
       defaults={{
         audioOn: false,
         videoOn: false,
         showChatArea: false,
       }}
-      name={'joe shmo'}
+      // name={'joe shmo'}
       // disableLocalVidDrag={true}
       // disableRedIndicators={false}
       // cstmWelcomeMsg="DISABLED"
@@ -67,16 +67,16 @@ const WrapperComp = ({
       onSubmitLog={log => {
         console.log('received: ' + log);
       }}
-      cstmOptionBtns={[
-        {
-          id: 'test',
-          tooltip: 'Terms of Service',
-          onClick: () => {
-            window.open('https://readtogetheronline.com/tos/', '_blank');
-          },
-          fontAwesomeIcon: ['fas', 'info-circle'],
-        },
-      ]}
+      // cstmOptionBtns={[
+      //   {
+      //     id: 'test',
+      //     tooltip: 'Terms of Service',
+      //     onClick: () => {
+      //       window.open('https://readtogetheronline.com/tos/', '_blank');
+      //     },
+      //     fontAwesomeIcon: ['fas', 'info-circle'],
+      //   },
+      // ]}
       // cstmWelcomeMsg={
       //   <>
       //     <span>Room ready! Waiting for others to join with session key </span>

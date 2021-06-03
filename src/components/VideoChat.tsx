@@ -215,10 +215,10 @@ const VideoChat = ({
     remoteStreams.delete(uuid);
     dataChannel.delete(uuid);
     peerMetadata.delete(uuid);
-    setRemoteStreams(remoteStreams);
-    setPeerConnections(peerConnections);
-    setDataChannel(dataChannel);
-    setPeerMetadata(peerMetadata);
+    setPeerConnections(new Map(peerConnections));
+    setRemoteStreams(new Map(remoteStreams));
+    setDataChannel(new Map(dataChannel));
+    setPeerMetadata(new Map(peerMetadata));
     if (onRemovePeer) onRemovePeer();
   };
 
