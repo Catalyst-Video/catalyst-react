@@ -245,14 +245,12 @@ export default function Toolbar({
                   ? ''
                   : `text-${
                       disableRedIndicators ? themeColor : 'red'
-                    }-500 dark:text-${
-                      disableRedIndicators ? themeColor : 'red'
-                    }-500`
+                    } dark:text-${disableRedIndicators ? themeColor : 'red'}`
               } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${
                 disableRedIndicators ? themeColor : 'red'
-              }-500 dark:hover:text-${
+              } dark:hover:text-${
                 disableRedIndicators ? themeColor : 'red'
-              }-500 not-selectable tooltip`}
+              } not-selectable tooltip`}
               onClick={() => {
                 handleMute(
                   setAudioEnabled,
@@ -279,14 +277,12 @@ export default function Toolbar({
                   ? ''
                   : `text-${
                       disableRedIndicators ? themeColor : 'red'
-                    }-500 dark:text-${
-                      disableRedIndicators ? themeColor : 'red'
-                    }-500`
+                    } dark:text-${disableRedIndicators ? themeColor : 'red'}`
               } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${
                 disableRedIndicators ? themeColor : 'red'
-              }-500 dark:hover:text-${
+              } dark:hover:text-${
                 disableRedIndicators ? themeColor : 'red'
-              }-500 not-selectable tooltip`}
+              } not-selectable tooltip`}
               onClick={() => {
                 handlePauseVideo(
                   videoEnabled,
@@ -415,9 +411,9 @@ export default function Toolbar({
             <button
               className={`text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${
                 disableRedIndicators ? themeColor : 'red'
-              }-500 dark:hover:text-${
+              } dark:hover:text-${
                 disableRedIndicators ? themeColor : 'red'
-              }-500 not-selectable tooltip`}
+              } not-selectable tooltip`}
               onClick={() => {
                 handleLog();
                 onEndCall ? onEndCall() : console.log('call ended');

@@ -102,7 +102,7 @@ const PermsLoading = ({
             >
               <span
                 className={`text-${
-                  cstmBackground ? themeColor + `-500` : `white`
+                  cstmBackground ? themeColor : `white`
                 } font-semibold text-2xl`}
               >
                 Your browser is not supported.
@@ -147,7 +147,7 @@ const PermsLoading = ({
               >
                 <span
                   className={`text-${
-                    cstmBackground ? themeColor + `-500` : `white`
+                    cstmBackground ? themeColor : `white`
                   } font-semibold text-2xl`}
                 >
                   Click “allow” above

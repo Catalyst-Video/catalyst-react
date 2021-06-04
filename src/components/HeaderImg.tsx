@@ -8,16 +8,12 @@ const HeaderImg = ({ themeColor }: { themeColor: string }) => {
       height="48"
       viewBox="0 0 2327.000000 813.000000"
       preserveAspectRatio="xMidYMid meet"
-      className={`fill-current text-${
-        themeColor == 'white' ? themeColor : themeColor + '-500'
-      }`}
+      className={`fill-current text-${themeColor}`}
     >
       <g
         transform="translate(0.000000,813.000000) scale(0.100000,-0.100000)"
         stroke="none"
-        className={`fill-current text-${
-          themeColor == 'white' ? themeColor : themeColor + '-500'
-        }`}
+        className={`fill-current text-${themeColor}`}
       >
         <path
           d="M3415 6614 c-102 -8 -333 -46 -433 -70 -275 -67 -568 -196 -804 -353

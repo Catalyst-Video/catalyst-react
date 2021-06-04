@@ -181,7 +181,7 @@ const RemoteVideos = React.memo(
                   id="remote-muted"
                   className={`text-${
                     disableRedIndicators ? themeColor : 'red'
-                  }-500 h-4 w-4 mr-3 ${
+                  } h-4 w-4 mr-3 ${
                     peerMetadata.get(uuid)?.audioOn ? 'hidden' : ''
                   }`}
                 >
@@ -206,7 +206,7 @@ const RemoteVideos = React.memo(
                   id="remote-paused"
                   className={`text-${
                     disableRedIndicators ? themeColor : 'red'
-                  }-500  h-4 w-4 ${
+                  }  h-4 w-4 ${
                     peerMetadata.get(uuid)?.videoOn ? 'hidden' : ''
                   }`}
                 >

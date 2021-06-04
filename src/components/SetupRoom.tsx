@@ -182,7 +182,7 @@ const SetupRoom = ({
                 onClick={() => setAudioEnabled(!audioEnabled)}
                 className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
                   !audioEnabled
-                    ? 'bg-red-50 text-red-500'
+                    ? 'text-red'
                     : 'dark:text-gray-100 dark:bg-gray-700'
                 }`}
               >
@@ -212,7 +212,7 @@ const SetupRoom = ({
                 }}
                 className={`mx-auto h-16 w-16 relative flex justify-center items-center rounded-full border-2 border-gray cursor-pointer focus:outline-none focus:border-0 ${
                   !videoEnabled
-                    ? 'bg-red-50 text-red-500'
+                    ? 'text-red'
                     : 'dark:text-gray-100 dark:bg-gray-700'
                 }`}
               >
