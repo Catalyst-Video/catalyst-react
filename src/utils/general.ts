@@ -60,32 +60,56 @@ export function millisecondsToTime(duration: number): string {
 export function setThemeColor(color: string): void {
   var themeColor: string;
   switch (color) {
-    case 'pink':
-      themeColor = '#D53F8C';
-      break;
     case 'red':
-      themeColor = '#E53E3E';
+      themeColor = '#EF4444';
       break;
     case 'orange':
-      themeColor = '#DD6B20';
+      themeColor = '#F97316';
+      break;
+    case 'amber':
+      themeColor = '#F59E0B';
       break;
     case 'yellow':
-      themeColor = '#FFCE26';
+      themeColor = '#EAB308';
+      break;
+    case 'lime':
+      themeColor = '#84CC16';
       break;
     case 'green':
-      themeColor = '#38A169';
+      themeColor = '#22C55E';
+      break;
+    case 'emerald':
+      themeColor = '#10B981';
       break;
     case 'teal':
-      themeColor = '#319795';
+      themeColor = '#14B8A6';
+      break;
+    case 'cyan':
+      themeColor = '#06B6D4';
+      break;
+    case 'lightBlue':
+      themeColor = '#0EA5E9';
       break;
     case 'blue':
-      themeColor = '#3f83f8';
+      themeColor = '#3B82F6';
+      break;
+    case 'violet':
+      themeColor = '#8B5CF6';
       break;
     case 'indigo':
-      themeColor = '#5A67D8';
+      themeColor = '#6366F1';
       break;
     case 'purple':
-      themeColor = '#805AD5';
+      themeColor = '#A855F7';
+      break;
+    case 'fuchsia':
+      themeColor = '#D946EF';
+      break;
+    case 'rose':
+      themeColor = '#F43F5E';
+      break;
+    case 'pink':
+      themeColor = '#EC4899';
       break;
     default:
       themeColor = color;
