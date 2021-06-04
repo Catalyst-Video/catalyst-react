@@ -49,7 +49,7 @@ const Header = ({
   return (
     <div>
       <div
-        className={`absolute left-0 top-0 block w-full text-center bg-${themeColor}-500 p-1 text-white text-sm font-semibold z-4 ${
+        className={`absolute left-0 top-0 block w-full text-center bg-${themeColor} p-1 text-white text-sm font-semibold z-4 ${
           alwaysBanner ? '' : 'sm:hidden'
         }`}
       >
@@ -94,6 +94,11 @@ const Header = ({
           )}
         </>
       )}
+
+      <div
+        id="avoid-minifying-colors"
+        className="hidden text-red text-orange text-yellow text-amber text-yellow text-lime text-emerald text-green text-lightBlue text-blue text-cyan text-teal text-violet text-indigo text-purple text-fuchsia text-pink text-rose bg-red bg-orange bg-yellow bg-amber bg-yellow bg-lime bg-emerald bg-green bg-lightBlue bg-blue bg-cyan bg-teal bg-violet bg-indigo bg-purple bg-fuchsia bg-pink bg-rose"
+      />
     </div>
   );
 };

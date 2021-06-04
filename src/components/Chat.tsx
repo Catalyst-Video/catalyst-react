@@ -59,7 +59,7 @@ const ChatComponent = ({
           target="_blank"
           href={matches[0]}
           className={`${
-            isSelf ? 'text-white' : `text-${themeColor}-500`
+            isSelf ? 'text-white' : `text-${themeColor}`
           } underline`}
         >
           {matches[0]}
@@ -117,7 +117,7 @@ const ChatComponent = ({
                       </span>
                     )}
                   <div
-                    className={`bg-${themeColor}-500 text-white relative rounded-tl-2xl rounded-tr-2xl rounded-br-sm rounded-bl-2xl  ml-auto p-2`}
+                    className={`bg-${themeColor} text-white relative rounded-tl-2xl rounded-tr-2xl rounded-br-sm rounded-bl-2xl  ml-auto p-2`}
                   >
                     <div className="message break-all px-2 py-1 text-xs">
                       {autolink(msg, true)}
@@ -176,7 +176,7 @@ const ChatComponent = ({
           onClick={() => {
             handleSendMsg(chatBox);
           }}
-          className={`bg-${themeColor}-500 ml-2 p-2 cursor-pointer rounded-xl text-white`}
+          className={`bg-${themeColor} ml-2 p-2 cursor-pointer rounded-xl text-white`}
         >
           <FontAwesomeIcon
             id="chat-send"

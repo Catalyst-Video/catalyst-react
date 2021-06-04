@@ -312,8 +312,8 @@ export default function Toolbar({
               className={`${
                 !fsHandle.active
                   ? ''
-                  : `text-${themeColor}-500 dark:text-${themeColor}-500`
-              } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
+                  : `text-${themeColor} dark:text-${themeColor}`
+              } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor} dark:hover:text-${themeColor} not-selectable tooltip`}
               onClick={() => {
                 if (fsHandle.active) {
                   fsHandle.exit();
@@ -337,10 +337,8 @@ export default function Toolbar({
           <div className="relative h-full w-full flex flex-col items-center m-0 z-2">
             <button
               className={`${
-                !showChat
-                  ? ''
-                  : `text-${themeColor}-500 dark:text-${themeColor}-500`
-              } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
+                !showChat ? '' : `text-${themeColor} dark:text-${themeColor}`
+              } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor} dark:hover:text-${themeColor} not-selectable tooltip`}
               onClick={() => {
                 setShowChat(!showChat);
                 setUnseenChats(0);
@@ -353,7 +351,7 @@ export default function Toolbar({
               {!showChat && unseenChats !== 0 && (
                 <i
                   id="chat-indicator"
-                  className={`absolute top-0 right-6 sm:right-0 z-0 not-italic text-white bg-${themeColor}-500 rounded-full text-sm px-2 opacity-90 `}
+                  className={`absolute top-0 right-6 sm:right-0 z-0 not-italic text-white bg-${themeColor} rounded-full text-sm px-2 opacity-90 `}
                 >
                   {unseenChats.toString()}
                 </i>
@@ -366,10 +364,8 @@ export default function Toolbar({
           <div className="hidden sm:flex relative h-full w-full flex-col items-center m-0 z-2">
             <button
               className={`${
-                !sharing
-                  ? ''
-                  : `text-${themeColor}-500 dark:text-${themeColor}-500`
-              } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
+                !sharing ? '' : `text-${themeColor} dark:text-${themeColor}`
+              } text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor} dark:hover:text-${themeColor} not-selectable tooltip`}
               id="share-button"
               onClick={() => {
                 handleSharing(
@@ -400,7 +396,7 @@ export default function Toolbar({
             key={idx}
           >
             <button
-              className={`text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor}-500 dark:hover:text-${themeColor}-500 not-selectable tooltip`}
+              className={`text-black dark:text-white cursor-pointer px-4 py-1 focus:border-0 focus:outline-none hover:text-${themeColor} dark:hover:text-${themeColor} not-selectable tooltip`}
               id={btn.id}
               onClick={() => {
                 btn.onClick();

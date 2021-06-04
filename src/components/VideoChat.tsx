@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import io from 'socket.io-client';
-import '../utils/autolink.js';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import {
   CstmOptionBtn,

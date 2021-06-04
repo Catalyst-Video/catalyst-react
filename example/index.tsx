@@ -64,7 +64,7 @@ const WrapperComp = ({
       onSubmitLog={log => {
         console.log('received: ' + log);
       }}
-      themeColor="green"
+      themeColor="cyan"
       hidden={{ chat: true }}
       //  darkModeDefault={true}
       // disableRedIndicators={false}

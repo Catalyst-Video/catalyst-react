@@ -202,7 +202,7 @@ const Settings = ({
                       defaultText="Microphone"
                     />
                     <span
-                      className={`block text-xs uppercase font-bold text-${themeColor}-500`}
+                      className={`block text-xs uppercase font-bold text-${themeColor}`}
                     >
                       {audioEnabled ? 'ON' : 'OFF'}
                     </span>
@@ -239,7 +239,7 @@ const Settings = ({
                       defaultText="Camera"
                     />
                     <span
-                      className={`block text-xs uppercase font-bold text-${themeColor}-500`}
+                      className={`block text-xs uppercase font-bold text-${themeColor}`}
                     >
                       {videoEnabled ? 'ON' : 'OFF'}
                     </span>
@@ -253,7 +253,7 @@ const Settings = ({
                       if (setDark) setDark(!dark);
                     }}
                     type="button"
-                    className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-${themeColor}-600 text-base font-medium text-white hover:bg-${themeColor}-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-400 focus:ring-${themeColor}-500 sm:ml-3 sm:w-auto sm:text-sm`}
+                    className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-${themeColor}-600 text-base font-medium text-white hover:bg-${themeColor}-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-400 focus:ring-${themeColor} sm:ml-3 sm:w-auto sm:text-sm`}
                   >
                     <FontAwesomeIcon
                       icon={dark ? faSun : faMoon}
@@ -269,14 +269,14 @@ const Settings = ({
                 {/* <button
               onClick={() => setSettings(false)}
               type="button"
-              className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-${themeColor}-600 text-base font-medium text-white hover:bg-${themeColor}-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-${themeColor}-500 sm:ml-3 sm:w-auto sm:text-sm`}
+              className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-${themeColor}-600 text-base font-medium text-white hover:bg-${themeColor}-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-${themeColor} sm:ml-3 sm:w-auto sm:text-sm`}
             >
               Close Settings
             </button> */}
                 <button
                   onClick={() => setSettings(false)}
                   type="button"
-                  className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-300 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-${themeColor}-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}
+                  className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-300 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-${themeColor} sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}
                 >
                   Close Settings
                 </button>

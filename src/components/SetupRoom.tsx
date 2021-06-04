@@ -142,7 +142,7 @@ const SetupRoom = ({
       {hasPerms && (
         <span id="welcome-msg" className="block text-lg my-3">
           Welcome to{' '}
-          <span className={`font-semibold text-${themeColor}-500`}>
+          <span className={`font-semibold text-${themeColor}`}>
             {sessionKey}
           </span>
         </span>
@@ -199,7 +199,7 @@ const SetupRoom = ({
                 defaultText="Microphone"
               />
               <span
-                className={`block text-xs uppercase font-bold text-${themeColor}-500`}
+                className={`block text-xs uppercase font-bold text-${themeColor}`}
               >
                 {audioEnabled ? 'ON' : 'OFF'}
               </span>
@@ -229,7 +229,7 @@ const SetupRoom = ({
                 defaultText="Camera"
               />
               <span
-                className={`block text-xs uppercase font-bold text-${themeColor}-500`}
+                className={`block text-xs uppercase font-bold text-${themeColor}`}
               >
                 {videoEnabled ? 'ON' : 'OFF'}
               </span>
@@ -237,7 +237,7 @@ const SetupRoom = ({
           </div>
           <button
             id="setuproom-but"
-            className={`rounded-b-xl cursor-pointer block outline-none border-0 font-bold text-md h-14 text-white w-full focus:outline-none focus:border-0 bg-${themeColor}-500`}
+            className={`rounded-b-xl cursor-pointer block outline-none border-0 font-bold text-md h-14 text-white w-full focus:outline-none focus:border-0 bg-${themeColor}`}
             onClick={() => joinCall()}
           >
             Join Call

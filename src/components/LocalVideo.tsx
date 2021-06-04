@@ -39,7 +39,7 @@ const LocalVideo = React.memo(
               </p>
               <video
                 id="local-video"
-                className={`w-full h-full rounded-2xl bg-black border-2 border-${themeColor}-500`} //TODO: border?
+                className={`w-full h-full rounded-2xl bg-black border-2 border-${themeColor}`} //TODO: border?
                 autoPlay
                 muted
                 playsInline
