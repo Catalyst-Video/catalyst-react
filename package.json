@@ -65,7 +65,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest-environment-jsdom-fifteen": "^1.0.2",
     "lint": "^0.7.0",
-    "postcss": "^7.0.35",
+    "postcss": "^8.2.10",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
     "rollup-plugin-postcss": "^4.0.0",
