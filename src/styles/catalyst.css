@@ -103,12 +103,6 @@ body {
   }
 }
 
-/* color message links */
-#catalyst .message a {
-  text-decoration: underline;
-  color: var(--themeColor);
-}
-
 /* hide tooltips on mobile  */
 @media (hover: none) {
   #catalyst button:hover span {

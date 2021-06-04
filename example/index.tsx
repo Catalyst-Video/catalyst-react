@@ -65,8 +65,9 @@ const WrapperComp = ({
         console.log('received: ' + log);
       }}
       themeColor="green"
+      hidden={{ chat: true }}
+      //  darkModeDefault={true}
       // disableRedIndicators={false}
-      // hidden={{ chat: true }}
       // darkModeDefault={true}
       // cstmOptionBtns={[
       //   {

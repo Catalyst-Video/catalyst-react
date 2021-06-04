@@ -231,15 +231,16 @@ const RemoteVideos = React.memo(
                 id="remote-name"
                 className="absolute bottom-2 right-3 flex justify-around items-center z-20 text-md rounded-full"
               >
-                {peerMetadata && peerMetadata.get(uuid) && (
-                  <div
-                    id="name"
-                    indicator-uuid={uuid}
-                    className="text-white text-xs not-selectable bg-gray-700 bg-opacity-40 px-2 py-1 rounded-xl"
-                  >
-                    {peerMetadata.get(uuid)?.name}
-                  </div>
-                )}
+                {peerMetadata &&
+                  (peerMetadata.get(uuid)?.name ?? '').length > 0 && (
+                    <div
+                      id="name"
+                      indicator-uuid={uuid}
+                      className="text-white text-xs not-selectable bg-gray-700 bg-opacity-40 px-2 py-1 rounded-xl"
+                    >
+                      {peerMetadata.get(uuid)?.name}
+                    </div>
+                  )}
               </div>
             </div>
           );

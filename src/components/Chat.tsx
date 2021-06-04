@@ -35,7 +35,7 @@ const ChatComponent = ({
       logger(msg);
       // Prevent cross site scripting
       msg = msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      msg = msg.autolink();
+      // msg = msg.autolink();
       sendToAllDataChannels('mesg:' + msg, dataChannel);
       setChatMessages(chatMessages => [...chatMessages, ['', localName, msg]]);
       setChatBox('');
@@ -49,6 +49,24 @@ const ChatComponent = ({
       inline: 'start',
     });
   }, [chatMessages.length]);
+
+  const autolink = (msg: string, isSelf: boolean) => {
+    const pattern = /(^|[\s\n]|<[A-Za-z]*\/?>)((?:https?|ftp):\/\/[\-A-Z0-9+\u0026\u2019@#\/%?=()~_|!:,.;]*[\-A-Z0-9+\u0026@#\/%=~()_|])/gi;
+    let matches = msg.match(pattern);
+    if (matches) {
+      return (
+        <a
+          target="_blank"
+          href={matches[0]}
+          className={`${
+            isSelf ? 'text-white' : `text-${themeColor}-500`
+          } underline`}
+        >
+          {matches[0]}
+        </a>
+      );
+    } else return msg;
+  };
 
   return (
     <div
@@ -67,7 +85,7 @@ const ChatComponent = ({
       </span>
       <button
         id="chat-close-btn"
-        className="rounded-full bg-transparent z-20 absolute right-4 sm:right-8 pt-3 focus:border-0 focus:outline-none text-left cursor-pointer text-black dark:text-white"
+        className="rounded-full bg-transparent z-20 absolute right-4 pt-3 focus:border-0 focus:outline-none text-left cursor-pointer text-black dark:text-white"
         onClick={() => {
           setShowChat(!showChat);
           setUnseenChats(0);
@@ -102,7 +120,7 @@ const ChatComponent = ({
                     className={`bg-${themeColor}-500 text-white relative rounded-tl-2xl rounded-tr-2xl rounded-br-sm rounded-bl-2xl  ml-auto p-2`}
                   >
                     <div className="message break-all px-2 py-1 text-xs">
-                      {msg}
+                      {autolink(msg, true)}
                     </div>
                   </div>
                 </div>
@@ -121,7 +139,7 @@ const ChatComponent = ({
                     )}
                   <div className="bg-gray-100 text-black relative flex items-center justify-center rounded-tl-2xl rounded-tr-2xl rounded-br-2xl rounded-bl-sm p-2">
                     <div className="message break-all px-2 py-1 text-xs">
-                      {msg}
+                      {autolink(msg, false)}
                     </div>
                   </div>
                 </div>
