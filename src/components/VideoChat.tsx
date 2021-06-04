@@ -640,6 +640,37 @@ const VideoChat = ({
                 themeColor={themeColor}
                 setUnseenChats={setUnseenChats}
               />
+              <Toolbar
+                toolbarRef={toolbarRef}
+                hiddenTools={hiddenTools}
+                localName={localName}
+                audioEnabled={audioEnabled}
+                disableRedIndicators={disableRedIndicators}
+                themeColor={themeColor}
+                setAudioEnabled={setAudioEnabled}
+                videoEnabled={videoEnabled}
+                setVideoEnabled={setVideoEnabled}
+                setLocalVideoText={setLocalVideoText}
+                disableLocalVidDrag={disableLocalVidDrag}
+                fsHandle={fsHandle}
+                showChat={showChat}
+                setShowChat={setShowChat}
+                unseenChats={unseenChats}
+                setUnseenChats={setUnseenChats}
+                sharing={sharing}
+                setSharing={setSharing}
+                cstmOptionBtns={cstmOptionBtns}
+                onEndCall={onEndCall}
+                localAudio={localAudio}
+                localStream={localStream}
+                setLocalAudio={setLocalAudio}
+                setLocalStream={setLocalStream}
+                dataChannel={dataChannel}
+                switchInputDevices={switchInputDevices}
+                connected={connected}
+                peerConnections={peerConnections}
+                handleLog={handleLog}
+              />
             </div>
 
             {!showChat && (
@@ -663,40 +694,9 @@ const VideoChat = ({
                 setLocalStream={setLocalStream}
                 dataChannel={dataChannel}
                 localName={localName}
+                alwaysBanner={alwaysBanner}
               />
             )}
-
-            <Toolbar
-              toolbarRef={toolbarRef}
-              hiddenTools={hiddenTools}
-              localName={localName}
-              audioEnabled={audioEnabled}
-              disableRedIndicators={disableRedIndicators}
-              themeColor={themeColor}
-              setAudioEnabled={setAudioEnabled}
-              videoEnabled={videoEnabled}
-              setVideoEnabled={setVideoEnabled}
-              setLocalVideoText={setLocalVideoText}
-              disableLocalVidDrag={disableLocalVidDrag}
-              fsHandle={fsHandle}
-              showChat={showChat}
-              setShowChat={setShowChat}
-              unseenChats={unseenChats}
-              setUnseenChats={setUnseenChats}
-              sharing={sharing}
-              setSharing={setSharing}
-              cstmOptionBtns={cstmOptionBtns}
-              onEndCall={onEndCall}
-              localAudio={localAudio}
-              localStream={localStream}
-              setLocalAudio={setLocalAudio}
-              setLocalStream={setLocalStream}
-              dataChannel={dataChannel}
-              switchInputDevices={switchInputDevices}
-              connected={connected}
-              peerConnections={peerConnections}
-              handleLog={handleLog}
-            />
           </div>
         </FullScreen>
       </div>

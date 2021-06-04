@@ -231,7 +231,7 @@ export default function Toolbar({
     <div
       id="toolbar"
       ref={toolbarRef}
-      className="fixed min-w-screen max-w-screen bottom-0 left-0 right-0 sm:bottom-2 z-6 flex justify-center flex-row"
+      className="absolute min-w-screen max-w-screen bottom-0 left-0 right-0 sm:bottom-2 z-6 flex justify-center flex-row"
     >
       <div
         id="multi-btn"

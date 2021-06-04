@@ -49,18 +49,14 @@ const WrapperComp = ({
       uniqueAppId="demo1"
       // disableSetupRoom={true}
       defaults={{
-        audioOn: false,
-        videoOn: false,
+        audioOn: true,
+        videoOn: true,
         showChatArea: false,
       }}
       showSetNameBox={true}
-      // name={'joe shmo'}
+      name={'USER_NAME'}
       // disableLocalVidDrag={true}
-      // disableRedIndicators={false}
-      // cstmWelcomeMsg="DISABLED"
       // alwaysBanner={true}
-      // hidden={{ chat: true, mute: true }}
-      // darkModeDefault={true}
       onAddPeer={() => console.log('peer added')}
       onStartCall={() => console.log('on start call')}
       onRemovePeer={() => console.log('on remove peer')}
@@ -68,6 +64,10 @@ const WrapperComp = ({
       onSubmitLog={log => {
         console.log('received: ' + log);
       }}
+      themeColor="green"
+      // disableRedIndicators={false}
+      // hidden={{ chat: true }}
+      // darkModeDefault={true}
       // cstmOptionBtns={[
       //   {
       //     id: 'test',

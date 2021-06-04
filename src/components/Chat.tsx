@@ -67,7 +67,7 @@ const ChatComponent = ({
       </span>
       <button
         id="chat-close-btn"
-        className="rounded-full bg-transparent z-20 fixed right-4 sm:right-8 pt-3 focus:border-0 focus:outline-none text-left cursor-pointer text-black dark:text-white"
+        className="rounded-full bg-transparent z-20 absolute right-4 sm:right-8 pt-3 focus:border-0 focus:outline-none text-left cursor-pointer text-black dark:text-white"
         onClick={() => {
           setShowChat(!showChat);
           setUnseenChats(0);

@@ -35,6 +35,7 @@ const Settings = ({
   dataChannel,
   hidden,
   localName,
+  alwaysBanner,
 }: {
   themeColor: string;
   vidInput?: MediaDeviceInfo;
@@ -56,6 +57,7 @@ const Settings = ({
   dataChannel?: Map<string, RTCDataChannel>;
   hidden?: HiddenToolbarItems;
   localName: string;
+  alwaysBanner?: boolean;
 }) => {
   const [showSettings, setSettings] = useState(false);
 
@@ -123,7 +125,9 @@ const Settings = ({
       onClick={() => {
         setSettings(!showSettings);
       }}
-      className="absolute top-10 sm:top-4 right-4 text-black dark:text-white cursor-pointer z-10 focus:border-0 focus:outline-none"
+      className={`absolute ${
+        alwaysBanner ? 'top-10' : 'top-10 sm:top-4'
+      } right-4 text-black dark:text-white cursor-pointer z-10 focus:border-0 focus:outline-none`}
     >
       <FontAwesomeIcon icon={faEllipsisV} size="lg" className="" />
     </button>
@@ -133,7 +137,7 @@ const Settings = ({
     <>
       <SettingsButton />
       {showSettings && (
-        <div className="fixed z-30 inset-0 overflow-y-auto" role="dialog">
+        <div className="absolute z-30 inset-0 overflow-y-auto" role="dialog">
           <div className="flex items-center sm:items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
 
