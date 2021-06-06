@@ -66,7 +66,7 @@ const CatalystChat = ({
       );
     });
 
-    navigator.mediaDevices.ondevicechange = () => window.location.reload();
+    // TODO: determine if necessary? navigator.mediaDevices.ondevicechange = () => window.location.reload();
   }, []);
 
   useEffect(() => {
