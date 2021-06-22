@@ -155,7 +155,7 @@ const SetupRoom = ({
           id="setuproom-comp"
           className="bg-white dark:bg-gray-800 rounded-2xl my-2 mx-1 shadow-md"
         >
-          <div className="md:w-96 md:h-72 bg-gray-900 rounded-t-xl z-1">
+          <div className="md:w-96 md:h-72 bg-gray-900 rounded-t-xl z-1 flex justify-items-center">
             <video
               id="setuproom-samp-video"
               className="w-auto rounded-t-xl max-h-72 z-3"
@@ -199,7 +199,7 @@ const SetupRoom = ({
                 defaultText="Microphone"
               />
               <span
-                className={`block text-xs uppercase font-bold text-${themeColor}`}
+                className={`block text-xs uppercase font-bold not-selectable text-${themeColor}`}
               >
                 {audioEnabled ? 'ON' : 'OFF'}
               </span>
@@ -229,7 +229,7 @@ const SetupRoom = ({
                 defaultText="Camera"
               />
               <span
-                className={`block text-xs uppercase font-bold text-${themeColor}`}
+                className={`block text-xs not-selectable uppercase font-bold text-${themeColor}`}
               >
                 {videoEnabled ? 'ON' : 'OFF'}
               </span>

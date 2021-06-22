@@ -76,6 +76,7 @@ const CatalystChat = ({
   if (
     hasPerms &&
     isUserReady &&
+    DetectRTC.isWebRTCSupported &&
     (DetectRTC.browser.isChrome ||
       DetectRTC.browser.isEdge ||
       DetectRTC.browser.isSafari)
@@ -121,7 +122,9 @@ const CatalystChat = ({
     (DetectRTC.browser.isChrome ||
       DetectRTC.browser.isEdge ||
       DetectRTC.browser.isSafari) &&
-    !disableSetupRoom
+    !disableSetupRoom &&
+    hasPerms &&
+    !isUserReady
   ) {
     return (
       <SetupRoom
@@ -132,7 +135,7 @@ const CatalystChat = ({
         setAudioEnabled={setAudioEnabled}
         videoEnabled={videoEnabled}
         setVideoEnabled={setVideoEnabled}
-        themeColor={themeColor ?? 'blue'}
+        themeColor={themeColor ?? DEFAULT_THEMECOLOR}
         audInput={audInput}
         vidInput={vidInput}
         setAudInput={setAudInput}
@@ -148,7 +151,7 @@ const CatalystChat = ({
         hasPerms={hasPerms}
         setPermissions={setPermissions}
         cstmBackground={cstmBackground}
-        themeColor={themeColor ?? 'blue'}
+        themeColor={themeColor ?? DEFAULT_THEMECOLOR}
         browserSupported={
           (DetectRTC.isWebRTCSupported &&
             (DetectRTC.browser.isChrome ||

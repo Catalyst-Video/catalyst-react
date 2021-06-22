@@ -62,15 +62,17 @@ const DeviceSelector = ({
   transition duration-150 ease-in-out origin-top min-w-32 cursor-pointer"
       >
         {devices?.map(dev => {
-          return (
-            <li
-              onClick={() => setDevice(dev)}
-              key={dev.label}
-              className="rounded-sm px-3 py-1 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer dark:text-white"
-            >
-              {dev.label.substring(0, dev.label.indexOf(' ('))}
-            </li>
-          );
+          if (dev.label.substring(0, dev.label.indexOf(' (')).length > 0)
+            return (
+              <li
+                onClick={() => setDevice(dev)}
+                key={dev.label}
+                className="rounded-sm px-3 py-1 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer dark:text-white"
+              >
+                {dev.label.substring(0, dev.label.indexOf(' ('))}
+              </li>
+            );
+          else return null;
         })}
       </ul>
     </div>

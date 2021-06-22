@@ -146,12 +146,12 @@ const Settings = ({
             </span>
 
             <div className="inline-block align-bottom bg-white dark:bg-gray-800 rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              <div className="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+              <div className="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
                   <div
                     className={`mx-auto flex-shrink-0 flex items-center justify-center h-16 w-16 rounded-full bg-${themeColor} sm:mx-0 sm:h-10 sm:w-10`}
                   >
-                    <FontAwesomeIcon icon={faCogs} size="lg"></FontAwesomeIcon>
+                    <FontAwesomeIcon icon={faCogs} size="lg" className="text-white"></FontAwesomeIcon>
                   </div>
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                     <h3
@@ -171,7 +171,7 @@ const Settings = ({
                 <br />
                 <div
                   id="opts"
-                  className="flex justify-center items-center m-1 bg-white dark:bg-gray-800"
+                  className="flex justify-center items-center m-1"
                 >
                   <div id="opt-mic" className="text-center text-base my-2 mr-5">
                     <button
@@ -247,7 +247,7 @@ const Settings = ({
                 </div>
               </div>
               {!hidden?.darkmode ? (
-                <div className="w-full text-center mb-4 px-4 sm:px-0 bg-white dark:bg-gray-800">
+                <div className="w-full text-center mb-4 px-4 sm:px-0 ">
                   <button
                     onClick={() => {
                       if (setDark) setDark(!dark);
@@ -276,7 +276,7 @@ const Settings = ({
                 <button
                   onClick={() => setSettings(false)}
                   type="button"
-                  className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-300 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-${themeColor} sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}
+                  className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-300 text-base font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-${themeColor} sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}
                 >
                   Close Settings
                 </button>

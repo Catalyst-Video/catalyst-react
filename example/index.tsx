@@ -66,6 +66,7 @@ const WrapperComp = ({
       }}
       themeColor="cyan"
       hidden={{ chat: true }}
+      disableSetupRoom={true}
       //  darkModeDefault={true}
       // disableRedIndicators={false}
       // darkModeDefault={true}
