@@ -5,6 +5,9 @@ module.exports = {
     // require('tailwindcss/nesting')(require('postcss-nesting')),
     require('tailwindcss'),
     require('autoprefixer'),
+    require('cssnano')({
+      preset: 'default',
+    }),
     // require('postcss-nested')({ bubble: ['screen'] }),
   ],
 };
