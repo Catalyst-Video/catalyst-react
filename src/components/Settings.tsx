@@ -266,13 +266,6 @@ const Settings = ({
               ) : null}
 
               <div className="bg-gray-50 dark:bg-gray-600 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                {/* <button
-              onClick={() => setSettings(false)}
-              type="button"
-              className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-${themeColor}-600 text-base font-medium text-white hover:bg-${themeColor}-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-${themeColor} sm:ml-3 sm:w-auto sm:text-sm`}
-            >
-              Close Settings
-            </button> */}
                 <button
                   onClick={() => setSettings(false)}
                   type="button"

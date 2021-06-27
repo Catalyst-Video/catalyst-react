@@ -25,7 +25,6 @@ const SetupRoom = ({
   cstmBackground,
   setLocalName,
   showSetNameBox,
-  dark,
 }: {
   sessionKey: string;
   setUserReady: Function;
@@ -41,7 +40,6 @@ const SetupRoom = ({
   cstmBackground?: string;
   setLocalName: Function;
   showSetNameBox?: boolean;
-  dark: boolean;
 }) => {
   const setupRoomRef = useRef<HTMLDivElement>(null);
   const testVideoRef = useRef<HTMLVideoElement>(null);
@@ -111,9 +109,7 @@ const SetupRoom = ({
   return (
     <div
       id="setuproom"
-      className={`${
-        dark ? 'dark' : ''
-      } h-full w-full flex justify-between items-center flex-col flex-1`}
+      className="h-full w-full flex justify-between items-center flex-col flex-1"
       style={
         cstmBackground
           ? cstmBackground.length > 0

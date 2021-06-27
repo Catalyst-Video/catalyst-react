@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // Styles
 import './styles/catalyst.css';
 import './styles/tailwind.output.css';
+// import './styles/oldcss.css';
 
 // Types
 import { CatalystVideoChatProps } from './typings/interfaces';
@@ -57,6 +58,8 @@ const CatalystChat = ({
   const [audInput, setAudInput] = useState<MediaDeviceInfo>();
   const [vidInput, setVidInput] = useState<MediaDeviceInfo>();
 
+  const catalystRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     DetectRTC.load(() => {
       setPermissions(
@@ -66,6 +69,13 @@ const CatalystChat = ({
       );
     });
 
+    if (
+      catalystRef &&
+      catalystRef.current?.parentNode?.parentNode?.nodeName === 'BODY'
+    ) {
+      catalystRef.current.style.position = 'fixed';
+    }
+
     // TODO: determine if necessary? navigator.mediaDevices.ondevicechange = () => window.location.reload();
   }, []);
 
@@ -73,95 +83,88 @@ const CatalystChat = ({
     setThemeColor(themeColor ?? DEFAULT_THEMECOLOR);
   }, [themeColor]);
 
-  if (
-    hasPerms &&
-    isUserReady &&
-    DetectRTC.isWebRTCSupported &&
-    (DetectRTC.browser.isChrome ||
-      DetectRTC.browser.isEdge ||
-      DetectRTC.browser.isSafari)
-  ) {
-    return (
-      <VideoChat
-        sessionKey={sessionKey}
-        uniqueAppId={uniqueAppId}
-        cstmServerAddress={cstmServerAddress ?? DEFAULT_SERVER_ADDRESS}
-        defaults={defaults}
-        hiddenTools={hiddenTools}
-        picInPic={picInPic}
-        onStartCall={onStartCall}
-        onAddPeer={onAddPeer}
-        onRemovePeer={onRemovePeer}
-        onEndCall={onEndCall}
-        onSubmitLog={onSubmitLog}
-        localName={localName}
-        arbitraryData={arbitraryData}
-        onReceiveArbitraryData={onReceiveArbitraryData}
-        cstmWelcomeMsg={cstmWelcomeMsg}
-        cstmOptionBtns={cstmOptionBtns}
-        themeColor={themeColor ?? DEFAULT_THEMECOLOR}
-        autoFade={autoFade ?? DEFAULT_AUTOFADE}
-        alwaysBanner={alwaysBanner}
-        disableLocalVidDrag={disableLocalVidDrag}
-        dark={dark}
-        setDark={setDark}
-        audioEnabled={audioEnabled}
-        setAudioEnabled={setAudioEnabled}
-        videoEnabled={videoEnabled}
-        setVideoEnabled={setVideoEnabled}
-        audInput={audInput}
-        vidInput={vidInput}
-        setAudInput={setAudInput}
-        setVidInput={setVidInput}
-        disableRedIndicators={disableRedIndicators}
-        fourThreeAspectRatioEnabled={fourThreeAspectRatioEnabled}
-      />
-    );
-  } else if (
-    DetectRTC.isWebRTCSupported &&
-    (DetectRTC.browser.isChrome ||
-      DetectRTC.browser.isEdge ||
-      DetectRTC.browser.isSafari) &&
-    !disableSetupRoom &&
-    hasPerms &&
-    !isUserReady
-  ) {
-    return (
-      <SetupRoom
-        sessionKey={sessionKey}
-        dark={dark}
-        setUserReady={setUserReady}
-        audioEnabled={audioEnabled}
-        setAudioEnabled={setAudioEnabled}
-        videoEnabled={videoEnabled}
-        setVideoEnabled={setVideoEnabled}
-        themeColor={themeColor ?? DEFAULT_THEMECOLOR}
-        audInput={audInput}
-        vidInput={vidInput}
-        setAudInput={setAudInput}
-        setVidInput={setVidInput}
-        cstmBackground={cstmBackground}
-        setLocalName={setLocalName}
-        showSetNameBox={showSetNameBox}
-      />
-    );
-  } else {
-    return (
-      <PermsLoading
-        hasPerms={hasPerms}
-        setPermissions={setPermissions}
-        cstmBackground={cstmBackground}
-        themeColor={themeColor ?? DEFAULT_THEMECOLOR}
-        browserSupported={
-          (DetectRTC.isWebRTCSupported &&
-            (DetectRTC.browser.isChrome ||
-              DetectRTC.browser.isEdge ||
-              DetectRTC.browser.isSafari)) ??
-          true
-        }
-      />
-    );
-  }
+  return (
+    <div id="ctw" ref={catalystRef} className={dark ? 'dark' : ''}>
+      {hasPerms &&
+      isUserReady &&
+      DetectRTC.isWebRTCSupported &&
+      (DetectRTC.browser.isChrome ||
+        DetectRTC.browser.isEdge ||
+        DetectRTC.browser.isSafari) ? (
+        <VideoChat
+          sessionKey={sessionKey}
+          uniqueAppId={uniqueAppId}
+          cstmServerAddress={cstmServerAddress ?? DEFAULT_SERVER_ADDRESS}
+          defaults={defaults}
+          hiddenTools={hiddenTools}
+          picInPic={picInPic}
+          onStartCall={onStartCall}
+          onAddPeer={onAddPeer}
+          onRemovePeer={onRemovePeer}
+          onEndCall={onEndCall}
+          onSubmitLog={onSubmitLog}
+          localName={localName}
+          arbitraryData={arbitraryData}
+          onReceiveArbitraryData={onReceiveArbitraryData}
+          cstmWelcomeMsg={cstmWelcomeMsg}
+          cstmOptionBtns={cstmOptionBtns}
+          themeColor={themeColor ?? DEFAULT_THEMECOLOR}
+          autoFade={autoFade ?? DEFAULT_AUTOFADE}
+          alwaysBanner={alwaysBanner}
+          disableLocalVidDrag={disableLocalVidDrag}
+          dark={dark}
+          setDark={setDark}
+          audioEnabled={audioEnabled}
+          setAudioEnabled={setAudioEnabled}
+          videoEnabled={videoEnabled}
+          setVideoEnabled={setVideoEnabled}
+          audInput={audInput}
+          vidInput={vidInput}
+          setAudInput={setAudInput}
+          setVidInput={setVidInput}
+          disableRedIndicators={disableRedIndicators}
+          fourThreeAspectRatioEnabled={fourThreeAspectRatioEnabled}
+        />
+      ) : DetectRTC.isWebRTCSupported &&
+        (DetectRTC.browser.isChrome ||
+          DetectRTC.browser.isEdge ||
+          DetectRTC.browser.isSafari) &&
+        !disableSetupRoom &&
+        hasPerms &&
+        !isUserReady ? (
+        <SetupRoom
+          sessionKey={sessionKey}
+          setUserReady={setUserReady}
+          audioEnabled={audioEnabled}
+          setAudioEnabled={setAudioEnabled}
+          videoEnabled={videoEnabled}
+          setVideoEnabled={setVideoEnabled}
+          themeColor={themeColor ?? DEFAULT_THEMECOLOR}
+          audInput={audInput}
+          vidInput={vidInput}
+          setAudInput={setAudInput}
+          setVidInput={setVidInput}
+          cstmBackground={cstmBackground}
+          setLocalName={setLocalName}
+          showSetNameBox={showSetNameBox}
+        />
+      ) : (
+        <PermsLoading
+          hasPerms={hasPerms}
+          setPermissions={setPermissions}
+          cstmBackground={cstmBackground}
+          themeColor={themeColor ?? DEFAULT_THEMECOLOR}
+          browserSupported={
+            (DetectRTC.isWebRTCSupported &&
+              (DetectRTC.browser.isChrome ||
+                DetectRTC.browser.isEdge ||
+                DetectRTC.browser.isSafari)) ??
+            true
+          }
+        />
+      )}
+    </div>
+  );
 };
 
 export default CatalystChat;

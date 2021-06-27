@@ -8,6 +8,7 @@ module.exports = {
   ],
   // mode: 'jit',
   darkMode: 'class', // or 'media' or 'class'
+  important: '#ctw',
   theme: {
     colors: {
       // Build your palette here
@@ -25,7 +26,7 @@ module.exports = {
       emerald: colors.emerald[500],
       teal: colors.teal[500],
       cyan: colors.cyan[500],
-      lightBlue: colors.lightBlue[500],
+      sky: colors.sky[500],
       blue: colors.blue[500],
       indigo: colors.indigo[500],
       violet: colors.violet[500],

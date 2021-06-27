@@ -65,7 +65,7 @@ const WrapperComp = ({
         console.log('received: ' + log);
       }}
       themeColor="cyan"
-      hidden={{ chat: true }}
+      // hidden={{ chat: true }}
       disableSetupRoom={true}
       //  darkModeDefault={true}
       // disableRedIndicators={false}

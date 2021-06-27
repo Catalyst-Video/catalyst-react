@@ -126,7 +126,6 @@ const VideoChat = ({
 
   const [startTime, setStartTime] = useState(new Date());
 
-  const catalystRef = useRef<HTMLDivElement>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
 
   const requestMediaStream = () => {
@@ -540,12 +539,6 @@ const VideoChat = ({
   }, [audInput, vidInput]);
 
   useEffect(() => {
-    if (
-      catalystRef &&
-      catalystRef.current?.parentNode?.parentNode?.nodeName === 'BODY'
-    )
-      catalystRef.current.style.position = 'fixed';
-
     window.addEventListener('unload', handleLog);
     // window.addEventListener('beforeunload', alertUser);
 
@@ -584,11 +577,8 @@ const VideoChat = ({
 
   return (
     <div
-      id="catalyst"
-      ref={catalystRef}
-      className={`${
-        dark ? 'dark' : ''
-      } box-border h-full w-full m-0 p-0 opacity-0 overflow-hidden max-h-screen max-w-screen relative`}
+      id="video-chat"
+      className="box-border h-full w-full m-0 p-0 overflow-hidden max-h-screen max-w-screen relative" //opacity-0
     >
       <div id="bg-theme" className="h-full w-full bg-gray-200 dark:bg-gray-900">
         <FullScreen
