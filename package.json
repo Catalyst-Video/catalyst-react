@@ -27,8 +27,6 @@
     "watch:tw": "postcss src/styles/tailwind.css -o src/styles/tailwind.output.css -w",
     "prestart:tw": "postcss src/styles/tailwind.css -o src/styles/tailwind.output.css",
     "build:tw": "postcss src/styles/tailwind.css -o src/styles/tailwind.output.css",
-    "build:tailwind": "npx tailwindcss-cli@latest build src/styles/tailwind.css -o src/styles/tailwind.output.css -w",
-    "build:tailwind:prod": "npx tailwindcss-cli@latest build src/styles/tailwind.css -o src/styles/tailwind.output.css",
     "prestart": "npm run prestart:tw",
     "prebuild": "npm run build:tw",
     "start": "tsdx watch",
