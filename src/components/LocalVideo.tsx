@@ -29,17 +29,22 @@ const LocalVideo = React.memo(
           >
             <div
               id="local-vid-wrapper"
-              className="cursor-move z-20 relative flex justify-center w-full h-auto"
+              className="relative inline-block align-middle self-center overflow-hidden text-center h-autocursor-move z-20  justify-center shadow-xl bg-gray-800 rounded-2xl" //  w-44 h-auto"
+              style={{
+                // 16:9
+                width: '192px',
+                height: '108px',
+              }}
             >
-              <p
+              {/* <p
                 id="local-text"
                 className="absolute flex items-center text-white opacity-40 whitespace-nowrap h-full font-bold z-5 text-xs sm:text-sm not-selectable"
               >
                 {localVideoText}
-              </p>
+              </p> */}
               <video
                 id="local-video"
-                className={`w-full h-full rounded-2xl bg-black border-2 border-${themeColor}`} //TODO: border?
+                className={`w-full h-full relative z-20 overflow-hidden inline-block shadow-md object-cover`} //TODO: border? border-2 border-${themeColor}
                 autoPlay
                 muted
                 playsInline

@@ -618,6 +618,10 @@ const VideoChat = ({
                 sessionKey={sessionKey}
                 themeColor={themeColor}
                 picInPic={picInPic}
+                audioEnabled={audioEnabled}
+                videoEnabled={videoEnabled}
+                localName={localName}
+                localStream={localStream}
               />
               <Chat
                 localName={localName}

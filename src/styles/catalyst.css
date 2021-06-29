@@ -78,11 +78,22 @@
 } */
 
 /* draggable local video */
-#ctw #local-vid-wrapper {
-  width: 15%;
-  max-height: 100px;
-  min-width: 100px;
-} 
+/* #ctw #local-vid-wrapper {
+  max-width: 130px;
+  height: auto;
+  width: 100%;
+  min-width: 100px; 
+}  */
+
+#ctw #local-vid-wrapper video {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
+#ctw video #local-video {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
 
 /* show tooltips on hover */
 #ctw button.tooltip:hover span {
