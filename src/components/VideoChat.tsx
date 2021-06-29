@@ -131,9 +131,9 @@ const VideoChat = ({
   const requestMediaStream = () => {
     logger('requestMediaStream');
     let audioProp: boolean | { deviceId: string | undefined } = true;
-    let videoProp: boolean | { deviceId: string | undefined } = true;
+    let videoProp: boolean | { deviceId: string | undefined, aspectRatio: number } = true;
     audioProp = { deviceId: audInput?.deviceId };
-    videoProp = { deviceId: vidInput?.deviceId };
+    videoProp = { deviceId: vidInput?.deviceId, aspectRatio: 16 / 9  };
     navigator.mediaDevices
       .getUserMedia({
         audio: audioProp,
@@ -478,9 +478,11 @@ const VideoChat = ({
   const switchInputDevices = () => {
     logger('switchInputDevices');
     let audioProp: boolean | { deviceId: string | undefined } = true;
-    let videoProp: boolean | { deviceId: string | undefined } = true;
+    let videoProp:
+      | boolean
+      | { deviceId: string | undefined; aspectRatio: number } = true;
     audioProp = { deviceId: audInput?.deviceId };
-    videoProp = { deviceId: vidInput?.deviceId };
+    videoProp = { deviceId: vidInput?.deviceId, aspectRatio: 16 / 9 };
     navigator.mediaDevices
       .getUserMedia({
         audio: audioProp,

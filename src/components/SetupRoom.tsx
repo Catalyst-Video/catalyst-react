@@ -83,9 +83,12 @@ const SetupRoom = ({
     });
     if (videoEnabled || audioEnabled) {
       let audioProp: boolean | { deviceId: string | undefined } = false;
-      let videoProp: boolean | { deviceId: string | undefined } = false;
+      let videoProp:
+        | boolean
+        | { deviceId: string | undefined; aspectRatio: number } = false;
       if (audioEnabled) audioProp = { deviceId: audInput?.deviceId };
-      if (videoEnabled) videoProp = { deviceId: vidInput?.deviceId };
+      if (videoEnabled)
+        videoProp = { deviceId: vidInput?.deviceId, aspectRatio: 16 / 9 };
       navigator.mediaDevices
         .getUserMedia({
           audio: audioProp,

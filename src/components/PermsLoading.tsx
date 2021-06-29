@@ -49,7 +49,9 @@ const PermsLoading = ({
       navigator.mediaDevices
         .getUserMedia({
           audio: true,
-          video: true,
+          video: {
+            aspectRatio: 16 / 9,
+          },
         })
         .then(stream => {
           setPermissions(true);
