@@ -57,8 +57,6 @@ const CatalystChat = ({
   const [audInput, setAudInput] = useState<MediaDeviceInfo>();
   const [vidInput, setVidInput] = useState<MediaDeviceInfo>();
 
-  const catalystRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     DetectRTC.load(() => {
       setPermissions(
@@ -67,15 +65,6 @@ const CatalystChat = ({
           DetectRTC.isWebsiteHasMicrophonePermissions
       );
     });
-
-    // if (
-    //   catalystRef &&
-    //   catalystRef.current?.parentNode?.parentNode?.nodeName === 'BODY'
-    // ) {
-    //   catalystRef.current.style.position = 'fixed';
-    // }
-
-    // TODO: determine if necessary? navigator.mediaDevices.ondevicechange = () => window.location.reload();
   }, []);
 
   useEffect(() => {
@@ -85,13 +74,11 @@ const CatalystChat = ({
   return (
     <div
       id="ctw"
-      ref={catalystRef}
-      style={
-        catalystRef &&
-        catalystRef.current?.parentNode?.parentNode?.nodeName === 'BODY'
-          ? { position: 'fixed' }
-          : {}
-      }
+      ref={ref => {
+        if (ref && ref.parentNode?.parentNode?.nodeName === 'BODY') {
+          ref.style.position = 'fixed';
+        }
+      }}
     >
       <div
         id="theme-wrapper"
