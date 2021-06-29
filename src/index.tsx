@@ -75,8 +75,14 @@ const CatalystChat = ({
     <div
       id="ctw"
       ref={ref => {
+        // dynamically make Catalyst work properly if there is no parent component
         if (ref && ref.parentNode?.parentNode?.nodeName === 'BODY') {
           ref.style.position = 'fixed';
+          let ss = document.createElement('style');
+          document.head.appendChild(ss);
+          ss?.sheet?.insertRule(
+            'html, body { margin: 0px; padding: 0px; height: 100%; }'
+          );
         }
       }}
     >
