@@ -32,7 +32,7 @@ const PopoutLocalVideo = React.memo(
             <div
               id="local-vid-wrapper"
               onDoubleClick={() => setLocalPopout(localPopup => !localPopup)}
-              className="relative inline-block align-middle self-center overflow-hidden text-center h-auto focus:cursor-move z-20  justify-center shadow-xl bg-gray-800 rounded-2xl"
+              className="inline-block align-middle self-center overflow-hidden text-center h-auto focus:cursor-move z-20  justify-center shadow-xl bg-gray-800 rounded-2xl absolute"
               style={{
                 // 16:9
                 width: '192px',
