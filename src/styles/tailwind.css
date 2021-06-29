@@ -1,3 +1,326 @@
-@tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* @tailwind base; */
+#ctw html {
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+}
+#ctw body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+}
+#ctw hr {
+  height: 0;
+  color: inherit;
+}
+#ctw abbr[title] {
+  -webkit-text-decoration: underline dotted;
+  text-decoration: underline dotted;
+}
+#ctw b, #ctw strong {
+  font-weight: bolder;
+}
+#ctw code, #ctw kbd, #ctw pre, #ctw samp {
+  font-family: ui-monospace, SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+  font-size: 1em;
+}
+#ctw small {
+  font-size: 80%;
+}
+#ctw sub, #ctw sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+#ctw sub {
+  bottom: -0.25em;
+}
+#ctw sup {
+  top: -0.5em;
+}
+#ctw table {
+  text-indent: 0;
+  border-color: inherit;
+}
+#ctw button, #ctw input, #ctw optgroup, #ctw select, #ctw textarea {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+}
+#ctw button, #ctw select {
+  text-transform: none;
+}
+#ctw [type=button], #ctw [type=reset], #ctw [type=submit], #ctw button {
+  -webkit-appearance: button;
+}
+#ctw ::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+#ctw :-moz-focusring {
+  outline: 1px dotted ButtonText;
+}
+#ctw :-moz-ui-invalid {
+  box-shadow: none;
+}
+#ctw legend {
+  padding: 0;
+}
+#ctw progress {
+  vertical-align: baseline;
+}
+#ctw ::-webkit-inner-spin-button, #ctw ::-webkit-outer-spin-button {
+  height: auto;
+}
+#ctw [type=search] {
+  -webkit-appearance: textfield;
+  outline-offset: -2px;
+}
+#ctw ::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+#ctw ::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  font: inherit;
+}
+#ctw summary {
+  display: list-item;
+}
+#ctw blockquote, #ctw dd, #ctw dl, #ctw figure, #ctw h1, #ctw h2, #ctw h3, #ctw h4, #ctw h5, #ctw h6, #ctw hr, #ctw p, #ctw pre {
+  margin: 0;
+}
+#ctw button {
+  background-color: transparent;
+  background-image: none;
+}
+#ctw fieldset, #ctw ol, #ctw ul {
+  margin: 0;
+  padding: 0;
+}
+#ctw ol, #ctw ul {
+  list-style: none;
+}
+#ctw html {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+  line-height: 1.5;
+}
+#ctw body {
+  font-family: inherit;
+  line-height: inherit;
+}
+#ctw *, #ctw :after, #ctw :before {
+  box-sizing: border-box;
+  border: 0 solid;
+}
+#ctw hr {
+  border-top-width: 1px;
+}
+#ctw img {
+  border-style: solid;
+}
+#ctw textarea {
+  resize: vertical;
+}
+#ctw input::-moz-placeholder, #ctw textarea::-moz-placeholder {
+  opacity: 1;
+  color: #9ca3af;
+}
+#ctw input:-ms-input-placeholder, #ctw textarea:-ms-input-placeholder {
+  opacity: 1;
+  color: #9ca3af;
+}
+#ctw input::placeholder, #ctw textarea::placeholder {
+  opacity: 1;
+  color: #9ca3af;
+}
+#ctw [role=button], #ctw button {
+  cursor: pointer;
+}
+#ctw table {
+  border-collapse: collapse;
+}
+#ctw h1, #ctw h2, #ctw h3, #ctw h4, #ctw h5, #ctw h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+#ctw a {
+  color: inherit;
+  text-decoration: inherit;
+}
+#ctw button, #ctw input, #ctw optgroup, #ctw select, #ctw textarea {
+  padding: 0;
+  line-height: inherit;
+  color: inherit;
+}
+#ctw code, #ctw kbd, #ctw pre, #ctw samp {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+}
+#ctw audio, #ctw canvas, #ctw embed, #ctw iframe, #ctw img, #ctw object, #ctw svg, #ctw video {
+  display: block;
+  vertical-align: middle;
+}
+#ctw img, #ctw video {
+  max-width: 100%;
+  height: auto;
+}
+#ctw *, #ctw :after, #ctw :before {
+  --tw-border-opacity: 1;
+  border-color: rgba(229, 231, 235, var(--tw-border-opacity));
+}
+#ctw .container {
+  width: 100%;
+}
+@media (min-width: 640px) {
+  #ctw .container {
+    max-width: 640px;
+  }
+}
+@media (min-width: 768px) {
+  #ctw .container {
+    max-width: 768px;
+  }
+}
+@media (min-width: 1024px) {
+  #ctw .container {
+    max-width: 1024px;
+  }
+}
+@media (min-width: 1280px) {
+  #ctw .container {
+    max-width: 1280px;
+  }
+}
+@media (min-width: 1536px) {
+  #ctw .container {
+    max-width: 1536px;
+  }
+}
+#ctw .aspect-w-1, #ctw .aspect-w-2, #ctw .aspect-w-3, #ctw .aspect-w-4, #ctw .aspect-w-5, #ctw .aspect-w-6, #ctw .aspect-w-7, #ctw .aspect-w-8, #ctw .aspect-w-9, #ctw .aspect-w-10, #ctw .aspect-w-11, #ctw .aspect-w-12, #ctw .aspect-w-13, #ctw .aspect-w-14, #ctw .aspect-w-15, #ctw .aspect-w-16 {
+  position: relative;
+  padding-bottom: calc(var(--tw-aspect-h)/var(--tw-aspect-w)*100%);
+}
+#ctw .aspect-w-1 > *, #ctw .aspect-w-2 > *, #ctw .aspect-w-3 > *, #ctw .aspect-w-4 > *, #ctw .aspect-w-5 > *, #ctw .aspect-w-6 > *, #ctw .aspect-w-7 > *, #ctw .aspect-w-8 > *, #ctw .aspect-w-9 > *, #ctw .aspect-w-10 > *, #ctw .aspect-w-11 > *, #ctw .aspect-w-12 > *, #ctw .aspect-w-13 > *, #ctw .aspect-w-14 > *, #ctw .aspect-w-15 > *, #ctw .aspect-w-16 > * {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+#ctw .aspect-none {
+  position: static;
+  padding-bottom: 0;
+}
+#ctw .aspect-none > * {
+  position: static;
+  height: auto;
+  width: auto;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+}
+#ctw .aspect-w-1 {
+  --tw-aspect-w: 1;
+}
+#ctw .aspect-w-2 {
+  --tw-aspect-w: 2;
+}
+#ctw .aspect-w-3 {
+  --tw-aspect-w: 3;
+}
+#ctw .aspect-w-4 {
+  --tw-aspect-w: 4;
+}
+#ctw .aspect-w-5 {
+  --tw-aspect-w: 5;
+}
+#ctw .aspect-w-6 {
+  --tw-aspect-w: 6;
+}
+#ctw .aspect-w-7 {
+  --tw-aspect-w: 7;
+}
+#ctw .aspect-w-8 {
+  --tw-aspect-w: 8;
+}
+#ctw .aspect-w-9 {
+  --tw-aspect-w: 9;
+}
+#ctw .aspect-w-10 {
+  --tw-aspect-w: 10;
+}
+#ctw .aspect-w-11 {
+  --tw-aspect-w: 11;
+}
+#ctw .aspect-w-12 {
+  --tw-aspect-w: 12;
+}
+#ctw .aspect-w-13 {
+  --tw-aspect-w: 13;
+}
+#ctw .aspect-w-14 {
+  --tw-aspect-w: 14;
+}
+#ctw .aspect-w-15 {
+  --tw-aspect-w: 15;
+}
+#ctw .aspect-w-16 {
+  --tw-aspect-w: 16;
+}
+#ctw .aspect-h-1 {
+  --tw-aspect-h: 1;
+}
+#ctw .aspect-h-2 {
+  --tw-aspect-h: 2;
+}
+#ctw .aspect-h-3 {
+  --tw-aspect-h: 3;
+}
+#ctw .aspect-h-4 {
+  --tw-aspect-h: 4;
+}
+#ctw .aspect-h-5 {
+  --tw-aspect-h: 5;
+}
+#ctw .aspect-h-6 {
+  --tw-aspect-h: 6;
+}
+#ctw .aspect-h-7 {
+  --tw-aspect-h: 7;
+}
+#ctw .aspect-h-8 {
+  --tw-aspect-h: 8;
+}
+#ctw .aspect-h-9 {
+  --tw-aspect-h: 9;
+}
+#ctw .aspect-h-10 {
+  --tw-aspect-h: 10;
+}
+#ctw .aspect-h-11 {
+  --tw-aspect-h: 11;
+}
+#ctw .aspect-h-12 {
+  --tw-aspect-h: 12;
+}
+#ctw .aspect-h-13 {
+  --tw-aspect-h: 13;
+}
+#ctw .aspect-h-14 {
+  --tw-aspect-h: 14;
+}
+#ctw .aspect-h-15 {
+  --tw-aspect-h: 15;
+}
+#ctw .aspect-h-16 {
+  --tw-aspect-h: 16;
+}
