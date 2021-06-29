@@ -3,7 +3,7 @@ import Chat from './Chat';
 import Settings from './Settings';
 import Toolbar from './Toolbar';
 import RemoteVideos from './RemoteVideos';
-import LocalVideo from './LocalVideo';
+import LocalVideo from './PopoutLocalVideo';
 import PermsLoading from './PermsLoading';
 import SetupRoom from './SetupRoom';
 import HeaderImg from './HeaderImg';

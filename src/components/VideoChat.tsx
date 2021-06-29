@@ -595,14 +595,6 @@ const VideoChat = ({
           />
 
           <div id="call-section" className="w-full h-full items-end">
-            <LocalVideo
-              localStream={localStream}
-              disableLocalVidDrag={disableLocalVidDrag}
-              localVideoText={localVideoText}
-              themeColor={themeColor}
-              localName={localName}
-            />
-
             <div
               id="vid-chat-cont"
               className="absolute top-0 left-0 right-0 bottom-0 flex"

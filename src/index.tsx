@@ -119,8 +119,6 @@ const CatalystChat = ({
             autoFade={autoFade ?? DEFAULT_AUTOFADE}
             alwaysBanner={alwaysBanner}
             disableLocalVidDrag={disableLocalVidDrag}
-            dark={dark}
-            setDark={setDark}
             audioEnabled={audioEnabled}
             setAudioEnabled={setAudioEnabled}
             videoEnabled={videoEnabled}
@@ -131,6 +129,8 @@ const CatalystChat = ({
             setVidInput={setVidInput}
             disableRedIndicators={disableRedIndicators}
             fourThreeAspectRatioEnabled={fourThreeAspectRatioEnabled}
+            setDark={setDark}
+            dark={dark}
           />
         ) : DetectRTC.isWebRTCSupported &&
           (DetectRTC.browser.isChrome ||

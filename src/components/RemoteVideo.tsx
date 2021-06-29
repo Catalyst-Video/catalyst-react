@@ -1,18 +1,21 @@
 import React from 'react';
+import { PeerMetadata } from '../typings/interfaces';
+import { logger } from '../utils/general';
 
-const LocalVideo = React.memo(
+const RemoteVideo = React.memo(
   ({
+    uuid,
     track,
     vidDims,
+    idx,
     picInPic,
     disableRedIndicators,
     themeColor,
-    audioEnabled,
-    videoEnabled,
-    localName,
-    setLocalPopout,
+    peerMetadata,
   }: {
+    uuid: string;
     track: MediaStream;
+    idx: number;
     vidDims: {
       width: string;
       height: string;
@@ -21,16 +24,43 @@ const LocalVideo = React.memo(
     picInPic?: string;
     disableRedIndicators?: boolean;
     themeColor: string;
-    audioEnabled: boolean;
-    videoEnabled: boolean;
-    localName?: string;
-    setLocalPopout: Function;
+    peerMetadata: Map<string, PeerMetadata>;
   }) => {
+    const handlePictureInPicture = (video: HTMLVideoElement) => {
+      if ('pictureInPictureEnabled' in document) {
+        // @ts-ignore
+        if (document && document.pictureInPictureElement) {
+          // @ts-ignore
+          document.exitPictureInPicture().catch((e: string) => {
+            logger('Error exiting pip.' + e);
+          });
+        } else {
+          // @ts-ignore
+          switch (video?.webkitPresentationMode) {
+            case 'inline':
+              // @ts-ignore
+              video?.webkitSetPresentationMode('picture-in-picture');
+              break;
+            case 'picture-in-picture':
+              // @ts-ignore
+              video?.webkitSetPresentationMode('inline');
+              break;
+            default:
+              // @ts-ignore
+              video.requestPictureInPicture().catch((e: string) => {
+                logger('You must join a call to enter picture in picture');
+              });
+          }
+        }
+      } else {
+        logger('You must join a call to enter picture in picture');
+      }
+    };
+
     return (
       <div
         className="relative z-0 inline-block align-middle self-center overflow-hidden text-center h-auto bg-gray-800 rounded-2xl" // aspect-w-16 aspect-h-9
-        key="local-div"
-        onDoubleClick={() => setLocalPopout(localPopup => !localPopup)}
+        key={uuid}
         style={{
           width: vidDims.width,
           height: vidDims.height,
@@ -39,27 +69,32 @@ const LocalVideo = React.memo(
         }}
       >
         <video
-          id="local-video"
+          id="remote-video"
           className="w-full h-full relative z-0 overflow-hidden inline-block shadow-md"
           ref={vid => {
             if (vid) {
               vid.srcObject = track as MediaProvider;
+              if (picInPic != 'disabled')
+                vid.addEventListener(picInPic ?? 'dblclick', () => {
+                  handlePictureInPicture(vid);
+                });
             }
           }}
-          key="local-vid"
+          key={idx}
           autoPlay
           playsInline
+          vid-uuid={uuid}
         ></video>
         <div
-          id="local-indicators"
+          id="remote-indicators"
           className="absolute bottom-4 left-3 flex justify-around items-center z-20 text-md rounded-full"
         >
           {/* muted-uuid */}
           <i
-            id="local-muted"
+            id="remote-muted"
             className={`text-${
               disableRedIndicators ? themeColor : 'red'
-            } h-4 w-4 mr-3 ${audioEnabled ? 'hidden' : ''}`}
+            } h-4 w-4 mr-3 ${peerMetadata.get(uuid)?.audioOn ? 'hidden' : ''}`}
           >
             <svg
               aria-hidden="true"
@@ -79,10 +114,10 @@ const LocalVideo = React.memo(
           </i>
           {/* paused-uuid */}
           <i
-            id="local-paused"
+            id="remote-paused"
             className={`text-${
               disableRedIndicators ? themeColor : 'red'
-            }  h-4 w-4 ${videoEnabled ? 'hidden' : ''}`}
+            }  h-4 w-4 ${peerMetadata.get(uuid)?.videoOn ? 'hidden' : ''}`}
           >
             <svg
               aria-hidden="true"
@@ -102,15 +137,16 @@ const LocalVideo = React.memo(
           </i>
         </div>
         <div
-          id="local-name"
+          id="remote-name"
           className="absolute bottom-2 right-3 flex justify-around items-center z-20 text-md rounded-full"
         >
-          {localName && localName.length > 0 && (
+          {peerMetadata && (peerMetadata.get(uuid)?.name ?? '').length > 0 && (
             <div
               id="name"
+              indicator-uuid={uuid}
               className="text-white text-xs not-selectable bg-gray-700 bg-opacity-40 px-2 py-1 rounded-xl"
             >
-              {localName}
+              {peerMetadata.get(uuid)?.name}
             </div>
           )}
         </div>
@@ -118,4 +154,4 @@ const LocalVideo = React.memo(
     );
   }
 );
-export default LocalVideo;
+export default RemoteVideo;
