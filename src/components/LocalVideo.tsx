@@ -28,7 +28,7 @@ const LocalVideo = React.memo(
   }) => {
     return (
       <div
-        className="relative z-0 inline-block align-middle self-center overflow-hidden text-center h-auto bg-gray-800 rounded-2xl" // aspect-w-16 aspect-h-9
+        className="relative z-0 inline-block align-middle self-center overflow-hidden text-center h-auto bg-gray-800 rounded-2xl"
         key="local-div"
         onDoubleClick={() => setLocalPopout(localPopup => !localPopup)}
         style={{

@@ -90,7 +90,7 @@
   transform: scaleX(-1);
 }
 
-#ctw video #local-video {
+#ctw  video#local-video  {
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
 }
