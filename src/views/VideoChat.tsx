@@ -20,7 +20,6 @@ import {
 import React, { useEffect, useState } from 'react';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { RoomMetaData } from '../typings/interfaces';
-import { ControlsProps } from '../components/Toolbar';
 import { ParticipantProps } from '../components/ParticipantView';
 import { StageProps } from '../typings/StageProps';
 import { StageView } from '../components/StageView';
@@ -110,8 +109,6 @@ const VideoChat = ({ token }: { token: string }) => {
               >
                 <StageView
                   roomState={roomState}
-                  participantRenderer={undefined}
-                  controlRenderer={undefined}
                   onLeave={onLeave}
                   adaptiveVideo={true}
                 />

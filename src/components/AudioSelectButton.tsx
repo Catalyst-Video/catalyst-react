@@ -3,7 +3,7 @@ import {
   faMicrophoneSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect, useState } from "react";
-import { ControlButton, MenuItem } from "./ControlButton";
+import  ToolbarButton, { Device } from "./ToolbarButton";
 
 export interface AudioSelectButtonProps {
   isMuted: boolean;
@@ -17,39 +17,39 @@ export const AudioSelectButton = ({
   onSourceSelected,
 }: AudioSelectButtonProps) => {
   const [sources, setSources] = useState<MediaDeviceInfo[]>([]);
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [devices, setMenuItems] = useState<Device[]>([]);
 
   useEffect(() => {
     navigator.mediaDevices.enumerateDevices().then((devices) => {
       const audioDevices = devices.filter(
-        (item) => item.kind === "audioinput" && item.deviceId
+        id => id.kind === 'audioinput' && id.deviceId
       );
       setSources(audioDevices);
       setMenuItems(
-        audioDevices.map((item) => {
-          return { label: item.label };
+        audioDevices.map(id => {
+          return { label: id.label };
         })
       );
     });
   }, [isMuted]);
 
-  const handleMenuItem = (item: MenuItem) => {
-    const device = sources.find((d) => d.label === item.label);
+  const handleDeviceClick = (id: Device) => {
+    const device = sources.find(d => d.label === id.label);
     if (device && onSourceSelected) {
       onSourceSelected(device);
     }
   };
 
   return (
-    <ControlButton
+    <ToolbarButton
       label={isMuted ? 'Unmute' : 'Mute'}
       icon={isMuted ? faMicrophoneSlash : faMicrophone}
       // icon={isMuted ? faMicrophoneAltSlash : faMicrophoneAlt}
       bgColor={isMuted ? 'bg-white hover:bg-gray-100' : undefined}
       iconColor={isMuted ? 'text-red' : undefined}
       onClick={onClick}
-      menuItems={menuItems}
-      onMenuItemClick={handleMenuItem}
+      devices={devices}
+      onDeviceClick={handleDeviceClick}
     />
   );
 };

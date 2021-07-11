@@ -22,7 +22,7 @@ import {
 import React, { ReactElement, useState } from "react";
 import { useParticipant } from "../hooks/useParticipant";
 import { AudioSelectButton } from "./AudioSelectButton";
-import { ControlButton } from "./ControlButton";
+import ToolbarButton from "./ToolbarButton";
 import "./styles.module.css";
 import { VideoSelectButton } from "./VideoSelectButton";
 
@@ -130,7 +130,7 @@ import { VideoSelectButton } from "./VideoSelectButton";
          if (enableScreenShare) {
            if (screenPub?.track) {
              screenButton = (
-               <ControlButton
+               <ToolbarButton
                  label="Stop sharing"
                  icon={faStop}
                  onClick={() =>
@@ -140,7 +140,7 @@ import { VideoSelectButton } from "./VideoSelectButton";
              );
            } else {
              screenButton = (
-               <ControlButton
+               <ToolbarButton
                  label="Share screen"
                  icon={faDesktop}
                  onClick={async () => {
@@ -240,7 +240,7 @@ import { VideoSelectButton } from "./VideoSelectButton";
              {screenButton}
              {/* End Call Button */}
              {onLeave && (
-               <ControlButton
+               <ToolbarButton
                  label="End"
                  icon={faPhoneSlash}
                  bgColor={'bg-red'}

@@ -13,8 +13,6 @@ import "./styles.module.css";
 
 export const MobileStage = ({
   roomState,
-  participantRenderer,
-  controlRenderer,
   onLeave,
   adaptiveVideo,
 }: StageProps) => {
@@ -36,8 +34,8 @@ export const MobileStage = ({
     return <div>no one is in the room</div>;
   }
 
-  const ParticipantRenderer = participantRenderer ?? ParticipantView;
-  const ControlRenderer = controlRenderer ?? Toolbar;
+  const ParticipantRenderer = ParticipantView;
+  const ControlRenderer = Toolbar;
 
   // find first participant with screen shared
   let screenTrack: RemoteVideoTrack | undefined;

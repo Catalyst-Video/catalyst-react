@@ -4,17 +4,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { Popover } from "react-tiny-popover";
 
-export interface MenuItem {
+export interface Device {
   label: string;
 }
 
-export const ControlButton = ({
+export const ToolbarButton = ({
          label,
          disabled,
          onClick,
          icon,
          devices,
-         onMenuItemClick,
+         onDeviceClick,
          bgColor,
          iconColor,
        }: {
@@ -23,16 +23,16 @@ export const ControlButton = ({
          onClick?: () => void;
          icon?: IconProp;
          className?: string;
-         devices?: MenuItem[];
-         onMenuItemClick?: (item: MenuItem) => void;
+         devices?: Device[];
+         onDeviceClick?: (id: Device) => void;
          bgColor?: string;
          iconColor?: string;
        }) => {
          const [deviceMenu, setDeviceMenu] = useState(false);
 
-         const handleDeviceClick = (item: MenuItem) => {
-           if (onMenuItemClick) {
-             onMenuItemClick(item);
+         const handleDeviceClick = (id: Device) => {
+           if (onDeviceClick) {
+             onDeviceClick(id);
            }
            setDeviceMenu(false);
          };
@@ -60,7 +60,7 @@ export const ControlButton = ({
                    }}
                    className="bg-gray-600 border-0 margin-0 bullet-none p-5 cursor-pointer"
                  >
-                   {devices?.map((item, i) => {
+                   {devices?.map((id, i) => {
                      return (
                        <li
                          key={i}
@@ -69,9 +69,9 @@ export const ControlButton = ({
                            padding: 1,
                          }}
                          //  className="text-white bullet-none p-1"
-                         onClick={() => handleDeviceClick(item)}
+                         onClick={() => handleDeviceClick(id)}
                        >
-                         {item.label}
+                         {id.label}
                        </li>
                      );
                    })}
@@ -118,3 +118,4 @@ export const ControlButton = ({
            </Popover>
          );
        };
+export default ToolbarButton;

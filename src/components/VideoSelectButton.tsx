@@ -1,6 +1,6 @@
 import { faVideo, faVideoSlash } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect, useState } from "react";
-import { ControlButton, MenuItem } from "./ControlButton";
+import ToolbarButton, { Device } from "./ToolbarButton";
 
 export interface VideoSelectButtonProps {
   isEnabled: boolean;
@@ -14,36 +14,36 @@ export const VideoSelectButton = ({
   onSourceSelected,
 }: VideoSelectButtonProps) => {
   const [sources, setSources] = useState<MediaDeviceInfo[]>([]);
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [devices, setMenuItems] = useState<Device[]>([]);
 
   useEffect(() => {
     navigator.mediaDevices.enumerateDevices().then((devices) => {
       const videoDevices = devices.filter(
-        (item) => item.kind === "videoinput" && item.deviceId
+        id => id.kind === 'videoinput' && id.deviceId
       );
       setSources(videoDevices);
       setMenuItems(
-        videoDevices.map((item) => {
-          return { label: item.label };
+        videoDevices.map(id => {
+          return { label: id.label };
         })
       );
     });
   }, [isEnabled]);
 
-  const handleMenuItem = (item: MenuItem) => {
-    const device = sources.find((d) => d.label === item.label);
+  const handleDevice = (id: Device) => {
+    const device = sources.find(d => d.label === id.label);
     if (device && onSourceSelected) {
       onSourceSelected(device);
     }
   };
 
   return (
-    <ControlButton
+    <ToolbarButton
       label={isEnabled ? 'Disable Video' : 'Enable Video'}
       icon={isEnabled ? faVideo : faVideoSlash}
       onClick={onClick}
-      menuItems={menuItems}
-      onMenuItemClick={handleMenuItem}
+      devices={devices}
+      onDeviceClick={handleDevice}
       bgColor={isEnabled ? undefined : 'bg-white hover:bg-gray-100'}
       iconColor={isEnabled ? undefined : 'text-red'}
     />
