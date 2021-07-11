@@ -43,6 +43,7 @@
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@tailwindcss/aspect-ratio": "^0.2.1",
     "detectrtc": "^1.4.1",
+    "livekit-client": "^0.9.7",
     "lodash.debounce": "^4.0.8",
     "plain-draggable": "^2.5.14",
     "postcss-cli": "^8.3.1",
