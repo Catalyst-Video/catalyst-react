@@ -1,20 +1,8 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { ReactElement, useState } from "react";
+import React, { useState } from "react";
 import { Popover } from "react-tiny-popover";
-
-
-interface ButtonProps {
-  label: string;
-  disabled?: boolean;
-  onClick?: () => void;
-  icon?: IconProp;
-  className?: string;
-  menuItems?: MenuItem[];
-  onMenuItemClick?: (item: MenuItem) => void;
-  bgColor?: string;iconColor?: string;
-}
 
 export interface MenuItem {
   label: string;
@@ -25,11 +13,21 @@ export const ControlButton = ({
          disabled,
          onClick,
          icon,
-         menuItems,
+         devices,
          onMenuItemClick,
-  bgColor,
-         iconColor
-       }: ButtonProps) => {
+         bgColor,
+         iconColor,
+       }: {
+         label: string;
+         disabled?: boolean;
+         onClick?: () => void;
+         icon?: IconProp;
+         className?: string;
+         devices?: MenuItem[];
+         onMenuItemClick?: (item: MenuItem) => void;
+         bgColor?: string;
+         iconColor?: string;
+       }) => {
          const [deviceMenu, setDeviceMenu] = useState(false);
 
          const handleDeviceClick = (item: MenuItem) => {
@@ -38,36 +36,6 @@ export const ControlButton = ({
            }
            setDeviceMenu(false);
          };
-
-        //  let menuTrigger: ReactElement | undefined;
-        //  let menu: ReactElement = <div />;
-        //  if (menuItems && menuItems.length > 0) {
-        //    classes += ` ${'hasDropdown'}`;
-        //    menuTrigger = (
-        //      <button
-        //        disabled={disabled}
-        //        className={`${'button'} ${'dropdown'}`}
-        //        onClick={() => setMenuVisible(!menuVisible)}
-        //      >
-        //        <div className={'separator'} />
-        //        <FontAwesomeIcon height={32} icon={faChevronDown} />
-        //      </button>
-        //    );
-
-        //    menu = (
-        //      <div className={'popoverMenu'}>
-        //        <ul className={'list'}>
-        //          {menuItems?.map((item, i) => {
-        //            return (
-        //              <li key={i} onClick={() => handleMenuClick(item)}>
-        //                {item.label}
-        //              </li>
-        //            );
-        //          })}
-        //        </ul>
-        //      </div>
-        //    );
-        //  }
 
          return (
            <Popover
@@ -92,7 +60,7 @@ export const ControlButton = ({
                    }}
                    className="bg-gray-600 border-0 margin-0 bullet-none p-5 cursor-pointer"
                  >
-                   {menuItems?.map((item, i) => {
+                   {devices?.map((item, i) => {
                      return (
                        <li
                          key={i}
@@ -131,7 +99,7 @@ export const ControlButton = ({
                  )}
                  {/*TODO: tooltip {label} */}
                </button>
-               {menuItems && menuItems.length > 0 && (
+               {devices && devices.length > 0 && (
                  <button
                    disabled={disabled}
                    className={`absolute z-10 -right-1 -bottom-1 ${
