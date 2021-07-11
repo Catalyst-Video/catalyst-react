@@ -59,62 +59,62 @@ export const ControlsView = ({
     enableAudio = true;
   }
 
-  let muteButton: ReactElement | undefined;
-  if (enableAudio) {
-    if (!audioPub || isMuted) {
-      muteButton = (
-        <ControlButton
-          label="Unmute"
-          icon={faMicrophoneAltSlash}
-          bgColor={'bg-white hover:bg-gray-100'}
-          iconColor={'text-red'}
-          onClick={async () => {
-            if (audioPub) {
-              (audioPub as LocalTrackPublication).unmute();
-            } else {
-              // track not published
-              const audioTrack = await createLocalAudioTrack();
-              room.localParticipant.publishTrack(audioTrack);
-            }
-          }}
-        />
-      );
-    } else {
-      muteButton = (
-        <ControlButton
-          label="Mute"
-          icon={faMicrophoneAlt}
-          onClick={() => (audioPub as LocalTrackPublication).mute()}
-        />
-      );
-    }
-  }
+  // let muteButton: ReactElement | undefined;
+  // if (enableAudio) {
+  //   if (!audioPub || isMuted) {
+  //     muteButton = (
+  //       <ControlButton
+  //         label="Unmute"
+  //         icon={faMicrophoneAltSlash}
+  //         bgColor={'bg-white hover:bg-gray-100'}
+  //         iconColor={'text-red'}
+  //         onClick={async () => {
+  //           if (audioPub) {
+  //             (audioPub as LocalTrackPublication).unmute();
+  //           } else {
+  //             // track not published
+  //             const audioTrack = await createLocalAudioTrack();
+  //             room.localParticipant.publishTrack(audioTrack);
+  //           }
+  //         }}
+  //       />
+  //     );
+  //   } else {
+  //     muteButton = (
+  //       <ControlButton
+  //         label="Mute"
+  //         icon={faMicrophoneAlt}
+  //         onClick={() => (audioPub as LocalTrackPublication).mute()}
+  //       />
+  //     );
+  //   }
+  // }
 
-  let videoButton: ReactElement | undefined;
-  if (enableVideo) {
-    if (videoPub?.track) {
-      videoButton = (
-        <ControlButton
-          label="Stop video"
-          icon={faVideo}
-          onClick={() => unpublishTrack(videoPub.track as LocalVideoTrack)}
-        />
-      );
-    } else {
-      videoButton = (
-        <ControlButton
-          label="Start video"
-          icon={faVideoSlash}
-          bgColor={'bg-white hover:bg-gray-100'}
-          iconColor={'text-red'}
-          onClick={async () => {
-            const videoTrack = await createLocalVideoTrack();
-            room.localParticipant.publishTrack(videoTrack);
-          }}
-        />
-      );
-    }
-  }
+  // let videoButton: ReactElement | undefined;
+  // if (enableVideo) {
+  //   if (videoPub?.track) {
+  //     videoButton = (
+  //       <ControlButton
+  //         label="Stop video"
+  //         icon={faVideo}
+  //         onClick={() => unpublishTrack(videoPub.track as LocalVideoTrack)}
+  //       />
+  //     );
+  //   } else {
+  //     videoButton = (
+  //       <ControlButton
+  //         label="Start video"
+  //         icon={faVideoSlash}
+  //         bgColor={'bg-white hover:bg-gray-100'}
+  //         iconColor={'text-red'}
+  //         onClick={async () => {
+  //           const videoTrack = await createLocalVideoTrack();
+  //           room.localParticipant.publishTrack(videoTrack);
+  //         }}
+  //       />
+  //     );
+  //   }
+  // }
 
   let screenButton: ReactElement | undefined;
   if (enableScreenShare) {
@@ -150,7 +150,7 @@ export const ControlsView = ({
                 },
               });
             } catch (err) {
-              // TODO: display error
+              window.alert("Error sharing screen");
             }
           }}
         />
@@ -160,9 +160,53 @@ export const ControlsView = ({
 
   return (
     <div className={'controlsWrapper'}>
-      {muteButton}
-      {videoButton}
+      {/* Mute Audio Button */}
+      {enableAudio && (
+        <ControlButton
+          label={!audioPub || isMuted ? 'Unmute' : 'Mute'}
+          icon={!audioPub || isMuted ? faMicrophoneAltSlash : faMicrophoneAlt}
+          bgColor={
+            !audioPub || isMuted ? 'bg-white hover:bg-gray-100' : undefined
+          }
+          iconColor={!audioPub || isMuted ? 'text-red' : undefined}
+          onClick={
+            !audioPub || isMuted
+              ? async () => {
+                  if (audioPub) {
+                    (audioPub as LocalTrackPublication).unmute();
+                  } else {
+                    // track not published
+                    const audioTrack = await createLocalAudioTrack();
+                    room.localParticipant.publishTrack(audioTrack);
+                  }
+                }
+              : () => (audioPub as LocalTrackPublication).mute()
+          }
+        />
+      )}
+      {/* Pause Video Button */}
+      {enableVideo && (
+        <ControlButton
+          label={videoPub?.track ? 'Stop video' : 'Start video'}
+          icon={videoPub?.track ? faVideo : faVideoSlash}
+          bgColor={videoPub?.track ? undefined : 'bg-white hover:bg-gray-100'}
+          iconColor={videoPub?.track ? undefined : 'text-red'}
+          onClick={
+            videoPub?.track
+              ? () => {
+                  if (videoPub)
+                    unpublishTrack(videoPub.track as LocalVideoTrack);
+                }
+              : async () => {
+                  const videoTrack = await createLocalVideoTrack();
+                  room.localParticipant.publishTrack(videoTrack);
+                }
+          }
+        />
+      )}
+      {/* Screen Share Button */}
       {screenButton}
+      {/* End Call Button */}
       {onLeave && (
         <ControlButton
           label="End"

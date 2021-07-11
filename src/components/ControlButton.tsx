@@ -25,18 +25,12 @@ export const ControlButton = ({
          disabled,
          onClick,
          icon,
-         className,
          menuItems,
          onMenuItemClick,
   bgColor,
          iconColor
        }: ButtonProps) => {
          const [menuVisible, setMenuVisible] = useState(false);
-
-         let classes = 'button';
-         if (className) {
-           classes += ` ${className}`;
-         }
 
          const handleMenuClick = (item: MenuItem) => {
            if (onMenuItemClick) {
