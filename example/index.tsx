@@ -45,59 +45,10 @@ const WrapperComp = ({
     //     }}
     //   >
     <CatalystChat
-      sessionKey={sessionKey}
-      uniqueAppId="demo1"
-      // disableSetupRoom={true}
-      defaults={{
-        audioOn: true,
-        videoOn: true,
-        showChatArea: false,
-      }}
-      showSetNameBox={true}
-      name={'USER_NAME'}
-      // disableLocalVidDrag={true}
-      // alwaysBanner={true}
-      onAddPeer={() => console.log('peer added')}
-      onStartCall={() => console.log('on start call')}
-      onRemovePeer={() => console.log('on remove peer')}
-      onEndCall={() => setShowVideoCall(false)}
-      onSubmitLog={log => {
-        console.log('received: ' + log);
-      }}
-      themeColor="cyan"
-      // hidden={{ chat: true }}
-      disableSetupRoom={true}
-      //  darkModeDefault={true}
-      // disableRedIndicators={false}
-      // darkModeDefault={true}
-      // cstmOptionBtns={[
-      //   {
-      //     id: 'test',
-      //     tooltip: 'Terms of Service',
-      //     onClick: () => {
-      //       window.open('https://readtogetheronline.com/tos/', '_blank');
-      //     },
-      //     fontAwesomeIcon: ['fas', 'info-circle'],
-      //   },
-      // ]}
-      // cstmWelcomeMsg={
-      //   <>
-      //     <span>Room ready! Waiting for others to join with session key </span>
-      //     <strong>{'Bob'}</strong>
-      //   </>
-      // }
-      // themeColor="green"
-      // cstmOptionBtns={[
-      //   <div className="ct-btn-container">
-      //     <button
-      //       className="ct-hover-btn ct-tooltip ct-not-selectable"
-      //       onClick={() => console.log('call ended')}
-      //     >
-      //       <FontAwesomeIcon icon={faSync} />
-      //       <span>Synchronize</span>
-      //     </button>
-      //   </div>,
-      // ]}
+      key={"test"}
+      appId={"example"}
+      dark={false}
+
     />
     //   </div>
     // </div>

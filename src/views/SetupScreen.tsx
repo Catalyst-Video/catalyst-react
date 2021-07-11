@@ -1,5 +1,13 @@
 import { createLocalVideoTrack, CreateVideoTrackOptions, LocalVideoTrack } from "livekit-client"
 import React, { useRef, useEffect, useState, ReactElement } from "react"
+import {
+  AudioSelectButton,
+  ControlButton,
+  VideoRenderer,
+  VideoSelectButton,
+} from 'catalyst-react';
+import AspectRatio from 'react-aspect-ratio'
+import { faArrowAltCircleLeft, faArrowAltCircleRight } from "@fortawesome/free-solid-svg-icons";
 
 
 const SetupScreen = () => {
@@ -13,7 +21,6 @@ const SetupScreen = () => {
   const [videoTrack, setVideoTrack] = useState<LocalVideoTrack>();
   const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
   const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
-  const history = useHistory()
 
   useEffect(() => {
     if (!videoRef.current || !videoTrack) {
@@ -102,10 +109,6 @@ const SetupScreen = () => {
     if (videoDevice) {
       params.videoDeviceId = videoDevice.deviceId;
     }
-    history.push({
-      pathname: '/room',
-      search: "?" + new URLSearchParams(params).toString()
-    })
   }
 
   let videoElement: ReactElement;
@@ -165,14 +168,10 @@ const SetupScreen = () => {
             <ControlButton
               label="Connect"
               disabled={connectDisabled}
-              icon={faBolt}
+              icon={faArrowAltCircleRight}
               onClick={connectToRoom}/>
           </div>
         </div>
     </div>
   )
-}
-
-function useHistory() {
-  throw new Error("Function not implemented.")
 }

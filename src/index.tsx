@@ -10,30 +10,36 @@ const CatalystChat = ({ key, appId, dark }: CatalystChatProps) => {
     const [ready, setReady] = useState(true);
 
     return (
-			<div
-				id="ctw"
-				ref={ref => {
-					// dynamically make Catalyst work properly if there is no parent component
-					if (ref && ref.parentNode?.parentNode?.nodeName === "BODY") {
-						ref.style.position = "fixed";
-						let ss = document.createElement("style");
-						document.head.appendChild(ss);
-						ss?.sheet?.insertRule(
-							"html, body { margin: 0px; padding: 0px; height: 100%; }"
-						);
-					}
-				}}
-			>
-				<div
-					id="theme-wrapper"
-					className={`${
-						dark ? "dark" : ""
-					} h-full w-full m-0 p-0 overflow-hidden max-h-screen max-w-screen box-border`}
-				>
-					{ready ? <VideoChat token={"token"} /> : null}
-				</div>
-			</div>
-		);
+      <div
+        id="ctw"
+        ref={ref => {
+          // dynamically make Catalyst work properly if there is no parent component
+          if (ref && ref.parentNode?.parentNode?.nodeName === 'BODY') {
+            ref.style.position = 'fixed';
+            let ss = document.createElement('style');
+            document.head.appendChild(ss);
+            ss?.sheet?.insertRule(
+              'html, body { margin: 0px; padding: 0px; height: 100%; }'
+            );
+          }
+        }}
+      >
+        <div
+          id="theme-wrapper"
+          className={`${
+            dark ? 'dark' : ''
+          } h-full w-full m-0 p-0 overflow-hidden max-h-screen max-w-screen box-border`}
+        >
+          {ready ? (
+            <VideoChat
+              token={
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2aWRlbyI6eyJyb29tSm9pbiI6dHJ1ZSwicm9vbSI6ImFzZGZhZCIsImNhblB1Ymxpc2giOnRydWUsImNhblN1YnNjcmliZSI6dHJ1ZX0sImlhdCI6MTYyNjAzODcyOSwibmJmIjoxNjI2MDM4NzI5LCJleHAiOjE2MjYwNDU5MjksImlzcyI6IkFQSU1teGlMOHJxdUt6dFpFb1pKVjlGYiIsImp0aSI6ImFkc2Zkc2YifQ.mN3dlXAUUK_EGbw-QNx4qK7h9F6Qo1dFYcfKpJIhRMQ'
+              }
+            />
+          ) : null}
+        </div>
+      </div>
+    );
 
 };
 export default CatalystChat;

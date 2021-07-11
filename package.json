@@ -24,11 +24,13 @@
     "node": ">=10"
   },
   "scripts": {
+    "prestart:tailwind": "npx tailwindcss-cli@latest build src/styles/tailwind.css -o src/styles/tailwind.output.css -w",
+    "prebuild:tailwind:": "npx tailwindcss-cli@latest build src/styles/tailwind.css -o src/styles/tailwind.output.css",
     "watch:tw": "postcss src/styles/tailwind.css -o src/styles/tailwind.output.css -w",
     "prestart:tw": "postcss src/styles/tailwind.css -o src/styles/tailwind.output.css",
     "build:tw": "postcss src/styles/tailwind.css -o src/styles/tailwind.output.css",
-    "prestart": "npm run prestart:tw",
-    "prebuild": "npm run build:tw",
+    "prestart": "npm run prestart:tailwind",
+    "prebuild": "npm run prebuild:tailwind",
     "start": "tsdx watch",
     "build": "tsdx build",
     "test": "tsdx test --passWithNoTests",
@@ -42,6 +44,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@tailwindcss/aspect-ratio": "^0.2.1",
+    "catalyst-react": "github:Catalyst-Video/livekit-react#master",
     "detectrtc": "^1.4.1",
     "livekit-client": "^0.9.7",
     "lodash.debounce": "^4.0.8",
