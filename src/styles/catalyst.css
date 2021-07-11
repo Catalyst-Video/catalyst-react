@@ -123,6 +123,12 @@
   }
 }
 
+#ctw .popout-drag {
+  transition-property: 'tranform';
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in;
+}
+
 
 /* Hide video controls on mobile
 TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away after you press pause then play again */

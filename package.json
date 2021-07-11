@@ -44,11 +44,13 @@
     "@tailwindcss/aspect-ratio": "^0.2.1",
     "detectrtc": "^1.4.1",
     "lodash.debounce": "^4.0.8",
+    "plain-draggable": "^2.5.14",
     "postcss-cli": "^8.3.1",
     "postcss-nesting": "^7.0.1",
+    "react-beautiful-dnd": "^13.1.0",
     "react-draggable": "^4.4.3",
     "react-full-screen": "^1.0.1",
-    "react-scripts": "^4.0.3",
+    "react-scripts": "^1.1.5",
     "socket.io-client": "^2.3.1"
   },
   "devDependencies": {
@@ -73,7 +75,7 @@
     "postcss-nested": "^5.0.5",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
-    "rollup-plugin-postcss": "^4.0.0",
+    "rollup-plugin-postcss": "^1.6.3",
     "size-limit": "^4.10.1",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2",
     "tsdx": "^0.14.1",
