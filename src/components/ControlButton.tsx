@@ -30,13 +30,13 @@ export const ControlButton = ({
   bgColor,
          iconColor
        }: ButtonProps) => {
-         const [menuVisible, setMenuVisible] = useState(false);
+         const [deviceMenu, setDeviceMenu] = useState(false);
 
-         const handleMenuClick = (item: MenuItem) => {
+         const handleDeviceClick = (item: MenuItem) => {
            if (onMenuItemClick) {
              onMenuItemClick(item);
            }
-           setMenuVisible(false);
+           setDeviceMenu(false);
          };
 
         //  let menuTrigger: ReactElement | undefined;
@@ -71,8 +71,10 @@ export const ControlButton = ({
 
          return (
            <Popover
-             isOpen={menuVisible}
+             isOpen={deviceMenu}
              positions={['bottom', 'right']}
+             reposition={true}
+             onClickOutside={() => setDeviceMenu(false)}
              content={
                <div className="bg-gray-600 rounded-md mb-3 z-20 bullet-none">
                  <ul
@@ -84,7 +86,9 @@ export const ControlButton = ({
                      padding: '4px',
                      margin: 0,
                      paddingInline: 'none',
-                     marginBottom: '3px'
+                     marginBottom: '7px',
+                     fontFamily:
+                       'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
                    }}
                    className="bg-gray-600 border-0 margin-0 bullet-none p-5 cursor-pointer"
                  >
@@ -97,7 +101,7 @@ export const ControlButton = ({
                            padding: 1,
                          }}
                          //  className="text-white bullet-none p-1"
-                         onClick={() => handleMenuClick(item)}
+                         onClick={() => handleDeviceClick(item)}
                        >
                          {item.label}
                        </li>
@@ -125,7 +129,7 @@ export const ControlButton = ({
                      icon={icon}
                    />
                  )}
-                 {/* {label} */}
+                 {/*TODO: tooltip {label} */}
                </button>
                {menuItems && menuItems.length > 0 && (
                  <button
@@ -133,12 +137,12 @@ export const ControlButton = ({
                    className={`absolute z-10 -right-1 -bottom-1 ${
                      bgColor ? bgColor : 'bg-gray-600 hover:bg-gray-500'
                    }  rounded-full border-4 border-gray-700 h-6 w-6 flex justify-center items-center focus:outline-none focus:border-0 `}
-                   onClick={() => setMenuVisible(!menuVisible)}
+                   onClick={() => setDeviceMenu(!deviceMenu)}
                  >
                    <FontAwesomeIcon
                      size="xs"
                      className={iconColor ? 'text-gray-900' : 'text-white'}
-                     icon={menuVisible ? faChevronUp : faChevronDown}
+                     icon={deviceMenu ? faChevronUp : faChevronDown}
                    />
                  </button>
                )}
