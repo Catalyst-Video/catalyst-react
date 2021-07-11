@@ -255,7 +255,7 @@ button.hasDropdown {
   margin-right: 0;
 } */
 
-.separator {
+/* .separator {
   display: inline-block;
   margin-top: -5px;
   margin-bottom: -5px;
@@ -264,14 +264,14 @@ button.hasDropdown {
   border-left: 1px solid rgba(255, 255, 255, 0.2);
   width: 1px;
   height: 20px;
-}
+} */
 /* 
 .popoverMenu {
   background: #2F2F2F;
   border-radius: 4px;
   margin-bottom: 5px;
 } */
-
+/* 
 ul.list {
   border: 0;
   margin: 0;
@@ -289,7 +289,7 @@ ul.list li {
 
 ul.list li:first-child {
   border: 0;
-}
+} */
 
 
 .stage {
@@ -402,26 +402,10 @@ ul.list li:first-child {
   }
 }
 
-/* entrance animation */
-/* .c-tw #video-chat {
-  -webkit-animation: fadeIn ease-in 1;
-  -moz-animation: fadeIn ease-in 1;
-  animation: fadeIn ease-in 1;
-  -webkit-animation-fill-mode: forwards;
-  -moz-animation-fill-mode: forwards;
-  animation-fill-mode: forwards;
-  -webkit-animation-duration: 0.3s;
-  -moz-animation-duration: 0.3s;
-  animation-duration: 0.3s;
-} */
-
-/* draggable local video */
-/* #ctw #local-vid-wrapper {
-  max-width: 130px;
-  height: auto;
-  width: 100%;
-  min-width: 100px; 
-}  */
+#ctw .bullet-none {
+  list-style-type: none !important;
+  padding-inline: 0;
+}
 
 #ctw #local-vid-wrapper video {
   -webkit-transform: scaleX(-1);

@@ -74,19 +74,37 @@ export const ControlButton = ({
              isOpen={menuVisible}
              positions={['bottom', 'right']}
              content={
-               <>
-                 <div className="bg-gray-600 rounded-md">
-                   <ul className={'list'}>
-                     {menuItems?.map((item, i) => {
-                       return (
-                         <li key={i} onClick={() => handleMenuClick(item)}>
-                           {item.label}
-                         </li>
-                       );
-                     })}
-                   </ul>
-                 </div>
-               </>
+               <div className="bg-gray-600 rounded-md mb-3 z-20 bullet-none">
+                 <ul
+                   style={{
+                     cursor: 'pointer',
+                     listStyle: 'none',
+                     background: '#4B5563',
+                     borderRadius: '5px',
+                     padding: '4px',
+                     margin: 0,
+                     paddingInline: 'none',
+                     marginBottom: '3px'
+                   }}
+                   className="bg-gray-600 border-0 margin-0 bullet-none p-5 cursor-pointer"
+                 >
+                   {menuItems?.map((item, i) => {
+                     return (
+                       <li
+                         key={i}
+                         style={{
+                           color: 'white',
+                           padding: 1,
+                         }}
+                         //  className="text-white bullet-none p-1"
+                         onClick={() => handleMenuClick(item)}
+                       >
+                         {item.label}
+                       </li>
+                     );
+                   })}
+                 </ul>
+               </div>
              }
            >
              <div className="inline-block m-1 relative">
