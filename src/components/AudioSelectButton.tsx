@@ -42,8 +42,11 @@ export const AudioSelectButton = ({
 
   return (
     <ControlButton
-      label={isMuted ? "Unmute" : "Mute"}
+      label={isMuted ? 'Unmute' : 'Mute'}
       icon={isMuted ? faMicrophoneSlash : faMicrophone}
+      // icon={isMuted ? faMicrophoneAltSlash : faMicrophoneAlt}
+      bgColor={isMuted ? 'bg-white hover:bg-gray-100' : undefined}
+      iconColor={isMuted ? 'text-red' : undefined}
       onClick={onClick}
       menuItems={menuItems}
       onMenuItemClick={handleMenuItem}

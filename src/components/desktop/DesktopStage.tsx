@@ -5,7 +5,7 @@ import {
 } from "livekit-client";
 import { VideoQuality } from "livekit-client/dist/proto/livekit_rtc";
 import React, { ReactElement, useState } from "react";
-import { ControlsView } from "../Toolbar";
+import Toolbar from "../Toolbar";
 import { ParticipantView } from "../ParticipantView";
 import { ScreenShareView } from "../ScreenShareView";
 import { StageProps } from "../../typings/StageProps";
@@ -97,7 +97,7 @@ export const DesktopStage = ({
         </div>
       </div>
       <div className={'controlsArea'}>
-        <ControlsView room={room} onLeave={onLeave} />
+        <Toolbar room={room} onLeave={onLeave} />
       </div>
     </div>
   );

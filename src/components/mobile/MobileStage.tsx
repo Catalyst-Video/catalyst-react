@@ -5,7 +5,7 @@ import {
 } from "livekit-client";
 import { VideoQuality } from "livekit-client/dist/proto/livekit_rtc";
 import React, { ReactElement, useState } from "react";
-import { ControlsView } from "../Toolbar";
+import Toolbar from "../Toolbar";
 import { ParticipantView } from "../ParticipantView";
 import { ScreenShareView } from "../ScreenShareView";
 import { StageProps } from "../../typings/StageProps";
@@ -37,7 +37,7 @@ export const MobileStage = ({
   }
 
   const ParticipantRenderer = participantRenderer ?? ParticipantView;
-  const ControlRenderer = controlRenderer ?? ControlsView;
+  const ControlRenderer = controlRenderer ?? Toolbar;
 
   // find first participant with screen shared
   let screenTrack: RemoteVideoTrack | undefined;

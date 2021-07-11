@@ -39,11 +39,13 @@ export const VideoSelectButton = ({
 
   return (
     <ControlButton
-      label={isEnabled ? "Disable Video" : "Enable Video"}
+      label={isEnabled ? 'Disable Video' : 'Enable Video'}
       icon={isEnabled ? faVideo : faVideoSlash}
       onClick={onClick}
       menuItems={menuItems}
       onMenuItemClick={handleMenuItem}
+      bgColor={isEnabled ? undefined : 'bg-white hover:bg-gray-100'}
+      iconColor={isEnabled ? undefined : 'text-red'}
     />
   );
 };

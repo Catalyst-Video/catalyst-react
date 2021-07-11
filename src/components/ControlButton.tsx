@@ -1,5 +1,5 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { ReactElement, useState } from "react";
 import { Popover } from "react-tiny-popover";
@@ -75,7 +75,7 @@ export const ControlButton = ({
              positions={['bottom', 'right']}
              content={
                <>
-                 <div className={'popoverMenu'}>
+                 <div className="bg-gray-600 rounded-md">
                    <ul className={'list'}>
                      {menuItems?.map((item, i) => {
                        return (
@@ -110,22 +110,20 @@ export const ControlButton = ({
                  {/* {label} */}
                </button>
                {menuItems && menuItems.length > 0 && (
-               <button
-                 disabled={disabled}
-                 className={`absolute z-10 -right-1 -bottom-1 ${
-                   bgColor ? bgColor : 'bg-gray-600 hover:bg-gray-500'
-                 }  rounded-full border-4 border-gray-700 h-6 w-6 flex justify-center items-center `}
-                 onClick={() => setMenuVisible(!menuVisible)}
-               >
-                 <FontAwesomeIcon
-                   size="xs"
-                   className={
-                   iconColor ? 'text-gray-900' : 'text-white'
-                 }
-                   icon={faChevronDown}
-                 />
-               </button>
-               )} 
+                 <button
+                   disabled={disabled}
+                   className={`absolute z-10 -right-1 -bottom-1 ${
+                     bgColor ? bgColor : 'bg-gray-600 hover:bg-gray-500'
+                   }  rounded-full border-4 border-gray-700 h-6 w-6 flex justify-center items-center focus:outline-none focus:border-0 `}
+                   onClick={() => setMenuVisible(!menuVisible)}
+                 >
+                   <FontAwesomeIcon
+                     size="xs"
+                     className={iconColor ? 'text-gray-900' : 'text-white'}
+                     icon={menuVisible ? faChevronUp : faChevronDown}
+                   />
+                 </button>
+               )}
              </div>
            </Popover>
          );
