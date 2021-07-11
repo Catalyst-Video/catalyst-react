@@ -1,11 +1,13 @@
-const PreJoinPage = () => {
-  // state to pass onto room
+import { createLocalVideoTrack, CreateVideoTrackOptions, LocalVideoTrack } from "livekit-client"
+import React, { useRef, useEffect, useState, ReactElement } from "react"
+
+
+const SetupScreen = () => {
   const [url, setUrl] = useState('ws://localhost:7880')
   const [token, setToken] = useState<string>('')
   const [simulcast, setSimulcast] = useState(false)
   const [videoEnabled, setVideoEnabled] = useState(false)
   const [audioEnabled, setAudioEnabled] = useState(true)
-  // disable connect button unless validated
   const [connectDisabled, setConnectDisabled] = useState(true)
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoTrack, setVideoTrack] = useState<LocalVideoTrack>();
@@ -114,8 +116,7 @@ const PreJoinPage = () => {
   }
 
   return (
-    <div className="prejoin">
-      <main>
+    <div id="setupscreen" className="">
         <h2>LiveKit Video</h2>
         <hr/>
         <div className="entrySection">
@@ -168,7 +169,10 @@ const PreJoinPage = () => {
               onClick={connectToRoom}/>
           </div>
         </div>
-      </main>
     </div>
   )
+}
+
+function useHistory() {
+  throw new Error("Function not implemented.")
 }
