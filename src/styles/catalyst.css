@@ -1,21 +1,3 @@
-/* body {
-  padding: 0;
-  font-family: Avenir, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: black;
-  color: white;
-  margin: 0;
-  height: 100vh;
-  font-size: 12px;
-} */
-
-/* code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-} */
 
 .container {
   box-sizing: border-box;
@@ -143,12 +125,12 @@
   margin-left: 5px;
 }
 
-video.video {
+/* video.video {
   object-position: center;
   border-radius: 4px;
   min-height: 0;
   min-width: 0;
-}
+} */
 
 .participant {
   border-radius: 4px;
@@ -186,110 +168,6 @@ video.video {
   width: 100%;
   height: 100%;
 }
-
-/* .iconRed {
-  color: #981010;
-} */
-
-.controlsWrapper {
-
-}
-/* 
-.buttonWrapper {
-  display: inline-block;
-  margin: 4px;
-  white-space: nowrap;
-} */
-
-/* .button {
-  display: inline-block;
-  border-radius: 44px;
-  border: none;
-  background: #2F2F2F;
-  padding: 12px 20px 12px 20px;
-  cursor: pointer;
-  color: white;
-  font-weight: normal;
-  font-size: 14px;
-  white-space: nowrap;
-} */
-
-/* .button:active {
-  border: none;
-}
-
-.button:hover {
-  background: #434343;
-}
-
-.button:disabled {
-  opacity: 0.5;
-  cursor: default;
-} */
-/* 
-.button .icon {
-  display: inline-block;
-  margin-right: 8px;
-} */
-/* 
-button.dangerButton {
-  background: #981010;
-}
-
-button.dangerButton:hover {
-  background: #b81212;
-} */
-
-/* button.dropdown {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  padding-left: 12px;
-  padding-right: 15px;
-  margin-left: 0;
-}
-
-button.hasDropdown {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  padding-right: 12px;
-  margin-right: 0;
-} */
-
-/* .separator {
-  display: inline-block;
-  margin-top: -5px;
-  margin-bottom: -5px;
-  margin-right: 8px;
-  margin-left: -12px;
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
-  width: 1px;
-  height: 20px;
-} */
-/* 
-.popoverMenu {
-  background: #2F2F2F;
-  border-radius: 4px;
-  margin-bottom: 5px;
-} */
-/* 
-ul.list {
-  border: 0;
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-  padding-inline: 0;
-}
-
-ul.list li {
-  font-size: 14px;
-  padding: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-}
-
-ul.list li:first-child {
-  border: 0;
-} */
 
 
 .stage {

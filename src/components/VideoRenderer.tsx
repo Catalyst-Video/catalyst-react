@@ -7,7 +7,6 @@ export interface VideoRendererProps {
   track: Track;
   isLocal: boolean;
   objectFit?: Property.ObjectFit;
-  className?: string;
   width?: Property.Width;
   height?: Property.Height;
 }
@@ -16,7 +15,6 @@ export const VideoRenderer = ({
   track,
   isLocal,
   objectFit,
-  className,
   width,
   height,
 }: VideoRendererProps) => {
@@ -46,6 +44,6 @@ export const VideoRenderer = ({
   }
 
   return (
-    <video ref={ref} className={className ?? 'video'} style={style} />
+    <video ref={ref} className='object-center min-h-0 min-w-0 rounded-lg' style={style} />
   );
 };

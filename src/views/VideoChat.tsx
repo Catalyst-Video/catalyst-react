@@ -21,36 +21,37 @@ import React, { useEffect, useState } from 'react';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { RoomMetaData } from '../typings/interfaces';
 import { ParticipantProps } from '../components/ParticipantView';
-import { StageProps } from '../typings/StageProps';
-import { StageView } from '../components/StageView';
+import VideoView  from '../components/StageView';
 import { useRoom } from '../hooks/useRoom';
+import Header from '../components/Header';
 
 
-const VideoChat = ({ token }: { token: string }) => {
-    const [tracks, setTracks] = useState<Track[]>([]);
-	const fsHandle = useFullScreenHandle();
-	const [numParticipants, setNumParticipants] = useState(0);
-	const [meta, setMeta] = useState<RoomMetaData>({
-		audioEnabled: true,
-		videoEnabled: true,
-		simulcast: true,
-	});
+const VideoChat = ({
+  token,
+  theme,
+  meta,
+}: {
+  token: string;
+  theme: string;
+  meta: RoomMetaData;
+}) => {
+  const [tracks, setTracks] = useState<Track[]>([]);
+  const fsHandle = useFullScreenHandle();
+  const [numParticipants, setNumParticipants] = useState(0);
 
-	const roomState = useRoom();
+  const roomState = useRoom();
 
-	const onConnected = room => {
-		// onConnected(room, meta);
-		room.on(RoomEvent.ParticipantConnected, () =>
-		updateParticipantSize(room)
-		);
-		room.on(RoomEvent.ParticipantDisconnected, () =>
-		updateParticipantSize(room)
-		);
+  const onConnected = room => {
+    // onConnected(room, meta);
+    room.on(RoomEvent.ParticipantConnected, () => updateParticipantSize(room));
+    room.on(RoomEvent.ParticipantDisconnected, () =>
+      updateParticipantSize(room)
+    );
     updateParticipantSize(room);
-    console.log(room)
-	}
+    console.log(room);
+  };
 
-	useEffect(() => {
+  useEffect(() => {
     roomState.connect('wss://demo.livekit.io', token, meta).then(room => {
       if (!room) {
         return;
@@ -64,90 +65,46 @@ const VideoChat = ({ token }: { token: string }) => {
     });
   }, []);
 
-	const updateParticipantSize = (room: Room) => {
-		setNumParticipants(room.participants.size + 1);
-	};
+  const updateParticipantSize = (room: Room) => {
+    setNumParticipants(room.participants.size + 1);
+  };
 
-	const onLeave = () => {
-	}
+  const onLeave = () => {};
 
-    return (
-      <div
-        id="video-chat"
-        className="h-full w-full relative" // opacity-0
-      >
-        <div
-          id="bg-theme"
+  return (
+    <div id="video-chat" className="h-full w-full relative">
+      <div id="bg-theme" className="h-full w-full bg-gray-700 dark:bg-gray-900">
+        <FullScreen
+          handle={fsHandle}
           className="h-full w-full bg-gray-700 dark:bg-gray-900"
         >
-          <FullScreen
-            handle={fsHandle}
-            className="h-full w-full bg-gray-700 dark:bg-gray-900"
-          >
-            <div className="roomContainer">
-              <div className="grid auto-cols-auto  justify-between items-center">
-                <h2>LiveKit Video</h2>
-                <div className="participantCount">
-                  <FontAwesomeIcon icon={faUserFriends} />
-                  <span>{numParticipants}</span>
-                </div>
-              </div>
+          <div className="">
+            <Header alwaysBanner={false} theme={theme} />
+            <div className="absolute right-10 top-4 flex">
+              <FontAwesomeIcon
+                icon={faUserFriends}
+                size="lg"
+                className="text-white mr-1"
+              />
+              <span className="text-white">{numParticipants}</span>
             </div>
-            {/* <Header
-							autoFade={autoFade}
-							toolbarRef={toolbarRef}
-							sessionKey={sessionKey}
-							alwaysBanner={alwaysBanner}
-							uniqueAppId={uniqueAppId}
-							themeColor={themeColor}
-			/> */}
+          </div>
 
-            <div id="call-section" className="w-full h-full items-end">
-              <div
-                id="vid-chat-cont"
-                className="absolute top-0 left-0 right-0 bottom-0 flex"
-              >
-                <StageView
-                  roomState={roomState}
-                  onLeave={onLeave}
-                  adaptiveVideo={true}
-                />
-              </div>
+          <div id="call-section" className="w-full h-full items-end">
+            <div
+              id="vid-chat-cont"
+              className="absolute top-0 left-0 right-0 bottom-0 flex"
+            >
+              <VideoView
+                roomState={roomState}
+                onLeave={onLeave}
+                adaptiveVideo={true}
+              />
             </div>
-          </FullScreen>
-        </div>
+          </div>
+        </FullScreen>
       </div>
-    );
+    </div>
+  );
 };
-
 export default VideoChat;
-
-async function onConnected(room: Room, meta: RoomMetaData) {
-  // make it easier to debug
-  (window as any).currentRoom = room;
-
-  if (meta.audioEnabled) {
-    const options: CreateAudioTrackOptions = {};
-    const audioDeviceId = meta.audioDeviceId
-    if (audioDeviceId) {
-      options.deviceId = audioDeviceId;
-    }
-    const audioTrack = await createLocalAudioTrack(options);
-    await room.localParticipant.publishTrack(audioTrack);
-  }
-  if (meta.videoEnabled) {
-    const videoDeviceId = meta.videoDeviceId
-    const captureOptions: CreateVideoTrackOptions = {};
-    if (videoDeviceId) {
-      captureOptions.deviceId = videoDeviceId;
-    }
-    const videoTrack = await createLocalVideoTrack(captureOptions);
-    const publishOptions: TrackPublishOptions = {
-      name: 'camera',
-    };
-    if (meta.simulcast) {
-      publishOptions.simulcast = true;
-    }
-    await room.localParticipant.publishTrack(videoTrack, publishOptions);
-  }
-}

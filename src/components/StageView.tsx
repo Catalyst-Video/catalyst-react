@@ -1,12 +1,20 @@
-import React, { ReactElement } from "react";
+import { Room } from "livekit-client";
+import React from "react";
 import { useMediaQuery } from "react-responsive";
+import { RoomState } from "../hooks/useRoom";
 import { AudioRenderer } from "./AudioRenderer";
 import { DesktopStage } from "./desktop/DesktopStage";
 import { MobileStage } from "./mobile/MobileStage";
-import { StageProps } from "../typings/StageProps";
-// import './styles.module.css';
 
-export const StageView = ({ roomState, onLeave, adaptiveVideo }: StageProps) => {
+ const VideoView = ({
+         roomState,
+         onLeave,
+         adaptiveVideo,
+       }: {
+         roomState: RoomState;
+         onLeave?: (room: Room) => void;
+         adaptiveVideo?: Boolean;
+       }) => {
          const isMobile = useMediaQuery({ query: '(max-width: 800px)' });
 
          return (
@@ -30,3 +38,4 @@ export const StageView = ({ roomState, onLeave, adaptiveVideo }: StageProps) => 
            </React.Fragment>
          );
        };
+export default VideoView;

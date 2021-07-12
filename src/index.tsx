@@ -6,7 +6,7 @@ import './styles/catalyst.css';
 import './styles/tailwind.output.css';
 import VideoChat from "./views/VideoChat";
 
-const CatalystChat = ({ key, appId, dark }: CatalystChatProps) => {
+const CatalystChat = ({ key, appId, dark, theme }: CatalystChatProps) => {
     const [ready, setReady] = useState(true);
 
     return (
@@ -25,7 +25,7 @@ const CatalystChat = ({ key, appId, dark }: CatalystChatProps) => {
         }}
       >
         <div
-          id="theme-wrapper"
+          id="dark-wrapper"
           className={`${
             dark ? 'dark' : ''
           } h-full w-full m-0 p-0 overflow-hidden max-h-screen max-w-screen box-border`}
@@ -35,6 +35,12 @@ const CatalystChat = ({ key, appId, dark }: CatalystChatProps) => {
               token={
                 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2aWRlbyI6eyJyb29tSm9pbiI6dHJ1ZSwicm9vbSI6ImFzZGZhZCIsImNhblB1Ymxpc2giOnRydWUsImNhblN1YnNjcmliZSI6dHJ1ZX0sImlhdCI6MTYyNjA2NTUxMCwibmJmIjoxNjI2MDY1NTEwLCJleHAiOjE2MjYwNzI3MTAsImlzcyI6IkFQSU1teGlMOHJxdUt6dFpFb1pKVjlGYiIsImp0aSI6ImFzZmRzZGYifQ.ZXK3LtTGRZrtUqljWgAU559gIIpFt_gbs4JaXQBIpao'
               }
+              theme={theme ?? 'blue'}
+              meta={{
+                audioEnabled: true,
+                videoEnabled: true,
+                simulcast: true,
+              }}
             />
           ) : null}
         </div>

@@ -1,7 +1,8 @@
 export interface CatalystChatProps {
-	key: string;
-	appId: string;
-	dark?: boolean;
+  key: string;
+  appId: string;
+  dark?: boolean;
+  theme?: string;
 }
 
 export interface RoomMetaData {

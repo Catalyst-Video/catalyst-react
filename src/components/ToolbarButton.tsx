@@ -53,7 +53,7 @@ export const ToolbarButton = ({
                      listStyle: 'none',
                      background: '#4B5563',
                      borderRadius: '5px',
-                     padding: '5px',
+                     padding: 0,
                      margin: 0,
                      paddingInline: 'none',
                      marginBottom: '10px',
@@ -69,7 +69,7 @@ export const ToolbarButton = ({
                          key={i}
                          style={{
                            color: 'white',
-                           padding: 2,
+                           padding: '8px',
                            borderTop: i > 0 ? '1px solid rgba(255, 255, 255, 0.2)': '0',
                          }}
                          //  className="text-white bullet-none p-1"
