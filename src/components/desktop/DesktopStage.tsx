@@ -16,10 +16,12 @@ export const DesktopStage = ({
          roomState,
          onLeave,
          adaptiveVideo,
+         theme,
        }: {
          roomState: RoomState;
          onLeave?: (room: Room) => void;
          adaptiveVideo?: Boolean;
+         theme: string
        }) => {
          const { isConnecting, error, participants, room } = roomState;
          const [showOverlay, setShowOverlay] = useState(false);
@@ -104,7 +106,7 @@ export const DesktopStage = ({
                </div>
              </div>
              <div className={'grid items-center justify-center mb-3 z-20'}>
-               <Toolbar room={room} onLeave={onLeave} />
+               <Toolbar room={room} onLeave={onLeave} theme={theme} />
              </div>
            </div>
          );

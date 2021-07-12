@@ -99,6 +99,7 @@ const VideoChat = ({
                 roomState={roomState}
                 onLeave={onLeave}
                 adaptiveVideo={true}
+                theme={theme}
               />
             </div>
           </div>

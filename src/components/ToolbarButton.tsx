@@ -8,6 +8,19 @@ export interface Device {
   label: string;
 }
 
+const popoverStyles = {
+  cursor: 'pointer',
+  listStyle: 'none',
+  background: '#4B5563',
+  borderRadius: '5px',
+  padding: 0,
+  margin: 0,
+  paddingInline: 'none',
+  marginBottom: '10px',
+  fontFamily:
+    'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+};
+
 export const ToolbarButton = ({
          label,
          disabled,
@@ -45,23 +58,9 @@ export const ToolbarButton = ({
              onClickOutside={() => setDeviceMenu(false)}
              content={
                <div
-                //  className="bg-gray-600 rounded-md mb-3 z-20 bullet-none"
                >
                  <ul
-                   style={{
-                     cursor: 'pointer',
-                     listStyle: 'none',
-                     background: '#4B5563',
-                     borderRadius: '5px',
-                     padding: 0,
-                     margin: 0,
-                     paddingInline: 'none',
-                     marginBottom: '10px',
-                     fontFamily:
-                       'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-                     
-                   }}
-                  //  className="bg-gray-600 border-0 margin-0 bullet-none p-5 cursor-pointer"
+                   style={popoverStyles}
                  >
                    {devices?.map((id, i) => {
                      return (
@@ -72,7 +71,6 @@ export const ToolbarButton = ({
                            padding: '8px',
                            borderTop: i > 0 ? '1px solid rgba(255, 255, 255, 0.2)': '0',
                          }}
-                         //  className="text-white bullet-none p-1"
                          onClick={() => handleDeviceClick(id)}
                        >
                          {id.label}
@@ -84,7 +82,6 @@ export const ToolbarButton = ({
              }
            >
              <div className="inline-block m-1 relative">
-               {/* whitespace-nowrap */}
                <button
                  disabled={disabled}
                  className={`rounded-full w-16 h-16 flex justify-center items-center ${
