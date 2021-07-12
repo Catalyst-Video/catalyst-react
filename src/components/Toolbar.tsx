@@ -1,13 +1,7 @@
 import {
   faDesktop,
-  faMicrophone,
-  faMicrophoneAltSlash,
-  faMicrophoneSlash,
-  faMicrophoneAlt,
   faPhoneSlash,
   faStop,
-  faVideo,
-  faVideoSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   createLocalAudioTrack,

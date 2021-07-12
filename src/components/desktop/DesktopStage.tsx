@@ -28,7 +28,7 @@ export const DesktopStage = ({
 
          if (error || isConnecting || !room || participants.length === 0) {
            return (
-             <div className="absolute top-0 left-1 w-full h-full flex justify-center items-center text-xl text-white">
+             <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center text-xl text-white">
                {error && <span>⚠️ {error.message}</span>}
                {isConnecting && <span>⚡ Connecting...</span>}
                {!room && !isConnecting && !error && (
