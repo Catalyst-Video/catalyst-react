@@ -1,4 +1,4 @@
-import { faArrowsAlt, faExpand, faExpandAlt, faExpandArrowsAlt, faUserFriends } from '@fortawesome/free-solid-svg-icons';
+import { faArrowsAlt, faCompressAlt, faExpand, faExpandAlt, faExpandArrowsAlt, faUserFriends } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LiveKitRoom } from 'catalyst-react';
 import {
@@ -95,7 +95,7 @@ const VideoChat = ({
                 }}
               >
                 <FontAwesomeIcon
-                  icon={fsHandle.active ? faExpandAlt : faExpandArrowsAlt}
+                  icon={fsHandle.active ? faCompressAlt : faExpandAlt}
                   size="lg"
                   className="text-white ml-5"
                 />

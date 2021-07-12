@@ -29,9 +29,11 @@ export const DesktopStage = ({
          if (error || isConnecting || !room || participants.length === 0) {
            return (
              <div className="absolute top-0 left-1 w-full h-full flex justify-center items-center text-xl text-white">
-               {error && error.message}
+               {error && <span>⚠️ {error.message}</span>}
                {isConnecting && <span>⚡ Connecting...</span>}
-               {!room && !isConnecting && <span>🚀 Preparing room...</span>}
+               {!room && !isConnecting && !error && (
+                 <span>🚀 Preparing room...</span>
+               )}
                {participants.length === 0 && room && !isConnecting && (
                  <span>👋 Waiting for others to join...</span>
                )}
