@@ -80,8 +80,8 @@ export const DesktopStage = ({
                </div>
              )}
 
-             <div className="grid grid-cols-12 gap-2 auto-rows-min z-20">
-               <div className={'stageCenter'}>{mainView}</div>
+             <div className="grid grid-cols-12 gap-2 auto-rows-min z-20 overflow-hidden">
+               <div className="col-start-1 col-end-11">{mainView}</div>
                <div className={'sidebar'}>
                  {otherParticipants.map((participant, i) => {
                    let quality = VideoQuality.HIGH;

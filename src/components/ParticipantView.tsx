@@ -170,7 +170,7 @@ export const ParticipantView = ({
   return (
     <div
       ref={ref}
-      className={classes.join(" ")}
+      className={classes.join(' ')}
       style={containerStyles}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -183,18 +183,18 @@ export const ParticipantView = ({
       )}
       {(!aspectWidth || !aspectHeight) && mainElement}
 
-      {showOverlay && (
-        <div className={'participantBar'}>
-          <div>{displayName}</div>
-          <div>
-            <FontAwesomeIcon
-              icon={isMuted ? faMicrophoneSlash : faMicrophone}
-              height={24}
-              className={isMuted ? 'iconRed' : 'iconNormal'}
-            />
-          </div>
+      <div className="absolute bottom-0 left-0 flex text-white justify-between p-2 w-full">
+        <div className="text-white text-sm not-selectable flex items-center justify-center bg-gray-700 bg-opacity-40 px-2 py-1 rounded-xl">
+          {displayName}
         </div>
-      )}
+        <div>
+          <FontAwesomeIcon
+            icon={isMuted ? faMicrophoneSlash : faMicrophone}
+            size="2x"
+            className={`text-white not-selectable bg-gray-700 h-10 w-10 bg-opacity-40 p-2 rounded-full`}
+          />
+        </div>
+      </div>
     </div>
   );
 };

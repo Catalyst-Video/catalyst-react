@@ -1,4 +1,4 @@
-import { faUserFriends } from '@fortawesome/free-solid-svg-icons';
+import { faArrowsAlt, faExpand, faExpandAlt, faExpandArrowsAlt, faUserFriends } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LiveKitRoom } from 'catalyst-react';
 import {
@@ -80,13 +80,26 @@ const VideoChat = ({
         >
           <div className="">
             <Header alwaysBanner={false} theme={theme} />
-            <div className="absolute right-10 top-4 flex">
+            <div className="absolute right-4 top-4 flex z-30">
               <FontAwesomeIcon
                 icon={faUserFriends}
                 size="lg"
                 className="text-white mr-1"
               />
               <span className="text-white">{numParticipants}</span>
+              <button
+                className="cursor-pointer focus:border-0 focus:outline-none"
+                onClick={() => {
+                  if (fsHandle.active) fsHandle.exit();
+                  else fsHandle.enter();
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={fsHandle.active ? faExpandAlt : faExpandArrowsAlt}
+                  size="lg"
+                  className="text-white ml-5"
+                />
+              </button>
             </div>
           </div>
 

@@ -169,18 +169,18 @@
   height: 100%;
 }
 
-
+/* 
 .stage {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 100%;
   gap: 8px;
   overflow: hidden;
-}
+} */
 
-.stageCenter {
+/* .stageCenter {
   grid-column: 1 / 11;
-}
+} */
 
 .sidebar {
   grid-column: 11 / 13;
@@ -189,14 +189,14 @@
   grid-auto-rows: min-content;
   overflow-y: scroll;
 }
-
+/* 
 .controlsArea {
   height: 100px;
   display: grid;
   align-items: center;
   justify-items: center;
 }
-
+ */
 
 .grid-container {
   grid-template-rows: auto min-content;
