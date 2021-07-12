@@ -33,7 +33,7 @@ const CatalystChat = ({ key, appId, dark }: CatalystChatProps) => {
           {ready ? (
             <VideoChat
               token={
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2aWRlbyI6eyJyb29tSm9pbiI6dHJ1ZSwicm9vbSI6ImFzZGZhZCIsImNhblB1Ymxpc2giOnRydWUsImNhblN1YnNjcmliZSI6dHJ1ZX0sImlhdCI6MTYyNjA0NjE5MiwibmJmIjoxNjI2MDQ2MTkyLCJleHAiOjE2MjYwNTMzOTIsImlzcyI6IkFQSU1teGlMOHJxdUt6dFpFb1pKVjlGYiIsImp0aSI6ImRzYWRmZmRzIn0.axMKHC_fqObbOE2ANph4tjElsO-ovxKTqQKHdTUGas4'
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2aWRlbyI6eyJyb29tSm9pbiI6dHJ1ZSwicm9vbSI6ImFzZGZhZCIsImNhblB1Ymxpc2giOnRydWUsImNhblN1YnNjcmliZSI6dHJ1ZX0sImlhdCI6MTYyNjA2NTUxMCwibmJmIjoxNjI2MDY1NTEwLCJleHAiOjE2MjYwNzI3MTAsImlzcyI6IkFQSU1teGlMOHJxdUt6dFpFb1pKVjlGYiIsImp0aSI6ImFzZmRzZGYifQ.ZXK3LtTGRZrtUqljWgAU559gIIpFt_gbs4JaXQBIpao'
               }
             />
           ) : null}

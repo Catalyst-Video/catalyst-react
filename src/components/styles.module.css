@@ -55,13 +55,13 @@ video.video {
   height: 20px;
 }
 
-/* .popoverMenu {
+ .popoverMenu {
   background: #2F2F2F;
   border-radius: 4px;
   margin-bottom: 5px;
-} */
+} 
 
-/* ul.list {
+ul.list {
   border: 0;
   margin: 0;
   padding: 0;
@@ -78,4 +78,4 @@ ul.list li {
 
 ul.list li:first-child {
   border: 0;
-} */
+} 

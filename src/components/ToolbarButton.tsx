@@ -40,25 +40,28 @@ export const ToolbarButton = ({
          return (
            <Popover
              isOpen={deviceMenu}
-             positions={['bottom', 'right']}
+             positions={['top', 'right']}
              reposition={true}
              onClickOutside={() => setDeviceMenu(false)}
              content={
-               <div className="bg-gray-600 rounded-md mb-3 z-20 bullet-none">
+               <div
+                //  className="bg-gray-600 rounded-md mb-3 z-20 bullet-none"
+               >
                  <ul
                    style={{
                      cursor: 'pointer',
                      listStyle: 'none',
                      background: '#4B5563',
                      borderRadius: '5px',
-                     padding: '4px',
+                     padding: '5px',
                      margin: 0,
                      paddingInline: 'none',
-                     marginBottom: '7px',
+                     marginBottom: '10px',
                      fontFamily:
                        'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+                     
                    }}
-                   className="bg-gray-600 border-0 margin-0 bullet-none p-5 cursor-pointer"
+                  //  className="bg-gray-600 border-0 margin-0 bullet-none p-5 cursor-pointer"
                  >
                    {devices?.map((id, i) => {
                      return (
@@ -66,7 +69,8 @@ export const ToolbarButton = ({
                          key={i}
                          style={{
                            color: 'white',
-                           padding: 1,
+                           padding: 2,
+                           borderTop: i > 0 ? '1px solid rgba(255, 255, 255, 0.2)': '0',
                          }}
                          //  className="text-white bullet-none p-1"
                          onClick={() => handleDeviceClick(id)}
