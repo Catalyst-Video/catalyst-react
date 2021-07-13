@@ -1,7 +1,7 @@
 import { Property } from "csstype";
 import { Track } from "livekit-client";
 import React from "react";
-import { VideoRenderer } from "./VideoRenderer";
+import VideoWrapper from "./VideoWrapper";
 
 interface ScreenShareProps {
   track: Track;
@@ -12,11 +12,9 @@ interface ScreenShareProps {
 export const ScreenShareView = ({ track, width, height }: ScreenShareProps) => {
   return (
     <div className={'screenShare'}>
-      <VideoRenderer
+      <VideoWrapper
         track={track}
         isLocal={false}
-        width={width}
-        height={height}
       />
     </div>
   );

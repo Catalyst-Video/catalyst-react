@@ -16,7 +16,7 @@ module.exports = {
       current: 'currentColor',
       white: colors.white,
       black: colors.black,
-      gray: colors.blueGray, // coolGray
+      gray: colors.coolGray, // coolGray
       red: colors.red[500],
       orange: colors.orange[500],
       amber: colors.amber[500],
@@ -35,7 +35,56 @@ module.exports = {
       pink: colors.pink[500],
       rose: colors.rose[500],
     },
-    extend: {},
+    extend: {
+      keyframes: {
+        'fade-in-down': {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(-10px)',
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0)',
+          },
+        },
+        'fade-out-down': {
+          from: {
+            opacity: '1',
+            transform: 'translateY(0px)',
+          },
+          to: {
+            opacity: '0',
+            transform: 'translateY(10px)',
+          },
+        },
+        'fade-in-up': {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(10px)',
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0)',
+          },
+        },
+        'fade-out-up': {
+          from: {
+            opacity: '1',
+            transform: 'translateY(0px)',
+          },
+          to: {
+            opacity: '0',
+            transform: 'translateY(10px)',
+          },
+        },
+      },
+      animation: {
+        'fade-in-down': 'fade-in-down 0.5s ease-out',
+        'fade-out-down': 'fade-out-down 0.5s ease-out',
+        'fade-in-up': 'fade-in-up 0.5s ease-out',
+        'fade-out-up': 'fade-out-up 0.5s ease-out',
+      },
+    },
   },
   variants: {
     extend: {},

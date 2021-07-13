@@ -17,7 +17,7 @@ import {
   ConnectOptions,
   TrackPublishOptions,
 } from 'livekit-client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { RoomMetaData } from '../typings/interfaces';
 import RoomWrapper  from '../components/RoomWrapper';
@@ -29,16 +29,20 @@ const VideoChat = ({
   token,
   theme,
   meta,
+  fade,
 }: {
   token: string;
   theme: string;
   meta: RoomMetaData;
+  fade: number
 }) => {
-  const [tracks, setTracks] = useState<Track[]>([]);
   const fsHandle = useFullScreenHandle();
   const [numParticipants, setNumParticipants] = useState(0);
-
   const roomState = useRoom();
+
+  const toolbarRef = useRef<HTMLDivElement>(null)
+  const headerRef = useRef<HTMLDivElement>(null);
+
 
   const onConnected = room => {
     // onConnected(room, meta);
@@ -69,6 +73,76 @@ const VideoChat = ({
   };
 
   const onLeave = () => {};
+  
+
+  // if (fade > 0) {
+  //   var timedelay = 1;
+  //   const delayCheck = () => {
+  //     if (timedelay === 5) {
+  //       headerRef.current?.classList.add('fade-out-up');
+  //       headerRef.current?.classList.remove('fade-in-down');
+  //       toolbarRef.current?.classList.add('fade-out-down');
+  //       toolbarRef.current?.classList.remove('fade-in-up');
+  //       timedelay = 1;
+  //     }
+  //     timedelay += 1;
+  //   };
+  //   document.addEventListener('mousemove', () => {
+  //     headerRef.current?.classList.add('fade-in-down');
+  //     headerRef.current?.classList.remove('fade-out-up');
+  //     toolbarRef.current?.classList.add('fade-in-up');
+  //     toolbarRef.current?.classList.remove('fade-out-down');
+  //     timedelay = 1;
+  //     clearInterval(_delay);
+  //     _delay = setInterval(delayCheck, fade);
+  //   });
+  //   var _delay = setInterval(delayCheck, fade);
+  // }
+
+
+  useEffect(() => {
+      const delayCheck = () => {
+          const hClasses = headerRef.current?.classList;
+          const tClasses = toolbarRef.current?.classList;
+        if (timedelay === 5) {
+          hClasses?.remove('animate-fade-in-down');
+          hClasses?.add('animate-fade-out-up');
+          tClasses?.remove('animate-fade-in-up');
+          tClasses?.add('animate-fade-out-down');
+          setTimeout(() => {
+            hClasses?.remove('animate-fade-out-up');
+            hClasses?.add('hidden');
+            tClasses?.remove('animate-fade-out-down');
+            tClasses?.add('hidden');
+          }, 500);
+          timedelay = 1;
+        }
+        timedelay += 1;
+      };
+
+    const handleMouse = () => {
+        const hClasses = headerRef.current?.classList;
+        const tClasses = toolbarRef.current?.classList;
+        hClasses?.remove('hidden');
+        hClasses?.add('animate-fade-in-down');
+        tClasses?.remove('hidden');
+        tClasses?.add('animate-fade-in-up');
+        timedelay = 1;
+        clearInterval(_delay);
+        _delay = setInterval(delayCheck, fade);
+      };
+
+      if (fade > 0) {
+        var timedelay = 1;
+        document.addEventListener('mousemove', handleMouse);
+        var _delay = setInterval(delayCheck, fade);
+      }
+
+      () => {
+        document.removeEventListener('mousemove', handleMouse);
+      };
+    
+  }, []);
 
   return (
     <div id="video-chat" className="h-full w-full relative">
@@ -77,7 +151,7 @@ const VideoChat = ({
           handle={fsHandle}
           className="h-full w-full bg-gray-700 dark:bg-gray-900"
         >
-          <div className="">
+          <div className="animate-fade-in-down" ref={headerRef}>
             <Header alwaysBanner={false} theme={theme} />
             <div className="absolute right-4 top-4 flex z-30">
               <FontAwesomeIcon
@@ -111,6 +185,7 @@ const VideoChat = ({
                 roomState={roomState}
                 onLeave={onLeave}
                 theme={theme}
+                toolbarRef={toolbarRef}
               />
             </div>
           </div>

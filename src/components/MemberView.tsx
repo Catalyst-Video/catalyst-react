@@ -16,6 +16,7 @@ import AspectRatio from "react-aspect-ratio";
 import { useInView } from "react-intersection-observer";
 import { useParticipant } from "../hooks/useParticipant";
 import "./styles.module.css";
+import VideoWrapper from "./VideoWrapper";
 
 const MemberView = ({
   member: m,
@@ -162,42 +163,3 @@ const MemberView = ({
 };
 export default MemberView;
 
-const VideoWrapper = ({
-  track,
-  isLocal,
-  objectFit,
-}: {
-  track: Track;
-  isLocal: boolean;
-  objectFit?: Property.ObjectFit;
-}) => {
-const ref = useRef<HTMLVideoElement>(null);
-
-useEffect(() => {
-  const el = ref.current;
-  if (!el) {
-    return;
-  }
-  el.muted = true;
-  track.attach(el);
-  return () => {
-    track.detach(el);
-  };
-}, [track, ref]);
-
-const isFrontFacing =
-  track.mediaStreamTrack?.getSettings().facingMode !== 'environment';
-
-  return  (
-    <video
-      ref={ref}
-      className={`object-center min-h-0 min-w-0 rounded-lg h-full w-full ${
-        isLocal && isFrontFacing ? '' : 'transform rotate-180'
-      } ${objectFit ?? ''}`}
-      // style={{
-      //   transform: isLocal && isFrontFacing ? 'rotateY(180deg)' : '',
-      //   objectFit: objectFit ?? '',
-      // }}
-    />
-  );
-}
