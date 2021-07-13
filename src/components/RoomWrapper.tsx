@@ -12,6 +12,7 @@ import { ScreenShareView } from "./ScreenShareView";
 import "./styles.module.css";
 import { RoomState } from "../hooks/useRoom";
 import { AudioRenderer } from "./AudioRenderer";
+import { debounce } from 'ts-debounce';
 
  const RoomWrapper = ({
    roomState,
@@ -39,11 +40,12 @@ import { AudioRenderer } from "./AudioRenderer";
        'load',
        () => {
          resizeWrapper();
-         window.onresize = resizeWrapper;
+         window.onresize = debounce(resizeWrapper, 15);
        },
        false
      );
    }, []);
+
 
    useEffect(() => {
      resizeWrapper();
@@ -79,11 +81,13 @@ import { AudioRenderer } from "./AudioRenderer";
        width = vidRef.current.offsetWidth - margin * 2;
        height = vidRef.current.offsetHeight - margin * 2;
      }
+    //  console.log('res', width, height);
      let max = 0;
      //  TODO: loop needs to be optimized
      let i = 1;
      while (i < 5000) {
-       let w = area(i, members.length, width, height, margin);
+       let l = members.length < 1 ? 1 : members.length;
+       let w = area(i, l, width, height, margin);
        if (w === false) {
          max = i - 1;
          break;
@@ -138,6 +142,8 @@ import { AudioRenderer } from "./AudioRenderer";
          member={members[0]}
          showOverlay={showOverlay}
          aspectWidth={16}
+         height={vidDims.height}
+         width={vidDims.width}
          aspectHeight={9}
          quality={VideoQuality.HIGH}
          onMouseEnter={() => setShowOverlay(true)}
@@ -160,10 +166,6 @@ import { AudioRenderer } from "./AudioRenderer";
          className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border`}
        >
          {members.map((m, i) => {
-           let quality = VideoQuality.HIGH;
-           if (i > 4) {
-             quality = VideoQuality.LOW;
-           }
            return (
              <MemberView
                key={m.identity}
@@ -171,7 +173,7 @@ import { AudioRenderer } from "./AudioRenderer";
                height={vidDims.height}
                width={vidDims.width}
                showOverlay={showOverlay}
-               quality={quality}
+               quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
                onMouseEnter={() => setShowOverlay(true)}
                onMouseLeave={() => setShowOverlay(false)}
              />
@@ -192,9 +194,10 @@ import { AudioRenderer } from "./AudioRenderer";
                  <MemberView
                    key={members[0].identity}
                    member={members[0]}
-                   width="100%"
                    aspectWidth={16}
                    aspectHeight={9}
+                   height={vidDims.height}
+                   width={vidDims.width}
                    showOverlay={showOverlay}
                    quality={quality}
                    onMouseEnter={() => setShowOverlay(true)}
@@ -211,8 +214,9 @@ import { AudioRenderer } from "./AudioRenderer";
                  <MemberView
                    key={participant.identity}
                    member={participant}
-                   width="100%"
                    aspectWidth={16}
+                   height={vidDims.height}
+                   width={vidDims.width}
                    aspectHeight={9}
                    showOverlay={showOverlay}
                    quality={quality}

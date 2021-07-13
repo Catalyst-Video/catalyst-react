@@ -89,7 +89,7 @@ const VideoChat = ({
             hClasses?.add('hidden');
             tClasses?.remove('animate-fade-out-down');
             tClasses?.add('hidden');
-          }, 500);
+          }, 450);
           timedelay = 1;
         }
         timedelay += 1;
@@ -126,9 +126,13 @@ const VideoChat = ({
           handle={fsHandle}
           className="h-full w-full bg-gray-700 dark:bg-gray-900"
         >
-          <div id="header-wrapper" className="animate-fade-in-down" ref={headerRef}>
+          <div
+            id="header-wrapper"
+            className="animate-fade-in-down"
+            ref={headerRef}
+          >
             <Header alwaysBanner={false} theme={theme} />
-            <div className="absolute right-4 top-4 flex z-30">
+            <div className="absolute right-3 sm:right-5 top-10 sm:top-5 flex z-30">
               <FontAwesomeIcon
                 icon={faUserFriends}
                 size="lg"

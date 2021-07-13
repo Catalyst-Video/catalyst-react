@@ -10,7 +10,7 @@ const Header = ({
 }) => {
 
   return (
-    <div className="">
+    <div id="header">
       <div
         className={`absolute left-0 top-0 block w-full text-center bg-${theme} p-1 text-white text-sm font-semibold z-40 ${
           alwaysBanner ? '' : 'sm:hidden'
@@ -19,19 +19,16 @@ const Header = ({
         Powered by Catalyst
       </div>
       {!alwaysBanner && (
-        <>
           <div
-            id="header"
             className="hidden sm:block fixed not-selectable m-3 z-40"
           >
             <div
-              id="header"
+              id="header-img-wrapper"
               className="focus:border-0 focus:outline-none bg-transparent cursor-pointer inline"
             >
               <HeaderImg themeColor={theme} />
             </div>
           </div>
-        </>
       )}
 
       <div

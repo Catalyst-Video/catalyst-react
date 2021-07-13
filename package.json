@@ -55,7 +55,8 @@
     "react-draggable": "^4.4.3",
     "react-full-screen": "^1.0.1",
     "react-scripts": "^1.1.5",
-    "socket.io-client": "^2.3.1"
+    "socket.io-client": "^2.3.1",
+    "ts-debounce": "^3.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-strip": "^2.0.0",

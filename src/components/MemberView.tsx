@@ -34,8 +34,8 @@ const MemberView = ({
 }: {
   member: Participant;
   displayName?: string;
-  width?: Property.Width;
-  height?: Property.Height;
+  width: Property.Width;
+  height: Property.Height;
   className?: string;
   aspectWidth?: number;
   aspectHeight?: number;
@@ -51,7 +51,9 @@ const MemberView = ({
   const [videoEnabled, setVideoEnabled] = useState(true);
   const [callbackTimeout, setCallbackTimeout] = useState<
     ReturnType<typeof setTimeout>
-  >();
+    >();
+
+  // console.log('render child video', height, width)
 
   // when video is hidden, disable it to optimize for bandwidth
   useEffect(() => {
@@ -125,12 +127,13 @@ const MemberView = ({
   
 
   return (
+    // <AspectRatio ratio={16 / 9} className="overflow-hidden">
     <div
       ref={ref}
-      className="relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-lg"
+      className="relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-lg m-1"
       style={{
-        width: width,
         height: height,
+        width: width,
       }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -159,6 +162,7 @@ const MemberView = ({
         </div>
       </div>
     </div>
+    // </AspectRatio>
   );
 };
 export default MemberView;
