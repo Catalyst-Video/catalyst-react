@@ -18,12 +18,10 @@ import { debounce } from 'ts-debounce';
    roomState,
    onLeave,
    theme,
-   toolbarRef,
  }: {
    roomState: RoomState;
    onLeave?: (room: Room) => void;
    theme: string;
-   toolbarRef: Ref<HTMLDivElement>
  }) => {
    const { isConnecting, error, participants: members, room } = roomState;
    const [showOverlay, setShowOverlay] = useState(false);
@@ -253,15 +251,6 @@ import { debounce } from 'ts-debounce';
            </div>
          </div>
        )}
-       <div
-         ref={toolbarRef}
-         className="absolute bottom-0 left-0 right-0 flex items-center justify-center mb-3 z-20"
-       >
-         <Toolbar room={room} onLeave={onLeave} theme={theme} />
-       </div>
-       {roomState.audioTracks.map(track => (
-         <AudioRenderer key={track.sid} track={track} isLocal={false} />
-       ))}
      </>
    );
  };

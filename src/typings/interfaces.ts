@@ -3,6 +3,7 @@ export interface CatalystChatProps {
   appId: string;
   dark?: boolean;
   theme?: string;
+  fade?: number;
 }
 
 export interface RoomMetaData {

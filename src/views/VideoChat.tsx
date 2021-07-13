@@ -1,4 +1,4 @@
-import { faArrowsAlt, faCompressAlt, faExpand, faExpandAlt, faExpandArrowsAlt, faUserFriends } from '@fortawesome/free-solid-svg-icons';
+import { faArrowsAlt, faCompressAlt, faExpand, faExpandAlt, faExpandArrowsAlt, faThLarge, faUserFriends } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LiveKitRoom } from 'catalyst-react';
 import {
@@ -22,7 +22,9 @@ import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { RoomMetaData } from '../typings/interfaces';
 import RoomWrapper  from '../components/RoomWrapper';
 import { useRoom } from '../hooks/useRoom';
-import Header from '../components/Header';
+import HeaderLogo from '../components/Header';
+import Toolbar from '../components/Toolbar';
+import { AudioRenderer } from '../components/AudioRenderer';
 
 
 const VideoChat = ({
@@ -76,9 +78,10 @@ const VideoChat = ({
 
   // animate toolbar & header fadeIn/Out
   useEffect(() => {
+    if (fade > 0) {
       const delayCheck = () => {
-          const hClasses = headerRef.current?.classList;
-          const tClasses = toolbarRef.current?.classList;
+        const hClasses = headerRef.current?.classList;
+        const tClasses = toolbarRef.current?.classList;
         if (timedelay === 5) {
           hClasses?.remove('animate-fade-in-down');
           hClasses?.add('animate-fade-out-up');
@@ -95,7 +98,7 @@ const VideoChat = ({
         timedelay += 1;
       };
 
-    const handleMouse = () => {
+      const handleMouse = () => {
         const hClasses = headerRef.current?.classList;
         const tClasses = toolbarRef.current?.classList;
         hClasses?.remove('hidden');
@@ -116,7 +119,7 @@ const VideoChat = ({
       () => {
         document.removeEventListener('mousemove', handleMouse);
       };
-    
+    }
   }, []);
 
   return (
@@ -131,7 +134,7 @@ const VideoChat = ({
             className="animate-fade-in-down"
             ref={headerRef}
           >
-            <Header alwaysBanner={false} theme={theme} />
+            <HeaderLogo alwaysBanner={false} theme={theme} />
             <div className="absolute right-3 sm:right-5 top-10 sm:top-5 flex z-30">
               <FontAwesomeIcon
                 icon={faUserFriends}
@@ -139,6 +142,19 @@ const VideoChat = ({
                 className="text-white mr-1"
               />
               <span className="text-white">{numParticipants}</span>
+              <button
+                className="cursor-pointer focus:border-0 focus:outline-none"
+                onClick={() => {
+                  if (fsHandle.active) fsHandle.exit();
+                  else fsHandle.enter();
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faThLarge}
+                  size="lg"
+                  className="text-white ml-5"
+                />
+              </button>
               <button
                 className="cursor-pointer focus:border-0 focus:outline-none"
                 onClick={() => {
@@ -164,8 +180,22 @@ const VideoChat = ({
                 roomState={roomState}
                 onLeave={onLeave}
                 theme={theme}
-                toolbarRef={toolbarRef}
               />
+              {roomState.room && (
+                <div
+                  ref={toolbarRef}
+                  className="absolute bottom-0 left-0 right-0 flex items-center justify-center mb-3 z-20"
+                >
+                  <Toolbar
+                    room={roomState.room}
+                    onLeave={onLeave}
+                    theme={theme}
+                  />
+                </div>
+              )}
+              {roomState.audioTracks.map(track => (
+                <AudioRenderer key={track.sid} track={track} isLocal={false} />
+              ))}
             </div>
           </div>
         </FullScreen>

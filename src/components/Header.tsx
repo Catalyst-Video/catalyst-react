@@ -1,7 +1,7 @@
 import React from 'react';
 import HeaderImg from './HeaderImg';
 
-const Header = ({
+const HeaderLogo = ({
   alwaysBanner,
   theme,
 }: {
@@ -39,4 +39,4 @@ const Header = ({
   );
 };
 
-export default Header;
+export default HeaderLogo;

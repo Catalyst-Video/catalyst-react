@@ -6,7 +6,7 @@ import './styles/catalyst.css';
 import './styles/tailwind.output.css';
 import VideoChat from "./views/VideoChat";
 
-const CatalystChat = ({ key, appId, dark, theme }: CatalystChatProps) => {
+const CatalystChat = ({ key, appId, dark, theme, fade }: CatalystChatProps) => {
     const [ready, setReady] = useState(true);
 
     return (
@@ -41,7 +41,7 @@ const CatalystChat = ({ key, appId, dark, theme }: CatalystChatProps) => {
                 videoEnabled: true,
                 simulcast: true,
               }}
-              fade={600}
+              fade={fade ?? 600}
             />
           ) : null}
         </div>
