@@ -32,7 +32,7 @@ const VideoWrapper = ({
     <video
       ref={ref}
       className={`object-center min-h-0 min-w-0 rounded-lg h-full w-full ${
-        isLocal && isFrontFacing ? '' : 'transform rotate-180'
+        isLocal && isFrontFacing ? '' : ''
       } ${objectFit ?? ''}`}
       // style={{
       //   transform: isLocal && isFrontFacing ? 'rotateY(180deg)' : '',

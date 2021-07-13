@@ -27,8 +27,9 @@ import { debounce } from 'ts-debounce';
  }) => {
    const { isConnecting, error, participants: members, room } = roomState;
    const [showOverlay, setShowOverlay] = useState(false);
+   const [gridView, setGridView] = useState(true);
+   const [screens, setSharedScreens] = useState <RemoteVideoTrack[]>([]);
    const vidRef = useRef<HTMLDivElement>(null);
-
    const [vidDims, setVidDims] = useState({
      width: '0px',
      height: '0px',
@@ -46,10 +47,30 @@ import { debounce } from 'ts-debounce';
      );
    }, []);
 
-
    useEffect(() => {
-     resizeWrapper();
-   }, [members]);
+      // find first participant with screen shared
+     let screenTrack: RemoteVideoTrack | undefined;
+      members.forEach(p => {
+        //  TODO: don't show local screen share if (p instanceof LocalParticipant) {
+        //    return;
+        //  }
+        // setSharedScreens([]);
+        p.videoTracks.forEach(track => {
+          if (track.trackName === 'screen' && track.track) {
+            screenTrack = track.track as RemoteVideoTrack;
+            if (!screens.includes(screenTrack)) {
+              setSharedScreens([...screens, screenTrack]);
+            }
+          }
+        });
+        // screens.forEach(screen => {
+        //   if (screen.isMuted)
+        //     setSharedScreens(screens.filter(t => t !== screen));
+        // });
+      });
+     console.log('screens', screens);
+      resizeWrapper();
+    }, [members]);
 
    const area = (
      increment: number,
@@ -86,7 +107,7 @@ import { debounce } from 'ts-debounce';
      //  TODO: loop needs to be optimized
      let i = 1;
      while (i < 5000) {
-       let l = members.length < 1 ? 1 : members.length;
+       let l = (members.length < 1 ? 1 : members.length) + screens.length;
        let w = area(i, l, width, height, margin);
        if (w === false) {
          max = i - 1;
@@ -114,43 +135,40 @@ import { debounce } from 'ts-debounce';
        </div>
      );
    }
-   // find first participant with screen shared
-   let screenTrack: RemoteVideoTrack | undefined;
-   members.forEach(p => {
-     if (p instanceof LocalParticipant) {
-       return;
-     }
-     p.videoTracks.forEach(track => {
-       if (track.trackName === 'screen' && track.track) {
-         screenTrack = track.track as RemoteVideoTrack;
-       }
-     });
-   });
 
-   let otherParticipants: Participant[];
-   let mainView: ReactElement;
-   if (screenTrack) {
-     otherParticipants = members;
-     mainView = (
-       <ScreenShareView track={screenTrack} height="100%" width="100%" />
-     );
-   } else {
-     otherParticipants = members.slice(1);
-     mainView = (
-       <MemberView
-         key={members[0].identity}
-         member={members[0]}
-         showOverlay={showOverlay}
-         aspectWidth={16}
-         height={vidDims.height}
-         width={vidDims.width}
-         aspectHeight={9}
-         quality={VideoQuality.HIGH}
-         onMouseEnter={() => setShowOverlay(true)}
-         onMouseLeave={() => setShowOverlay(false)}
-       />
-     );
-   }
+  
+
+  //  let otherParticipants: Participant[];
+  //  let mainView: ReactElement;
+  //  if (screenTrack) {
+  //    otherParticipants = members;
+  //    mainView = (
+  //      <ScreenShareView track={screenTrack} height="100%" width="100%" />
+  //    );
+  //  } else {
+  //    otherParticipants = members.slice(1);
+  //    mainView = (
+  //      <MemberView
+  //        key={members[0].identity}
+  //        member={members[0]}
+  //        showOverlay={showOverlay}
+  //        aspectWidth={16}
+  //        height={vidDims.height}
+  //        width={vidDims.width}
+  //        aspectHeight={9}
+  //        quality={VideoQuality.HIGH}
+  //        onMouseEnter={() => setShowOverlay(true)}
+  //        onMouseLeave={() => setShowOverlay(false)}
+  //      />
+  //    );
+  //  }
+
+      // useEffect(() => {
+      //   if (screenTrack) {
+      //     setGridView(false);
+      //   }
+      // }, [screenTrack]);
+
 
    return (
      <>
@@ -165,25 +183,36 @@ import { debounce } from 'ts-debounce';
          ref={vidRef}
          className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border`}
        >
-         {members.map((m, i) => {
-           return (
-             <MemberView
-               key={m.identity}
-               member={m}
-               height={vidDims.height}
-               width={vidDims.width}
-               showOverlay={showOverlay}
-               quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
-               onMouseEnter={() => setShowOverlay(true)}
-               onMouseLeave={() => setShowOverlay(false)}
-             />
-           );
-         })}
+         {gridView &&
+           members.map((m, i) => {
+             return (
+               <MemberView
+                 key={m.identity}
+                 member={m}
+                 height={vidDims.height}
+                 width={vidDims.width}
+                 showOverlay={showOverlay}
+                 quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
+                 onMouseEnter={() => setShowOverlay(true)}
+                 onMouseLeave={() => setShowOverlay(false)}
+               />
+             );
+           })}
+         {screens &&
+           screens.map((s, i) => {
+             return (
+               <ScreenShareView
+                 track={s}
+                 height={vidDims.height}
+                 width={vidDims.width}
+               />
+             );
+           })}
        </div>
-       {false && (
+       {!gridView && (
          <div className="grid grid-cols-12 gap-2 z-20 overflow-hidden py-10 px-1">
            {/* auto-rows-min */}
-           <div className="col-start-1 col-end-11">{mainView}</div>
+           {/* <div className="col-start-1 col-end-11">{mainView}</div> */}
            <div className={'sidebar overflow-auto'}>
              {[0, 1, 2, 3].map((participant, i) => {
                let quality = VideoQuality.HIGH;
@@ -205,7 +234,7 @@ import { debounce } from 'ts-debounce';
                  />
                );
              })}
-             {otherParticipants.map((participant, i) => {
+             {/* {otherParticipants.map((participant, i) => {
                let quality = VideoQuality.HIGH;
                if (i > 4) {
                  quality = VideoQuality.LOW;
@@ -224,7 +253,7 @@ import { debounce } from 'ts-debounce';
                    onMouseLeave={() => setShowOverlay(false)}
                  />
                );
-             })}
+             })} */}
            </div>
          </div>
        )}

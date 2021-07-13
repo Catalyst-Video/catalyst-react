@@ -19,6 +19,7 @@ import { AudioSelectButton } from "./AudioSelectButton";
 import ToolbarButton from "./ToolbarButton";
 import "./styles.module.css";
 import { VideoSelectButton } from "./VideoSelectButton";
+import { useEffect } from "react";
 
 
  const Toolbar = ({
@@ -110,10 +111,34 @@ import { VideoSelectButton } from "./VideoSelectButton";
        ) {
          return;
        }
-       toggleVideo();
      }
-     toggleVideo();
    };
+
+    useEffect(() => {
+       if (audioDevice) {
+           createLocalAudioTrack({ deviceId: audioDevice.deviceId })
+           .then(track => {
+             room.localParticipant.publishTrack(track);
+            //  (audioPub as LocalTrackPublication).unmute();
+           })
+           .catch((err: Error) => {
+             console.log(err);
+           });
+       }
+    }, [audioDevice]);
+
+   useEffect(() => {
+     if (videoDevice) {
+       createLocalVideoTrack({ deviceId: videoDevice.deviceId })
+         .then((track: LocalVideoTrack) => {
+          if (videoPub) unpublishTrack(videoPub.track as LocalVideoTrack);
+           room.localParticipant.publishTrack(track);
+         })
+         .catch((err: Error) => {
+           console.log(err);
+         });
+     }
+   }, [videoDevice]);
 
    return (
      <div className={'controlsWrapper'}>
@@ -144,30 +169,54 @@ import { VideoSelectButton } from "./VideoSelectButton";
            onClick={
              screenPub?.track
                ? () => unpublishTrack(screenPub.track as LocalVideoTrack)
-               : async () => {
-                   try {
-                     const captureStream =
-                       // @ts-ignore
-                       (await navigator.mediaDevices.getDisplayMedia({
-                         video: {
-                           width: VideoPresets.fhd.resolution.width,
-                           height: VideoPresets.fhd.resolution.height,
-                         },
-                       })) as MediaStream;
+               : () => {
+                   navigator.mediaDevices
+                     // @ts-ignore
+                     .getDisplayMedia({
+                       video: {
+                         width: VideoPresets.fhd.resolution.width,
+                         height: VideoPresets.fhd.resolution.height,
+                       },
+                     })
+                     .then((captureStream: MediaStream) => {
+                       room.localParticipant.publishTrack(
+                         captureStream.getTracks()[0],
+                         {
+                           name: 'screen',
+                           videoEncoding: {
+                             maxBitrate: 3000000,
+                             maxFramerate: 30,
+                           },
+                         }
+                       );
+                     })
+                     .catch(err => {
+                     window.alert('Error sharing screen' + err);
+                     });
+            
+                  //  try {
+                  //    const captureStream =
+                  //      // @ts-ignore
+                  //      (await navigator.mediaDevices.getDisplayMedia({
+                  //        video: {
+                  //          width: VideoPresets.fhd.resolution.width,
+                  //          height: VideoPresets.fhd.resolution.height,
+                  //        },
+                  //      })) as MediaStream;
 
-                     room.localParticipant.publishTrack(
-                       captureStream.getTracks()[0],
-                       {
-                         name: 'screen',
-                         videoEncoding: {
-                           maxBitrate: 3000000,
-                           maxFramerate: 30,
-                         },
-                       }
-                     );
-                   } catch (err) {
-                     window.alert('Error sharing screen');
-                   }
+                  //    room.localParticipant.publishTrack(
+                  //      captureStream.getTracks()[0],
+                  //      {
+                  //        name: 'screen',
+                  //        videoEncoding: {
+                  //          maxBitrate: 3000000,
+                  //          maxFramerate: 30,
+                  //        },
+                  //      }
+                  //    );
+                  //  } catch (err) {
+                  //    window.alert('Error sharing screen');
+                  //  }
                  }
            }
          />
