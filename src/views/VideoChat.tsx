@@ -73,33 +73,8 @@ const VideoChat = ({
   };
 
   const onLeave = () => {};
-  
 
-  // if (fade > 0) {
-  //   var timedelay = 1;
-  //   const delayCheck = () => {
-  //     if (timedelay === 5) {
-  //       headerRef.current?.classList.add('fade-out-up');
-  //       headerRef.current?.classList.remove('fade-in-down');
-  //       toolbarRef.current?.classList.add('fade-out-down');
-  //       toolbarRef.current?.classList.remove('fade-in-up');
-  //       timedelay = 1;
-  //     }
-  //     timedelay += 1;
-  //   };
-  //   document.addEventListener('mousemove', () => {
-  //     headerRef.current?.classList.add('fade-in-down');
-  //     headerRef.current?.classList.remove('fade-out-up');
-  //     toolbarRef.current?.classList.add('fade-in-up');
-  //     toolbarRef.current?.classList.remove('fade-out-down');
-  //     timedelay = 1;
-  //     clearInterval(_delay);
-  //     _delay = setInterval(delayCheck, fade);
-  //   });
-  //   var _delay = setInterval(delayCheck, fade);
-  // }
-
-
+  // animate toolbar & header fadeIn/Out
   useEffect(() => {
       const delayCheck = () => {
           const hClasses = headerRef.current?.classList;
@@ -151,7 +126,7 @@ const VideoChat = ({
           handle={fsHandle}
           className="h-full w-full bg-gray-700 dark:bg-gray-900"
         >
-          <div className="animate-fade-in-down" ref={headerRef}>
+          <div id="header-wrapper" className="animate-fade-in-down" ref={headerRef}>
             <Header alwaysBanner={false} theme={theme} />
             <div className="absolute right-4 top-4 flex z-30">
               <FontAwesomeIcon

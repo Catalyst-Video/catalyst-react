@@ -1,4 +1,4 @@
-import React, { RefObject, useRef, useState } from 'react';
+import React from 'react';
 import HeaderImg from './HeaderImg';
 
 const Header = ({
@@ -8,7 +8,6 @@ const Header = ({
   alwaysBanner?: boolean;
   theme: string;
 }) => {
-  const headerRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className="">
@@ -23,7 +22,6 @@ const Header = ({
         <>
           <div
             id="header"
-            ref={headerRef}
             className="hidden sm:block fixed not-selectable m-3 z-40"
           >
             <div
