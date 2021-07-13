@@ -1,4 +1,4 @@
-import { faArrowsAlt, faCompressAlt, faExpand, faExpandAlt, faExpandArrowsAlt, faThLarge, faUserFriends } from '@fortawesome/free-solid-svg-icons';
+import { faArrowsAlt, faCompressAlt, faExpand, faExpandAlt, faExpandArrowsAlt, faTh, faThLarge, faUserFriends } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LiveKitRoom } from 'catalyst-react';
 import {
@@ -41,6 +41,7 @@ const VideoChat = ({
   const fsHandle = useFullScreenHandle();
   const [numParticipants, setNumParticipants] = useState(0);
   const roomState = useRoom();
+  const [speakerMode, setSpeakerMode] = useState(false);
 
   const toolbarRef = useRef<HTMLDivElement>(null)
   const headerRef = useRef<HTMLDivElement>(null);
@@ -144,13 +145,10 @@ const VideoChat = ({
               <span className="text-white">{numParticipants}</span>
               <button
                 className="cursor-pointer focus:border-0 focus:outline-none"
-                onClick={() => {
-                  if (fsHandle.active) fsHandle.exit();
-                  else fsHandle.enter();
-                }}
+                onClick={() => setSpeakerMode(sMode => !sMode)}
               >
                 <FontAwesomeIcon
-                  icon={faThLarge}
+                  icon={speakerMode ? faTh : faThLarge}
                   size="lg"
                   className="text-white ml-5"
                 />
