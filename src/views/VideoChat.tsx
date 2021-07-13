@@ -20,8 +20,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { RoomMetaData } from '../typings/interfaces';
-import { ParticipantProps } from '../components/ParticipantView';
-import VideoView  from '../components/StageView';
+import RoomWrapper  from '../components/RoomWrapper';
 import { useRoom } from '../hooks/useRoom';
 import Header from '../components/Header';
 
@@ -108,10 +107,9 @@ const VideoChat = ({
               id="vid-chat-cont"
               className="absolute top-0 left-0 right-0 bottom-0 flex"
             >
-              <VideoView
+              <RoomWrapper
                 roomState={roomState}
                 onLeave={onLeave}
-                adaptiveVideo={true}
                 theme={theme}
               />
             </div>

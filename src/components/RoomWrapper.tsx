@@ -6,24 +6,23 @@ import {
 } from "livekit-client";
 import { VideoQuality } from "livekit-client/dist/proto/livekit_rtc";
 import React, { ReactElement, useEffect, useRef, useState } from "react";
-import Toolbar from "../Toolbar";
-import { ParticipantView } from "../ParticipantView";
-import { ScreenShareView } from "../ScreenShareView";
+import Toolbar from "./Toolbar";
+import MemberView from "./MemberView";
+import { ScreenShareView } from "./ScreenShareView";
 import "./styles.module.css";
-import { RoomState } from "../../hooks/useRoom";
+import { RoomState } from "../hooks/useRoom";
+import { AudioRenderer } from "./AudioRenderer";
 
-export const DesktopStage = ({
+ const RoomWrapper = ({
          roomState,
          onLeave,
-         adaptiveVideo,
          theme,
        }: {
          roomState: RoomState;
          onLeave?: (room: Room) => void;
-         adaptiveVideo?: Boolean;
          theme: string
        }) => {
-         const { isConnecting, error, participants, room } = roomState;
+         const { isConnecting, error, participants: members, room } = roomState;
   const [showOverlay, setShowOverlay] = useState(false);
   const vidRef = useRef<HTMLDivElement>(null);
   
@@ -46,7 +45,7 @@ export const DesktopStage = ({
 
     useEffect(() => {
       resizeWrapper();
-    }, [participants]);
+    }, [members]);
 
     const area = (
       increment: number,
@@ -82,7 +81,7 @@ export const DesktopStage = ({
       //  TODO: loop needs to be optimized
       let i = 1;
       while (i < 5000) {
-        let w = area(i, participants.length, width, height, margin);
+        let w = area(i, members.length, width, height, margin);
         if (w === false) {
           max = i - 1;
           break;
@@ -97,7 +96,7 @@ export const DesktopStage = ({
       });
     };
 
-         if (error || isConnecting || !room || participants.length === 0) {
+         if (error || isConnecting || !room || members.length === 0) {
            return (
              <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center text-xl text-white">
                {error && <span>⚠️ {error.message}</span>}
@@ -105,7 +104,7 @@ export const DesktopStage = ({
                {!room && !isConnecting && !error && (
                  <span>🚀 Preparing room...</span>
                )}
-               {participants.length === 0 && room && !isConnecting && (
+               {members.length === 0 && room && !isConnecting && (
                  <span>👋 Waiting for others to join...</span>
                )}
              </div>
@@ -113,7 +112,7 @@ export const DesktopStage = ({
          }
          // find first participant with screen shared
          let screenTrack: RemoteVideoTrack | undefined;
-         participants.forEach(p => {
+         members.forEach(p => {
            if (p instanceof LocalParticipant) {
              return;
            }
@@ -127,16 +126,16 @@ export const DesktopStage = ({
          let otherParticipants: Participant[];
          let mainView: ReactElement;
          if (screenTrack) {
-           otherParticipants = participants;
+           otherParticipants = members;
            mainView = (
              <ScreenShareView track={screenTrack} height="100%" width="100%" />
            );
          } else {
-           otherParticipants = participants.slice(1);
+           otherParticipants = members.slice(1);
            mainView = (
-             <ParticipantView
-               key={participants[0].identity}
-               participant={participants[0]}
+             <MemberView
+               key={members[0].identity}
+               member={members[0]}
                showOverlay={showOverlay}
                aspectWidth={16}
                aspectHeight={9}
@@ -150,8 +149,8 @@ export const DesktopStage = ({
          return (
            <>
              {/* grid min-h-0 grid-container */}
-             {participants.length <= 1 && (
-               <div className="absolute top-0 left-1 w-full h-full flex justify-center items-center z-0 text-xl text-white">
+             {members.length <= 1 && (
+               <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-xl text-white">
                  <span>👋 Waiting for others to join...</span>
                </div>
              )}
@@ -160,25 +159,21 @@ export const DesktopStage = ({
                ref={vidRef}
                className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border`}
              >
-               {participants.map((participant, i) => {
+               {members.map((m, i) => {
                  let quality = VideoQuality.HIGH;
-                 if (adaptiveVideo && i > 4) {
+                 if (i > 4) {
                    quality = VideoQuality.LOW;
                  }
                  return (
-                   <ParticipantView
-                     key={participants[0].identity}
-                     participant={participants[0]}
-                     //  width="100%"
-                     // aspectWidth={16}
+                   <MemberView
+                     key={m.identity}
+                     member={m}
                      height={vidDims.height}
                      width={vidDims.width}
-                     //  aspectHeight={9}
                      showOverlay={showOverlay}
                      quality={quality}
                      onMouseEnter={() => setShowOverlay(true)}
                      onMouseLeave={() => setShowOverlay(false)}
-                     adaptiveVideo={adaptiveVideo}
                    />
                  );
                })}
@@ -190,13 +185,13 @@ export const DesktopStage = ({
                  <div className={'sidebar overflow-auto'}>
                    {[0, 1, 2, 3].map((participant, i) => {
                      let quality = VideoQuality.HIGH;
-                     if (adaptiveVideo && i > 4) {
+                     if (i > 4) {
                        quality = VideoQuality.LOW;
                      }
                      return (
-                       <ParticipantView
-                         key={participants[0].identity}
-                         participant={participants[0]}
+                       <MemberView
+                         key={members[0].identity}
+                         member={members[0]}
                          width="100%"
                          aspectWidth={16}
                          aspectHeight={9}
@@ -204,19 +199,18 @@ export const DesktopStage = ({
                          quality={quality}
                          onMouseEnter={() => setShowOverlay(true)}
                          onMouseLeave={() => setShowOverlay(false)}
-                         adaptiveVideo={adaptiveVideo}
                        />
                      );
                    })}
                    {otherParticipants.map((participant, i) => {
                      let quality = VideoQuality.HIGH;
-                     if (adaptiveVideo && i > 4) {
+                     if (i > 4) {
                        quality = VideoQuality.LOW;
                      }
                      return (
-                       <ParticipantView
+                       <MemberView
                          key={participant.identity}
-                         participant={participant}
+                         member={participant}
                          width="100%"
                          aspectWidth={16}
                          aspectHeight={9}
@@ -224,7 +218,6 @@ export const DesktopStage = ({
                          quality={quality}
                          onMouseEnter={() => setShowOverlay(true)}
                          onMouseLeave={() => setShowOverlay(false)}
-                         adaptiveVideo={adaptiveVideo}
                        />
                      );
                    })}
@@ -238,6 +231,10 @@ export const DesktopStage = ({
              >
                <Toolbar room={room} onLeave={onLeave} theme={theme} />
              </div>
+             {roomState.audioTracks.map(track => (
+               <AudioRenderer key={track.sid} track={track} isLocal={false} />
+             ))}
            </>
          );
        };
+export default RoomWrapper
