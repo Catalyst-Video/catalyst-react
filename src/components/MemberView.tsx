@@ -132,7 +132,9 @@ const MemberView = ({
     // <AspectRatio ratio={16 / 9} className="overflow-hidden">
     <div
       ref={ref}
-      className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-lg m-1 ${m.isSpeaking ? `ring-4 ring-${theme}-300` : ''}`}
+      className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-xl m-1 ${
+        m.isSpeaking ? `ring-4 ring-${theme} ring-opacity-50` : ''
+      }`}
       style={{
         height: height,
         width: width,
@@ -148,18 +150,17 @@ const MemberView = ({
           objectFit={objectFit}
         />
       ) : (
-        <div className="w-full h-full bg-blue rounded-lg" />
-      )}
-
+        <div className={`w-full h-full bg-${theme}`} />
+      )}{' '}
       <div className="absolute bottom-0 left-0 flex text-white justify-between p-2 w-full">
-        <div className="text-white text-sm not-selectable flex items-center justify-center bg-gray-700 bg-opacity-40 px-2 py-1 rounded-xl">
+        <div className="text-white text-sm not-selectable flex items-center justify-center bg-gray-700 bg-opacity-50 px-2 py-1 rounded-xl">
           {displayName ?? isLocal ? `${m.identity} (You)` : m.identity}
         </div>
         <div>
           <FontAwesomeIcon
             icon={isMuted ? faMicrophoneSlash : faMicrophone}
             size="2x"
-            className={`text-white not-selectable bg-gray-700 h-10 w-10 bg-opacity-40 p-2 rounded-full`}
+            className={`text-white not-selectable bg-gray-700 h-10 w-10 bg-opacity-50 p-2 rounded-full`}
           />
         </div>
       </div>
