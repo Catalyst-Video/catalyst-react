@@ -149,12 +149,9 @@ export const ParticipantView = ({
   return (
     <div
       ref={ref}
-      className='w-full h-full flex-row flex-nowrap justify-center items-center'
-      style={{
-        flex: '1 1 auto'
-      }}
+      className="relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-lg"
       // className='relative rounded-lg overflow-hidden w-full h-full'
-      // style={containerStyles}
+      style={containerStyles}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={onClick}
@@ -168,7 +165,7 @@ export const ParticipantView = ({
               objectFit={objectFit}
             />
           ) : (
-            <div className="w-full h-full bg-red rounded-lg" />
+            <div className="w-full h-full bg-blue rounded-lg" />
           )}
         </AspectRatio>
       ) : videoPub?.track ? (
@@ -178,7 +175,7 @@ export const ParticipantView = ({
           objectFit={objectFit}
         />
       ) : (
-        <div className="w-full h-full bg-red rounded-lg" />
+        <div className="w-full h-full bg-blue rounded-lg" />
       )}
 
       <div className="absolute bottom-0 left-0 flex text-white justify-between p-2 w-full">
