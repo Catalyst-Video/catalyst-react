@@ -25,6 +25,7 @@ const MemberView = ({
   className,
   aspectWidth,
   aspectHeight,
+  theme,
   displayName,
   showOverlay,
   quality,
@@ -37,7 +38,8 @@ const MemberView = ({
   width: Property.Width;
   height: Property.Height;
   className?: string;
-  aspectWidth?: number;
+    aspectWidth?: number;
+  theme: string;
   aspectHeight?: number;
   showOverlay?: boolean;
   quality?: VideoQuality;
@@ -130,7 +132,7 @@ const MemberView = ({
     // <AspectRatio ratio={16 / 9} className="overflow-hidden">
     <div
       ref={ref}
-      className="relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-lg m-1"
+      className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-lg m-1 ${m.isSpeaking ? `ring-4 ring-${theme}-300` : ''}`}
       style={{
         height: height,
         width: width,

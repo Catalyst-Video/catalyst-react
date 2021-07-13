@@ -48,29 +48,8 @@ import { debounce } from 'ts-debounce';
    }, []);
 
    useEffect(() => {
-      // find first participant with screen shared
-     let screenTrack: RemoteVideoTrack | undefined;
-      members.forEach(p => {
-        //  TODO: don't show local screen share if (p instanceof LocalParticipant) {
-        //    return;
-        //  }
-        // setSharedScreens([]);
-        p.videoTracks.forEach(track => {
-          if (track.trackName === 'screen' && track.track) {
-            screenTrack = track.track as RemoteVideoTrack;
-            if (!screens.includes(screenTrack)) {
-              setSharedScreens([...screens, screenTrack]);
-            }
-          }
-        });
-        // screens.forEach(screen => {
-        //   if (screen.isMuted)
-        //     setSharedScreens(screens.filter(t => t !== screen));
-        // });
-      });
-     console.log('screens', screens);
-      resizeWrapper();
-    }, [members]);
+     resizeWrapper();
+   }, [members, screens]);
 
    const area = (
      increment: number,
@@ -135,40 +114,53 @@ import { debounce } from 'ts-debounce';
        </div>
      );
    }
+   // find first participant with screen shared
+   let screenTrack: RemoteVideoTrack | undefined;
+   let shared = []
+   members.forEach(p => {
+    //  TODO: don't show local screen share if (p instanceof LocalParticipant) {
+    //    return;
+    //  }
+     
+     p.videoTracks.forEach(track => {
+       if (track.trackName === 'screen' && track.track) {
+         screenTrack = track.track as RemoteVideoTrack;
+         if (!screens.includes(screenTrack)) {
+           setSharedScreens([...screens, screenTrack]);
+         }
+       }
+     });
+   });
+   if (shared.length > 0) {
+      setSharedScreens(shared);
+   }
 
-  
 
-  //  let otherParticipants: Participant[];
-  //  let mainView: ReactElement;
-  //  if (screenTrack) {
-  //    otherParticipants = members;
-  //    mainView = (
-  //      <ScreenShareView track={screenTrack} height="100%" width="100%" />
-  //    );
-  //  } else {
-  //    otherParticipants = members.slice(1);
-  //    mainView = (
-  //      <MemberView
-  //        key={members[0].identity}
-  //        member={members[0]}
-  //        showOverlay={showOverlay}
-  //        aspectWidth={16}
-  //        height={vidDims.height}
-  //        width={vidDims.width}
-  //        aspectHeight={9}
-  //        quality={VideoQuality.HIGH}
-  //        onMouseEnter={() => setShowOverlay(true)}
-  //        onMouseLeave={() => setShowOverlay(false)}
-  //      />
-  //    );
-  //  }
-
-      // useEffect(() => {
-      //   if (screenTrack) {
-      //     setGridView(false);
-      //   }
-      // }, [screenTrack]);
-
+   let otherParticipants: Participant[];
+   let mainView: ReactElement;
+   if (screenTrack) {
+     otherParticipants = members;
+     mainView = (
+       <ScreenShareView track={screenTrack} height="100%" width="100%" />
+     );
+   } else {
+     otherParticipants = members.slice(1);
+     mainView = (
+       <MemberView
+         key={members[0].identity}
+         member={members[0]}
+         showOverlay={showOverlay}
+         aspectWidth={16}
+         height={vidDims.height}
+         width={vidDims.width}
+         aspectHeight={9}
+         theme={theme}
+         quality={VideoQuality.HIGH}
+         onMouseEnter={() => setShowOverlay(true)}
+         onMouseLeave={() => setShowOverlay(false)}
+       />
+     );
+   }
 
    return (
      <>
@@ -183,6 +175,17 @@ import { debounce } from 'ts-debounce';
          ref={vidRef}
          className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border`}
        >
+         {screens &&
+           screens.map((s, i) => {
+             return (
+               <ScreenShareView
+                 track={s}
+                 height={vidDims.height}
+                 width={vidDims.width}
+                 key={`${i}-screen`}
+               />
+             );
+           })}
          {gridView &&
            members.map((m, i) => {
              return (
@@ -195,16 +198,7 @@ import { debounce } from 'ts-debounce';
                  quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
                  onMouseEnter={() => setShowOverlay(true)}
                  onMouseLeave={() => setShowOverlay(false)}
-               />
-             );
-           })}
-         {screens &&
-           screens.map((s, i) => {
-             return (
-               <ScreenShareView
-                 track={s}
-                 height={vidDims.height}
-                 width={vidDims.width}
+                 theme={theme}
                />
              );
            })}
@@ -212,7 +206,7 @@ import { debounce } from 'ts-debounce';
        {!gridView && (
          <div className="grid grid-cols-12 gap-2 z-20 overflow-hidden py-10 px-1">
            {/* auto-rows-min */}
-           {/* <div className="col-start-1 col-end-11">{mainView}</div> */}
+           <div className="col-start-1 col-end-11">{mainView}</div>
            <div className={'sidebar overflow-auto'}>
              {[0, 1, 2, 3].map((participant, i) => {
                let quality = VideoQuality.HIGH;
@@ -231,10 +225,11 @@ import { debounce } from 'ts-debounce';
                    quality={quality}
                    onMouseEnter={() => setShowOverlay(true)}
                    onMouseLeave={() => setShowOverlay(false)}
+                   theme={theme}
                  />
                );
              })}
-             {/* {otherParticipants.map((participant, i) => {
+             {otherParticipants.map((participant, i) => {
                let quality = VideoQuality.HIGH;
                if (i > 4) {
                  quality = VideoQuality.LOW;
@@ -249,11 +244,12 @@ import { debounce } from 'ts-debounce';
                    aspectHeight={9}
                    showOverlay={showOverlay}
                    quality={quality}
+                   theme={theme}
                    onMouseEnter={() => setShowOverlay(true)}
                    onMouseLeave={() => setShowOverlay(false)}
                  />
                );
-             })} */}
+             })}
            </div>
          </div>
        )}
