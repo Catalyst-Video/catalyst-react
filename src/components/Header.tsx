@@ -11,9 +11,9 @@ const Header = ({
   const headerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div>
+    <div className="">
       <div
-        className={`absolute left-0 top-0 block w-full text-center bg-${theme} p-1 text-white text-sm font-semibold z-4 ${
+        className={`absolute left-0 top-0 block w-full text-center bg-${theme} p-1 text-white text-sm font-semibold z-40 ${
           alwaysBanner ? '' : 'sm:hidden'
         }`}
       >
@@ -24,7 +24,7 @@ const Header = ({
           <div
             id="header"
             ref={headerRef}
-            className="hidden sm:block fixed not-selectable m-3"
+            className="hidden sm:block fixed not-selectable m-3 z-40"
           >
             <div
               id="header"

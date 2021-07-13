@@ -34,16 +34,17 @@ export const VideoRenderer = ({
 
   const isFrontFacing =
     track.mediaStreamTrack?.getSettings().facingMode !== "environment";
-  const style: CSSProperties = {
-    transform: isLocal && isFrontFacing ? "rotateY(180deg)" : "",
-    width: width,
-    height: height,
-  };
-  if (objectFit) {
-    style.objectFit = objectFit;
-  }
 
   return (
-    <video ref={ref} className='object-center min-h-0 min-w-0 rounded-lg' style={style} />
+    <video
+      ref={ref}
+      className={`object-center min-h-0 min-w-0 rounded-lg h-full w-full ${
+        isLocal && isFrontFacing ? '' : 'transform rotate-180'
+      } ${objectFit ?? ''}`}
+      // style={{
+      //   transform: isLocal && isFrontFacing ? 'rotateY(180deg)' : '',
+      //   objectFit: objectFit ?? '',
+      // }}
+    />
   );
 };

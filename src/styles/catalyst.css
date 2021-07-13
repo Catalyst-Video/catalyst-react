@@ -178,9 +178,9 @@
   overflow: hidden;
 } */
 
-/* .stageCenter {
+.stageCenter {
   grid-column: 1 / 11;
-} */
+}
 
 .sidebar {
   grid-column: 11 / 13;

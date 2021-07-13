@@ -146,42 +146,40 @@ export const ParticipantView = ({
       displayName += " (You)";
     }
   }
-
-  let mainElement: ReactElement;
-  if (videoPub?.track) {
-    mainElement = (
-      <VideoRenderer
-        track={videoPub.track}
-        isLocal={isLocal}
-        objectFit={objectFit}
-        width="100%"
-        height="100%"
-      />
-    );
-  } else {
-    mainElement = <div className={'placeholder'} />;
-  }
-
-  const classes = ['participant'];
-  if (className) {
-    classes.push(className);
-  }
-
   return (
     <div
       ref={ref}
-      className={classes.join(' ')}
-      style={containerStyles}
+      className='w-full h-full flex-row flex-nowrap justify-center items-center'
+      style={{
+        flex: '1 1 auto'
+      }}
+      // className='relative rounded-lg overflow-hidden w-full h-full'
+      // style={containerStyles}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={onClick}
     >
-      {aspectWidth && aspectHeight && (
+      {aspectWidth && aspectHeight ? (
         <AspectRatio ratio={aspectWidth / aspectHeight}>
-          {mainElement}
+          {videoPub?.track ? (
+            <VideoRenderer
+              track={videoPub.track}
+              isLocal={isLocal}
+              objectFit={objectFit}
+            />
+          ) : (
+            <div className="w-full h-full bg-red rounded-lg" />
+          )}
         </AspectRatio>
+      ) : videoPub?.track ? (
+        <VideoRenderer
+          track={videoPub.track}
+          isLocal={isLocal}
+          objectFit={objectFit}
+        />
+      ) : (
+        <div className="w-full h-full bg-red rounded-lg" />
       )}
-      {(!aspectWidth || !aspectHeight) && mainElement}
 
       <div className="absolute bottom-0 left-0 flex text-white justify-between p-2 w-full">
         <div className="text-white text-sm not-selectable flex items-center justify-center bg-gray-700 bg-opacity-40 px-2 py-1 rounded-xl">

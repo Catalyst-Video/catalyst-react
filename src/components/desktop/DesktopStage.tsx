@@ -67,6 +67,8 @@ export const DesktopStage = ({
                key={participants[0].identity}
                participant={participants[0]}
                showOverlay={showOverlay}
+               aspectWidth={16}
+               aspectHeight={9}
                quality={VideoQuality.HIGH}
                onMouseEnter={() => setShowOverlay(true)}
                onMouseLeave={() => setShowOverlay(false)}
@@ -75,39 +77,84 @@ export const DesktopStage = ({
          }
 
          return (
-           <div className="w-full h-full grid min-h-0 grid-container relative">
+           <div className="w-full h-full relative">
+             {/* grid min-h-0 grid-container */}
              {participants.length <= 1 && (
                <div className="absolute top-0 left-1 w-full h-full flex justify-center items-center z-10 text-xl text-white">
                  <span>👋 Waiting for others to join...</span>
                </div>
              )}
-
-             <div className="grid grid-cols-12 gap-2 auto-rows-min z-20 overflow-hidden">
-               <div className="col-start-1 col-end-11">{mainView}</div>
-               <div className={'sidebar'}>
-                 {otherParticipants.map((participant, i) => {
-                   let quality = VideoQuality.HIGH;
-                   if (adaptiveVideo && i > 4) {
-                     quality = VideoQuality.LOW;
-                   }
-                   return (
-                     <ParticipantView
-                       key={participant.identity}
-                       participant={participant}
-                       width="100%"
-                       aspectWidth={16}
-                       aspectHeight={9}
-                       showOverlay={showOverlay}
-                       quality={quality}
-                       onMouseEnter={() => setShowOverlay(true)}
-                       onMouseLeave={() => setShowOverlay(false)}
-                       adaptiveVideo={adaptiveVideo}
-                     />
-                   );
-                 })}
-               </div>
+             <div className="absolute top-0 right-0 left-0 bottom-0 flex justify-center items-center overflow-hidden">
+               {[0, 1, 2, 3].map((participant, i) => {
+                 let quality = VideoQuality.HIGH;
+                 if (adaptiveVideo && i > 4) {
+                   quality = VideoQuality.LOW;
+                 }
+                 return (
+                   <ParticipantView
+                     key={participants[0].identity}
+                     participant={participants[0]}
+                     width="100%"
+                     aspectWidth={16}
+                     aspectHeight={9}
+                     showOverlay={showOverlay}
+                     quality={quality}
+                     onMouseEnter={() => setShowOverlay(true)}
+                     onMouseLeave={() => setShowOverlay(false)}
+                     adaptiveVideo={adaptiveVideo}
+                   />
+                 );
+               })}
              </div>
-             <div className={'grid items-center justify-center mb-3 z-20'}>
+             {false && (
+               <div className="grid grid-cols-12 gap-2 z-20 overflow-hidden py-10 px-1">
+                 {/* auto-rows-min */}
+                 <div className="col-start-1 col-end-11">{mainView}</div>
+                 <div className={'sidebar overflow-auto'}>
+                   {[0, 1, 2, 3].map((participant, i) => {
+                     let quality = VideoQuality.HIGH;
+                     if (adaptiveVideo && i > 4) {
+                       quality = VideoQuality.LOW;
+                     }
+                     return (
+                       <ParticipantView
+                         key={participants[0].identity}
+                         participant={participants[0]}
+                         width="100%"
+                         aspectWidth={16}
+                         aspectHeight={9}
+                         showOverlay={showOverlay}
+                         quality={quality}
+                         onMouseEnter={() => setShowOverlay(true)}
+                         onMouseLeave={() => setShowOverlay(false)}
+                         adaptiveVideo={adaptiveVideo}
+                       />
+                     );
+                   })}
+                   {otherParticipants.map((participant, i) => {
+                     let quality = VideoQuality.HIGH;
+                     if (adaptiveVideo && i > 4) {
+                       quality = VideoQuality.LOW;
+                     }
+                     return (
+                       <ParticipantView
+                         key={participant.identity}
+                         participant={participant}
+                         width="100%"
+                         aspectWidth={16}
+                         aspectHeight={9}
+                         showOverlay={showOverlay}
+                         quality={quality}
+                         onMouseEnter={() => setShowOverlay(true)}
+                         onMouseLeave={() => setShowOverlay(false)}
+                         adaptiveVideo={adaptiveVideo}
+                       />
+                     );
+                   })}
+                 </div>
+               </div>
+             )}
+             <div className={'absolute bottom-0 left-0 right-0 flex items-center justify-center mb-3 z-20'}>
                <Toolbar room={room} onLeave={onLeave} theme={theme} />
              </div>
            </div>
