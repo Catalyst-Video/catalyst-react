@@ -25,6 +25,7 @@ import { useRoom } from '../hooks/useRoom';
 import HeaderLogo from '../components/Header';
 import Toolbar from '../components/Toolbar';
 import { AudioRenderer } from '../components/AudioRenderer';
+import { debounce } from 'ts-debounce';
 
 
 const VideoChat = ({
@@ -83,7 +84,7 @@ const VideoChat = ({
       const delayCheck = () => {
         const hClasses = headerRef.current?.classList;
         const tClasses = toolbarRef.current?.classList;
-        if (timedelay === 5) {
+        if (timedelay === 5 && !isHidden) {
           hClasses?.remove('animate-fade-in-down');
           hClasses?.add('animate-fade-out-up');
           tClasses?.remove('animate-fade-in-up');
@@ -93,6 +94,7 @@ const VideoChat = ({
             hClasses?.add('hidden');
             tClasses?.remove('animate-fade-out-down');
             tClasses?.add('hidden');
+            isHidden = true;
           }, 450);
           timedelay = 1;
         }
@@ -106,16 +108,17 @@ const VideoChat = ({
         hClasses?.add('animate-fade-in-down');
         tClasses?.remove('hidden');
         tClasses?.add('animate-fade-in-up');
+        isHidden = false;
         timedelay = 1;
         clearInterval(_delay);
         _delay = setInterval(delayCheck, fade);
       };
 
-      if (fade > 0) {
         var timedelay = 1;
-        document.addEventListener('mousemove', handleMouse);
+        var isHidden = false;
+        const debounceHandleMouse = debounce(handleMouse, 200);
+        document.addEventListener('mousemove', debounceHandleMouse);
         var _delay = setInterval(delayCheck, fade);
-      }
 
       () => {
         document.removeEventListener('mousemove', handleMouse);

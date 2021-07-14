@@ -84,7 +84,8 @@ import { debounce } from 'ts-debounce';
      //  TODO: loop needs to be optimized
      let i = 1;
      while (i < 5000) {
-       let l = (members.length < 1 ? 1 : members.length) + screens.length;
+      //  TODO: let l = (members.length < 1 ? 1 : members.length) + screens.length;
+       let l = 4 + screens.length;
        let w = area(i, l, width, height, margin);
        if (w === false) {
          max = i - 1;
@@ -114,7 +115,6 @@ import { debounce } from 'ts-debounce';
    }
    // find first participant with screen shared
    let screenTrack: RemoteVideoTrack | undefined;
-   let shared = []
    members.forEach(p => {
     //  TODO: don't show local screen share if (p instanceof LocalParticipant) {
     //    return;
@@ -129,10 +129,6 @@ import { debounce } from 'ts-debounce';
        }
      });
    });
-   if (shared.length > 0) {
-      setSharedScreens(shared);
-   }
-
 
    let otherParticipants: Participant[];
    let mainView: ReactElement;
@@ -173,7 +169,23 @@ import { debounce } from 'ts-debounce';
          ref={vidRef}
          className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border`}
        >
-         {screens &&
+         {members.map((m, i) => {
+           m.videoTracks.forEach(track => {
+             if (track.trackName === 'screen' && track.track) {
+               screenTrack = track.track as RemoteVideoTrack;
+               console.log(screenTrack);
+              return (
+                <ScreenShareView
+                  track={screenTrack}
+                  height={vidDims.height}
+                  width={vidDims.width}
+                  key={`${i}-screen`}
+                />
+              );
+             } else return null
+           });
+         })}
+         {/* {screens &&
            screens.map((s, i) => {
              return (
                <ScreenShareView
@@ -183,8 +195,24 @@ import { debounce } from 'ts-debounce';
                  key={`${i}-screen`}
                />
              );
-           })}
+           })} */}
          {gridView &&
+           [0,1,2,3].map((m, i) => {
+             return (
+               <MemberView
+                 key={members[0].identity}
+                 member={members[0]}
+                 height={vidDims.height}
+                 width={vidDims.width}
+                 showOverlay={showOverlay}
+                 quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
+                 onMouseEnter={() => setShowOverlay(true)}
+                 onMouseLeave={() => setShowOverlay(false)}
+                 theme={theme}
+               />
+             );
+           })}
+         {/* {gridView &&
            members.map((m, i) => {
              return (
                <MemberView
@@ -199,7 +227,7 @@ import { debounce } from 'ts-debounce';
                  theme={theme}
                />
              );
-           })}
+           })} */}
        </div>
        {!gridView && (
          <div className="grid grid-cols-12 gap-2 z-20 overflow-hidden py-10 px-1">
