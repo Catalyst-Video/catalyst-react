@@ -181,6 +181,7 @@ const VideoChat = ({
                 roomState={roomState}
                 onLeave={onLeave}
                 theme={theme}
+                speakerMode={speakerMode}
               />
               {roomState.room && (
                 <div
