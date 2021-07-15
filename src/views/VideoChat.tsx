@@ -116,7 +116,7 @@ const VideoChat = ({
 
         var timedelay = 1;
         var isHidden = false;
-        const debounceHandleMouse = debounce(handleMouse, 200);
+        const debounceHandleMouse = debounce(handleMouse, 50);
         document.addEventListener('mousemove', debounceHandleMouse);
         var _delay = setInterval(delayCheck, fade);
 

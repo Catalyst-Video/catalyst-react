@@ -22,9 +22,7 @@ const MemberView = ({
   member: m,
   width,
   height,
-  className,
-  aspectWidth,
-  aspectHeight,
+  classes,
   theme,
   displayName,
   showOverlay,
@@ -37,10 +35,8 @@ const MemberView = ({
   displayName?: string;
   width: Property.Width;
   height: Property.Height;
-  className?: string;
-    aspectWidth?: number;
+  classes?: string;
   theme: string;
-  aspectHeight?: number;
   showOverlay?: boolean;
   quality?: VideoQuality;
   onMouseEnter?: () => void;
@@ -53,7 +49,7 @@ const MemberView = ({
   const [videoEnabled, setVideoEnabled] = useState(true);
   const [callbackTimeout, setCallbackTimeout] = useState<
     ReturnType<typeof setTimeout>
-    >();
+  >();
 
   // console.log('render child video', height, width)
 
@@ -117,54 +113,54 @@ const MemberView = ({
   // when aspect matches, cover instead
   let objectFit: Property.ObjectFit = 'contain';
   if (
-    aspectWidth &&
-    aspectHeight &&
     videoPub?.dimensions &&
-    (aspectWidth - aspectHeight) *
+    (16 - 9) *
       (videoPub.dimensions.width - videoPub.dimensions.height) >
       0
   ) {
     objectFit = 'cover';
   }
-  
 
   return (
     // <AspectRatio ratio={16 / 9} className="overflow-hidden">
-    <div
-      ref={ref}
-      className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-xl m-1 ${
-        m.isSpeaking ? `ring-4 ring-${theme} ring-opacity-50` : ''
-      }`}
-      style={{
-        height: height,
-        width: width,
-      }}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      onClick={onClick}
-    >
-      {videoPub?.track ? (
-        <VideoWrapper
-          track={videoPub.track}
-          isLocal={isLocal}
-          objectFit={objectFit}
-        />
-      ) : (
-        <div className={`w-full h-full bg-${theme}`} />
-      )}{' '}
-      <div className="absolute bottom-0 left-0 flex text-white justify-between p-2 w-full">
-        <div className="text-white text-sm not-selectable flex items-center justify-center bg-gray-700 bg-opacity-50 px-2 py-1 rounded-xl">
-          {displayName ?? isLocal ? `${m.identity} (You)` : m.identity}
-        </div>
-        <div>
-          <FontAwesomeIcon
-            icon={isMuted ? faMicrophoneSlash : faMicrophone}
-            size="2x"
-            className={`text-white not-selectable bg-gray-700 h-10 w-10 bg-opacity-50 p-2 rounded-full`}
+    <div className={classes}>
+      <div
+        ref={ref}
+        className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-xl m-1 ${
+          m.isSpeaking ? `ring-4 ring-${theme} ring-opacity-50` : ''
+        }`}
+        style={{
+          height: height,
+          width: width,
+        }}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+      >
+        {videoPub?.track ? (
+          <VideoWrapper
+            track={videoPub.track}
+            isLocal={isLocal}
+            objectFit={objectFit}
           />
+        ) : (
+          <div className={`w-full h-full bg-${theme}`} />
+        )}{' '}
+        <div className="absolute bottom-0 left-0 flex text-white justify-between p-2 w-full">
+          <div className="text-white text-sm not-selectable flex items-center justify-center bg-gray-700 bg-opacity-40 px-2 py-1 rounded-xl">
+            {displayName ?? isLocal ? `${m.identity} (You)` : m.identity}
+          </div>
+          <div>
+            <FontAwesomeIcon
+              icon={isMuted ? faMicrophoneSlash : faMicrophone}
+              size="2x"
+              className={`text-white not-selectable bg-gray-700 h-8 w-8 bg-opacity-40 p-2 rounded-full`}
+            />
+          </div>
         </div>
       </div>
     </div>
+
     // </AspectRatio>
   );
 };

@@ -185,11 +185,11 @@ import { debounce } from 'ts-debounce';
    return (
      <>
        {/* grid min-h-0 grid-container */}
-       {members.length <= 1 && (
+       {/* TODO: {members.length <= 1 && (
          <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-xl text-white">
            <span>👋 Waiting for others to join...</span>
          </div>
-       )}
+       )} */}
        {!speakerMode && (
          <div
            id="remote-vid-wrapper"
@@ -223,35 +223,36 @@ import { debounce } from 'ts-debounce';
                />
              );
            })} */}
-           {
-             members.map((m, i) => {
-               return (
-                 <MemberView
-                   key={m.identity}
-                   member={m}
-                   height={vidDims.height}
-                   width={vidDims.width}
-                   showOverlay={showOverlay}
-                   quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
-                   onMouseEnter={() => setShowOverlay(true)}
-                   onMouseLeave={() => setShowOverlay(false)}
-                   theme={theme}
-                 />
-               );
-             })}
+           {members.map((m, i) => {
+             return (
+               <MemberView
+                 key={m.identity}
+                 member={m}
+                 height={vidDims.height}
+                 width={vidDims.width}
+                 showOverlay={showOverlay}
+                 quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
+                 onMouseEnter={() => setShowOverlay(true)}
+                 onMouseLeave={() => setShowOverlay(false)}
+                 theme={theme}
+               />
+             );
+           })}
          </div>
        )}
        {speakerMode && (
-         <div className="flex z-20 overflow-hidden py-10 px-1">
+         <div className="flex flex-col sm:flex-row z-20 py-10 px-1 w-full lg:px-10 xl:px-20 justify-around">
            {/* auto-rows-min */}
-           <div className="flex flex-col w-4/5">
+           <div
+             className="flex flex-col sm:w-4/5 p-1 justify-center content-center"
+             //  style={{ paddingBottom: '56.25%' }}
+           >
              <MemberView
                key={members[0].identity}
                member={members[0]}
-               aspectWidth={16}
-               aspectHeight={9}
                height={'100%'}
                width={'100%'}
+               classes={'aspect-w-16 aspect-h-9'}
                showOverlay={showOverlay}
                quality={VideoQuality.HIGH}
                onMouseEnter={() => setShowOverlay(true)}
@@ -259,7 +260,11 @@ import { debounce } from 'ts-debounce';
                theme={theme}
              />
            </div>
-           <div className={'flex flex-col w-1/5 overflow-auto'}>
+           <div
+             className={
+               'flex flex-row sm:flex-col sm:w-1/5 p-1 justify-center content-center no-scrollbar'
+             }
+           >
              {/* flex flex-col */}
              {[0, 1, 2, 3].map((participant, i) => {
                let quality = VideoQuality.HIGH;
@@ -270,10 +275,11 @@ import { debounce } from 'ts-debounce';
                  <MemberView
                    key={members[0].identity}
                    member={members[0]}
-                   aspectWidth={16}
-                   aspectHeight={9}
                    height={'100%'}
                    width={'100%'}
+                   classes={
+                     'ml-1 mr-1 sm:mt-1 sm:mb-1 aspect-w-16 aspect-h-9'
+                   }
                    showOverlay={showOverlay}
                    quality={quality}
                    onMouseEnter={() => setShowOverlay(true)}

@@ -291,6 +291,14 @@
     }
 }
 
+#ctw .no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+#ctw .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
 #ctw .bullet-none {
   list-style-type: none !important;
   padding-inline: 0;
