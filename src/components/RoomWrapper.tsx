@@ -30,6 +30,8 @@ import { debounce } from 'ts-debounce';
    const { isConnecting, error, participants: members, room } = roomState;
    const [showOverlay, setShowOverlay] = useState(false);
    const [screens, setSharedScreens] = useState<RemoteVideoTrack[]>([]);
+   const [mainMember, setMainMember] = useState<Participant>(members[0])
+   const [otherMembers, setOtherMembers] = useState<Participant[]>(members.slice(1, members.length));
    const vidRef = useRef<HTMLDivElement>(null);
    const [vidDims, setVidDims] = useState({
      width: '0px',
@@ -207,22 +209,6 @@ import { debounce } from 'ts-debounce';
                  />
                );
              })}
-           {/* {gridView &&
-           [0,1,2,3].map((m, i) => {
-             return (
-               <MemberView
-                 key={members[0].identity}
-                 member={members[0]}
-                 height={vidDims.height}
-                 width={vidDims.width}
-                 showOverlay={showOverlay}
-                 quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
-                 onMouseEnter={() => setShowOverlay(true)}
-                 onMouseLeave={() => setShowOverlay(false)}
-                 theme={theme}
-               />
-             );
-           })} */}
            {members.map((m, i) => {
              return (
                <MemberView
@@ -242,14 +228,10 @@ import { debounce } from 'ts-debounce';
        )}
        {speakerMode && (
          <div className="flex flex-col sm:flex-row z-20 py-10 px-1 w-full lg:px-10 xl:px-20 justify-around">
-           {/* auto-rows-min */}
-           <div
-             className="flex flex-col sm:w-4/5 p-1 justify-center content-center"
-             //  style={{ paddingBottom: '56.25%' }}
-           >
+           <div className="flex flex-col sm:w-4/5 p-1 justify-center content-center">
              <MemberView
-               key={members[0].identity}
-               member={members[0]}
+               key={mainMember.identity}
+               member={mainMember}
                height={'100%'}
                width={'100%'}
                classes={'aspect-w-16 aspect-h-9'}
@@ -265,21 +247,18 @@ import { debounce } from 'ts-debounce';
                'flex flex-row sm:flex-col sm:w-1/5 p-1 justify-center content-center no-scrollbar'
              }
            >
-             {/* flex flex-col */}
-             {[0, 1, 2, 3].map((participant, i) => {
+             {otherMembers.map((m, i) => {
                let quality = VideoQuality.HIGH;
                if (i > 4) {
                  quality = VideoQuality.LOW;
                }
                return (
                  <MemberView
-                   key={members[0].identity}
-                   member={members[0]}
+                   key={m.identity}
+                   member={m}
                    height={'100%'}
                    width={'100%'}
-                   classes={
-                     'ml-1 mr-1 sm:mt-1 sm:mb-1 aspect-w-16 aspect-h-9'
-                   }
+                   classes={'ml-1 mr-1 sm:mt-1 sm:mb-1 aspect-w-16 aspect-h-9'}
                    showOverlay={showOverlay}
                    quality={quality}
                    onMouseEnter={() => setShowOverlay(true)}
@@ -288,27 +267,6 @@ import { debounce } from 'ts-debounce';
                  />
                );
              })}
-             {/* {otherParticipants.map((participant, i) => {
-               let quality = VideoQuality.HIGH;
-               if (i > 4) {
-                 quality = VideoQuality.LOW;
-               }
-               return (
-                 <MemberView
-                   key={participant.identity}
-                   member={participant}
-                   aspectWidth={16}
-                   height={vidDims.height}
-                   width={vidDims.width}
-                   aspectHeight={9}
-                   showOverlay={showOverlay}
-                   quality={quality}
-                   theme={theme}
-                   onMouseEnter={() => setShowOverlay(true)}
-                   onMouseLeave={() => setShowOverlay(false)}
-                 />
-               );
-             })} */}
            </div>
          </div>
        )}
