@@ -16,80 +16,109 @@ import { RoomState } from "../hooks/useRoom";
 import { AudioRenderer } from "./AudioRenderer";
 import { debounce } from 'ts-debounce';
 
- const RoomWrapper = ({
-   roomState,
-   onLeave,
-   theme,
-   speakerMode,
- }: {
-   roomState: RoomState;
-   onLeave?: (room: Room) => void;
-   theme: string;
-   speakerMode: boolean
- }) => {
-   const { isConnecting, error, participants: members, room } = roomState;
-   const [showOverlay, setShowOverlay] = useState(false);
-   const [screens, setSharedScreens] = useState<RemoteVideoTrack[]>([]);
-   const [mainMember, setMainMember] = useState<Participant>(members[0])
-   const [otherMembers, setOtherMembers] = useState<Participant[]>(members.slice(1, members.length));
-   const vidRef = useRef<HTMLDivElement>(null);
-   const [vidDims, setVidDims] = useState({
-     width: '0px',
-     height: '0px',
-     margin: '2px',
-   });
+function merge(a1, a2) {
+  const merged = Array(a1.length + a2.length);
+  let index = 0,
+    i1 = 0,
+    i2 = 0;
+  while (i1 < a1.length || i2 < a2.length) {
+    if (a1[i1] && a2[i2]) {
+      const item1 = a1[i1];
+      const item2 = a2[i2].charCodeAt(0) - 96;
+      merged[index++] = item1 < item2 ? a1[i1++] : a2[i2++];
+    } else if (a1[i1]) merged[index++] = a1[i1++];
+    else if (a2[i2]) merged[index++] = a2[i2++];
+  }
+  return merged;
+}
 
-   const resizeWrapper = () => {
-     let margin = 2;
-     let width = 0;
-     let height = 0;
-     if (vidRef.current) {
-       width = vidRef.current.offsetWidth - margin * 2;
-       height = vidRef.current.offsetHeight - margin * 2;
-     }
-     //  console.log('res', width, height);
-     let max = 0;
-     //  TODO: loop needs to be optimized
-     let i = 1;
-     while (i < 5000) {
-       let l = (members.length < 1 ? 1 : members.length) + screens.length;
-       // TODO:   let l = 4 + screens.length;
-       let w = area(i, l, width, height, margin);
-       if (w === false) {
-         max = i - 1;
-         break;
-       }
-       i++;
-     }
-     max = max - margin * 2;
-     setVidDims({
-       width: max + 'px',
-       height: max * 0.5625 + 'px', // 0.5625 enforce 16:9 (vs 0.75 for 4:3)
-       margin: margin + 'px',
-     });
-   };
+const RoomWrapper = ({
+  roomState,
+  onLeave,
+  theme,
+  speakerMode,
+  setSpeakerMode,
+}: {
+  roomState: RoomState;
+  onLeave?: (room: Room) => void;
+  theme: string;
+  speakerMode: boolean;
+  setSpeakerMode: Function
+}) => {
+  const { isConnecting, error, participants: members, room } = roomState;
+  const [showOverlay, setShowOverlay] = useState(false);
+  const [screens, setSharedScreens] = useState<RemoteVideoTrack[]>([]);
+  const [mainVid, setMainVid] = useState<Participant | RemoteVideoTrack>(members[0]);
+  const [otherVids, setOtherVids] =
+    useState<Array<RemoteVideoTrack | Participant>>(members.slice(1).map(m => m));
+  const vidRef = useRef<HTMLDivElement>(null);
+  const [vidDims, setVidDims] = useState({
+    width: '0px',
+    height: '0px',
+    // margin: '2px',
+  });
 
-   const area = (
-     increment: number,
-     count: number,
-     width: number,
-     height: number,
-     margin: number = 10
-   ) => {
-     let i = 0;
-     let w = 0;
-     let h = increment * 0.75 + margin * 2;
-     while (i < count) {
-       if (w + increment > width) {
-         w = 0;
-         h = h + increment * 0.75 + margin * 2;
-       }
-       w = w + increment + margin * 2;
-       i++;
-     }
-     if (h > height) return false;
-     else return increment;
-   };
+  const resizeWrapper = () => {
+    let margin = 2;
+    let width = 0;
+    let height = 0;
+    if (vidRef.current) {
+      width = vidRef.current.offsetWidth - margin * 2;
+      height = vidRef.current.offsetHeight - margin * 2;
+    }
+    //  console.log('res', width, height);
+    let max = 0;
+    //  TODO: loop needs to be optimized
+    let i = 1;
+    while (i < 5000) {
+      let l = (members.length < 1 ? 1 : members.length) + screens.length;
+      // TODO:   let l = 4 + screens.length;
+      let w = area(i, l, width, height, margin);
+      if (w === false) {
+        max = i - 1;
+        break;
+      }
+      i++;
+    }
+    max = max - margin * 2;
+    setVidDims({
+      width: max + 'px',
+      height: max * 0.5625 + 'px', // 0.5625 enforce 16:9 (vs 0.75 for 4:3)
+      // margin: margin + 'px',
+    });
+  };
+
+  const area = (
+    increment: number,
+    count: number,
+    width: number,
+    height: number,
+    margin: number = 10
+  ) => {
+    let i = 0;
+    let w = 0;
+    let h = increment * 0.75 + margin * 2;
+    while (i < count) {
+      if (w + increment > width) {
+        w = 0;
+        h = h + increment * 0.75 + margin * 2;
+      }
+      w = w + increment + margin * 2;
+      i++;
+    }
+    if (h > height) return false;
+    else return increment;
+  };
+
+  const reconfigureSpeakerView = (v: Participant | RemoteVideoTrack, stopSwap?: boolean) => {
+    setMainVid(v);
+    let newOtherVids: Array<RemoteVideoTrack | Participant> = merge(
+      screens.filter(p => p !== v),
+      members.filter(p => p !== v)
+    );
+    setOtherVids(newOtherVids);
+    if (!speakerMode || !stopSwap) setSpeakerMode(sm => !sm);
+   }
 
    const debouncedResize = debounce(resizeWrapper, 15);
 
@@ -107,6 +136,11 @@ import { debounce } from 'ts-debounce';
    useEffect(() => {
      resizeWrapper();
    }, [members, screens]);
+  
+  useEffect(() => {
+    if (screens.length > 0)
+     reconfigureSpeakerView(screens[screens.length - 1], true);
+  }, [screens])
 
    if (error || isConnecting || !room || members.length === 0) {
      return (
@@ -120,53 +154,6 @@ import { debounce } from 'ts-debounce';
        </div>
      );
    }
-   //  // find first participant with screen shared
-
-   //  let otherParticipants: Participant[];
-   //  let mainView: ReactElement;
-   //  if (screenTrack) {
-   //    otherParticipants = members;
-   //    mainView = (
-   //      <ScreenShareView track={screenTrack} height="100%" width="100%" />
-   //    );
-   //  } else {
-   //    otherParticipants = members.slice(1);
-   //    mainView = (
-   //      <MemberView
-   //        key={members[0].identity}
-   //        member={members[0]}
-   //        showOverlay={showOverlay}
-   //        aspectWidth={16}
-   //        height={vidDims.height}
-   //        width={vidDims.width}
-   //        aspectHeight={9}
-   //        theme={theme}
-   //        quality={VideoQuality.HIGH}
-   //        onMouseEnter={() => setShowOverlay(true)}
-   //        onMouseLeave={() => setShowOverlay(false)}
-   //      />
-   //    );
-
-   //  }
-
-   //  room.on(
-   //    RoomEvent.TrackUnsubscribed,
-   //    (track, publication, participant) => {
-   //     console.log('unsub', track);
-
-   //  let screenTrack: RemoteVideoTrack;
-   //  if (track.trackName === 'screen' && track.track) {
-   //    screenTrack = track.track as RemoteVideoTrack;
-   //    if (screens.includes(screenTrack)) {
-   //      setSharedScreens(tracks => tracks.filter(t => t !== screenTrack));
-   //    }
-   //  }
-   //    }
-   //  );
-
-   //  const() => {
-   //    setSharedScreens(tracks => tracks.filter(t => t !== screenTrack));
-   //  };
 
    let screenTrack: RemoteVideoTrack;
    members.forEach(m => {
@@ -176,9 +163,10 @@ import { debounce } from 'ts-debounce';
      m.videoTracks.forEach(track => {
        if (track.trackName === 'screen' && track.track) {
          screenTrack = track.track as RemoteVideoTrack;
-         console.log(screenTrack);
+        //  console.log(screenTrack);
          if (!screens.includes(screenTrack)) {
            setSharedScreens([...screens, screenTrack]);
+          //  reconfigureSpeakerView(screenTrack, true)
          }
        }
      });
@@ -192,7 +180,7 @@ import { debounce } from 'ts-debounce';
            <span>👋 Waiting for others to join...</span>
          </div>
        )} */}
-       {!speakerMode && (
+       {/* {!speakerMode && (
          <div
            id="remote-vid-wrapper"
            ref={vidRef}
@@ -206,6 +194,7 @@ import { debounce } from 'ts-debounce';
                    height={vidDims.height}
                    width={vidDims.width}
                    key={`${i}-screen`}
+                   onClick={() => reconfigureSpeakerView(s)}
                  />
                );
              })}
@@ -221,51 +210,118 @@ import { debounce } from 'ts-debounce';
                  onMouseEnter={() => setShowOverlay(true)}
                  onMouseLeave={() => setShowOverlay(false)}
                  theme={theme}
+                 onClick={() => reconfigureSpeakerView(m)}
                />
              );
            })}
          </div>
-       )}
-       {speakerMode && (
+       )} */}
+       {!speakerMode && (
          <div className="flex flex-col sm:flex-row z-20 py-10 px-1 w-full lg:px-10 xl:px-20 justify-around">
-           <div className="flex flex-col sm:w-4/5 p-1 justify-center content-center">
-             <MemberView
-               key={mainMember.identity}
-               member={mainMember}
-               height={'100%'}
-               width={'100%'}
-               classes={'aspect-w-16 aspect-h-9'}
-               showOverlay={showOverlay}
-               quality={VideoQuality.HIGH}
-               onMouseEnter={() => setShowOverlay(true)}
-               onMouseLeave={() => setShowOverlay(false)}
-               theme={theme}
-             />
-           </div>
-           <div
-             className={
-               'flex flex-row sm:flex-col sm:w-1/5 p-1 justify-center content-center no-scrollbar'
-             }
-           >
-             {otherMembers.map((m, i) => {
-               let quality = VideoQuality.HIGH;
-               if (i > 4) {
-                 quality = VideoQuality.LOW;
-               }
+           <div className="flex flex-col w-full p-1 justify-center content-center sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
+             {screens &&
+               screens.map((s, i) => {
+                 return (
+                   <ScreenShareView
+                     track={s}
+                     height={'100%'}
+                     width={'100%'}
+                     classes={'aspect-w-16 aspect-h-9'}
+                     key={`${i}-screen`}
+                     onClick={() => reconfigureSpeakerView(s)}
+                   />
+                 );
+               })}
+             {members.map((m, i) => {
                return (
                  <MemberView
                    key={m.identity}
                    member={m}
                    height={'100%'}
                    width={'100%'}
-                   classes={'ml-1 mr-1 sm:mt-1 sm:mb-1 aspect-w-16 aspect-h-9'}
+                   classes={'aspect-w-16 aspect-h-9'}
                    showOverlay={showOverlay}
-                   quality={quality}
+                   quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
                    onMouseEnter={() => setShowOverlay(true)}
                    onMouseLeave={() => setShowOverlay(false)}
                    theme={theme}
+                   onClick={() => reconfigureSpeakerView(m)}
                  />
                );
+             })}
+           </div>
+         </div>
+       )}
+       {speakerMode && mainVid && (
+         <div className="flex flex-col sm:flex-row z-20 py-10 px-1 w-full lg:px-10 xl:px-20 justify-around">
+           <div className="flex flex-col sm:w-4/5 p-1 justify-center content-center">
+             {'identity' in mainVid ? (
+               <MemberView
+                 key={mainVid.identity}
+                 member={mainVid}
+                 height={'100%'}
+                 width={'100%'}
+                 classes={'aspect-w-16 aspect-h-9'}
+                 showOverlay={showOverlay}
+                 quality={VideoQuality.HIGH}
+                 onMouseEnter={() => setShowOverlay(true)}
+                 onMouseLeave={() => setShowOverlay(false)}
+                 theme={theme}
+                 onClick={() => setSpeakerMode(sm => !sm)}
+               />
+             ) : (
+               <ScreenShareView
+                 track={mainVid}
+                 height={'100%'}
+                 width={'100%'}
+                 classes={'aspect-w-16 aspect-h-9'}
+                 key={`main-screen`}
+                 onClick={() => setSpeakerMode(sm => !sm)}
+               />
+             )}
+           </div>
+           <div
+             className={
+               'flex flex-row sm:flex-col sm:w-1/5 p-1 justify-center content-center no-scrollbar'
+             }
+           >
+             {otherVids.map((m, i) => {
+               let quality = VideoQuality.HIGH;
+               if (i > 4) {
+                 quality = VideoQuality.LOW;
+               }
+               if ('identity' in m) {
+                 return (
+                   <MemberView
+                     key={m.identity}
+                     member={m}
+                     height={'100%'}
+                     width={'100%'}
+                     classes={
+                       'ml-1 mr-1 sm:mt-1 sm:mb-1 aspect-w-16 aspect-h-9'
+                     }
+                     showOverlay={showOverlay}
+                     quality={quality}
+                     onMouseEnter={() => setShowOverlay(true)}
+                     onMouseLeave={() => setShowOverlay(false)}
+                     theme={theme}
+                     onClick={() => reconfigureSpeakerView(m, true)}
+                   />
+                 );
+               } else {
+                 return (
+                   <ScreenShareView
+                     track={m}
+                     height={'100%'}
+                     width={'100%'}
+                     classes={
+                       'ml-1 mr-1 sm:mt-1 sm:mb-1 aspect-w-16 aspect-h-9'
+                     }
+                     key={`${m.sid}-screen`}
+                     onClick={() => reconfigureSpeakerView(m, true)}
+                   />
+                 );
+               }
              })}
            </div>
          </div>
