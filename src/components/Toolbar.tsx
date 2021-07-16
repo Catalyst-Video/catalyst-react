@@ -29,13 +29,15 @@ import { useEffect } from "react";
    enableVideo,
    onLeave,
    theme,
+   setSpeakerMode,
  }: {
    room: Room;
    enableScreenShare?: boolean;
    enableAudio?: boolean;
    enableVideo?: boolean;
    onLeave?: (room: Room) => void;
-   theme: string
+   theme: string;
+   setSpeakerMode: Function
  }) => {
    const { publications, isMuted, unpublishTrack } = useParticipant(
      room.localParticipant
@@ -114,24 +116,24 @@ import { useEffect } from "react";
      }
    };
 
-    useEffect(() => {
-       if (audioDevice) {
-           createLocalAudioTrack({ deviceId: audioDevice.deviceId })
-           .then(track => {
-             room.localParticipant.publishTrack(track);
-            //  (audioPub as LocalTrackPublication).unmute();
-           })
-           .catch((err: Error) => {
-             console.log(err);
-           });
-       }
-    }, [audioDevice]);
+   useEffect(() => {
+     if (audioDevice) {
+       createLocalAudioTrack({ deviceId: audioDevice.deviceId })
+         .then(track => {
+           room.localParticipant.publishTrack(track);
+           //  (audioPub as LocalTrackPublication).unmute();
+         })
+         .catch((err: Error) => {
+           console.log(err);
+         });
+     }
+   }, [audioDevice]);
 
    useEffect(() => {
      if (videoDevice) {
        createLocalVideoTrack({ deviceId: videoDevice.deviceId })
          .then((track: LocalVideoTrack) => {
-          if (videoPub) unpublishTrack(videoPub.track as LocalVideoTrack);
+           if (videoPub) unpublishTrack(videoPub.track as LocalVideoTrack);
            room.localParticipant.publishTrack(track);
          })
          .catch((err: Error) => {
@@ -170,53 +172,55 @@ import { useEffect } from "react";
              screenPub?.track
                ? () => unpublishTrack(screenPub.track as LocalVideoTrack)
                : () => {
-                   navigator.mediaDevices
-                     // @ts-ignore
-                     .getDisplayMedia({
-                       video: {
-                         width: VideoPresets.fhd.resolution.width,
-                         height: VideoPresets.fhd.resolution.height,
-                       },
+                 navigator.mediaDevices
+                   // @ts-ignore
+                   .getDisplayMedia({
+                     video: {
+                       width: VideoPresets.fhd.resolution.width,
+                       height: VideoPresets.fhd.resolution.height,
+                     },
+                   })
+                   .then((captureStream: MediaStream) => {
+                     room.localParticipant.publishTrack(
+                       captureStream.getTracks()[0],
+                       {
+                         name: 'screen',
+                         videoEncoding: {
+                           maxBitrate: 3000000,
+                           maxFramerate: 30,
+                         },
+                       }
+                     ).then((track) => {
+                       setSpeakerMode(true);
                      })
-                     .then((captureStream: MediaStream) => {
-                       room.localParticipant.publishTrack(
-                         captureStream.getTracks()[0],
-                         {
-                           name: 'screen',
-                           videoEncoding: {
-                             maxBitrate: 3000000,
-                             maxFramerate: 30,
-                           },
-                         }
-                       );
-                     })
+                   })
                      .catch(err => {
-                     window.alert('Error sharing screen' + err);
+                       window.alert('Error sharing screen' + err);
                      });
-            
-                  //  try {
-                  //    const captureStream =
-                  //      // @ts-ignore
-                  //      (await navigator.mediaDevices.getDisplayMedia({
-                  //        video: {
-                  //          width: VideoPresets.fhd.resolution.width,
-                  //          height: VideoPresets.fhd.resolution.height,
-                  //        },
-                  //      })) as MediaStream;
 
-                  //    room.localParticipant.publishTrack(
-                  //      captureStream.getTracks()[0],
-                  //      {
-                  //        name: 'screen',
-                  //        videoEncoding: {
-                  //          maxBitrate: 3000000,
-                  //          maxFramerate: 30,
-                  //        },
-                  //      }
-                  //    );
-                  //  } catch (err) {
-                  //    window.alert('Error sharing screen');
-                  //  }
+                   //  try {
+                   //    const captureStream =
+                   //      // @ts-ignore
+                   //      (await navigator.mediaDevices.getDisplayMedia({
+                   //        video: {
+                   //          width: VideoPresets.fhd.resolution.width,
+                   //          height: VideoPresets.fhd.resolution.height,
+                   //        },
+                   //      })) as MediaStream;
+
+                   //    room.localParticipant.publishTrack(
+                   //      captureStream.getTracks()[0],
+                   //      {
+                   //        name: 'screen',
+                   //        videoEncoding: {
+                   //          maxBitrate: 3000000,
+                   //          maxFramerate: 30,
+                   //        },
+                   //      }
+                   //    );
+                   //  } catch (err) {
+                   //    window.alert('Error sharing screen');
+                   //  }
                  }
            }
          />

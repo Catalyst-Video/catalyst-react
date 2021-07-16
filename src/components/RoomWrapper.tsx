@@ -65,11 +65,12 @@ const RoomWrapper = ({
     let max = 0;
     //  TODO: loop needs to be optimized
     let i = 1;
+    let l =
+      (members.length < 1 ? 1 : members.length) +
+      screens +
+      (members.length < 2 ? 1 : 0);
+      console.log(l)
     while (i < 5000) {
-      let l =
-        (members.length < 1 ? 1 : members.length) +
-        screens +
-        (members.length === 1 ? 1 : 0);
       let w = area(i, l, width, height, margin);
       if (w === false) {
         max = i - 1;
@@ -106,10 +107,18 @@ const RoomWrapper = ({
     else return increment;
   };
 
-  const reconfigureSpeakerView = (v: Participant | RemoteVideoTrack, stopSwap?: boolean) => {
-    setMainVid(v);
-    if (!speakerMode || !stopSwap) setSpeakerMode(sm => !sm);
-   }
+  // const reconfigureSpeakerView = (v: Participant | RemoteVideoTrack, stopSwap?: boolean) => {
+  //   setMainVid(v);
+  //   if (!speakerMode || !stopSwap) setSpeakerMode(sm => !sm);
+  //  }
+
+  // useEffect(() => {
+  //     if (members.findIndex(m => m === mainVid) < 1) {
+  //     //   setSpeakerMode(true);
+  //     // } else {
+  //       setSpeakerMode(sm => !sm);
+  //     }
+  //  }, [mainVid]);
 
    const debouncedResize = debounce(resizeWrapper, 15);
 
@@ -153,8 +162,10 @@ const RoomWrapper = ({
         //  console.log(screenTrack);
          if (!sharedScreens.includes(screenTrack)) {
            sharedScreens = [...sharedScreens, screenTrack];
-           if (mainVid !== screenTrack)
-            setMainVid(screenTrack)
+           if (mainVid !== screenTrack && sharedScreens.length != screens) {
+             setMainVid(screenTrack);
+            //  setSpeakerMode(true);
+           }
          }
        }
      });
@@ -180,7 +191,10 @@ const RoomWrapper = ({
                    height={vidDims.height}
                    width={vidDims.width}
                    key={`${i}-screen`}
-                    onClick={() => reconfigureSpeakerView(s)}
+                   onClick={() => {
+                     setMainVid(s);
+                     setSpeakerMode(sm => !sm);
+                   }}
                  />
                );
              })}
@@ -196,7 +210,10 @@ const RoomWrapper = ({
                  onMouseEnter={() => setShowOverlay(true)}
                  onMouseLeave={() => setShowOverlay(false)}
                  theme={theme}
-                 onClick={() => reconfigureSpeakerView(m)}
+                 onClick={() => {
+                   setMainVid(m);
+                   setSpeakerMode(sm => !sm);
+                 }}
                />
              );
            })}
@@ -217,7 +234,7 @@ const RoomWrapper = ({
          </div>
        )}
        {speakerMode && (
-         <div className="flex flex-col sm:flex-row z-20 py-10 px-1 w-full lg:px-10 xl:px-20 justify-around">
+         <div className="flex flex-col sm:flex-row z-20 py-10 px-1 w-full lg:px-10 xl:px-20 justify-center sm:justify-around">
            <div className="flex flex-col sm:w-4/5 p-1 justify-center content-center">
              {!mainVid || 'identity' in mainVid ? (
                <MemberView
@@ -251,53 +268,67 @@ const RoomWrapper = ({
              onClick={() => setSpeakerMode(sm => !sm)}
            >
              {members.length === 1 && (
+               <>
                <div
-                 className={`ml-1 mr-1 sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
+                 className={`ml-1 mr-1 w-full sm:w-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
                >
                  <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-sm md:text-md xl:text-lg text-white text-center px-1 sm:px-2 md:px-3 ">
                    <span>👋 Waiting for others to join...</span>
                  </div>
-               </div>
+                 </div>
+                  <div
+                 className={`ml-1 mr-1 w-full sm:w-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
+               >
+                 <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-sm md:text-md xl:text-lg text-white text-center px-1 sm:px-2 md:px-3 ">
+                   <span>👋 Waiting for others to join...</span>
+                 </div>
+               </div></>
+               
              )}
              {sharedScreens &&
                sharedScreens.map((s, i) => {
-                 if(s !== mainVid)
+                 if (s !== mainVid)
+                   return (
+                     <ScreenShareView
+                       track={s}
+                       height={'100%'}
+                       width={'100%'}
+                       classes={
+                         'ml-1 mr-1 sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9'
+                       }
+                       key={`sidebar-screen-${i}`}
+                       onClick={() => {
+                         setMainVid(s);
+                         setSpeakerMode(sm => !sm);
+                       }}
+                     />
+                   );
+                 else return null;
+               })}
+             {members.map((m, i) => {
+               if (m !== mainVid)
                  return (
-                   <ScreenShareView
-                     track={s}
+                   <MemberView
+                     key={m.identity}
+                     member={m}
                      height={'100%'}
                      width={'100%'}
                      classes={
                        'ml-1 mr-1 sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9'
                      }
-                     key={`sidebar-screen-${i}`}
-                     onClick={() => reconfigureSpeakerView(s, true)}
+                     showOverlay={showOverlay}
+                     quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
+                     onMouseEnter={() => setShowOverlay(true)}
+                     onMouseLeave={() => setShowOverlay(false)}
+                     theme={theme}
+                     onClick={() => {
+                       setMainVid(m);
+                       setSpeakerMode(sm => !sm);
+                     }}
                    />
                  );
-                 else return null
-               })}
-             {members.map((m, i) => {
-                if (m !== mainVid)
-                  return (
-                    <MemberView
-                      key={m.identity}
-                      member={m}
-                      height={'100%'}
-                      width={'100%'}
-                      classes={
-                        'ml-1 mr-1 sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9'
-                      }
-                      showOverlay={showOverlay}
-                      quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
-                      onMouseEnter={() => setShowOverlay(true)}
-                      onMouseLeave={() => setShowOverlay(false)}
-                      theme={theme}
-                      onClick={() => reconfigureSpeakerView(m, true)}
-                    />
-                  );
-                else return null;
+               else return null;
              })}
-          
            </div>
          </div>
        )}

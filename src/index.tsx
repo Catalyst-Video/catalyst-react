@@ -33,7 +33,7 @@ const CatalystChat = ({ key, appId, dark, theme, fade }: CatalystChatProps) => {
           {ready ? (
             <VideoChat
               token={
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2aWRlbyI6eyJyb29tSm9pbiI6dHJ1ZSwicm9vbSI6ImFzZGZhZCIsImNhblB1Ymxpc2giOnRydWUsImNhblN1YnNjcmliZSI6dHJ1ZX0sImlhdCI6MTYyNjQwNjk3MiwibmJmIjoxNjI2NDA2OTcyLCJleHAiOjE2MjY0MTQxNzIsImlzcyI6IkFQSU1teGlMOHJxdUt6dFpFb1pKVjlGYiIsImp0aSI6ImJvYiJ9.WbOJ5CryVpvb7NKBlqaLiH2dR8PADilQf5YZYPsJZw0'
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2aWRlbyI6eyJyb29tSm9pbiI6dHJ1ZSwicm9vbSI6ImFzZGZhZCIsImNhblB1Ymxpc2giOnRydWUsImNhblN1YnNjcmliZSI6dHJ1ZX0sImlhdCI6MTYyNjQxNDM1NSwibmJmIjoxNjI2NDE0MzU1LCJleHAiOjE2MjY0MjE1NTUsImlzcyI6IkFQSU1teGlMOHJxdUt6dFpFb1pKVjlGYiIsImp0aSI6ImFzZmRhZmRzIn0.0UK046AJKG_SCJJe8GFYR-0oJn9Yc95I9NmTBzJLZTA'
               }
               theme={theme ?? 'teal'}
               meta={{
