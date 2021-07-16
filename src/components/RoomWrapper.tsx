@@ -63,7 +63,7 @@ const RoomWrapper = ({
       width = vidRef.current.offsetWidth - margin * 2;
       height = vidRef.current.offsetHeight - margin * 2;
     }
-    console.log(width, height)
+    // console.log(width, height)
     let max = 0;
     //  TODO: loop needs to be optimized
     let i = 1;
@@ -212,6 +212,7 @@ const RoomWrapper = ({
                  height: vidDims.height,
                  width: vidDims.width,
                }}
+               onClick={() => setSpeakerMode(sm => !sm)}
              >
                <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-xl text-white">
                  <span>👋 Waiting for others to join...</span>
@@ -220,13 +221,13 @@ const RoomWrapper = ({
            )}
          </div>
        )}
-       {speakerMode && mainVid && (
+       {speakerMode && (
          <div className="flex flex-col sm:flex-row z-20 py-10 px-1 w-full lg:px-10 xl:px-20 justify-around">
            <div className="flex flex-col sm:w-4/5 p-1 justify-center content-center">
-             {'identity' in mainVid ? (
+             {!mainVid || 'identity' in mainVid ? (
                <MemberView
-                 key={mainVid.identity}
-                 member={mainVid}
+                 key={mainVid?.identity ?? 'first-vid'}
+                 member={mainVid ?? members[0]}
                  height={'100%'}
                  width={'100%'}
                  classes={'aspect-w-16 aspect-h-9'}
@@ -252,6 +253,7 @@ const RoomWrapper = ({
              className={
                'flex flex-row sm:flex-col sm:w-1/5 p-1 justify-center content-center no-scrollbar'
              }
+             onClick={() => setSpeakerMode(sm => !sm)}
            >
              {members.length === 1 && (
                <div
