@@ -45,10 +45,8 @@ const RoomWrapper = ({
 }) => {
   const { isConnecting, error, participants: members, room } = roomState;
   const [showOverlay, setShowOverlay] = useState(false);
-  const [screens, setSharedScreens] = useState<RemoteVideoTrack[]>([]);
+  const [screens, setNumScreens] = useState<number>(0);
   const [mainVid, setMainVid] = useState<Participant | RemoteVideoTrack>(members[0]);
-  const [otherVids, setOtherVids] =
-    useState<Array<RemoteVideoTrack | Participant>>(members.slice(1).map(m => m));
   const vidRef = useRef<HTMLDivElement>(null);
   const [vidDims, setVidDims] = useState({
     width: '0px',
@@ -70,7 +68,7 @@ const RoomWrapper = ({
     while (i < 5000) {
       let l =
         (members.length < 1 ? 1 : members.length) +
-        screens.length +
+        screens +
         (members.length === 1 ? 1 : 0);
       let w = area(i, l, width, height, margin);
       if (w === false) {
@@ -110,11 +108,6 @@ const RoomWrapper = ({
 
   const reconfigureSpeakerView = (v: Participant | RemoteVideoTrack, stopSwap?: boolean) => {
     setMainVid(v);
-    let newOtherVids: Array<RemoteVideoTrack | Participant> = merge(
-      screens.filter(p => p !== v),
-      members.filter(p => p !== v)
-    );
-    setOtherVids(newOtherVids);
     if (!speakerMode || !stopSwap) setSpeakerMode(sm => !sm);
    }
 
@@ -134,11 +127,6 @@ const RoomWrapper = ({
    useEffect(() => {
      resizeWrapper();
    }, [members, screens]);
-  
-  useEffect(() => {
-    if (screens.length > 0)
-     reconfigureSpeakerView(screens[screens.length - 1], true);
-  }, [screens])
 
    if (error || isConnecting || !room || members.length === 0) {
      return (
@@ -153,7 +141,8 @@ const RoomWrapper = ({
      );
    }
 
-   let screenTrack: RemoteVideoTrack;
+  let screenTrack: RemoteVideoTrack;
+  var sharedScreens = [] as Array<RemoteVideoTrack>;
    members.forEach(m => {
      //  TODO: don't show local screen share if (p instanceof LocalParticipant) {
      //    return;
@@ -162,12 +151,18 @@ const RoomWrapper = ({
        if (track.trackName === 'screen' && track.track) {
          screenTrack = track.track as RemoteVideoTrack;
         //  console.log(screenTrack);
-         if (!screens.includes(screenTrack)) {
-           setSharedScreens([...screens, screenTrack]);
+         if (!sharedScreens.includes(screenTrack)) {
+           sharedScreens = [...sharedScreens, screenTrack];
+           if (mainVid !== screenTrack)
+            setMainVid(screenTrack)
          }
        }
      });
    });
+  if (sharedScreens.length != screens) {
+     setNumScreens(sharedScreens.length);
+  }
+  
 
    return (
      <>
@@ -177,15 +172,15 @@ const RoomWrapper = ({
            ref={vidRef}
            className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border`}
          >
-           {screens &&
-             screens.map((s, i) => {
+           {sharedScreens &&
+             sharedScreens.map((s, i) => {
                return (
                  <ScreenShareView
                    track={s}
                    height={vidDims.height}
                    width={vidDims.width}
                    key={`${i}-screen`}
-                   onClick={() => reconfigureSpeakerView(s)}
+                    onClick={() => reconfigureSpeakerView(s)}
                  />
                );
              })}
@@ -207,7 +202,7 @@ const RoomWrapper = ({
            })}
            {members.length === 1 && (
              <div
-               className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-xl m-1`}
+               className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center m-1 bg-gray-800 rounded-xl`}
                style={{
                  height: vidDims.height,
                  width: vidDims.width,
@@ -257,51 +252,52 @@ const RoomWrapper = ({
            >
              {members.length === 1 && (
                <div
-                 className={`ml-1 mr-1 sm:mt-1 sm:mb-1 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl m-1`}
+                 className={`ml-1 mr-1 sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
                >
                  <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-sm md:text-md xl:text-lg text-white text-center px-1 sm:px-2 md:px-3 ">
                    <span>👋 Waiting for others to join...</span>
                  </div>
                </div>
              )}
-             {otherVids.map((m, i) => {
-               let quality = VideoQuality.HIGH;
-               if (i > 4) {
-                 quality = VideoQuality.LOW;
-               }
-               if ('identity' in m) {
-                 return (
-                   <MemberView
-                     key={m.identity}
-                     member={m}
-                     height={'100%'}
-                     width={'100%'}
-                     classes={
-                       'ml-1 mr-1 sm:mt-1 sm:mb-1 aspect-w-16 aspect-h-9'
-                     }
-                     showOverlay={showOverlay}
-                     quality={quality}
-                     onMouseEnter={() => setShowOverlay(true)}
-                     onMouseLeave={() => setShowOverlay(false)}
-                     theme={theme}
-                     onClick={() => reconfigureSpeakerView(m, true)}
-                   />
-                 );
-               } else {
+             {sharedScreens &&
+               sharedScreens.map((s, i) => {
+                 if(s !== mainVid)
                  return (
                    <ScreenShareView
-                     track={m}
+                     track={s}
                      height={'100%'}
                      width={'100%'}
                      classes={
-                       'ml-1 mr-1 sm:mt-1 sm:mb-1 aspect-w-16 aspect-h-9'
+                       'ml-1 mr-1 sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9'
                      }
-                     key={`${m.sid}-screen`}
-                     onClick={() => reconfigureSpeakerView(m, true)}
+                     key={`sidebar-screen-${i}`}
+                     onClick={() => reconfigureSpeakerView(s, true)}
                    />
                  );
-               }
+                 else return null
+               })}
+             {members.map((m, i) => {
+                if (m !== mainVid)
+                  return (
+                    <MemberView
+                      key={m.identity}
+                      member={m}
+                      height={'100%'}
+                      width={'100%'}
+                      classes={
+                        'ml-1 mr-1 sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9'
+                      }
+                      showOverlay={showOverlay}
+                      quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
+                      onMouseEnter={() => setShowOverlay(true)}
+                      onMouseLeave={() => setShowOverlay(false)}
+                      theme={theme}
+                      onClick={() => reconfigureSpeakerView(m, true)}
+                    />
+                  );
+                else return null;
              })}
+          
            </div>
          </div>
        )}

@@ -126,7 +126,7 @@ const MemberView = ({
     <div className={classes}>
       <div
         ref={ref}
-        className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-xl m-1 ${
+        className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-xl ${
           m.isSpeaking ? `ring-4 ring-${theme} ring-opacity-50` : ''
         }`}
         style={{
