@@ -171,11 +171,6 @@ const RoomWrapper = ({
 
    return (
      <>
-       {/* TODO: {members.length <= 1 && (
-         <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-xl text-white">
-           <span>👋 Waiting for others to join...</span>
-         </div>
-       )} */}
        {!speakerMode && (
          <div
            id="remote-vid-wrapper"
@@ -258,6 +253,15 @@ const RoomWrapper = ({
                'flex flex-row sm:flex-col sm:w-1/5 p-1 justify-center content-center no-scrollbar'
              }
            >
+             {members.length === 1 && (
+               <div
+                 className={`ml-1 mr-1 sm:mt-1 sm:mb-1 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl m-1`}
+               >
+                 <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-sm md:text-md xl:text-lg text-white text-center px-1 sm:px-2 md:px-3 ">
+                   <span>👋 Waiting for others to join...</span>
+                 </div>
+               </div>
+             )}
              {otherVids.map((m, i) => {
                let quality = VideoQuality.HIGH;
                if (i > 4) {
