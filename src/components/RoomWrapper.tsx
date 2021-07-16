@@ -8,12 +8,10 @@ import {
 } from "livekit-client";
 import { VideoQuality } from "livekit-client/dist/proto/livekit_rtc";
 import React, { ReactElement, Ref, useEffect, useRef, useState } from "react";
-import Toolbar from "./Toolbar";
 import MemberView from "./MemberView";
 import { ScreenShareView } from "./ScreenShareView";
 import "./styles.module.css";
 import { RoomState } from "../hooks/useRoom";
-import { AudioRenderer } from "./AudioRenderer";
 import { debounce } from 'ts-debounce';
 
 function merge(a1, a2) {
@@ -55,7 +53,6 @@ const RoomWrapper = ({
   const [vidDims, setVidDims] = useState({
     width: '0px',
     height: '0px',
-    // margin: '2px',
   });
 
   const resizeWrapper = () => {
@@ -66,13 +63,15 @@ const RoomWrapper = ({
       width = vidRef.current.offsetWidth - margin * 2;
       height = vidRef.current.offsetHeight - margin * 2;
     }
-    //  console.log('res', width, height);
+    console.log(width, height)
     let max = 0;
     //  TODO: loop needs to be optimized
     let i = 1;
     while (i < 5000) {
-      let l = (members.length < 1 ? 1 : members.length) + screens.length;
-      // TODO:   let l = 4 + screens.length;
+      let l =
+        (members.length < 1 ? 1 : members.length) +
+        screens.length +
+        (members.length === 1 ? 1 : 0);
       let w = area(i, l, width, height, margin);
       if (w === false) {
         max = i - 1;
@@ -84,7 +83,6 @@ const RoomWrapper = ({
     setVidDims({
       width: max + 'px',
       height: max * 0.5625 + 'px', // 0.5625 enforce 16:9 (vs 0.75 for 4:3)
-      // margin: margin + 'px',
     });
   };
 
@@ -166,7 +164,6 @@ const RoomWrapper = ({
         //  console.log(screenTrack);
          if (!screens.includes(screenTrack)) {
            setSharedScreens([...screens, screenTrack]);
-          //  reconfigureSpeakerView(screenTrack, true)
          }
        }
      });
@@ -174,13 +171,12 @@ const RoomWrapper = ({
 
    return (
      <>
-       {/* grid min-h-0 grid-container */}
        {/* TODO: {members.length <= 1 && (
          <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-xl text-white">
            <span>👋 Waiting for others to join...</span>
          </div>
        )} */}
-       {/* {!speakerMode && (
+       {!speakerMode && (
          <div
            id="remote-vid-wrapper"
            ref={vidRef}
@@ -214,42 +210,19 @@ const RoomWrapper = ({
                />
              );
            })}
-         </div>
-       )} */}
-       {!speakerMode && (
-         <div className="flex flex-col sm:flex-row z-20 py-10 px-1 w-full lg:px-10 xl:px-20 justify-around">
-           <div className="flex flex-col w-full p-1 justify-center content-center sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
-             {screens &&
-               screens.map((s, i) => {
-                 return (
-                   <ScreenShareView
-                     track={s}
-                     height={'100%'}
-                     width={'100%'}
-                     classes={'aspect-w-16 aspect-h-9'}
-                     key={`${i}-screen`}
-                     onClick={() => reconfigureSpeakerView(s)}
-                   />
-                 );
-               })}
-             {members.map((m, i) => {
-               return (
-                 <MemberView
-                   key={m.identity}
-                   member={m}
-                   height={'100%'}
-                   width={'100%'}
-                   classes={'aspect-w-16 aspect-h-9'}
-                   showOverlay={showOverlay}
-                   quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
-                   onMouseEnter={() => setShowOverlay(true)}
-                   onMouseLeave={() => setShowOverlay(false)}
-                   theme={theme}
-                   onClick={() => reconfigureSpeakerView(m)}
-                 />
-               );
-             })}
-           </div>
+           {members.length === 1 && (
+             <div
+               className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-xl m-1`}
+               style={{
+                 height: vidDims.height,
+                 width: vidDims.width,
+               }}
+             >
+               <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-xl text-white">
+                 <span>👋 Waiting for others to join...</span>
+               </div>
+             </div>
+           )}
          </div>
        )}
        {speakerMode && mainVid && (
