@@ -16,6 +16,7 @@ import {
 	Room,
   ConnectOptions,
   TrackPublishOptions,
+  createLocalTracks,
 } from 'livekit-client';
 import React, { useEffect, useRef, useState } from 'react';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
@@ -51,14 +52,21 @@ const VideoChat = ({
   const toolbarRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
 
-  const onConnected = room => {
-    // onConnected(room, meta);
+  const onConnected = async room => {
     room.on(RoomEvent.ParticipantConnected, () => updateParticipantSize(room));
     room.on(RoomEvent.ParticipantDisconnected, () =>
       updateParticipantSize(room)
     );
     updateParticipantSize(room);
     console.log(room);
+
+    const tracks = await createLocalTracks({
+      audio: audioOnDefault,
+      video: videoOnDefault,
+    });
+    tracks.forEach(track => {
+      room.localParticipant.publishTrack(track);
+    });
   };
 
   useEffect(() => {

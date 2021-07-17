@@ -7,6 +7,7 @@ import {
   createLocalAudioTrack,
   createLocalVideoTrack,
   CreateVideoTrackOptions,
+  LocalAudioTrack,
   LocalTrackPublication,
   LocalVideoTrack,
   Room,
@@ -119,6 +120,7 @@ import { useEffect } from "react";
      if (audioDevice) {
        createLocalAudioTrack({ deviceId: audioDevice.deviceId })
          .then(track => {
+           if (audioPub) unpublishTrack(audioPub.track as LocalAudioTrack);
            room.localParticipant.publishTrack(track);
            //  (audioPub as LocalTrackPublication).unmute();
          })
