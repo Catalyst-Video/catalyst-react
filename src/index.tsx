@@ -6,7 +6,7 @@ import './styles/catalyst.css';
 import './styles/tailwind.output.css';
 import VideoChat from "./views/VideoChat";
 
-const CatalystChat = ({ key, appId, dark, theme, fade }: CatalystChatProps) => {
+const CatalystChat = ({ key, appId, dark, theme, fade, name, audioOnDefault, videoOnDefault }: CatalystChatProps) => {
     const [ready, setReady] = useState(true);
 
     return (
@@ -33,7 +33,7 @@ const CatalystChat = ({ key, appId, dark, theme, fade }: CatalystChatProps) => {
           {ready ? (
             <VideoChat
               token={
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2aWRlbyI6eyJyb29tSm9pbiI6dHJ1ZSwicm9vbSI6ImFzZGZhZCIsImNhblB1Ymxpc2giOnRydWUsImNhblN1YnNjcmliZSI6dHJ1ZX0sImlhdCI6MTYyNjQxNDM1NSwibmJmIjoxNjI2NDE0MzU1LCJleHAiOjE2MjY0MjE1NTUsImlzcyI6IkFQSU1teGlMOHJxdUt6dFpFb1pKVjlGYiIsImp0aSI6ImFzZmRhZmRzIn0.0UK046AJKG_SCJJe8GFYR-0oJn9Yc95I9NmTBzJLZTA'
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2aWRlbyI6eyJyb29tSm9pbiI6dHJ1ZSwicm9vbSI6ImFzZGZhZCIsImNhblB1Ymxpc2giOnRydWUsImNhblN1YnNjcmliZSI6dHJ1ZX0sImlhdCI6MTYyNjUzMzk1MSwibmJmIjoxNjI2NTMzOTUxLCJleHAiOjE2MjY1NDExNTEsImlzcyI6IkFQSU1teGlMOHJxdUt6dFpFb1pKVjlGYiIsImp0aSI6InNhZmRzZGYifQ.9I0ruoY8CGNCL4lhGxbvKP8rOnS6xO7EzdBM4_RH6WU'
               }
               theme={theme ?? 'teal'}
               meta={{
@@ -42,6 +42,8 @@ const CatalystChat = ({ key, appId, dark, theme, fade }: CatalystChatProps) => {
                 simulcast: true,
               }}
               fade={fade ?? 600}
+              audioOnDefault={audioOnDefault ?? true}
+              videoOnDefault={videoOnDefault ?? true}
             />
           ) : null}
         </div>

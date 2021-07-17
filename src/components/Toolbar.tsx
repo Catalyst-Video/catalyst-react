@@ -17,7 +17,6 @@ import React, { ReactElement, useState } from "react";
 import { useParticipant } from "../hooks/useParticipant";
 import { AudioSelectButton } from "./AudioSelectButton";
 import ToolbarButton from "./ToolbarButton";
-import "./styles.module.css";
 import { VideoSelectButton } from "./VideoSelectButton";
 import { useEffect } from "react";
 

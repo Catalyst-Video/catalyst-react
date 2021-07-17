@@ -33,20 +33,23 @@ const VideoChat = ({
   theme,
   meta,
   fade,
+  audioOnDefault,
+  videoOnDefault,
 }: {
   token: string;
   theme: string;
   meta: RoomMetaData;
-  fade: number
+  fade: number;
+  audioOnDefault: boolean;
+  videoOnDefault: boolean
 }) => {
   const fsHandle = useFullScreenHandle();
   const [numParticipants, setNumParticipants] = useState(0);
   const roomState = useRoom();
   const [speakerMode, setSpeakerMode] = useState(false);
 
-  const toolbarRef = useRef<HTMLDivElement>(null)
+  const toolbarRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
-
 
   const onConnected = room => {
     // onConnected(room, meta);
@@ -114,11 +117,11 @@ const VideoChat = ({
         _delay = setInterval(delayCheck, fade);
       };
 
-        var timedelay = 1;
-        var isHidden = false;
-        const debounceHandleMouse = debounce(handleMouse, 50);
-        document.addEventListener('mousemove', debounceHandleMouse);
-        var _delay = setInterval(delayCheck, fade);
+      var timedelay = 1;
+      var isHidden = false;
+      const debounceHandleMouse = debounce(handleMouse, 50);
+      document.addEventListener('mousemove', debounceHandleMouse);
+      var _delay = setInterval(delayCheck, fade);
 
       () => {
         document.removeEventListener('mousemove', handleMouse);

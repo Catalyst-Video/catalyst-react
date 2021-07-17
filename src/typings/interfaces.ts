@@ -4,6 +4,9 @@ export interface CatalystChatProps {
   dark?: boolean;
   theme?: string;
   fade?: number;
+  name?: string;
+  audioOnDefault?: boolean;
+  videoOnDefault?: boolean;
 }
 
 export interface RoomMetaData {

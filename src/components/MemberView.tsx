@@ -15,7 +15,6 @@ import React, { CSSProperties, ReactElement, useEffect, useRef, useState } from 
 import AspectRatio from "react-aspect-ratio";
 import { useInView } from "react-intersection-observer";
 import { useParticipant } from "../hooks/useParticipant";
-import "./styles.module.css";
 import VideoWrapper from "./VideoWrapper";
 
 const MemberView = ({

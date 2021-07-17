@@ -10,7 +10,6 @@ import { VideoQuality } from "livekit-client/dist/proto/livekit_rtc";
 import React, { ReactElement, Ref, useEffect, useRef, useState } from "react";
 import MemberView from "./MemberView";
 import { ScreenShareView } from "./ScreenShareView";
-import "./styles.module.css";
 import { RoomState } from "../hooks/useRoom";
 import { debounce } from 'ts-debounce';
 
@@ -269,13 +268,13 @@ const RoomWrapper = ({
            >
              {members.length === 1 && (
                <>
-               <div
+               {/*TODO: fix mobile sizing <div
                  className={`ml-1 mr-1 w-full sm:w-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
                >
                  <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-sm md:text-md xl:text-lg text-white text-center px-1 sm:px-2 md:px-3 ">
                    <span>👋 Waiting for others to join...</span>
                  </div>
-                 </div>
+                 </div> */}
                   <div
                  className={`ml-1 mr-1 w-full sm:w-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
                >
