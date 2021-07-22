@@ -198,30 +198,6 @@ import { useEffect } from "react";
                      .catch(err => {
                        window.alert('Error sharing screen' + err);
                      });
-
-                   //  try {
-                   //    const captureStream =
-                   //      // @ts-ignore
-                   //      (await navigator.mediaDevices.getDisplayMedia({
-                   //        video: {
-                   //          width: VideoPresets.fhd.resolution.width,
-                   //          height: VideoPresets.fhd.resolution.height,
-                   //        },
-                   //      })) as MediaStream;
-
-                   //    room.localParticipant.publishTrack(
-                   //      captureStream.getTracks()[0],
-                   //      {
-                   //        name: 'screen',
-                   //        videoEncoding: {
-                   //          maxBitrate: 3000000,
-                   //          maxFramerate: 30,
-                   //        },
-                   //      }
-                   //    );
-                   //  } catch (err) {
-                   //    window.alert('Error sharing screen');
-                   //  }
                  }
            }
          />

@@ -5,9 +5,35 @@ import { CatalystChatProps } from "./typings/interfaces";
 import './styles/catalyst.css';
 import './styles/tailwind.output.css';
 import VideoChat from "./views/VideoChat";
+import { useEffect } from "react";
 
-const CatalystChat = ({ key, appId, dark, theme, fade, name, audioOnDefault, videoOnDefault }: CatalystChatProps) => {
-    const [ready, setReady] = useState(true);
+const CatalystChat = ({ room, appId, dark, theme, fade, name, audioOnDefault, videoOnDefault }: CatalystChatProps) => {
+  const [ready, setReady] = useState(true);
+  const [token, setToken] = useState("");
+  const [userName, setUserName] = useState(name ?? 'test');
+
+  useEffect(() => {
+    fetch(
+      `https://pricey-somber-silence.glitch.me/token?participantName=${'test'}&customerUid=${appId}&roomName=${room}`,
+      {
+        method: 'GET',
+        headers: {
+          // 'Content-Type': 'application/json',
+          mode: 'no-cors',
+        },
+      }
+    )
+      .then(response => {
+          console.log(response);
+        if (response.status === 200) {
+          console.log(response.body)
+            // setToken(response.json().token);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, []);
 
     return (
       <div
@@ -32,9 +58,7 @@ const CatalystChat = ({ key, appId, dark, theme, fade, name, audioOnDefault, vid
         >
           {ready ? (
             <VideoChat
-              token={
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2aWRlbyI6eyJyb29tSm9pbiI6dHJ1ZSwicm9vbSI6ImFzZGZhZCIsImNhblB1Ymxpc2giOnRydWUsImNhblN1YnNjcmliZSI6dHJ1ZX0sImlhdCI6MTYyNjUzMzk1MSwibmJmIjoxNjI2NTMzOTUxLCJleHAiOjE2MjY1NDExNTEsImlzcyI6IkFQSU1teGlMOHJxdUt6dFpFb1pKVjlGYiIsImp0aSI6InNhZmRzZGYifQ.9I0ruoY8CGNCL4lhGxbvKP8rOnS6xO7EzdBM4_RH6WU'
-              }
+              token={token}
               theme={theme ?? 'teal'}
               meta={{
                 audioEnabled: true,

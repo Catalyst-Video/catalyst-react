@@ -44,12 +44,7 @@ const WrapperComp = ({
     //       position: 'absolute',
     //     }}
     //   >
-    <CatalystChat
-      key={"test"}
-      appId={"example"}
-      dark={false}
-
-    />
+    <CatalystChat room={'test'} appId={'example'} dark={false} />
     //   </div>
     // </div>
   );

@@ -1,5 +1,5 @@
 export interface CatalystChatProps {
-  key: string;
+  room: string;
   appId: string;
   dark?: boolean;
   theme?: string;

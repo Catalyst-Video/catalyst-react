@@ -70,7 +70,8 @@ const VideoChat = ({
   };
 
   useEffect(() => {
-    roomState.connect('wss://demo.livekit.io', token, meta).then(room => {
+    // 'wss://demo.livekit.io'
+    roomState.connect('wss://infra.catalyst.chat', token, meta).then(room => {
       if (!room) {
         return;
       }
@@ -80,7 +81,9 @@ const VideoChat = ({
       return () => {
         room.disconnect();
       };
-    });
+    }).catch(err => {
+      console.error(err); 
+    }); 
   }, []);
 
   const updateParticipantSize = (room: Room) => {
