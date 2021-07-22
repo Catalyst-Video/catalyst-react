@@ -13,26 +13,27 @@ const CatalystChat = ({ room, appId, dark, theme, fade, name, audioOnDefault, vi
   const [userName, setUserName] = useState(name ?? 'test');
 
   useEffect(() => {
+    let sampname = prompt(`Please enter your name:`, 'testName')
+
     fetch(
-      `https://pricey-somber-silence.glitch.me/token?participantName=${'test'}&customerUid=${appId}&roomName=${room}`,
+      `https://pricey-somber-silence.glitch.me/token?participantName=${sampname}&customerUid=${appId}&roomName=${room}`,
       {
         method: 'GET',
         headers: {
-          // 'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
           mode: 'no-cors',
         },
       }
     )
       .then(response => {
-          console.log(response);
+        // console.log(response);
         if (response.status === 200) {
           response.json().then(json => {
             setToken(json.token);
-          console.log(json)
-
-          })
+            // console.log(json.token)
+          });
           // console.log(response.body)
-            // setToken(response.body.);
+          // setToken(response.body.);
         }
       })
       .catch(err => {
