@@ -26,8 +26,13 @@ const CatalystChat = ({ room, appId, dark, theme, fade, name, audioOnDefault, vi
       .then(response => {
           console.log(response);
         if (response.status === 200) {
-          console.log(response.body)
-            // setToken(response.json().token);
+          response.json().then(json => {
+            setToken(json.token);
+          console.log(json)
+
+          })
+          // console.log(response.body)
+            // setToken(response.body.);
         }
       })
       .catch(err => {

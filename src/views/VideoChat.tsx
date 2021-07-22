@@ -70,21 +70,23 @@ const VideoChat = ({
   };
 
   useEffect(() => {
-    // 'wss://demo.livekit.io'
-    roomState.connect('wss://infra.catalyst.chat', token, meta).then(room => {
-      if (!room) {
-        return;
-      }
-      if (onConnected) {
-        onConnected(room);
-      }
-      return () => {
-        room.disconnect();
-      };
-    }).catch(err => {
-      console.error(err); 
-    }); 
-  }, []);
+    if (token && token.length > 0) {
+      // 'wss://demo.livekit.io'
+      roomState.connect('wss://infra.catalyst.chat', token, meta).then(room => {
+        if (!room) {
+          return;
+        }
+        if (onConnected) {
+          onConnected(room);
+        }
+        return () => {
+          room.disconnect();
+        };
+      }).catch(err => {
+        console.error(err);
+      });
+    }
+  }, [token]);
 
   const updateParticipantSize = (room: Room) => {
     setNumParticipants(room.participants.size + 1);
