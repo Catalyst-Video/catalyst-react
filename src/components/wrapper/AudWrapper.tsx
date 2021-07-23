@@ -1,12 +1,11 @@
 import { Track } from "catalyst-client";
 import { useEffect, useRef } from "react";
 
-export interface AudioTrackProps {
+const AudWrapper = ({ track, isLocal }: {
   track: Track;
   isLocal: boolean;
 }
-
-export const AudioRenderer = ({ track, isLocal }: AudioTrackProps) => {
+) => {
   const audioEl = useRef<HTMLAudioElement>();
 
   useEffect(() => {
@@ -24,3 +23,4 @@ export const AudioRenderer = ({ track, isLocal }: AudioTrackProps) => {
   // TODO: allow set sink id
   return null;
 };
+export default AudWrapper;

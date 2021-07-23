@@ -9,7 +9,7 @@ import {
 import { VideoQuality } from "catalyst-client/dist/proto/livekit_rtc";
 import React, { ReactElement, Ref, useEffect, useRef, useState } from "react";
 import MemberView from "./MemberView";
-import { ScreenShareView } from "./ScreenShareView";
+import ScreenShareWrapper from "./wrapper/ScreenShareView";
 import { RoomState } from "../hooks/useRoom";
 import { debounce } from 'ts-debounce';
 
@@ -185,7 +185,7 @@ const RoomWrapper = ({
            {sharedScreens &&
              sharedScreens.map((s, i) => {
                return (
-                 <ScreenShareView
+                 <ScreenShareWrapper
                    track={s}
                    height={vidDims.height}
                    width={vidDims.width}
@@ -250,7 +250,7 @@ const RoomWrapper = ({
                  onClick={() => setSpeakerMode(sm => !sm)}
                />
              ) : (
-               <ScreenShareView
+               <ScreenShareWrapper
                  track={mainVid}
                  height={'100%'}
                  width={'100%'}
@@ -268,27 +268,27 @@ const RoomWrapper = ({
            >
              {members.length === 1 && (
                <>
-               {/*TODO: fix mobile sizing <div
+                 {/*TODO: fix mobile sizing <div
                  className={`ml-1 mr-1 w-full sm:w-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
                >
                  <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-sm md:text-md xl:text-lg text-white text-center px-1 sm:px-2 md:px-3 ">
                    <span>👋 Waiting for others to join...</span>
                  </div>
                  </div> */}
-                  <div
-                 className={`ml-1 mr-1 w-full sm:w-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
-               >
-                 <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-sm md:text-md xl:text-lg text-white text-center px-1 sm:px-2 md:px-3 ">
-                   <span>👋 Waiting for others to join...</span>
+                 <div
+                   className={`ml-1 mr-1 w-full sm:w-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
+                 >
+                   <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-sm md:text-md xl:text-lg text-white text-center px-1 sm:px-2 md:px-3 ">
+                     <span>👋 Waiting for others to join...</span>
+                   </div>
                  </div>
-               </div></>
-               
+               </>
              )}
              {sharedScreens &&
                sharedScreens.map((s, i) => {
                  if (s !== mainVid)
                    return (
-                     <ScreenShareView
+                     <ScreenShareWrapper
                        track={s}
                        height={'100%'}
                        width={'100%'}

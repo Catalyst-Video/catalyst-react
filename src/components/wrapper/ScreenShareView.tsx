@@ -3,23 +3,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Property } from "csstype";
 import { Track } from "catalyst-client";
 import React from "react";
-import VideoWrapper from "./VideoWrapper";
+import VidWrapper from "./VidWrapper";
 
-interface ScreenShareProps {
-  track: Track;
-  width?: Property.Width;
-  height?: Property.Height;
-  classes?: string
-  onClick?: () => void;
-}
 
-export const ScreenShareView = ({
+ const ScreenShareWrapper = ({
          track,
          width,
          height,
          classes,
          onClick,
-}: ScreenShareProps) => {
+}: {
+  track: Track;
+  width?: Property.Width;
+  height?: Property.Height;
+  classes?: string
+  onClick?: () => void;
+}) => {
 
          return (
            <div className={classes} onClick={onClick}>
@@ -30,7 +29,7 @@ export const ScreenShareView = ({
                  width: width,
                }}
              >
-               <VideoWrapper track={track} isLocal={false} />
+               <VidWrapper track={track} isLocal={false} />
                <div className="absolute bottom-0 left-0 flex text-white justify-between p-2 w-full">
                  <div className="text-white text-sm not-selectable flex items-center justify-center bg-gray-700 bg-opacity-40 px-2 py-1 rounded-xl">
                    {'Sharing'}
@@ -47,3 +46,4 @@ export const ScreenShareView = ({
            </div>
          );
        };
+export default ScreenShareWrapper;

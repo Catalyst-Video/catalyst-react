@@ -19,12 +19,12 @@ import {
 } from 'catalyst-client';
 import React, { useEffect, useRef, useState } from 'react';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
+import AudWrapper from '../components/wrapper/AudWrapper';
 import { RoomMetaData } from '../typings/interfaces';
 import RoomWrapper  from '../components/RoomWrapper';
+import HeaderLogo from '../components/header/Header';
+import Toolbar from '../components/toolbar/Toolbar';
 import { useRoom } from '../hooks/useRoom';
-import HeaderLogo from '../components/Header';
-import Toolbar from '../components/Toolbar';
-import { AudioRenderer } from '../components/AudioRenderer';
 import { debounce } from 'ts-debounce';
 
 
@@ -216,7 +216,7 @@ const VideoChat = ({
                 </div>
               )}
               {roomState.audioTracks.map(track => (
-                <AudioRenderer key={track.sid} track={track} isLocal={false} />
+                <AudWrapper key={track.sid} track={track} isLocal={false} />
               ))}
             </div>
           </div>

@@ -14,7 +14,7 @@ import { VideoQuality } from "catalyst-client/dist/proto/livekit_rtc";
 import React, { CSSProperties, ReactElement, useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useParticipant } from "../hooks/useParticipant";
-import VideoWrapper from "./VideoWrapper";
+import VidWrapper from "./wrapper/VidWrapper";
 
 const MemberView = ({
   member: m,
@@ -133,7 +133,7 @@ const MemberView = ({
         onClick={onClick}
       >
         {videoPub?.track ? (
-          <VideoWrapper
+          <VidWrapper
             track={videoPub.track}
             isLocal={isLocal}
             objectFit={objectFit}

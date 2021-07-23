@@ -1,20 +1,20 @@
 import { faVideo, faVideoSlash } from "@fortawesome/free-solid-svg-icons";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ToolbarButton, { Device } from "./ToolbarButton";
 
-export interface VideoSelectButtonProps {
+const VidDeviceBtn = ({
+  isEnabled,
+  onClick,
+  onSourceSelected,
+}: {
   isEnabled: boolean;
   onClick?: () => void;
   onSourceSelected?: (device: MediaDeviceInfo) => void;
 }
-
-export const VideoSelectButton = ({
-  isEnabled,
-  onClick,
-  onSourceSelected,
-}: VideoSelectButtonProps) => {
+) => {
   const [sources, setSources] = useState<MediaDeviceInfo[]>([]);
   const [devices, setMenuItems] = useState<Device[]>([]);
+  const vidBtnRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     navigator.mediaDevices.enumerateDevices().then((devices) => {
@@ -38,14 +38,19 @@ export const VideoSelectButton = ({
   };
 
   return (
-    <ToolbarButton
-      label={isEnabled ? 'Disable Video' : 'Enable Video'}
-      icon={isEnabled ? faVideo : faVideoSlash}
-      onClick={onClick}
-      devices={devices}
-      onDeviceClick={handleDevice}
-      bgColor={isEnabled ? undefined : 'bg-white hover:bg-gray-100'}
-      iconColor={isEnabled ? undefined : 'text-red'}
-    />
+    <div ref={vidBtnRef} className="inline">
+      <ToolbarButton
+        label={isEnabled ? 'Disable Video' : 'Enable Video'}
+        icon={isEnabled ? faVideo : faVideoSlash}
+        bgColor={isEnabled ? undefined : 'bg-white hover:bg-gray-100'}
+        iconColor={isEnabled ? undefined : 'text-red'}
+        onDeviceClick={handleDevice}
+        parentRef={vidBtnRef}
+        onClick={onClick}
+        devices={devices}
+      />
+    </div>
   );
 };
+
+export default VidDeviceBtn;

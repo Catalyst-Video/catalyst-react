@@ -2,7 +2,8 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Popover } from 'react-tiny-popover';
-import React, { useState } from "react";
+import React, { Ref, RefObject, useState } from "react";
+import {useFullScreenHandle } from "react-full-screen";
 
 export interface Device {
   label: string;
@@ -30,6 +31,7 @@ export const ToolbarButton = ({
          onDeviceClick,
          bgColor,
          iconColor,
+         parentRef,
        }: {
          label: string;
          disabled?: boolean;
@@ -40,8 +42,10 @@ export const ToolbarButton = ({
          onDeviceClick?: (id: Device) => void;
          bgColor?: string;
          iconColor?: string;
+         parentRef?: RefObject<HTMLDivElement>
        }) => {
          const [deviceMenu, setDeviceMenu] = useState(false);
+         const fs = useFullScreenHandle();
 
          const handleDeviceClick = (id: Device) => {
            if (onDeviceClick) {
@@ -56,12 +60,11 @@ export const ToolbarButton = ({
              positions={['top', 'right']}
              reposition={true}
              onClickOutside={() => setDeviceMenu(false)}
+             containerStyle={{ zIndex: '40' }}
+             containerParent={parentRef?.current ?? document.body}
              content={
-               <div
-               >
-                 <ul
-                   style={popoverStyles}
-                 >
+               <div>
+                 <ul style={popoverStyles}>
                    {devices?.map((id, i) => {
                      return (
                        <li
@@ -69,7 +72,8 @@ export const ToolbarButton = ({
                          style={{
                            color: 'white',
                            padding: '8px',
-                           borderTop: i > 0 ? '1px solid rgba(255, 255, 255, 0.2)': '0',
+                           borderTop:
+                             i > 0 ? '1px solid rgba(255, 255, 255, 0.2)' : '0',
                          }}
                          onClick={() => handleDeviceClick(id)}
                        >

@@ -4,7 +4,7 @@ import { CatalystChatProps } from "./typings/interfaces";
 // Styles
 import './styles/catalyst.css';
 import './styles/tailwind.output.css';
-import VideoChat from "./views/VideoChat";
+import VideoChat from "./views/VideoChatView";
 import { useEffect } from "react";
 
 const CatalystChat = ({

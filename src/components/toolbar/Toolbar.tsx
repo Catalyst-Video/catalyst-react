@@ -14,11 +14,11 @@ import {
   Track,
   VideoPresets,
 } from "catalyst-client";
-import React, { ReactElement, useState } from "react";
-import { useParticipant } from "../hooks/useParticipant";
-import { AudioSelectButton } from "./AudioSelectButton";
+import React, { ReactElement, useRef, useState } from "react";
+import { useParticipant } from "../../hooks/useParticipant";
+import AudioDeviceBtn from "./AudioDeviceBtn";
 import ToolbarButton from "./ToolbarButton";
-import { VideoSelectButton } from "./VideoSelectButton";
+import VidDeviceBtn from './VidDeviceBtn';
 import { useEffect } from "react";
 
 
@@ -63,6 +63,7 @@ import { useEffect } from "react";
    const [videoTrack, setVideoTrack] = useState<LocalVideoTrack>();
    const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
    const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
+
 
    const toggleVideo = () => {
      if (videoPub?.track) {
@@ -147,18 +148,18 @@ import { useEffect } from "react";
      <div className={'controlsWrapper'}>
        {/* Mute Audio Button */}
        {enableAudio && (
-         <AudioSelectButton
+         <AudioDeviceBtn
            isMuted={!audioPub || isMuted}
-           onClick={toggleAudio}
            onSourceSelected={setAudioDevice}
+           onClick={toggleAudio}
          />
        )}
        {/* Pause Video Button */}
        {enableVideo && (
-         <VideoSelectButton
+         <VidDeviceBtn
            isEnabled={videoPub?.track ? true : false}
-           onClick={toggleVideo}
            onSourceSelected={selectVideoDevice}
+           onClick={toggleVideo}
          />
        )}
        {/* Screen Share Button */}
@@ -173,28 +174,27 @@ import { useEffect } from "react";
              screenPub?.track
                ? () => unpublishTrack(screenPub.track as LocalVideoTrack)
                : () => {
-                 navigator.mediaDevices
-                   // @ts-ignore
-                   .getDisplayMedia({
-                     video: {
-                       width: VideoPresets.fhd.resolution.width,
-                       height: VideoPresets.fhd.resolution.height,
-                     },
-                   })
-                   .then((captureStream: MediaStream) => {
-                     room.localParticipant.publishTrack(
-                       captureStream.getTracks()[0],
-                       {
-                         name: 'screen',
-                         videoEncoding: {
-                           maxBitrate: 3000000,
-                           maxFramerate: 30,
-                         },
-                       }
-                     ).then((track) => {
-                       setSpeakerMode(true);
+                   navigator.mediaDevices
+                     // @ts-ignore
+                     .getDisplayMedia({
+                       video: {
+                         width: VideoPresets.fhd.resolution.width,
+                         height: VideoPresets.fhd.resolution.height,
+                       },
                      })
-                   })
+                     .then((captureStream: MediaStream) => {
+                       room.localParticipant
+                         .publishTrack(captureStream.getTracks()[0], {
+                           name: 'screen',
+                           videoEncoding: {
+                             maxBitrate: 3000000,
+                             maxFramerate: 30,
+                           },
+                         })
+                         .then(track => {
+                           setSpeakerMode(true);
+                         });
+                     })
                      .catch(err => {
                        window.alert('Error sharing screen' + err);
                      });

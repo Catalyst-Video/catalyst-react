@@ -2,7 +2,7 @@ import { Track } from "catalyst-client";
 import React, { useEffect, useRef } from "react";
 import { Property } from 'csstype';
 
-const VideoWrapper = ({
+const VidWrapper = ({
   track,
   isLocal,
   objectFit,
@@ -42,4 +42,4 @@ const VideoWrapper = ({
     />
   );
 };
-export default VideoWrapper;
+export default VidWrapper;
