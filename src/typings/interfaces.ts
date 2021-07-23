@@ -1,13 +1,13 @@
 export interface CatalystChatProps {
   room: string;
   appId: string;
+  name?: string;
   dark?: boolean;
   theme?: {
     primary: string;
     primaryDark: string;
-  }
+  };
   fade?: number;
-  name?: string;
   audioOnDefault?: boolean;
   videoOnDefault?: boolean;
   simulcast?: boolean;
