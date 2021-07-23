@@ -45,7 +45,9 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@tailwindcss/aspect-ratio": "^0.2.1",
+    "@types/css-global-variables": "^3.0.1",
     "catalyst-client": "Catalyst-Video/catalyst-client#master",
+    "css-global-variables": "^3.0.2",
     "livekit-client": "^0.9.7",
     "lodash.debounce": "^4.0.8",
     "plain-draggable": "^2.5.14",
@@ -53,8 +55,7 @@
     "react-intersection-observer": "^8.32.0",
     "react-scripts": "^1.1.5",
     "react-tiny-popover": "^6.0.5",
-    "ts-debounce": "^3.0.0",
-    "css-global-variables": "^3.0.2"
+    "ts-debounce": "^3.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-strip": "^2.0.0",

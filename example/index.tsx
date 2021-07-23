@@ -22,7 +22,11 @@ const GeneralTest = () => {
       dark={false}
       audioOnDefault={false}
       name={(Math.random() * 1000).toString().slice(0, 4)}
-      onEndCall={() => console.log("end")}
+      theme={{
+        primary: '#50c878',
+        primaryDark: '#50c878',
+      }}
+      onEndCall={() => console.log('end')}
     />
   );
 };
@@ -46,7 +50,7 @@ const HoursTest = () => {
         style={{ position: 'absolute', bottom: 0, left: 0, zIndex: 10000 }}
         onClick={() => setShowVideoCall(!showVideoCall)}
       >
-       Toggle
+        Toggle
       </button>
       <img
         src="https://user-images.githubusercontent.com/47064842/126739397-a87e0fa1-46c8-4920-91c7-5f1ff9924048.png"
@@ -74,7 +78,10 @@ const HoursTest = () => {
               appId={'testUid'}
               dark={false}
               audioOnDefault={false}
-              theme="green"
+              theme={{
+                primary: '#50c878',
+                primaryDark: '#50c878',
+              }}
               onEndCall={() => setShowVideoCall(false)}
             />
           </div>

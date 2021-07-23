@@ -2,8 +2,7 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Popover } from 'react-tiny-popover';
-import React, { Ref, RefObject, useState } from "react";
-import {useFullScreenHandle } from "react-full-screen";
+import React, {  RefObject, useState } from "react";
 
 export interface Device {
   label: string;
@@ -45,7 +44,6 @@ export const ToolbarButton = ({
          parentRef?: RefObject<HTMLDivElement>
        }) => {
          const [deviceMenu, setDeviceMenu] = useState(false);
-         const fs = useFullScreenHandle();
 
          const handleDeviceClick = (id: Device) => {
            if (onDeviceClick) {
@@ -58,9 +56,9 @@ export const ToolbarButton = ({
            <Popover
              isOpen={deviceMenu}
              positions={['top', 'right']}
-             reposition={true}
+             reposition={false}
              onClickOutside={() => setDeviceMenu(false)}
-             containerStyle={{ zIndex: '40' }}
+             containerStyle={{ zIndex: '40', position: 'absolute', top: '0', left: '0' }}
              containerParent={parentRef?.current ?? document.body}
              content={
                <div>

@@ -58,6 +58,7 @@ import { useEffect } from "react";
      enableAudio = true;
    }
 
+
    const [videoTrack, setVideoTrack] = useState<LocalVideoTrack>();
    const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
    const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
