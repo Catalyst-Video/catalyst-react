@@ -10,13 +10,13 @@ import { useEffect } from "react";
 const CatalystChat = ({
   room,
   appId,
-  dark,
-  theme,
-  fade,
   name,
+  theme,
+  dark,
+  fade,
   audioOnDefault,
   videoOnDefault,
-  simcast,
+  simulcast,
   onEndCall,
 }: CatalystChatProps) => {
   const [ready, setReady] = useState(true);
@@ -74,7 +74,7 @@ const CatalystChat = ({
             meta={{
               audioEnabled: audioOnDefault ?? true,
               videoEnabled: videoOnDefault ?? true,
-              simulcast: simcast ?? true,
+              simulcast: simulcast ?? true,
             }}
             fade={fade ?? 600}
             onEndCall={onEndCall}

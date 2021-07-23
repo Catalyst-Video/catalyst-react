@@ -7,7 +7,7 @@ export interface CatalystChatProps {
   name?: string;
   audioOnDefault?: boolean;
   videoOnDefault?: boolean;
-  simcast?: boolean;
+  simulcast?: boolean;
   onEndCall: () => void;
 }
 
