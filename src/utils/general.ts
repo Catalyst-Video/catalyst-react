@@ -65,6 +65,7 @@ export function setThemeColor(theme: {
        }): void {
   let cssVar = new CSSGlobalVariables();
   // light
+  // TODO: set dark modes to a lighter color by default
          switch (theme.primary) {
            case 'red':
              cssVar.ctwPrimary = '#EF4444';

@@ -7,6 +7,7 @@ import './styles/tailwind.output.css';
 import VideoChat from "./views/VideoChatView";
 import { useEffect } from "react";
 import { setThemeColor } from "./utils/general";
+import { DEFAULT_AUTOFADE, DEFAULT_THEME } from "./utils/globals";
 
 const CatalystChat = ({
   room,
@@ -49,10 +50,7 @@ const CatalystChat = ({
       });
       // set global theme
     setThemeColor(
-      theme ?? {
-        primary: 'teal',
-        primaryDark: 'cyan',
-      }
+      theme ?? DEFAULT_THEME
     );
 
   }, []);
@@ -87,7 +85,7 @@ const CatalystChat = ({
               videoEnabled: videoOnDefault ?? true,
               simulcast: simulcast ?? true,
             }}
-            fade={fade ?? 600}
+            fade={fade ?? DEFAULT_AUTOFADE}
             onEndCall={onEndCall}
           />
         ) : null}
