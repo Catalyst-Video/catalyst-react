@@ -7,16 +7,25 @@ import './styles/tailwind.output.css';
 import VideoChat from "./views/VideoChat";
 import { useEffect } from "react";
 
-const CatalystChat = ({ room, appId, dark, theme, fade, name, audioOnDefault, videoOnDefault }: CatalystChatProps) => {
+const CatalystChat = ({
+  room,
+  appId,
+  dark,
+  theme,
+  fade,
+  name,
+  audioOnDefault,
+  videoOnDefault,
+  simcast,
+  onEndCall,
+}: CatalystChatProps) => {
   const [ready, setReady] = useState(true);
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState('');
   const [userName, setUserName] = useState(name ?? 'test');
 
   useEffect(() => {
-    let sampname = prompt(`Please enter your name:`, 'testName')
-
     fetch(
-      `https://pricey-somber-silence.glitch.me/token?participantName=${sampname}&customerUid=${appId}&roomName=${room}`,
+      `https://pricey-somber-silence.glitch.me/token?participantName=${userName}&customerUid=${appId}&roomName=${room}`,
       {
         method: 'GET',
         headers: {
@@ -26,14 +35,10 @@ const CatalystChat = ({ room, appId, dark, theme, fade, name, audioOnDefault, vi
       }
     )
       .then(response => {
-        // console.log(response);
         if (response.status === 200) {
           response.json().then(json => {
             setToken(json.token);
-            // console.log(json.token)
           });
-          // console.log(response.body)
-          // setToken(response.body.);
         }
       })
       .catch(err => {
@@ -41,44 +46,42 @@ const CatalystChat = ({ room, appId, dark, theme, fade, name, audioOnDefault, vi
       });
   }, []);
 
-    return (
+  return (
+    <div
+      id="ctw"
+      ref={ref => {
+        // dynamically make Catalyst work properly if there is no parent component
+        if (ref && ref.parentNode?.parentNode?.nodeName === 'BODY') {
+          ref.style.position = 'fixed';
+          let ss = document.createElement('style');
+          document.head.appendChild(ss);
+          ss?.sheet?.insertRule(
+            'html, body { margin: 0px; padding: 0px; height: 100%; }'
+          );
+        }
+      }}
+    >
       <div
-        id="ctw"
-        ref={ref => {
-          // dynamically make Catalyst work properly if there is no parent component
-          if (ref && ref.parentNode?.parentNode?.nodeName === 'BODY') {
-            ref.style.position = 'fixed';
-            let ss = document.createElement('style');
-            document.head.appendChild(ss);
-            ss?.sheet?.insertRule(
-              'html, body { margin: 0px; padding: 0px; height: 100%; }'
-            );
-          }
-        }}
+        id="dark-wrapper"
+        className={`${
+          dark ? 'dark' : ''
+        } h-full w-full m-0 p-0 overflow-hidden max-h-screen max-w-screen box-border`}
       >
-        <div
-          id="dark-wrapper"
-          className={`${
-            dark ? 'dark' : ''
-          } h-full w-full m-0 p-0 overflow-hidden max-h-screen max-w-screen box-border`}
-        >
-          {ready ? (
-            <VideoChat
-              token={token}
-              theme={theme ?? 'teal'}
-              meta={{
-                audioEnabled: true,
-                videoEnabled: true,
-                simulcast: true,
-              }}
-              fade={fade ?? 600}
-              audioOnDefault={audioOnDefault ?? true}
-              videoOnDefault={videoOnDefault ?? true}
-            />
-          ) : null}
-        </div>
+        {ready ? (
+          <VideoChat
+            token={token}
+            theme={theme ?? 'teal'}
+            meta={{
+              audioEnabled: audioOnDefault ?? true,
+              videoEnabled: videoOnDefault ?? true,
+              simulcast: simcast ?? true,
+            }}
+            fade={fade ?? 600}
+            onEndCall={onEndCall}
+          />
+        ) : null}
       </div>
-    );
-
+    </div>
+  );
 };
 export default CatalystChat;

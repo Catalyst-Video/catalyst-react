@@ -1,8 +1,8 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Popover } from 'react-tiny-popover';
 import React, { useState } from "react";
-import { Popover } from "react-tiny-popover";
 
 export interface Device {
   label: string;

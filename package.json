@@ -1,10 +1,10 @@
 {
   "name": "catalyst-vc-react",
-  "version": "2.0.3",
+  "version": "3.0.0",
   "author": "@GoldinGuy seth@goldin.io & @JoeSemrai josephsemrai@gmail.com",
   "private": false,
   "license": "AGPL-3.0-only",
-  "description": "An awesome video-chat react component that can be added to your site in fewer than 5 lines of code",
+  "description": "Reliable and scalable open-source video chat in a few lines of code",
   "repository": "https://github.com/Catalyst-Video/catalyst-react",
   "bugs": "https://github.com/Catalyst-Video/catalyst-react/issues",
   "keywords": [
@@ -13,7 +13,11 @@
     "react",
     "free video chat",
     "socket-io",
-    "webrtc"
+    "webrtc",
+    "catalyst",
+    "livekit",
+    "video-chat",
+    "embed video chat"
   ],
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -26,9 +30,6 @@
   "scripts": {
     "prestart:tailwind": "npx tailwindcss-cli@latest build src/styles/tailwind.css -o src/styles/tailwind.output.css -w",
     "prebuild:tailwind:": "npx tailwindcss-cli@latest build src/styles/tailwind.css -o src/styles/tailwind.output.css",
-    "watch:tw": "postcss src/styles/tailwind.css -o src/styles/tailwind.output.css -w",
-    "prestart:tw": "postcss src/styles/tailwind.css -o src/styles/tailwind.output.css",
-    "build:tw": "postcss src/styles/tailwind.css -o src/styles/tailwind.output.css",
     "prestart": "npm run prestart:tailwind",
     "prebuild": "npm run prebuild:tailwind",
     "start": "tsdx watch",
@@ -44,18 +45,14 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@tailwindcss/aspect-ratio": "^0.2.1",
-    "catalyst-react": "github:Catalyst-Video/livekit-react#master",
-    "detectrtc": "^1.4.1",
+    "catalyst-client": "Catalyst-Video/catalyst-client#master",
     "livekit-client": "^0.9.7",
     "lodash.debounce": "^4.0.8",
     "plain-draggable": "^2.5.14",
-    "postcss-cli": "^8.3.1",
-    "postcss-nesting": "^7.0.1",
-    "react-beautiful-dnd": "^13.1.0",
-    "react-draggable": "^4.4.3",
     "react-full-screen": "^1.0.1",
+    "react-intersection-observer": "^8.32.0",
     "react-scripts": "^1.1.5",
-    "socket.io-client": "^2.3.1",
+    "react-tiny-popover": "^6.0.5",
     "ts-debounce": "^3.0.0"
   },
   "devDependencies": {

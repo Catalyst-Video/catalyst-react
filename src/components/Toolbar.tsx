@@ -13,7 +13,7 @@ import {
   Room,
   Track,
   VideoPresets,
-} from "livekit-client";
+} from "catalyst-client";
 import React, { ReactElement, useState } from "react";
 import { useParticipant } from "../hooks/useParticipant";
 import { AudioSelectButton } from "./AudioSelectButton";

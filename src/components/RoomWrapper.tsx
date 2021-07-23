@@ -5,8 +5,8 @@ import {
   Room,
   RoomEvent,
   TrackPublication,
-} from "livekit-client";
-import { VideoQuality } from "livekit-client/dist/proto/livekit_rtc";
+} from "catalyst-client";
+import { VideoQuality } from "catalyst-client/dist/proto/livekit_rtc";
 import React, { ReactElement, Ref, useEffect, useRef, useState } from "react";
 import MemberView from "./MemberView";
 import { ScreenShareView } from "./ScreenShareView";

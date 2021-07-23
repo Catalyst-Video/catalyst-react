@@ -7,6 +7,8 @@ export interface CatalystChatProps {
   name?: string;
   audioOnDefault?: boolean;
   videoOnDefault?: boolean;
+  simcast?: boolean;
+  onEndCall: () => void;
 }
 
 export interface RoomMetaData {

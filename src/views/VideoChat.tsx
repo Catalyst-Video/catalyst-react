@@ -1,6 +1,5 @@
 import { faArrowsAlt, faCompressAlt, faExpand, faExpandAlt, faExpandArrowsAlt, faTh, faThLarge, faUserFriends } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { LiveKitRoom } from 'catalyst-react';
 import {
   connect,
   RoomEvent,
@@ -17,7 +16,7 @@ import {
   ConnectOptions,
   TrackPublishOptions,
   createLocalTracks,
-} from 'livekit-client';
+} from 'catalyst-client';
 import React, { useEffect, useRef, useState } from 'react';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { RoomMetaData } from '../typings/interfaces';
@@ -34,20 +33,18 @@ const VideoChat = ({
   theme,
   meta,
   fade,
-  audioOnDefault,
-  videoOnDefault,
+  onEndCall,
 }: {
   token: string;
   theme: string;
   meta: RoomMetaData;
   fade: number;
-  audioOnDefault: boolean;
-  videoOnDefault: boolean
+  onEndCall: () => void;
 }) => {
   const fsHandle = useFullScreenHandle();
   const [numParticipants, setNumParticipants] = useState(0);
-  const roomState = useRoom();
   const [speakerMode, setSpeakerMode] = useState(false);
+  const roomState = useRoom();
 
   const toolbarRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
@@ -61,8 +58,8 @@ const VideoChat = ({
     console.log(room);
 
     const tracks = await createLocalTracks({
-      audio: audioOnDefault,
-      video: videoOnDefault,
+      audio: meta.audioEnabled,
+      video: meta.videoEnabled,
     });
     tracks.forEach(track => {
       room.localParticipant.publishTrack(track);
@@ -72,19 +69,22 @@ const VideoChat = ({
   useEffect(() => {
     if (token && token.length > 0) {
       // 'wss://demo.livekit.io'
-      roomState.connect('wss://infra.catalyst.chat', token, meta).then(room => {
-        if (!room) {
-          return;
-        }
-        if (onConnected) {
-          onConnected(room);
-        }
-        return () => {
-          room.disconnect();
-        };
-      }).catch(err => {
-        console.error(err);
-      });
+      roomState
+        .connect('wss://infra.catalyst.chat', token, meta)
+        .then(room => {
+          if (!room) {
+            return;
+          }
+          if (onConnected) {
+            onConnected(room);
+          }
+          return () => {
+            room.disconnect();
+          };
+        })
+        .catch(err => {
+          console.error(err);
+        });
     }
   }, [token]);
 
@@ -92,7 +92,9 @@ const VideoChat = ({
     setNumParticipants(room.participants.size + 1);
   };
 
-  const onLeave = () => {};
+  const onLeave = () => {
+    onEndCall()
+  };
 
   // animate toolbar & header fadeIn/Out
   useEffect(() => {

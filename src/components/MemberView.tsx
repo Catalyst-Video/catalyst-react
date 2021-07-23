@@ -9,10 +9,9 @@ import {
   RemoteTrackPublication,
   Track,
   TrackPublication,
-} from "livekit-client";
-import { VideoQuality } from "livekit-client/dist/proto/livekit_rtc";
+} from "catalyst-client";
+import { VideoQuality } from "catalyst-client/dist/proto/livekit_rtc";
 import React, { CSSProperties, ReactElement, useEffect, useRef, useState } from "react";
-import AspectRatio from "react-aspect-ratio";
 import { useInView } from "react-intersection-observer";
 import { useParticipant } from "../hooks/useParticipant";
 import VideoWrapper from "./VideoWrapper";
@@ -49,8 +48,6 @@ const MemberView = ({
   const [callbackTimeout, setCallbackTimeout] = useState<
     ReturnType<typeof setTimeout>
   >();
-
-  // console.log('render child video', height, width)
 
   // when video is hidden, disable it to optimize for bandwidth
   useEffect(() => {
@@ -121,8 +118,7 @@ const MemberView = ({
   }
 
   return (
-    // <AspectRatio ratio={16 / 9} className="overflow-hidden">
-    <div className={classes}>
+    <div className={`m-1 ${classes}`}>
       <div
         ref={ref}
         className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-xl ${
@@ -159,8 +155,6 @@ const MemberView = ({
         </div>
       </div>
     </div>
-
-    // </AspectRatio>
   );
 };
 export default MemberView;

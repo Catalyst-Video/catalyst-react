@@ -1,4 +1,4 @@
-import { Track } from "livekit-client";
+import { Track } from "catalyst-client";
 import React, { useEffect, useRef } from "react";
 import { Property } from 'csstype';
 

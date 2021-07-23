@@ -2,52 +2,84 @@ import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import CatalystChat from '../dist/index';
+import Draggable from 'react-draggable'; 
 
 const App = () => {
-  const [showVideoCall, setShowVideoCall] = React.useState(true);
 
   return (
     <>
-      {/* <button
-        style={{ position: 'absolute', top: 0, left: 0, zIndex: 10000 }}
-        onClick={() => setShowVideoCall(!showVideoCall)}
-      >
-        toggle on
-      </button> */}
-      {showVideoCall ? (
-        <WrapperComp
-          sessionKey="TestingGround"
-          setShowVideoCall={setShowVideoCall}
-        />
-      ) : (
-        ''
-      )}
+      <GeneralTest />
+      {/* <HoursTest /> */}
     </>
   );
 };
 
-const WrapperComp = ({
-  sessionKey,
-  setShowVideoCall,
-}: {
-  sessionKey: string;
-  setShowVideoCall: Function;
-}) => {
+const GeneralTest = () => {
   return (
-    // <div style={{ width: '100vw', height: '100vh', background: 'red' }}>
-    //   <div
-    //     style={{
-    //       width: '70vw',
-    //       height: '70vh',
-    //       top: '50px',
-    //       left: '50px',
-    //       position: 'absolute',
-    //     }}
-    //   >
-    //name={'testName'}
-    <CatalystChat room={'testRoom'} appId={'testUid'} dark={false} />
-    //   </div>
-    // </div>
+      <CatalystChat
+        room={'testRoom'}
+        appId={'testUid'}
+        dark={false}
+        audioOnDefault={false}
+        // onEndCall={() => setShowVideoCall(false)}
+      />
+  );
+};
+
+
+const HoursTest = () => {
+  const [showVideoCall, setShowVideoCall] = React.useState(true);
+  
+  return (
+    <div
+      style={{
+        width: '100vw',
+        height: '100vh',
+        background: 'white',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+      }}
+    >
+      <button
+        style={{ position: 'absolute', bottom: 0, left: 0, zIndex: 10000 }}
+        onClick={() => setShowVideoCall(!showVideoCall)}
+      >
+       Toggle
+      </button>
+      <img
+        src="https://user-images.githubusercontent.com/47064842/126739397-a87e0fa1-46c8-4920-91c7-5f1ff9924048.png"
+        alt="hours"
+        style={{
+          height: '100%',
+          width: '100%',
+        }}
+      />{' '}
+      {showVideoCall && (
+        <Draggable bounds="parent">
+          <div
+            style={{
+              width: '40vw',
+              height: '60vh',
+              bottom: '40px',
+              right: '40px',
+              position: 'absolute',
+              overflow: 'hidden',
+              borderRadius: 8,
+            }}
+          >
+            <CatalystChat
+              room={'testRoom'}
+              appId={'testUid'}
+              dark={false}
+              audioOnDefault={false}
+              theme="green"
+              onEndCall={() => setShowVideoCall(false)}
+            />
+          </div>
+        </Draggable>
+      )}
+    </div>
   );
 };
 
