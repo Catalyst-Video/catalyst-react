@@ -2,105 +2,92 @@ import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import CatalystChat from '../dist/index';
+import Draggable from 'react-draggable'; 
 
 const App = () => {
-  const [showVideoCall, setShowVideoCall] = React.useState(true);
 
   return (
     <>
-      {/* <button
-        style={{ position: 'absolute', top: 0, left: 0, zIndex: 10000 }}
-        onClick={() => setShowVideoCall(!showVideoCall)}
-      >
-        toggle on
-      </button> */}
-      {showVideoCall ? (
-        <WrapperComp
-          sessionKey="TestingGround"
-          setShowVideoCall={setShowVideoCall}
-        />
-      ) : (
-        ''
-      )}
+      <GeneralTest />
+      {/* <HoursTest /> */}
     </>
   );
 };
 
-const WrapperComp = ({
-  sessionKey,
-  setShowVideoCall,
-}: {
-  sessionKey: string;
-  setShowVideoCall: Function;
-}) => {
+const GeneralTest = () => {
   return (
-    // <div style={{ width: '100vw', height: '100vh', background: 'red' }}>
-    //   <div
-    //     style={{
-    //       width: '70vw',
-    //       height: '70vh',
-    //       top: '50px',
-    //       left: '50px',
-    //       position: 'absolute',
-    //     }}
-    //   >
     <CatalystChat
-      sessionKey={sessionKey}
-      uniqueAppId="demo1"
-      // disableSetupRoom={true}
-      defaults={{
-        audioOn: true,
-        videoOn: true,
-        showChatArea: false,
+      room={'testRoom'}
+      appId={'testUid'}
+      // dark={true}
+      audioOnDefault={false}
+      // name={(Math.random() * 1000).toString().slice(0, 4)}
+      theme={{
+        primary: '#50c878',
+        primaryDark: '#50c878',
       }}
-      showSetNameBox={true}
-      name={'USER_NAME'}
-      // disableLocalVidDrag={true}
-      // alwaysBanner={true}
-      onAddPeer={() => console.log('peer added')}
-      onStartCall={() => console.log('on start call')}
-      onRemovePeer={() => console.log('on remove peer')}
-      onEndCall={() => setShowVideoCall(false)}
-      onSubmitLog={log => {
-        console.log('received: ' + log);
-      }}
-      themeColor="cyan"
-      // hidden={{ chat: true }}
-      disableSetupRoom={true}
-      //  darkModeDefault={true}
-      // disableRedIndicators={false}
-      // darkModeDefault={true}
-      // cstmOptionBtns={[
-      //   {
-      //     id: 'test',
-      //     tooltip: 'Terms of Service',
-      //     onClick: () => {
-      //       window.open('https://readtogetheronline.com/tos/', '_blank');
-      //     },
-      //     fontAwesomeIcon: ['fas', 'info-circle'],
-      //   },
-      // ]}
-      // cstmWelcomeMsg={
-      //   <>
-      //     <span>Room ready! Waiting for others to join with session key </span>
-      //     <strong>{'Bob'}</strong>
-      //   </>
-      // }
-      // themeColor="green"
-      // cstmOptionBtns={[
-      //   <div className="ct-btn-container">
-      //     <button
-      //       className="ct-hover-btn ct-tooltip ct-not-selectable"
-      //       onClick={() => console.log('call ended')}
-      //     >
-      //       <FontAwesomeIcon icon={faSync} />
-      //       <span>Synchronize</span>
-      //     </button>
-      //   </div>,
-      // ]}
+      onEndCall={() => console.log('end')}
     />
-    //   </div>
-    // </div>
+  );
+};
+
+
+const HoursTest = () => {
+  const [showVideoCall, setShowVideoCall] = React.useState(true);
+  
+  return (
+    <div
+      style={{
+        width: '100vw',
+        height: '100vh',
+        background: 'white',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+      }}
+    >
+      <button
+        style={{ position: 'absolute', bottom: 0, left: 0, zIndex: 10000 }}
+        onClick={() => setShowVideoCall(!showVideoCall)}
+      >
+        Toggle
+      </button>
+      <img
+        src="https://user-images.githubusercontent.com/47064842/126739397-a87e0fa1-46c8-4920-91c7-5f1ff9924048.png"
+        alt="hours"
+        style={{
+          height: '100%',
+          width: '100%',
+        }}
+      />{' '}
+      {showVideoCall && (
+        <Draggable bounds="parent">
+          <div
+            style={{
+              width: '40vw',
+              height: '60vh',
+              bottom: '40px',
+              right: '40px',
+              position: 'absolute',
+              overflow: 'hidden',
+              borderRadius: 8,
+            }}
+          >
+            <CatalystChat
+              room={'testRoom'}
+              appId={'testUid'}
+              dark={false}
+              audioOnDefault={false}
+              theme={{
+                primary: '#50c878',
+                primaryDark: '#50c878',
+              }}
+              onEndCall={() => setShowVideoCall(false)}
+            />
+          </div>
+        </Draggable>
+      )}
+    </div>
   );
 };
 

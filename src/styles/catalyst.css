@@ -1,3 +1,9 @@
+/* :root {
+  --color-primary: #5c6ac4;
+  --color-secondary: #ecc94b;
+} */
+
+/* global catalyst */
 #ctw {
   margin: 0px; 
   padding: 0px;
@@ -5,6 +11,13 @@
   width: 100%;
    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; 
     line-height: 1.5; 
+}
+
+/* grid container  */
+#ctw .container {
+  box-sizing: border-box;
+  height: 100vh;
+  padding: 32px;
 }
 
 
@@ -64,25 +77,39 @@
   }
 }
 
-/* entrance animation */
-/* .c-tw #video-chat {
-  -webkit-animation: fadeIn ease-in 1;
-  -moz-animation: fadeIn ease-in 1;
-  animation: fadeIn ease-in 1;
-  -webkit-animation-fill-mode: forwards;
-  -moz-animation-fill-mode: forwards;
-  animation-fill-mode: forwards;
-  -webkit-animation-duration: 0.3s;
-  -moz-animation-duration: 0.3s;
-  animation-duration: 0.3s;
-} */
+@keyframes show {
+    0% {
+        opacity: 0;
+        transform: scale(0.4) translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
 
-/* draggable local video */
-#ctw #local-vid-wrapper {
-  width: 15%;
-  max-height: 100px;
-  min-width: 100px;
-} 
+#ctw .no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+#ctw .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+#ctw .bullet-none {
+  list-style-type: none !important;
+  padding-inline: 0;
+}
+
+#ctw #local-vid-wrapper video {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
+#ctw  video#local-video  {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
 
 /* show tooltips on hover */
 #ctw button.tooltip:hover span {
@@ -110,6 +137,12 @@
   #ctw button:hover span {
     display: none !important;
   }
+}
+
+#ctw .popout-drag {
+  transition-property: 'tranform';
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in;
 }
 
 

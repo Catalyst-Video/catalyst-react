@@ -3437,11 +3437,10 @@ var nouns = [
 ];
 
 
-export default function genSessionKey(): string {
+export default function genRandomName(): string {
 var adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
 var noun = nouns[Math.floor(Math.random() * nouns.length)];
 noun = noun.charAt(0).toUpperCase() + noun.substring(1);
 adjective = adjective.charAt(0).toUpperCase() + adjective.substring(1);
-
-	return adjective;
+return adjective + noun;
 };
