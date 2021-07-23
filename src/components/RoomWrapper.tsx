@@ -180,7 +180,7 @@ const RoomWrapper = ({
          <div
            id="remote-vid-wrapper"
            ref={vidRef}
-           className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border`}
+           className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border animate-fade-in-left`}
          >
            {sharedScreens &&
              sharedScreens.map((s, i) => {
@@ -232,7 +232,7 @@ const RoomWrapper = ({
          </div>
        )}
        {speakerMode && (
-         <div className="flex flex-col sm:flex-row z-20 py-10 px-1 w-full lg:px-10 xl:px-20 justify-center sm:justify-around">
+         <div className="flex flex-col sm:flex-row z-20 py-10 px-1 w-full lg:px-10 xl:px-20 justify-center sm:justify-around animate-fade-in-left">
            <div className="flex flex-col sm:w-4/5 p-1 justify-center content-center">
              {!mainVid || 'identity' in mainVid ? (
                <MemberView

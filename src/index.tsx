@@ -8,6 +8,7 @@ import VideoChat from "./views/VideoChatView";
 import { useEffect } from "react";
 import { setThemeColor } from "./utils/general";
 import { DEFAULT_AUTOFADE, DEFAULT_THEME } from "./utils/globals";
+import genRandomName from "./utils/name_gen";
 
 const CatalystChat = ({
   room,
@@ -23,7 +24,7 @@ const CatalystChat = ({
 }: CatalystChatProps) => {
   const [ready, setReady] = useState(true);
   const [token, setToken] = useState('');
-  const [userName, setUserName] = useState(name ?? 'test');
+  const [userName, setUserName] = useState(name ?? genRandomName());
 
   useEffect(() => {
     // obtain user token

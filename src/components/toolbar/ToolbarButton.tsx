@@ -56,9 +56,9 @@ export const ToolbarButton = ({
            <Popover
              isOpen={deviceMenu}
              positions={['top', 'right']}
-             reposition={false}
+             reposition={true}
              onClickOutside={() => setDeviceMenu(false)}
-             containerStyle={{ zIndex: '40', position: 'absolute', top: '0', left: '0' }}
+             containerStyle={{ zIndex: '40' }}
              containerParent={parentRef?.current ?? document.body}
              content={
                <div>
@@ -87,7 +87,9 @@ export const ToolbarButton = ({
                <button
                  disabled={disabled}
                  className={`rounded-full w-16 h-16 flex justify-center items-center ${
-                   bgColor ? bgColor : 'bg-gray-600 hover:bg-gray-500'
+                   bgColor
+                     ? bgColor
+                     : 'bg-gray-600 dark:bg-gray-700 hover:bg-gray-500 dark:hover:bg-gray-600'
                  } focus:outline-none focus:border-0 `}
                  onClick={onClick}
                >
@@ -106,7 +108,9 @@ export const ToolbarButton = ({
                  <button
                    disabled={disabled}
                    className={`absolute z-10 -right-1 -bottom-1 ${
-                     bgColor ? bgColor : 'bg-gray-600 hover:bg-gray-500'
+                     bgColor
+                       ? bgColor
+                       : 'bg-gray-600 dark:bg-gray-700 hover:bg-gray-500 dark:hover:bg-gray-600'
                    }  rounded-full border-4 border-gray-700 h-6 w-6 flex justify-center items-center focus:outline-none focus:border-0 `}
                    onClick={() => setDeviceMenu(!deviceMenu)}
                  >

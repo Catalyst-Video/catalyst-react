@@ -81,12 +81,34 @@ module.exports = {
             transform: 'translateY(10px)',
           },
         },
+        'fade-in-right': {
+          from: {
+            opacity: '0',
+            transform: 'translateX(20px)',
+          },
+          to: {
+            opacity: '1',
+            transform: 'translateX(0px)',
+          },
+        },
+        'fade-in-left': {
+          from: {
+            opacity: '0',
+            transform: 'translateX(-20px)',
+          },
+          to: {
+            opacity: '1',
+            transform: 'translateX(0px)',
+          },
+        },
       },
       animation: {
         'fade-in-down': 'fade-in-down 0.35s ease-out',
         'fade-out-down': 'fade-out-down 0.35s ease-out',
         'fade-in-up': 'fade-in-up 0.35s ease-out',
         'fade-out-up': 'fade-out-up 0.35s ease-out',
+        'fade-in-right': 'fade-in-right 0.35s ease-out',
+        'fade-in-left': 'fade-in-left 0.35s ease-out',
       },
     },
   },

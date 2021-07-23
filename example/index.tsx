@@ -19,9 +19,9 @@ const GeneralTest = () => {
     <CatalystChat
       room={'testRoom'}
       appId={'testUid'}
-      dark={false}
+      // dark={true}
       audioOnDefault={false}
-      name={(Math.random() * 1000).toString().slice(0, 4)}
+      // name={(Math.random() * 1000).toString().slice(0, 4)}
       theme={{
         primary: '#50c878',
         primaryDark: '#50c878',

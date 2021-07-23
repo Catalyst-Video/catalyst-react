@@ -167,7 +167,9 @@ import { useEffect } from "react";
            label={screenPub?.track ? 'Stop sharing' : 'Share screen'}
            icon={screenPub?.track ? faStop : faDesktop}
            bgColor={
-             screenPub?.track ? `bg-primary` : 'bg-gray-600 hover:bg-gray-500'
+             screenPub?.track
+               ? `bg-primary`
+               : 'bg-gray-600 hover:bg-gray-500 dark:bg-gray-700 dark:hover:bg-gray-600'
            }
            onClick={
              screenPub?.track

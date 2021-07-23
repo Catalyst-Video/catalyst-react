@@ -29,7 +29,7 @@
   },
   "scripts": {
     "prestart:tailwind": "npx tailwindcss-cli@latest build src/styles/tailwind.css -o src/styles/tailwind.output.css -w",
-    "prebuild:tailwind:": "npx tailwindcss-cli@latest build src/styles/tailwind.css -o src/styles/tailwind.output.css",
+    "prebuild:tailwind": "npx tailwindcss-cli@latest build src/styles/tailwind.css -o src/styles/tailwind.output.css",
     "prestart": "npm run prestart:tailwind",
     "prebuild": "npm run prebuild:tailwind",
     "start": "tsdx watch",

@@ -38,7 +38,7 @@ const VidDeviceBtn = ({
   };
 
   return (
-    <div ref={vidBtnRef} className="inline relative">
+    <div ref={vidBtnRef} className="inline">
       <ToolbarButton
         label={isEnabled ? 'Disable Video' : 'Enable Video'}
         icon={isEnabled ? faVideo : faVideoSlash}
