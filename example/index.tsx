@@ -22,7 +22,7 @@ const GeneralTest = () => {
       dark={false}
       audioOnDefault={false}
       name={(Math.random() * 1000).toString().slice(0, 4)}
-      // onEndCall={() => setShowVideoCall(false)}
+      onEndCall={() => console.log("end")}
     />
   );
 };

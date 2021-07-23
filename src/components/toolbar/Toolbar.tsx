@@ -28,7 +28,6 @@ import { useEffect } from "react";
    enableAudio,
    enableVideo,
    onLeave,
-   theme,
    setSpeakerMode,
  }: {
    room: Room;
@@ -36,7 +35,6 @@ import { useEffect } from "react";
    enableAudio?: boolean;
    enableVideo?: boolean;
    onLeave?: (room: Room) => void;
-   theme: string;
    setSpeakerMode: Function
  }) => {
    const { publications, isMuted, unpublishTrack } = useParticipant(
@@ -168,7 +166,7 @@ import { useEffect } from "react";
            label={screenPub?.track ? 'Stop sharing' : 'Share screen'}
            icon={screenPub?.track ? faStop : faDesktop}
            bgColor={
-             screenPub?.track ? `bg-${theme}` : 'bg-gray-600 hover:bg-gray-500'
+             screenPub?.track ? `bg-primary` : 'bg-gray-600 hover:bg-gray-500'
            }
            onClick={
              screenPub?.track

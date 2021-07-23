@@ -8,6 +8,8 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
+    "@types/css-global-variables": "^3.0.1",
+    "g-style": "^1.2.9",
     "react-app-polyfill": "^1.0.0",
     "react-draggable": "^4.4.3"
   },

@@ -30,13 +30,11 @@ import { debounce } from 'ts-debounce';
 
 const VideoChat = ({
   token,
-  theme,
   meta,
   fade,
   onEndCall,
 }: {
   token: string;
-  theme: string;
   meta: RoomMetaData;
   fade: number;
   onEndCall: () => void;
@@ -156,7 +154,7 @@ const VideoChat = ({
             className="animate-fade-in-down"
             ref={headerRef}
           >
-            <HeaderLogo alwaysBanner={false} theme={theme} />
+            <HeaderLogo alwaysBanner={false} />
             <div className="absolute right-3 sm:right-5 top-10 sm:top-5 flex z-30">
               <FontAwesomeIcon
                 icon={faUserFriends}
@@ -198,7 +196,6 @@ const VideoChat = ({
               <RoomWrapper
                 roomState={roomState}
                 onLeave={onLeave}
-                theme={theme}
                 speakerMode={speakerMode}
                 setSpeakerMode={setSpeakerMode}
               />
@@ -210,7 +207,6 @@ const VideoChat = ({
                   <Toolbar
                     room={roomState.room}
                     onLeave={onLeave}
-                    theme={theme}
                     setSpeakerMode={setSpeakerMode}
                   />
                 </div>

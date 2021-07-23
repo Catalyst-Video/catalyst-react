@@ -21,7 +21,6 @@ const MemberView = ({
   width,
   height,
   classes,
-  theme,
   displayName,
   showOverlay,
   quality,
@@ -34,7 +33,6 @@ const MemberView = ({
   width: Property.Width;
   height: Property.Height;
   classes?: string;
-  theme: string;
   showOverlay?: boolean;
   quality?: VideoQuality;
   onMouseEnter?: () => void;
@@ -122,7 +120,7 @@ const MemberView = ({
       <div
         ref={ref}
         className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-xl ${
-          m.isSpeaking ? `ring-4 ring-${theme} ring-opacity-50` : ''
+          m.isSpeaking ? `ring-4 ring-primary ring-opacity-50` : ''
         }`}
         style={{
           height: height,
@@ -139,7 +137,7 @@ const MemberView = ({
             objectFit={objectFit}
           />
         ) : (
-          <div className={`w-full h-full bg-${theme}`} />
+          <div className={`w-full h-full bg-primary`} />
         )}{' '}
         <div className="absolute bottom-0 left-0 flex text-white justify-between p-2 w-full">
           <div className="text-white text-sm not-selectable flex items-center justify-center bg-gray-700 bg-opacity-40 px-2 py-1 rounded-xl">

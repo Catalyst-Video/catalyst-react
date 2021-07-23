@@ -32,13 +32,11 @@ function merge(a1, a2) {
 const RoomWrapper = ({
   roomState,
   onLeave,
-  theme,
   speakerMode,
   setSpeakerMode,
 }: {
   roomState: RoomState;
   onLeave?: (room: Room) => void;
-  theme: string;
   speakerMode: boolean;
   setSpeakerMode: Function
 }) => {
@@ -210,7 +208,6 @@ const RoomWrapper = ({
                  quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
                  onMouseEnter={() => setShowOverlay(true)}
                  onMouseLeave={() => setShowOverlay(false)}
-                 theme={theme}
                  onClick={() => {
                    setMainVid(m);
                    setSpeakerMode(sm => !sm);
@@ -248,7 +245,6 @@ const RoomWrapper = ({
                  quality={VideoQuality.HIGH}
                  onMouseEnter={() => setShowOverlay(true)}
                  onMouseLeave={() => setShowOverlay(false)}
-                 theme={theme}
                  onClick={() => setSpeakerMode(sm => !sm)}
                />
              ) : (
@@ -321,7 +317,6 @@ const RoomWrapper = ({
                      quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
                      onMouseEnter={() => setShowOverlay(true)}
                      onMouseLeave={() => setShowOverlay(false)}
-                     theme={theme}
                      onClick={() => {
                        setMainVid(m);
                        setSpeakerMode(sm => !sm);

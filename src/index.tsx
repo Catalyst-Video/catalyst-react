@@ -6,6 +6,7 @@ import './styles/catalyst.css';
 import './styles/tailwind.output.css';
 import VideoChat from "./views/VideoChatView";
 import { useEffect } from "react";
+import { setThemeColor } from "./utils/general";
 
 const CatalystChat = ({
   room,
@@ -24,6 +25,8 @@ const CatalystChat = ({
   const [userName, setUserName] = useState(name ?? 'test');
 
   useEffect(() => {
+    // obtain user token
+    // TODO: store token as cookie in local storage for pricing
     fetch(
       `https://pricey-somber-silence.glitch.me/token?participantName=${userName}&customerUid=${appId}&roomName=${room}`,
       {
@@ -44,6 +47,14 @@ const CatalystChat = ({
       .catch(err => {
         console.log(err);
       });
+      // set global theme
+    setThemeColor(
+      theme ?? {
+        primary: 'teal',
+        primaryDark: 'cyan',
+      }
+    );
+
   }, []);
 
   return (
@@ -70,7 +81,7 @@ const CatalystChat = ({
         {ready ? (
           <VideoChat
             token={token}
-            theme={theme ?? 'teal'}
+            // theme={theme ?? 'teal'}
             meta={{
               audioEnabled: audioOnDefault ?? true,
               videoEnabled: videoOnDefault ?? true,

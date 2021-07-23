@@ -53,7 +53,8 @@
     "react-intersection-observer": "^8.32.0",
     "react-scripts": "^1.1.5",
     "react-tiny-popover": "^6.0.5",
-    "ts-debounce": "^3.0.0"
+    "ts-debounce": "^3.0.0",
+    "css-global-variables": "^3.0.2"
   },
   "devDependencies": {
     "@rollup/plugin-strip": "^2.0.0",
