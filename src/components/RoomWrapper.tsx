@@ -45,7 +45,7 @@ const RoomWrapper = ({
   const { isConnecting, error, participants: members, room } = roomState;
   const [showOverlay, setShowOverlay] = useState(false);
   const [screens, setNumScreens] = useState<number>(0);
-  const [mainVid, setMainVid] = useState<Participant | RemoteVideoTrack>(members[0]);
+  const [mainVid, setMainVid] = useState<Participant | RemoteVideoTrack>();
   const vidRef = useRef<HTMLDivElement>(null);
   const [vidDims, setVidDims] = useState({
     width: '0px',
@@ -126,10 +126,12 @@ const RoomWrapper = ({
        'load',
        () => {
          resizeWrapper();
-         window.onresize = debouncedResize;
+        //  window.onresize = debouncedResize;
+        window.onresize = resizeWrapper;
        },
        false
      );
+     setMainVid(members[0]);
    }, []);
 
    useEffect(() => {
