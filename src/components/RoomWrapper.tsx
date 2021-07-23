@@ -68,7 +68,7 @@ const RoomWrapper = ({
       (members.length < 1 ? 1 : members.length) +
       screens +
       (members.length < 2 ? 1 : 0);
-      console.log(l)
+      // console.log(l)
     while (i < 5000) {
       let w = area(i, l, width, height, margin);
       if (w === false) {

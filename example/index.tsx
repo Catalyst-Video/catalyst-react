@@ -16,13 +16,14 @@ const App = () => {
 
 const GeneralTest = () => {
   return (
-      <CatalystChat
-        room={'testRoom'}
-        appId={'testUid'}
-        dark={false}
-        audioOnDefault={false}
-        // onEndCall={() => setShowVideoCall(false)}
-      />
+    <CatalystChat
+      room={'testRoom'}
+      appId={'testUid'}
+      dark={false}
+      audioOnDefault={false}
+      name={(Math.random() * 1000).toString().slice(0, 4)}
+      // onEndCall={() => setShowVideoCall(false)}
+    />
   );
 };
 

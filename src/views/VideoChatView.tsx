@@ -113,7 +113,7 @@ const VideoChat = ({
             tClasses?.remove('animate-fade-out-down');
             tClasses?.add('hidden');
             isHidden = true;
-          }, 450);
+          }, 350);
           timedelay = 1;
         }
         timedelay += 1;
