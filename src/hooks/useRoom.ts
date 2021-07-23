@@ -8,7 +8,7 @@ import {
   Room,
   RoomEvent,
   Track,
-} from "catalyst-client";
+} from "livekit-client";
 import { useCallback, useState } from "react";
 
 export interface RoomState {

@@ -5,7 +5,7 @@ import {
   ParticipantEvent,
   Track,
   TrackPublication,
-} from "catalyst-client";
+} from "livekit-client";
 import { useEffect, useState } from "react";
 
 export interface ParticipantState {

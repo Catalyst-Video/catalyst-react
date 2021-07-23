@@ -16,7 +16,7 @@ import {
   ConnectOptions,
   TrackPublishOptions,
   createLocalTracks,
-} from 'catalyst-client';
+} from 'livekit-client';
 import React, { useEffect, useRef, useState } from 'react';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import AudWrapper from '../components/wrapper/AudWrapper';

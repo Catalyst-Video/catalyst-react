@@ -1,4 +1,4 @@
-// import { createLocalVideoTrack, CreateVideoTrackOptions, LocalVideoTrack } from "catalyst-client"
+// import { createLocalVideoTrack, CreateVideoTrackOptions, LocalVideoTrack } from "livekit-client"
 // import React, { useRef, useEffect, useState, ReactElement } from "react"
 // import {
 //   AudioSelectButton,

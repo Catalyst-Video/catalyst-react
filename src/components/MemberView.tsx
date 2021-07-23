@@ -9,8 +9,8 @@ import {
   RemoteTrackPublication,
   Track,
   TrackPublication,
-} from "catalyst-client";
-import { VideoQuality } from "catalyst-client/dist/proto/livekit_rtc";
+} from "livekit-client";
+import { VideoQuality } from "livekit-client/dist/proto/livekit_rtc";
 import React, { CSSProperties, ReactElement, useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useParticipant } from "../hooks/useParticipant";
