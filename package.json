@@ -33,10 +33,10 @@
     "prestart": "npm run prestart:tailwind",
     "prebuild": "npm run prebuild:tailwind",
     "start": "tsdx watch",
-    "build": "npm run prebuild:tailwind && tsdx build",
+    "build": "tsdx build",
     "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint",
-    "prepare": "tsdx build",
+    "prepare": "npm run prebuild && tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
