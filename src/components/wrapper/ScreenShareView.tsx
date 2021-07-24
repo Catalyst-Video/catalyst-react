@@ -1,7 +1,7 @@
 import { faDesktop } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Property } from "csstype";
-import { Track } from "livekit-client";
+import { Track } from "catalyst-client";
 import React from "react";
 import VidWrapper from "./VidWrapper";
 

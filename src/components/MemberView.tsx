@@ -5,15 +5,15 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Property } from "csstype";
 import {
-  Participant,
+  Member,
   RemoteTrackPublication,
   Track,
   TrackPublication,
-} from "livekit-client";
-import { VideoQuality } from "livekit-client/dist/proto/livekit_rtc";
+} from "catalyst-client";
+import { VideoQuality } from "catalyst-client/dist/proto/livekit_rtc";
 import React, { CSSProperties, ReactElement, useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { useParticipant } from "../hooks/useParticipant";
+import { useMember } from "../hooks/useMember";
 import VidWrapper from "./wrapper/VidWrapper";
 
 const MemberView = ({
@@ -28,7 +28,7 @@ const MemberView = ({
   onMouseLeave,
   onClick,
 }: {
-  member: Participant;
+  member: Member;
   displayName?: string;
   width: Property.Width;
   height: Property.Height;
@@ -39,7 +39,7 @@ const MemberView = ({
   onMouseLeave?: () => void;
   onClick?: () => void;
 }) => {
-  const { isLocal, isMuted, subscribedTracks } = useParticipant(m);
+  const { isLocal, isMuted, subscribedTracks } = useMember(m);
   const { ref, inView } = useInView();
   const [videoPub, setVideoPub] = useState<TrackPublication>();
   const [videoEnabled, setVideoEnabled] = useState(true);

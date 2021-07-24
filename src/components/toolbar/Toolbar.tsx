@@ -13,9 +13,9 @@ import {
   Room,
   Track,
   VideoPresets,
-} from "livekit-client";
+} from "catalyst-client";
 import React, { ReactElement, useRef, useState } from "react";
-import { useParticipant } from "../../hooks/useParticipant";
+import { useMember } from "../../hooks/useMember";
 import AudioDeviceBtn from "./AudioDeviceBtn";
 import ToolbarButton from "./ToolbarButton";
 import VidDeviceBtn from './VidDeviceBtn';
@@ -37,8 +37,8 @@ import { useEffect } from "react";
    onLeave?: (room: Room) => void;
    setSpeakerMode: Function
  }) => {
-   const { publications, isMuted, unpublishTrack } = useParticipant(
-     room.localParticipant
+   const { publications, isMuted, unpublishTrack } = useMember(
+     room.localMember
    );
 
    const audioPub = publications.find(val => val.kind === Track.Kind.Audio);
@@ -74,7 +74,7 @@ import { useEffect } from "react";
        }
        createLocalVideoTrack(options)
          .then((track: LocalVideoTrack) => {
-           room.localParticipant.publishTrack(track);
+           room.localMember.publishTrack(track);
          })
          .catch((err: Error) => {
            console.log(err);
@@ -94,7 +94,7 @@ import { useEffect } from "react";
          // track not published
          createLocalAudioTrack(options)
            .then(track => {
-             room.localParticipant.publishTrack(track);
+             room.localMember.publishTrack(track);
            })
            .catch((err: Error) => {
              console.log(err);
@@ -121,7 +121,7 @@ import { useEffect } from "react";
        createLocalAudioTrack({ deviceId: audioDevice.deviceId })
          .then(track => {
            if (audioPub) unpublishTrack(audioPub.track as LocalAudioTrack);
-           room.localParticipant.publishTrack(track);
+           room.localMember.publishTrack(track);
            //  (audioPub as LocalTrackPublication).unmute();
          })
          .catch((err: Error) => {
@@ -135,7 +135,7 @@ import { useEffect } from "react";
        createLocalVideoTrack({ deviceId: videoDevice.deviceId })
          .then((track: LocalVideoTrack) => {
            if (videoPub) unpublishTrack(videoPub.track as LocalVideoTrack);
-           room.localParticipant.publishTrack(track);
+           room.localMember.publishTrack(track);
          })
          .catch((err: Error) => {
            console.log(err);
@@ -184,7 +184,7 @@ import { useEffect } from "react";
                        },
                      })
                      .then((captureStream: MediaStream) => {
-                       room.localParticipant
+                       room.localMember
                          .publishTrack(captureStream.getTracks()[0], {
                            name: 'screen',
                            videoEncoding: {

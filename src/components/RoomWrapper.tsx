@@ -1,12 +1,12 @@
 import {
-  LocalParticipant,
-  Participant,
+  LocalMember,
+  Member,
   RemoteVideoTrack,
   Room,
   RoomEvent,
   TrackPublication,
-} from "livekit-client";
-import { VideoQuality } from "livekit-client/dist/proto/livekit_rtc";
+} from "catalyst-client";
+import { VideoQuality } from "catalyst-client/dist/proto/livekit_rtc";
 import React, { ReactElement, Ref, useEffect, useRef, useState } from "react";
 import MemberView from "./MemberView";
 import ScreenShareWrapper from "./wrapper/ScreenShareView";
@@ -40,10 +40,10 @@ const RoomWrapper = ({
   speakerMode: boolean;
   setSpeakerMode: Function
 }) => {
-  const { isConnecting, error, participants: members, room } = roomState;
+  const { isConnecting, error, members: members, room } = roomState;
   const [showOverlay, setShowOverlay] = useState(false);
   const [screens, setNumScreens] = useState<number>(0);
-  const [mainVid, setMainVid] = useState<Participant | RemoteVideoTrack>();
+  const [mainVid, setMainVid] = useState<Member | RemoteVideoTrack>();
   const vidRef = useRef<HTMLDivElement>(null);
   const [vidDims, setVidDims] = useState({
     width: '0px',
@@ -104,7 +104,7 @@ const RoomWrapper = ({
     else return increment;
   };
 
-  // const reconfigureSpeakerView = (v: Participant | RemoteVideoTrack, stopSwap?: boolean) => {
+  // const reconfigureSpeakerView = (v: Member | RemoteVideoTrack, stopSwap?: boolean) => {
   //   setMainVid(v);
   //   if (!speakerMode || !stopSwap) setSpeakerMode(sm => !sm);
   //  }
@@ -152,7 +152,7 @@ const RoomWrapper = ({
   let screenTrack: RemoteVideoTrack;
   var sharedScreens = [] as Array<RemoteVideoTrack>;
    members.forEach(m => {
-     //  TODO: don't show local screen share if (p instanceof LocalParticipant) {
+     //  TODO: don't show local screen share if (p instanceof LocalMember) {
      //    return;
      //  }
      m.videoTracks.forEach(track => {

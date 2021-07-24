@@ -1,4 +1,4 @@
-import { Track } from "livekit-client";
+import { Track } from "catalyst-client";
 import { useEffect, useRef } from "react";
 
 const AudWrapper = ({ track, isLocal }: {
