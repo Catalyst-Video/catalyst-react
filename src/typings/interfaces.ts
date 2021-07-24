@@ -21,4 +21,5 @@ export interface RoomMetaData {
   audioDeviceId?: string;
   videoDeviceId?: string;
   key?: string;
+  loglevel?: string;
 }

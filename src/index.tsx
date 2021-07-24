@@ -30,7 +30,7 @@ const CatalystChat = ({
     // obtain user token
     // TODO: store token as cookie in local storage for pricing
     fetch(
-      `https://pricey-somber-silence.glitch.me/token?memberName=${userName}&customerUid=${appId}&roomName=${room}`,
+      `https://pricey-somber-silence.glitch.me/token?participantName=${userName}&customerUid=${appId}&roomName=${room}`,
       {
         method: 'GET',
         headers: {
@@ -85,6 +85,7 @@ const CatalystChat = ({
               audioEnabled: audioOnDefault ?? true,
               videoEnabled: videoOnDefault ?? true,
               simulcast: simulcast ?? true,
+              loglevel: 'trace',
             }}
             fade={fade ?? DEFAULT_AUTOFADE}
             onEndCall={onEndCall}

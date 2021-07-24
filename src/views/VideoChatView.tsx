@@ -3,10 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   connect,
   RoomEvent,
-  RemoteMember,
+  RemoteParticipant,
   RemoteTrackPublication,
   RemoteTrack,
-  Member,
+  Participant,
   Track,
   CreateAudioTrackOptions,
   createLocalAudioTrack,
@@ -16,7 +16,7 @@ import {
   ConnectOptions,
   TrackPublishOptions,
   createLocalTracks,
-} from 'catalyst-client';
+} from 'livekit-client';
 import React, { useEffect, useRef, useState } from 'react';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import AudWrapper from '../components/wrapper/AudWrapper';
@@ -40,7 +40,7 @@ const VideoChat = ({
   onEndCall: () => void;
 }) => {
   const fsHandle = useFullScreenHandle();
-  const [numMembers, setNumMembers] = useState(0);
+  const [numParticipants, setNumParticipants] = useState(0);
   const [speakerMode, setSpeakerMode] = useState(false);
   const roomState = useRoom();
 
@@ -48,11 +48,11 @@ const VideoChat = ({
   const headerRef = useRef<HTMLDivElement>(null);
 
   const onConnected = async room => {
-    room.on(RoomEvent.MemberConnected, () => updateMemberSize(room));
-    room.on(RoomEvent.MemberDisconnected, () =>
-      updateMemberSize(room)
+    room.on(RoomEvent.ParticipantConnected, () => updateParticipantSize(room));
+    room.on(RoomEvent.ParticipantDisconnected, () =>
+      updateParticipantSize(room)
     );
-    updateMemberSize(room);
+    updateParticipantSize(room);
     console.log(room);
 
     const tracks = await createLocalTracks({
@@ -60,7 +60,7 @@ const VideoChat = ({
       video: meta.videoEnabled,
     });
     tracks.forEach(track => {
-      room.localMember.publishTrack(track);
+      room.localParticipant.publishTrack(track);
     });
   };
 
@@ -86,8 +86,8 @@ const VideoChat = ({
     }
   }, [token]);
 
-  const updateMemberSize = (room: Room) => {
-    setNumMembers(room.members.size + 1);
+  const updateParticipantSize = (room: Room) => {
+    setNumParticipants(room.participants.size + 1);
   };
 
   const onLeave = () => {
@@ -161,7 +161,7 @@ const VideoChat = ({
                 size="lg"
                 className="text-white mr-1"
               />
-              <span className="text-white">{numMembers}</span>
+              <span className="text-white">{numParticipants}</span>
               <button
                 className="cursor-pointer focus:border-0 focus:outline-none"
                 onClick={() => setSpeakerMode(sMode => !sMode)}

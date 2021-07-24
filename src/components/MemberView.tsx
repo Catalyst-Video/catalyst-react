@@ -5,19 +5,19 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Property } from "csstype";
 import {
-  Member,
+  Participant,
   RemoteTrackPublication,
   Track,
   TrackPublication,
-} from "catalyst-client";
-import { VideoQuality } from "catalyst-client/dist/proto/livekit_rtc";
+} from "livekit-client";
+import { VideoQuality } from "livekit-client/dist/proto/livekit_rtc";
 import React, { CSSProperties, ReactElement, useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { useMember } from "../hooks/useMember";
+import { useParticipant } from "../hooks/useMember";
 import VidWrapper from "./wrapper/VidWrapper";
 
 const MemberView = ({
-  member: m,
+  participant: m,
   width,
   height,
   classes,
@@ -28,7 +28,7 @@ const MemberView = ({
   onMouseLeave,
   onClick,
 }: {
-  member: Member;
+  participant: Participant;
   displayName?: string;
   width: Property.Width;
   height: Property.Height;
@@ -39,7 +39,7 @@ const MemberView = ({
   onMouseLeave?: () => void;
   onClick?: () => void;
 }) => {
-  const { isLocal, isMuted, subscribedTracks } = useMember(m);
+  const { isLocal, isMuted, subscribedTracks } = useParticipant(m);
   const { ref, inView } = useInView();
   const [videoPub, setVideoPub] = useState<TrackPublication>();
   const [videoEnabled, setVideoEnabled] = useState(true);
@@ -108,9 +108,7 @@ const MemberView = ({
   let objectFit: Property.ObjectFit = 'contain';
   if (
     videoPub?.dimensions &&
-    (16 - 9) *
-      (videoPub.dimensions.width - videoPub.dimensions.height) >
-      0
+    (16 - 9) * (videoPub.dimensions.width - videoPub.dimensions.height) > 0
   ) {
     objectFit = 'cover';
   }

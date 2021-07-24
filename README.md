@@ -33,7 +33,7 @@ import CatalystChat from "catalyst-vc-react"
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- | -------------------------------------- | -------- |
 | `room` | Unique session identifier _(peers with the same `room` are connected)_                                                                    |  `string` | `ROOM_NAME` |  Required      |
 | `appId` | Unique project identifier                                                     |  `string` | `YOUR_CATALYST_PROJECT_ID` |  Required  |
-| `name` | Display name of member joining the call |  `string` | `MEMBER_NAME` |  Optional |
+| `name` | Display name of participant joining the call |  `string` | `MEMBER_NAME` |  Optional |
 | `dark` | Is dark mode enabled by default                                                    |  `boolean` | `false` | Optional |
 | `fade` | Milliseconds of no user interaction before fading out controls. Disabled when set to `0`                   |  `number` | `600` | Optional |
 | `audioOnDefault` |Is microphone enabled by default                        |  `boolean` | `true` | Optional |

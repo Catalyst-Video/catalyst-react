@@ -1,14 +1,14 @@
 import {
-  LocalMember,
+  LocalParticipant,
   LocalTrack,
-  Member,
-  MemberEvent,
+  Participant,
+  ParticipantEvent,
   Track,
   TrackPublication,
-} from "catalyst-client";
+} from "livekit-client";
 import { useEffect, useState } from "react";
 
-export interface MemberState {
+export interface ParticipantState {
   isSpeaking: boolean;
   isLocal: boolean;
   isMuted: boolean;
@@ -18,7 +18,7 @@ export interface MemberState {
   unpublishTrack: (track: LocalTrack) => void;
 }
 
-export function useMember(member: Member): MemberState {
+export function useParticipant(participant: Participant): ParticipantState {
   const [isMuted, setMuted] = useState(false);
   const [isSpeaking, setSpeaking] = useState(false);
   const [metadata, setMetadata] = useState<string>();
@@ -28,19 +28,19 @@ export function useMember(member: Member): MemberState {
   );
 
   const onPublicationsChanged = () => {
-    setPublications(Array.from(member.tracks.values()));
+    setPublications(Array.from(participant.tracks.values()));
     setSubscribedTracks(
-      Array.from(member.tracks.values()).filter((pub) => {
+      Array.from(participant.tracks.values()).filter((pub) => {
         return pub.track !== undefined;
       })
     );
   };
   const unpublishTrack = async (track: LocalTrack) => {
-    if (!(member instanceof LocalMember)) {
-      throw new Error("could not unpublish, not a local member");
+    if (!(participant instanceof LocalParticipant)) {
+      throw new Error("could not unpublish, not a local participant");
     }
-    (member as LocalMember).unpublishTrack(track);
-    member.emit("localtrackchanged");
+    (participant as LocalParticipant).unpublishTrack(track);
+    participant.emit("localtrackchanged");
   };
 
   useEffect(() => {
@@ -55,24 +55,24 @@ export function useMember(member: Member): MemberState {
       }
     };
     const onMetadataChanged = () => {
-      if (member.metadata) {
-        setMetadata(member.metadata);
+      if (participant.metadata) {
+        setMetadata(participant.metadata);
       }
     };
     const onIsSpeakingChanged = () => {
-      setSpeaking(member.isSpeaking);
+      setSpeaking(participant.isSpeaking);
     };
 
     // register listeners
-    member.on(MemberEvent.TrackMuted, onMuted);
-    member.on(MemberEvent.TrackUnmuted, onUnmuted);
-    member.on(MemberEvent.MetadataChanged, onMetadataChanged);
-    member.on(MemberEvent.IsSpeakingChanged, onIsSpeakingChanged);
-    member.on(MemberEvent.TrackPublished, onPublicationsChanged);
-    member.on(MemberEvent.TrackUnpublished, onPublicationsChanged);
-    member.on(MemberEvent.TrackSubscribed, onPublicationsChanged);
-    member.on(MemberEvent.TrackUnsubscribed, onPublicationsChanged);
-    member.on("localtrackchanged", onPublicationsChanged);
+    participant.on(ParticipantEvent.TrackMuted, onMuted);
+    participant.on(ParticipantEvent.TrackUnmuted, onUnmuted);
+    participant.on(ParticipantEvent.MetadataChanged, onMetadataChanged);
+    participant.on(ParticipantEvent.IsSpeakingChanged, onIsSpeakingChanged);
+    participant.on(ParticipantEvent.TrackPublished, onPublicationsChanged);
+    participant.on(ParticipantEvent.TrackUnpublished, onPublicationsChanged);
+    participant.on(ParticipantEvent.TrackSubscribed, onPublicationsChanged);
+    participant.on(ParticipantEvent.TrackUnsubscribed, onPublicationsChanged);
+    participant.on("localtrackchanged", onPublicationsChanged);
 
     // set initial state
     onMetadataChanged();
@@ -81,23 +81,23 @@ export function useMember(member: Member): MemberState {
 
     return () => {
       // cleanup
-      member.off(MemberEvent.TrackMuted, onMuted);
-      member.off(MemberEvent.TrackUnmuted, onUnmuted);
-      member.off(MemberEvent.MetadataChanged, onMetadataChanged);
-      member.off(MemberEvent.IsSpeakingChanged, onIsSpeakingChanged);
-      member.off(MemberEvent.TrackPublished, onPublicationsChanged);
-      member.off(MemberEvent.TrackUnpublished, onPublicationsChanged);
-      member.off(MemberEvent.TrackSubscribed, onPublicationsChanged);
-      member.off(
-        MemberEvent.TrackUnsubscribed,
+      participant.off(ParticipantEvent.TrackMuted, onMuted);
+      participant.off(ParticipantEvent.TrackUnmuted, onUnmuted);
+      participant.off(ParticipantEvent.MetadataChanged, onMetadataChanged);
+      participant.off(ParticipantEvent.IsSpeakingChanged, onIsSpeakingChanged);
+      participant.off(ParticipantEvent.TrackPublished, onPublicationsChanged);
+      participant.off(ParticipantEvent.TrackUnpublished, onPublicationsChanged);
+      participant.off(ParticipantEvent.TrackSubscribed, onPublicationsChanged);
+      participant.off(
+        ParticipantEvent.TrackUnsubscribed,
         onPublicationsChanged
       );
-      member.off("localtrackchanged", onPublicationsChanged);
+      participant.off("localtrackchanged", onPublicationsChanged);
     };
-  }, [member]);
+  }, [participant]);
 
   let muted: boolean | undefined;
-  member.audioTracks.forEach((pub) => {
+  participant.audioTracks.forEach((pub) => {
     muted = pub.isMuted;
   });
   if (muted === undefined) {
@@ -108,7 +108,7 @@ export function useMember(member: Member): MemberState {
   }
 
   return {
-    isLocal: member instanceof LocalMember,
+    isLocal: participant instanceof LocalParticipant,
     isSpeaking,
     isMuted,
     publications,

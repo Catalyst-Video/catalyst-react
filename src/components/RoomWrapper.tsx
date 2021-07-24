@@ -1,12 +1,12 @@
 import {
-  LocalMember,
-  Member,
+  LocalParticipant,
+  Participant,
   RemoteVideoTrack,
   Room,
   RoomEvent,
   TrackPublication,
-} from "catalyst-client";
-import { VideoQuality } from "catalyst-client/dist/proto/livekit_rtc";
+} from "livekit-client";
+import { VideoQuality } from "livekit-client/dist/proto/livekit_rtc";
 import React, { ReactElement, Ref, useEffect, useRef, useState } from "react";
 import MemberView from "./MemberView";
 import ScreenShareWrapper from "./wrapper/ScreenShareView";
@@ -40,10 +40,10 @@ const RoomWrapper = ({
   speakerMode: boolean;
   setSpeakerMode: Function
 }) => {
-  const { isConnecting, error, members: members, room } = roomState;
+  const { isConnecting, error, participants: participants, room } = roomState;
   const [showOverlay, setShowOverlay] = useState(false);
   const [screens, setNumScreens] = useState<number>(0);
-  const [mainVid, setMainVid] = useState<Member | RemoteVideoTrack>();
+  const [mainVid, setMainVid] = useState<Participant | RemoteVideoTrack>();
   const vidRef = useRef<HTMLDivElement>(null);
   const [vidDims, setVidDims] = useState({
     width: '0px',
@@ -63,9 +63,9 @@ const RoomWrapper = ({
     //  TODO: loop needs to be optimized
     let i = 1;
     let l =
-      (members.length < 1 ? 1 : members.length) +
+      (participants.length < 1 ? 1 : participants.length) +
       screens +
-      (members.length < 2 ? 1 : 0);
+      (participants.length < 2 ? 1 : 0);
       // console.log(l)
     while (i < 5000) {
       let w = area(i, l, width, height, margin);
@@ -104,13 +104,13 @@ const RoomWrapper = ({
     else return increment;
   };
 
-  // const reconfigureSpeakerView = (v: Member | RemoteVideoTrack, stopSwap?: boolean) => {
+  // const reconfigureSpeakerView = (v: Participant | RemoteVideoTrack, stopSwap?: boolean) => {
   //   setMainVid(v);
   //   if (!speakerMode || !stopSwap) setSpeakerMode(sm => !sm);
   //  }
 
   // useEffect(() => {
-  //     if (members.findIndex(m => m === mainVid) < 1) {
+  //     if (participants.findIndex(m => m === mainVid) < 1) {
   //     //   setSpeakerMode(true);
   //     // } else {
   //       setSpeakerMode(sm => !sm);
@@ -129,20 +129,20 @@ const RoomWrapper = ({
        },
        false
      );
-     setMainVid(members[0]);
    }, []);
 
-   useEffect(() => {
+  useEffect(() => {
+     if (!mainVid) setMainVid(participants[0]);
      resizeWrapper();
-   }, [members, screens]);
+   }, [participants, screens]);
 
-   if (error || isConnecting || !room || members.length === 0) {
+   if (error || isConnecting || !room || participants.length === 0) {
      return (
        <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center text-xl text-white">
          {error && <span>⚠️ {error.message}</span>}
          {isConnecting && <span>⚡ Connecting...</span>}
          {!room && !isConnecting && !error && <span>🚀 Preparing room...</span>}
-         {members.length === 0 && room && !isConnecting && (
+         {participants.length === 0 && room && !isConnecting && (
            <span>👋 Waiting for others to join...</span>
          )}
        </div>
@@ -151,8 +151,8 @@ const RoomWrapper = ({
 
   let screenTrack: RemoteVideoTrack;
   var sharedScreens = [] as Array<RemoteVideoTrack>;
-   members.forEach(m => {
-     //  TODO: don't show local screen share if (p instanceof LocalMember) {
+   participants.forEach(m => {
+     //  TODO: don't show local screen share if (p instanceof LocalParticipant) {
      //    return;
      //  }
      m.videoTracks.forEach(track => {
@@ -197,11 +197,11 @@ const RoomWrapper = ({
                  />
                );
              })}
-           {members.map((m, i) => {
+           {participants.map((m, i) => {
              return (
                <MemberView
                  key={m.identity}
-                 member={m}
+                 participant={m}
                  height={vidDims.height}
                  width={vidDims.width}
                  showOverlay={showOverlay}
@@ -215,7 +215,7 @@ const RoomWrapper = ({
                />
              );
            })}
-           {members.length === 1 && (
+           {participants.length === 1 && (
              <div
                className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center m-1 bg-gray-800 rounded-xl`}
                style={{
@@ -237,7 +237,7 @@ const RoomWrapper = ({
              {!mainVid || 'identity' in mainVid ? (
                <MemberView
                  key={mainVid?.identity ?? 'first-vid'}
-                 member={mainVid ?? members[0]}
+                 participant={mainVid ?? participants[0]}
                  height={'100%'}
                  width={'100%'}
                  classes={'aspect-w-16 aspect-h-9'}
@@ -264,7 +264,7 @@ const RoomWrapper = ({
              }
              onClick={() => setSpeakerMode(sm => !sm)}
            >
-             {members.length === 1 && (
+             {participants.length === 1 && (
                <>
                  {/*TODO: fix mobile sizing <div
                  className={`ml-1 mr-1 w-full sm:w-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
@@ -302,12 +302,12 @@ const RoomWrapper = ({
                    );
                  else return null;
                })}
-             {members.map((m, i) => {
+             {participants.map((m, i) => {
                if (m !== mainVid)
                  return (
                    <MemberView
                      key={m.identity}
-                     member={m}
+                     participant={m}
                      height={'100%'}
                      width={'100%'}
                      classes={
