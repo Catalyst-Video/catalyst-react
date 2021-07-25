@@ -12,22 +12,7 @@ import MemberView from "./MemberView";
 import ScreenShareWrapper from "./wrapper/ScreenShareView";
 import { RoomState } from "../hooks/useRoom";
 import { debounce } from 'ts-debounce';
-
-function merge(a1, a2) {
-  const merged = Array(a1.length + a2.length);
-  let index = 0,
-    i1 = 0,
-    i2 = 0;
-  while (i1 < a1.length || i2 < a2.length) {
-    if (a1[i1] && a2[i2]) {
-      const item1 = a1[i1];
-      const item2 = a2[i2].charCodeAt(0) - 96;
-      merged[index++] = item1 < item2 ? a1[i1++] : a2[i2++];
-    } else if (a1[i1]) merged[index++] = a1[i1++];
-    else if (a2[i2]) merged[index++] = a2[i2++];
-  }
-  return merged;
-}
+import Chat from "./Chat";
 
 const RoomWrapper = ({
   roomState,
@@ -40,11 +25,12 @@ const RoomWrapper = ({
   speakerMode: boolean;
   setSpeakerMode: Function
 }) => {
-  const { isConnecting, error, participants: participants, room } = roomState;
+  const { isConnecting, error, localParticipant, participants: members, room } = roomState;
   const [showOverlay, setShowOverlay] = useState(false);
   const [screens, setNumScreens] = useState<number>(0);
   const [mainVid, setMainVid] = useState<Participant | RemoteVideoTrack>();
   const vidRef = useRef<HTMLDivElement>(null);
+  const [chatOpen, setChatOpen] = useState(false);
   const [vidDims, setVidDims] = useState({
     width: '0px',
     height: '0px',
@@ -63,9 +49,9 @@ const RoomWrapper = ({
     //  TODO: loop needs to be optimized
     let i = 1;
     let l =
-      (participants.length < 1 ? 1 : participants.length) +
+      (members.length < 1 ? 1 : members.length) +
       screens +
-      (participants.length < 2 ? 1 : 0);
+      (members.length < 2 ? 1 : 0);
       // console.log(l)
     while (i < 5000) {
       let w = area(i, l, width, height, margin);
@@ -104,19 +90,6 @@ const RoomWrapper = ({
     else return increment;
   };
 
-  // const reconfigureSpeakerView = (v: Participant | RemoteVideoTrack, stopSwap?: boolean) => {
-  //   setMainVid(v);
-  //   if (!speakerMode || !stopSwap) setSpeakerMode(sm => !sm);
-  //  }
-
-  // useEffect(() => {
-  //     if (participants.findIndex(m => m === mainVid) < 1) {
-  //     //   setSpeakerMode(true);
-  //     // } else {
-  //       setSpeakerMode(sm => !sm);
-  //     }
-  //  }, [mainVid]);
-
    const debouncedResize = debounce(resizeWrapper, 15);
 
    useEffect(() => {
@@ -132,17 +105,17 @@ const RoomWrapper = ({
    }, []);
 
   useEffect(() => {
-     if (!mainVid) setMainVid(participants[0]);
-     resizeWrapper();
-   }, [participants, screens]);
+    if (!mainVid) setMainVid(members[0]);
+    resizeWrapper();
+  }, [members, screens, chatOpen]);
 
-   if (error || isConnecting || !room || participants.length === 0) {
+   if (error || isConnecting || !room || members.length === 0) {
      return (
        <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center text-xl text-white">
          {error && <span>⚠️ {error.message}</span>}
          {isConnecting && <span>⚡ Connecting...</span>}
          {!room && !isConnecting && !error && <span>🚀 Preparing room...</span>}
-         {participants.length === 0 && room && !isConnecting && (
+         {members.length === 0 && room && !isConnecting && (
            <span>👋 Waiting for others to join...</span>
          )}
        </div>
@@ -151,7 +124,7 @@ const RoomWrapper = ({
 
   let screenTrack: RemoteVideoTrack;
   var sharedScreens = [] as Array<RemoteVideoTrack>;
-   participants.forEach(m => {
+   members.forEach(m => {
      //  TODO: don't show local screen share if (p instanceof LocalParticipant) {
      //    return;
      //  }
@@ -180,7 +153,9 @@ const RoomWrapper = ({
          <div
            id="remote-vid-wrapper"
            ref={vidRef}
-           className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border animate-fade-in-left`}
+           className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border ${
+             chatOpen ? 'animate-fade-in-right' : 'animate-fade-in-left'
+           }`}
          >
            {sharedScreens &&
              sharedScreens.map((s, i) => {
@@ -197,7 +172,7 @@ const RoomWrapper = ({
                  />
                );
              })}
-           {participants.map((m, i) => {
+           {members.map((m, i) => {
              return (
                <MemberView
                  key={m.identity}
@@ -215,7 +190,7 @@ const RoomWrapper = ({
                />
              );
            })}
-           {participants.length === 1 && (
+           {members.length === 1 && (
              <div
                className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center m-1 bg-gray-800 rounded-xl`}
                style={{
@@ -232,12 +207,16 @@ const RoomWrapper = ({
          </div>
        )}
        {speakerMode && (
-         <div className="flex flex-col sm:flex-row z-20 py-10 px-1 w-full lg:px-10 xl:px-20 justify-center sm:justify-around animate-fade-in-left">
+         <div
+           className={`flex flex-col sm:flex-row z-20 py-10 px-1 w-full lg:px-10 xl:px-20 justify-center sm:justify-around  ${
+             chatOpen ? 'animate-fade-in-right' : 'animate-fade-in-left'
+           }`}
+         >
            <div className="flex flex-col sm:w-4/5 p-1 justify-center content-center">
              {!mainVid || 'identity' in mainVid ? (
                <MemberView
                  key={mainVid?.identity ?? 'first-vid'}
-                 participant={mainVid ?? participants[0]}
+                 participant={mainVid ?? members[0]}
                  height={'100%'}
                  width={'100%'}
                  classes={'aspect-w-16 aspect-h-9'}
@@ -264,15 +243,8 @@ const RoomWrapper = ({
              }
              onClick={() => setSpeakerMode(sm => !sm)}
            >
-             {participants.length === 1 && (
+             {members.length === 1 && (
                <>
-                 {/*TODO: fix mobile sizing <div
-                 className={`ml-1 mr-1 w-full sm:w-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
-               >
-                 <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-sm md:text-md xl:text-lg text-white text-center px-1 sm:px-2 md:px-3 ">
-                   <span>👋 Waiting for others to join...</span>
-                 </div>
-                 </div> */}
                  <div
                    className={`ml-1 mr-1 w-full sm:w-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
                  >
@@ -302,7 +274,7 @@ const RoomWrapper = ({
                    );
                  else return null;
                })}
-             {participants.map((m, i) => {
+             {members.map((m, i) => {
                if (m !== mainVid)
                  return (
                    <MemberView
@@ -328,6 +300,12 @@ const RoomWrapper = ({
            </div>
          </div>
        )}
+       <Chat
+        //  participants={members}
+         localParticipant={localParticipant}
+         chatOpen={chatOpen}
+         setChatOpen={setChatOpen}
+       />
      </>
    );
  };

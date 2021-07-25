@@ -20,6 +20,8 @@ const CatalystChat = ({
   audioOnDefault,
   videoOnDefault,
   simulcast,
+  arbData,
+  handleReceiveArbData,
   onEndCall,
 }: CatalystChatProps) => {
   const [ready, setReady] = useState(true);
@@ -89,6 +91,8 @@ const CatalystChat = ({
             }}
             fade={fade ?? DEFAULT_AUTOFADE}
             onEndCall={onEndCall}
+            arbData={arbData}
+            handleReceiveArbData={handleReceiveArbData}
           />
         ) : null}
       </div>

@@ -6,11 +6,17 @@ export interface CatalystChatProps {
   theme?: {
     primary: string;
     primaryDark: string;
+    secondary: string;
+    secondaryDark: string;
+    tertiary: string;
+    tertiaryDark: string;
   };
   fade?: number;
   audioOnDefault?: boolean;
   videoOnDefault?: boolean;
   simulcast?: boolean;
+  arbData?: Uint8Array;
+  handleReceiveArbData: (arbData: Uint8Array) => void;
   onEndCall: () => void;
 }
 

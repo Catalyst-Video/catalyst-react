@@ -188,3 +188,21 @@ export function setThemeColor(theme: {
     );
   
        }
+
+
+       
+function merge(a1, a2) {
+  const merged = Array(a1.length + a2.length);
+  let index = 0,
+    i1 = 0,
+    i2 = 0;
+  while (i1 < a1.length || i2 < a2.length) {
+    if (a1[i1] && a2[i2]) {
+      const item1 = a1[i1];
+      const item2 = a2[i2].charCodeAt(0) - 96;
+      merged[index++] = item1 < item2 ? a1[i1++] : a2[i2++];
+    } else if (a1[i1]) merged[index++] = a1[i1++];
+    else if (a2[i2]) merged[index++] = a2[i2++];
+  }
+  return merged;
+}

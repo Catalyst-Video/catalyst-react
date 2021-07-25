@@ -16,6 +16,7 @@ import {
   ConnectOptions,
   TrackPublishOptions,
   createLocalTracks,
+  DataPacket_Kind,
 } from 'livekit-client';
 import React, { useEffect, useRef, useState } from 'react';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
@@ -32,11 +33,15 @@ const VideoChat = ({
   token,
   meta,
   fade,
+  arbData,
+  handleReceiveArbData,
   onEndCall,
 }: {
   token: string;
   meta: RoomMetaData;
   fade: number;
+  arbData?: Uint8Array;
+  handleReceiveArbData: (arbData: Uint8Array) => void;
   onEndCall: () => void;
 }) => {
   const fsHandle = useFullScreenHandle();
@@ -52,6 +57,7 @@ const VideoChat = ({
     room.on(RoomEvent.ParticipantDisconnected, () =>
       updateParticipantSize(room)
     );
+    room.on(RoomEvent.DataReceived, () => handleReceiveArbData);
     updateParticipantSize(room);
     console.log(room);
 
@@ -63,6 +69,14 @@ const VideoChat = ({
       room.localParticipant.publishTrack(track);
     });
   };
+
+  useEffect(() => {
+    if (arbData)
+      roomState.localParticipant?.publishData(
+        arbData,
+        DataPacket_Kind.RELIABLE
+      );
+  }, [arbData]);
 
   useEffect(() => {
     if (token && token.length > 0) {
@@ -91,7 +105,7 @@ const VideoChat = ({
   };
 
   const onLeave = () => {
-    onEndCall()
+    onEndCall();
   };
 
   // animate toolbar & header fadeIn/Out
