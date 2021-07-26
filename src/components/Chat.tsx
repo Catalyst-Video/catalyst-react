@@ -172,7 +172,14 @@ const Chat = ({
           </div>
         </div>
       )}
-      <div className="absolute bottom-4 right-3 z-40">
+      <div
+        className={`absolute inset-y-0  ${
+          chatOpen
+            ? 'right-48 animate-fade-in-right'
+            : 'right-2 animate-fade-in-left'
+        } flex items-center h-full z-40`}
+        //bottom-4 right-3
+      >
         <button
           className="z-40 focus:outline-none focus:border-0 flex bg-gray-600 dark:bg-gray-700 hover:bg-gray-500 dark:hover:bg-gray-600 rounded-full w-16 h-16 items-center justify-center"
           onClick={() => setChatOpen(chatOpen => !chatOpen)}
