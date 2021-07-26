@@ -72,9 +72,10 @@ const VideoChat = ({
           ...chatMessages,
           {
             text: parsedData.text,
-            sender: roomState.participants.find(m => m.identity === parsedData.sender),
+            sender: room.participants?.get(parsedData.sender) ?? ''
           },
         ]);
+        
       } else {
         handleReceiveArbData(data);
       }

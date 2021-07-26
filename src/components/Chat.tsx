@@ -41,7 +41,7 @@ const Chat = ({
         let chat = {
           type: 'ctw-chat',
           text: msg,
-          sender: localParticipant.identity,
+          sender: localParticipant.sid,
         };
         const data = encoder.encode(JSON.stringify(chat));
         localParticipant.publishData(data, DataPacket_Kind.RELIABLE);
@@ -58,13 +58,12 @@ const Chat = ({
   };
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    // chatEndRef.current?.scrollIntoView({
-    //   behavior: 'smooth',
-    //   block: 'nearest',
-    //   inline: 'start',
-    // });
-  }, [chatMessages]);
+    chatEndRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'start',
+    });
+  }, [chatMessages, chatOpen]);
 
   const autolink = (msg: string, isSelf: boolean) => {
     const pattern = /(^|[\s\n]|<[A-Za-z]*\/?>)((?:https?|ftp):\/\/[\-A-Z0-9+\u0026\u2019@#\/%?=()~_|!:,.;]*[\-A-Z0-9+\u0026@#\/%=~()_|])/gi;
@@ -92,7 +91,7 @@ const Chat = ({
         >
           <div
             id="chat-zone"
-            className="flex h-full absolute inset-0 pt-16 pb-30"
+            className="flex h-full absolute overflow-x-none inset-0 pt-16 pb-36"
           >
             <div
               id="chat-messages"
@@ -137,7 +136,7 @@ const Chat = ({
               <div
                 ref={chatEndRef}
                 id="chat-end"
-                className="invisible w-full h-1 content-end" 
+                className="invisible w-full h-1 content-end"
               ></div>
             </div>
           </div>
