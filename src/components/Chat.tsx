@@ -40,8 +40,8 @@ const Chat = ({
             const encoder = new TextEncoder();
             const data = encoder.encode(msg);
             localParticipant.publishData(data, DataPacket_Kind.RELIABLE)
-             setChatBox('');
-            
+            setChatMessages([...chatMessages, { text: msg, sender: localParticipant }]);
+            setChatBox('');
         }
             
     }
@@ -75,23 +75,24 @@ const Chat = ({
     <>
       {chatOpen && (
         <div
-          className={`bg-gray-500 flex h-full w-64 ${
+          className={`bg-gray-500 flex h-full relative z-20 w-64 ${
             chatOpen ? 'animate-fade-in-right' : 'animate-fade-out-right'
           }`}
         >
           <div
             id="chat-zone"
-            className="flex flex-1 relative flex-row justify-end text-sm overflow-y-auto bg-red"
+            className="flex flex-1 flex-row justify-end text-sm h-full absolute left-0 top-0 right-0 pt-16 pb-30"
           >
             <div
               id="chat-messages"
-              className="w-full overflow-x-none pt-10 pb-5"
+              className="w-full h-auto overflow-x-none overflow-y-auto z-20 left-0 right-0"
             >
               {chatMessages.map((msg, idx) => {
+                console.log(msg);
                 if (msg.sender instanceof LocalParticipant)
                   return (
                     <div
-                      className="sent-message relative flex flex-col items-start content-end p-1 pr-2 pl-20 fade-in-bottom"
+                      className="sent-message relative flex flex-col items-start content-end p-1 pr-2 float-right fade-in-bottom z-40"
                       key={idx}
                     >
                       <span className="text-black dark:text-white font-semibold text-xs ml-auto p-1 not-selectable">
@@ -126,19 +127,18 @@ const Chat = ({
               <div
                 ref={chatEndRef}
                 id="chat-end"
-                className="invisible w-full h-1"
+                className="bg-blue w-full h-1" //invisible
               ></div>
             </div>
           </div>
-
           <div
             id="chat-compose-wrapper"
-            className="w-full mt-auto bg-gray-500 relative flex"
+            className="w-full bottom-0 fixed bg-gray-500 flex z-30"
           >
             <textarea
               id="chat-compose"
               placeholder="Type your message"
-              className="focus:outline-none focus:border-0 w-full text-gray-900 bg-gray-500 ml-1"
+              className="focus:outline-none focus:border-0 w-full resize-none text-gray-900 bg-gray-500 ml-1"
               rows={6}
               value={chatBox}
               onKeyUp={e => {
