@@ -10,26 +10,26 @@ import {
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import { DataPacket_Kind, LocalParticipant, Participant } from 'livekit-client';
-
-export interface ChatMessage {
-    text: string;
-    sender: Participant;
-}
+import { ChatMessage } from '../typings/interfaces';
 
 const Chat = ({
   chatOpen,
   setChatOpen,
-//   participants,
-  localParticipant,
+  //   participants,
+    localParticipant,
+    chatMessages,
+  setChatMessages
 }: {
   chatOpen: boolean;
   setChatOpen: Function;
-//   participants: Participant[];
+  //   participants: Participant[];
   localParticipant?: LocalParticipant;
+  chatMessages: ChatMessage[];
+  setChatMessages: Function;
 }) => {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const [chatBox, setChatBox] = useState('');
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const encoder = new TextEncoder();
 
   const handleSendMsg = (msg: string) => {
     // Send message over data channel, add message to screen (if message contains content)
@@ -37,22 +37,28 @@ const Chat = ({
       console.log(msg);
       // Prevent cross site scripting
       msg = msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      // msg = msg.autolink();
-      // TODO:  sendToAllDataChannels('mesg:' + msg, dataChannel);
-      //   setChatMessages(chatMessages => [...chatMessages, ['', localName, msg]]);
-        if (localParticipant) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(msg);
-            localParticipant.publishData(data, DataPacket_Kind.RELIABLE)
-            setChatMessages([...chatMessages, { text: msg, sender: localParticipant }]);
-            setChatBox('');
-        }
-            
+      if (localParticipant) {
+        let chat = {
+          type: 'ctw-chat',
+          text: msg,
+          sender: localParticipant.identity,
+        };
+        const data = encoder.encode(JSON.stringify(chat));
+        localParticipant.publishData(data, DataPacket_Kind.RELIABLE);
+        setChatMessages(chatMessages => [
+          ...chatMessages,
+          {
+            text: msg,
+            sender: localParticipant,
+          },
+        ]);
+        setChatBox('');
+      }
     }
   };
 
-    useEffect(() => {
-      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     // chatEndRef.current?.scrollIntoView({
     //   behavior: 'smooth',
     //   block: 'nearest',
@@ -93,7 +99,6 @@ const Chat = ({
               className="w-full h-auto overflow-x-none overflow-y-auto z-20 inset-0 relative"
             >
               {chatMessages.map((msg, idx) => {
-                console.log(msg);
                 if (msg.sender instanceof LocalParticipant)
                   return (
                     <div
@@ -101,7 +106,7 @@ const Chat = ({
                       key={idx}
                     >
                       <span className="text-white dark:text-white font-semibold text-xs ml-auto p-1 not-selectable">
-                        {msg.sender.identity} (You)
+                        {msg.sender?.identity} (You)
                       </span>
                       <div
                         className={`bg-primary text-white rounded-tl-2xl rounded-tr-2xl rounded-br-sm rounded-bl-2xl  ml-auto p-2`}
@@ -119,7 +124,7 @@ const Chat = ({
                       key={idx}
                     >
                       <span className="text-white dark:text-white font-semibold text-xs p-1 not-selectable">
-                        {msg.sender.identity}
+                        {msg?.sender?.identity}
                       </span>
                       <div className="bg-gray-100 text-black flex items-center justify-center rounded-tl-2xl rounded-tr-2xl rounded-br-2xl rounded-bl-sm p-2">
                         <div className="message break-all px-2 py-1 text-xs">

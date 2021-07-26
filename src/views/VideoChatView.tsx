@@ -21,12 +21,13 @@ import {
 import React, { useEffect, useRef, useState } from 'react';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import AudWrapper from '../components/wrapper/AudWrapper';
-import { RoomMetaData } from '../typings/interfaces';
+import { ChatMessage, RoomMetaData } from '../typings/interfaces';
 import RoomWrapper  from '../components/RoomWrapper';
 import HeaderLogo from '../components/header/Header';
 import Toolbar from '../components/toolbar/Toolbar';
 import { useRoom } from '../hooks/useRoom';
 import { debounce } from 'ts-debounce';
+import { protobufPackage } from 'livekit-client/dist/proto/livekit_models';
 
 
 const VideoChat = ({
@@ -50,16 +51,34 @@ const VideoChat = ({
   const [numParticipants, setNumParticipants] = useState(0);
   const [speakerMode, setSpeakerMode] = useState(false);
   const roomState = useRoom();
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
 
   const toolbarRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
+  const decoder = new TextDecoder();
 
   const onConnected = async room => {
     room.on(RoomEvent.ParticipantConnected, () => updateParticipantSize(room));
     room.on(RoomEvent.ParticipantDisconnected, () =>
       updateParticipantSize(room)
     );
-    room.on(RoomEvent.DataReceived, () => handleReceiveArbData);
+    room.on(RoomEvent.DataReceived, (data: Uint8Array, participant: Participant, kind: DataPacket_Kind) => {
+      const strData = decoder.decode(data)
+      console.log(strData)
+      const parsedData = JSON.parse(strData)
+      if (JSON.parse(strData)?.type === 'ctw-chat') {
+        console.log('received chat ', JSON.parse(strData).text);
+        setChatMessages(chatMessages => [
+          ...chatMessages,
+          {
+            text: parsedData.text,
+            sender: roomState.participants.find(m => m.identity === parsedData.sender),
+          },
+        ]);
+      } else {
+        handleReceiveArbData(data);
+      }
+    });
     updateParticipantSize(room);
     console.log(room);
 
@@ -215,6 +234,8 @@ const VideoChat = ({
                 speakerMode={speakerMode}
                 setSpeakerMode={setSpeakerMode}
                 disableChat={disableChat}
+                chatMessages={chatMessages}
+                setChatMessages={setChatMessages}
               />
               {roomState.room && (
                 <div

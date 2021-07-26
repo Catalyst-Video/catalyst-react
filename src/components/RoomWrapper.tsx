@@ -13,6 +13,7 @@ import ScreenShareWrapper from "./wrapper/ScreenShareView";
 import { RoomState } from "../hooks/useRoom";
 import { debounce } from 'ts-debounce';
 import Chat from "./Chat";
+import { ChatMessage } from "../typings/interfaces";
 
 const RoomWrapper = ({
   roomState,
@@ -20,12 +21,16 @@ const RoomWrapper = ({
   speakerMode,
   setSpeakerMode,
   disableChat,
+  chatMessages,
+  setChatMessages,
 }: {
   roomState: RoomState;
   onLeave?: (room: Room) => void;
   speakerMode: boolean;
   setSpeakerMode: Function;
   disableChat?: boolean;
+  chatMessages: ChatMessage[]
+  setChatMessages: Function
 }) => {
   const {
     isConnecting,
@@ -307,12 +312,16 @@ const RoomWrapper = ({
           </div>
         </div>
       )}
-     {!disableChat && <Chat
-        //  participants={members}
-        localParticipant={localParticipant}
-        chatOpen={chatOpen}
-        setChatOpen={setChatOpen}
-      />}
+      {!disableChat && (
+        <Chat
+          //  participants={members}
+          localParticipant={localParticipant}
+          chatOpen={chatOpen}
+          setChatOpen={setChatOpen}
+          chatMessages={chatMessages}
+          setChatMessages={setChatMessages}
+        />
+      )}
     </>
   );
 };

@@ -1,3 +1,5 @@
+import { Participant } from "livekit-client";
+
 export interface CatalystChatProps {
   room: string;
   appId: string;
@@ -29,4 +31,9 @@ export interface RoomMetaData {
   videoDeviceId?: string;
   key?: string;
   loglevel?: string;
+}
+
+export interface ChatMessage {
+  text: string;
+  sender?: Participant;
 }
