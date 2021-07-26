@@ -82,13 +82,13 @@ const Chat = ({
     <>
       {chatOpen && (
         <div
-          className={`bg-gray-700 flex h-full absolute right-0 md:relative z-40 md:z-20 w-96 md:w-64 ${
+          className={`bg-gray-700 flex h-full absolute right-0 sm:relative z-40 sm:z-20 w-96 sm:w-64 ${
             chatOpen ? 'animate-fade-in-right' : 'animate-fade-out-right'
           }`}
         >
           <div
             id="chat-zone"
-            className="flex h-full absolute overflow-x-none inset-0 pt-6 md:pt-16 pb-36"
+            className="flex h-full absolute overflow-x-none inset-0 pt-6 sm:pt-16 pb-36"
           >
             <div
               id="chat-messages"
@@ -176,7 +176,7 @@ const Chat = ({
       <div
         className={`absolute inset-y-0  ${
           chatOpen
-            ? 'left-2 md:right-48 animate-fade-in-right'
+            ? 'left-2 sm:left-auto sm:right-48 animate-fade-in-right'
             : 'right-2 animate-fade-in-left'
         } flex items-center h-full z-40`}
         //bottom-4 right-3

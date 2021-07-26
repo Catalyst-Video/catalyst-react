@@ -191,7 +191,7 @@ const VideoChat = ({
             ref={headerRef}
           >
             <HeaderLogo alwaysBanner={false} />
-            <div className="absolute right-3 sm:right-5 top-10 sm:top-5 flex z-30">
+            <div className="absolute right-3 sm:right-5 top-10 sm:top-5 flex z-50">
               <FontAwesomeIcon
                 icon={faUserFriends}
                 size="lg"

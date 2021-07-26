@@ -14,12 +14,11 @@ import {
   Track,
   VideoPresets,
 } from "livekit-client";
-import React, { ReactElement, useRef, useState } from "react";
+import React, { ReactElement, useRef, useState, useEffect } from 'react';
 import { useParticipant } from "../../hooks/useMember";
 import AudioDeviceBtn from "./AudioDeviceBtn";
 import ToolbarButton from "./ToolbarButton";
 import VidDeviceBtn from './VidDeviceBtn';
-import { useEffect } from "react";
 
 
  const Toolbar = ({
@@ -197,7 +196,7 @@ import { useEffect } from "react";
                          });
                      })
                      .catch(err => {
-                       window.alert('Error sharing screen' + err);
+                      console.log('Error sharing screen: ' + err);
                      });
                  }
            }
