@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+    faChevronLeft,
+    faChevronRight,
+    faCommentAlt,
+  faCommentSlash,
   faFileUpload,
   faPaperPlane,
   faTimes,
@@ -47,13 +51,14 @@ const Chat = ({
     }
   };
 
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'nearest',
-      inline: 'start',
-    });
-  }, [chatMessages.length]);
+    useEffect(() => {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // chatEndRef.current?.scrollIntoView({
+    //   behavior: 'smooth',
+    //   block: 'nearest',
+    //   inline: 'start',
+    // });
+  }, [chatMessages]);
 
   const autolink = (msg: string, isSelf: boolean) => {
     const pattern = /(^|[\s\n]|<[A-Za-z]*\/?>)((?:https?|ftp):\/\/[\-A-Z0-9+\u0026\u2019@#\/%?=()~_|!:,.;]*[\-A-Z0-9+\u0026@#\/%=~()_|])/gi;
@@ -85,21 +90,21 @@ const Chat = ({
           >
             <div
               id="chat-messages"
-              className="w-full h-auto overflow-x-none overflow-y-auto z-20 inset-0"
+              className="w-full h-auto overflow-x-none overflow-y-auto z-20 inset-0 relative"
             >
               {chatMessages.map((msg, idx) => {
                 console.log(msg);
                 if (msg.sender instanceof LocalParticipant)
                   return (
                     <div
-                      className="sent-message relative flex flex-col items-start content-end p-1 pr-2 float-right fade-in-bottom z-40"
+                      className="sent-message flex flex-col items-start content-end p-1 pr-2 float-right fade-in-bottom z-40"
                       key={idx}
                     >
                       <span className="text-white dark:text-white font-semibold text-xs ml-auto p-1 not-selectable">
                         {msg.sender.identity} (You)
                       </span>
                       <div
-                        className={`bg-primary text-white relative rounded-tl-2xl rounded-tr-2xl rounded-br-sm rounded-bl-2xl  ml-auto p-2`}
+                        className={`bg-primary text-white rounded-tl-2xl rounded-tr-2xl rounded-br-sm rounded-bl-2xl  ml-auto p-2`}
                       >
                         <div className="message break-all px-2 py-1 text-xs">
                           {autolink(msg.text, true)}
@@ -110,13 +115,13 @@ const Chat = ({
                 else
                   return (
                     <div
-                      className="received-message relative flex flex-col items-start content-end p-1 pl-2 fade-in-bottom"
+                      className="received-message flex flex-col items-start content-end p-1 pl-2 fade-in-bottom"
                       key={idx}
                     >
                       <span className="text-white dark:text-white font-semibold text-xs p-1 not-selectable">
                         {msg.sender.identity}
                       </span>
-                      <div className="bg-gray-100 text-black relative flex items-center justify-center rounded-tl-2xl rounded-tr-2xl rounded-br-2xl rounded-bl-sm p-2">
+                      <div className="bg-gray-100 text-black flex items-center justify-center rounded-tl-2xl rounded-tr-2xl rounded-br-2xl rounded-bl-sm p-2">
                         <div className="message break-all px-2 py-1 text-xs">
                           {autolink(msg.text, false)}
                         </div>
@@ -127,7 +132,7 @@ const Chat = ({
               <div
                 ref={chatEndRef}
                 id="chat-end"
-                className="bg-red w-full h-2" //invisible
+                className="bg-red w-full h-2 content-end" //invisible
               ></div>
             </div>
           </div>
@@ -167,12 +172,36 @@ const Chat = ({
           </div>
         </div>
       )}
-      <div className="absolute bottom-2 right-2 z-40">
+      <div className="absolute bottom-4 right-3 z-40">
         <button
-          className="z-40"
+          className="z-40 focus:outline-none focus:border-0 flex bg-gray-600 dark:bg-gray-700 hover:bg-gray-500 dark:hover:bg-gray-600 rounded-full w-16 h-16 items-center justify-center"
           onClick={() => setChatOpen(chatOpen => !chatOpen)}
         >
-          Toggle Chat
+          {!chatOpen && (
+            <FontAwesomeIcon
+              id="chat-send"
+              icon={faChevronLeft}
+              size="lg"
+              // title="Send Message"
+              className={`text-white mr-1`}
+            />
+          )}
+          <FontAwesomeIcon
+            id="chat-send"
+            icon={faCommentAlt}
+            size="lg"
+            // title="Send Message"
+            className={`text-white `}
+          />
+          {chatOpen && (
+            <FontAwesomeIcon
+              id="chat-send"
+              icon={faChevronRight}
+              size="lg"
+              // title="Send Message"
+              className={`text-white ml-1`}
+            />
+          )}
         </button>
       </div>
     </>
