@@ -45,13 +45,15 @@ const WrapperComp = ({
     //     }}
     //   >
     <CatalystChat
-      sessionKey={sessionKey}
-      uniqueAppId="demo1"
-      // disableSetupRoom={true}
-      defaults={{
-        audioOn: true,
-        videoOn: true,
-        showChatArea: false,
+      room={'testRoom'}
+      appId={'testUid'}
+      // dark={true}
+      // disableChat={true}
+      audioOnDefault={false}
+      // name={(Math.random() * 1000).toString().slice(0, 4)}
+      theme={{
+        primary: '#50c878',
+        primaryDark: '#50c878',
       }}
       showSetNameBox={true}
       name={'USER_NAME'}
