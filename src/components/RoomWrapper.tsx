@@ -19,13 +19,21 @@ const RoomWrapper = ({
   onLeave,
   speakerMode,
   setSpeakerMode,
+  disableChat,
 }: {
   roomState: RoomState;
   onLeave?: (room: Room) => void;
   speakerMode: boolean;
-  setSpeakerMode: Function
+  setSpeakerMode: Function;
+  disableChat?: boolean;
 }) => {
-  const { isConnecting, error, localParticipant, participants: members, room } = roomState;
+  const {
+    isConnecting,
+    error,
+    localParticipant,
+    participants: members,
+    room,
+  } = roomState;
   const [showOverlay, setShowOverlay] = useState(false);
   const [screens, setNumScreens] = useState<number>(0);
   const [mainVid, setMainVid] = useState<Participant | RemoteVideoTrack>();
@@ -52,7 +60,7 @@ const RoomWrapper = ({
       (members.length < 1 ? 1 : members.length) +
       screens +
       (members.length < 2 ? 1 : 0);
-      // console.log(l)
+    // console.log(l)
     while (i < 5000) {
       let w = area(i, l, width, height, margin);
       if (w === false) {
@@ -90,223 +98,222 @@ const RoomWrapper = ({
     else return increment;
   };
 
-   const debouncedResize = debounce(resizeWrapper, 15);
+  const debouncedResize = debounce(resizeWrapper, 15);
 
-   useEffect(() => {
-     window.addEventListener(
-       'load',
-       () => {
-         resizeWrapper();
+  useEffect(() => {
+    window.addEventListener(
+      'load',
+      () => {
+        resizeWrapper();
         //  window.onresize = debouncedResize;
         window.onresize = resizeWrapper;
-       },
-       false
-     );
-   }, []);
+      },
+      false
+    );
+  }, []);
 
   useEffect(() => {
     if (!mainVid) setMainVid(members[0]);
     resizeWrapper();
   }, [members, screens, chatOpen]);
 
-   if (error || isConnecting || !room || members.length === 0) {
-     return (
-       <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center text-xl text-white">
-         {error && <span>⚠️ {error.message}</span>}
-         {isConnecting && <span>⚡ Connecting...</span>}
-         {!room && !isConnecting && !error && <span>🚀 Preparing room...</span>}
-         {members.length === 0 && room && !isConnecting && (
-           <span>👋 Waiting for others to join...</span>
-         )}
-       </div>
-     );
-   }
+  if (error || isConnecting || !room || members.length === 0) {
+    return (
+      <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center text-xl text-white">
+        {error && <span>⚠️ {error.message}</span>}
+        {isConnecting && <span>⚡ Connecting...</span>}
+        {!room && !isConnecting && !error && <span>🚀 Preparing room...</span>}
+        {members.length === 0 && room && !isConnecting && (
+          <span>👋 Waiting for others to join...</span>
+        )}
+      </div>
+    );
+  }
 
   let screenTrack: RemoteVideoTrack;
   var sharedScreens = [] as Array<RemoteVideoTrack>;
-   members.forEach(m => {
-     //  TODO: don't show local screen share if (p instanceof LocalParticipant) {
-     //    return;
-     //  }
-     m.videoTracks.forEach(track => {
-       if (track.trackName === 'screen' && track.track) {
-         screenTrack = track.track as RemoteVideoTrack;
+  members.forEach(m => {
+    //  TODO: don't show local screen share if (p instanceof LocalParticipant) {
+    //    return;
+    //  }
+    m.videoTracks.forEach(track => {
+      if (track.trackName === 'screen' && track.track) {
+        screenTrack = track.track as RemoteVideoTrack;
         //  console.log(screenTrack);
-         if (!sharedScreens.includes(screenTrack)) {
-           sharedScreens = [...sharedScreens, screenTrack];
-           if (mainVid !== screenTrack && sharedScreens.length != screens) {
-             setMainVid(screenTrack);
+        if (!sharedScreens.includes(screenTrack)) {
+          sharedScreens = [...sharedScreens, screenTrack];
+          if (mainVid !== screenTrack && sharedScreens.length != screens) {
+            setMainVid(screenTrack);
             //  setSpeakerMode(true);
-           }
-         }
-       }
-     });
-   });
+          }
+        }
+      }
+    });
+  });
   if (sharedScreens.length != screens) {
-     setNumScreens(sharedScreens.length);
+    setNumScreens(sharedScreens.length);
   }
-  
 
-   return (
-     <>
-       {!speakerMode && (
-         <div
-           id="remote-vid-wrapper"
-           ref={vidRef}
-           className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border ${
-             chatOpen ? 'animate-fade-in-right' : 'animate-fade-in-left'
-           }`}
-         >
-           {sharedScreens &&
-             sharedScreens.map((s, i) => {
-               return (
-                 <ScreenShareWrapper
-                   track={s}
-                   height={vidDims.height}
-                   width={vidDims.width}
-                   key={`${i}-screen`}
-                   onClick={() => {
-                     setMainVid(s);
-                     setSpeakerMode(sm => !sm);
-                   }}
-                 />
-               );
-             })}
-           {members.map((m, i) => {
-             return (
-               <MemberView
-                 key={m.identity}
-                 participant={m}
-                 height={vidDims.height}
-                 width={vidDims.width}
-                 showOverlay={showOverlay}
-                 quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
-                 onMouseEnter={() => setShowOverlay(true)}
-                 onMouseLeave={() => setShowOverlay(false)}
-                 onClick={() => {
-                   setMainVid(m);
-                   setSpeakerMode(sm => !sm);
-                 }}
-               />
-             );
-           })}
-           {members.length === 1 && (
-             <div
-               className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center m-1 bg-gray-800 rounded-xl`}
-               style={{
-                 height: vidDims.height,
-                 width: vidDims.width,
-               }}
-               onClick={() => setSpeakerMode(sm => !sm)}
-             >
-               <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-xl text-white">
-                 <span>👋 Waiting for others to join...</span>
-               </div>
-             </div>
-           )}
-         </div>
-       )}
-       {speakerMode && (
-         <div
-           className={`flex flex-col sm:flex-row z-20 py-10 px-1 w-full lg:px-10 xl:px-20 justify-center sm:justify-around  ${
-             chatOpen ? 'animate-fade-in-right' : 'animate-fade-in-left'
-           }`}
-         >
-           <div className="flex flex-col sm:w-4/5 p-1 justify-center content-center">
-             {!mainVid || 'identity' in mainVid ? (
-               <MemberView
-                 key={mainVid?.identity ?? 'first-vid'}
-                 participant={mainVid ?? members[0]}
-                 height={'100%'}
-                 width={'100%'}
-                 classes={'aspect-w-16 aspect-h-9'}
-                 showOverlay={showOverlay}
-                 quality={VideoQuality.HIGH}
-                 onMouseEnter={() => setShowOverlay(true)}
-                 onMouseLeave={() => setShowOverlay(false)}
-                 onClick={() => setSpeakerMode(sm => !sm)}
-               />
-             ) : (
-               <ScreenShareWrapper
-                 track={mainVid}
-                 height={'100%'}
-                 width={'100%'}
-                 classes={'aspect-w-16 aspect-h-9'}
-                 key={`main-screen`}
-                 onClick={() => setSpeakerMode(sm => !sm)}
-               />
-             )}
-           </div>
-           <div
-             className={
-               'flex flex-row sm:flex-col sm:w-1/5 p-1 justify-center content-center no-scrollbar'
-             }
-             onClick={() => setSpeakerMode(sm => !sm)}
-           >
-             {members.length === 1 && (
-               <>
-                 <div
-                   className={`ml-1 mr-1 w-full sm:w-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
-                 >
-                   <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-sm md:text-md xl:text-lg text-white text-center px-1 sm:px-2 md:px-3 ">
-                     <span>👋 Waiting for others to join...</span>
-                   </div>
-                 </div>
-               </>
-             )}
-             {sharedScreens &&
-               sharedScreens.map((s, i) => {
-                 if (s !== mainVid)
-                   return (
-                     <ScreenShareWrapper
-                       track={s}
-                       height={'100%'}
-                       width={'100%'}
-                       classes={
-                         'ml-1 mr-1 sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9'
-                       }
-                       key={`sidebar-screen-${i}`}
-                       onClick={() => {
-                         setMainVid(s);
-                         setSpeakerMode(sm => !sm);
-                       }}
-                     />
-                   );
-                 else return null;
-               })}
-             {members.map((m, i) => {
-               if (m !== mainVid)
-                 return (
-                   <MemberView
-                     key={m.identity}
-                     participant={m}
-                     height={'100%'}
-                     width={'100%'}
-                     classes={
-                       'ml-1 mr-1 sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9'
-                     }
-                     showOverlay={showOverlay}
-                     quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
-                     onMouseEnter={() => setShowOverlay(true)}
-                     onMouseLeave={() => setShowOverlay(false)}
-                     onClick={() => {
-                       setMainVid(m);
-                       setSpeakerMode(sm => !sm);
-                     }}
-                   />
-                 );
-               else return null;
-             })}
-           </div>
-         </div>
-       )}
-       <Chat
+  return (
+    <>
+      {!speakerMode && (
+        <div
+          id="remote-vid-wrapper"
+          ref={vidRef}
+          className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border ${
+            chatOpen ? 'animate-fade-in-right' : 'animate-fade-in-left'
+          }`}
+        >
+          {sharedScreens &&
+            sharedScreens.map((s, i) => {
+              return (
+                <ScreenShareWrapper
+                  track={s}
+                  height={vidDims.height}
+                  width={vidDims.width}
+                  key={`${i}-screen`}
+                  onClick={() => {
+                    setMainVid(s);
+                    setSpeakerMode(sm => !sm);
+                  }}
+                />
+              );
+            })}
+          {members.map((m, i) => {
+            return (
+              <MemberView
+                key={m.identity}
+                participant={m}
+                height={vidDims.height}
+                width={vidDims.width}
+                showOverlay={showOverlay}
+                quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
+                onMouseEnter={() => setShowOverlay(true)}
+                onMouseLeave={() => setShowOverlay(false)}
+                onClick={() => {
+                  setMainVid(m);
+                  setSpeakerMode(sm => !sm);
+                }}
+              />
+            );
+          })}
+          {members.length === 1 && (
+            <div
+              className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center m-1 bg-gray-800 rounded-xl`}
+              style={{
+                height: vidDims.height,
+                width: vidDims.width,
+              }}
+              onClick={() => setSpeakerMode(sm => !sm)}
+            >
+              <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-xl text-white">
+                <span>👋 Waiting for others to join...</span>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+      {speakerMode && (
+        <div
+          className={`flex flex-col sm:flex-row z-20 py-10 px-1 w-full lg:px-10 xl:px-20 justify-center sm:justify-around  ${
+            chatOpen ? 'animate-fade-in-right' : 'animate-fade-in-left'
+          }`}
+        >
+          <div className="flex flex-col sm:w-4/5 p-1 justify-center content-center">
+            {!mainVid || 'identity' in mainVid ? (
+              <MemberView
+                key={mainVid?.identity ?? 'first-vid'}
+                participant={mainVid ?? members[0]}
+                height={'100%'}
+                width={'100%'}
+                classes={'aspect-w-16 aspect-h-9'}
+                showOverlay={showOverlay}
+                quality={VideoQuality.HIGH}
+                onMouseEnter={() => setShowOverlay(true)}
+                onMouseLeave={() => setShowOverlay(false)}
+                onClick={() => setSpeakerMode(sm => !sm)}
+              />
+            ) : (
+              <ScreenShareWrapper
+                track={mainVid}
+                height={'100%'}
+                width={'100%'}
+                classes={'aspect-w-16 aspect-h-9'}
+                key={`main-screen`}
+                onClick={() => setSpeakerMode(sm => !sm)}
+              />
+            )}
+          </div>
+          <div
+            className={
+              'flex flex-row sm:flex-col sm:w-1/5 p-1 justify-center content-center no-scrollbar'
+            }
+            onClick={() => setSpeakerMode(sm => !sm)}
+          >
+            {members.length === 1 && (
+              <>
+                <div
+                  className={`ml-1 mr-1 w-full sm:w-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
+                >
+                  <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-sm md:text-md xl:text-lg text-white text-center px-1 sm:px-2 md:px-3 ">
+                    <span>👋 Waiting for others to join...</span>
+                  </div>
+                </div>
+              </>
+            )}
+            {sharedScreens &&
+              sharedScreens.map((s, i) => {
+                if (s !== mainVid)
+                  return (
+                    <ScreenShareWrapper
+                      track={s}
+                      height={'100%'}
+                      width={'100%'}
+                      classes={
+                        'ml-1 mr-1 sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9'
+                      }
+                      key={`sidebar-screen-${i}`}
+                      onClick={() => {
+                        setMainVid(s);
+                        setSpeakerMode(sm => !sm);
+                      }}
+                    />
+                  );
+                else return null;
+              })}
+            {members.map((m, i) => {
+              if (m !== mainVid)
+                return (
+                  <MemberView
+                    key={m.identity}
+                    participant={m}
+                    height={'100%'}
+                    width={'100%'}
+                    classes={
+                      'ml-1 mr-1 sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9'
+                    }
+                    showOverlay={showOverlay}
+                    quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
+                    onMouseEnter={() => setShowOverlay(true)}
+                    onMouseLeave={() => setShowOverlay(false)}
+                    onClick={() => {
+                      setMainVid(m);
+                      setSpeakerMode(sm => !sm);
+                    }}
+                  />
+                );
+              else return null;
+            })}
+          </div>
+        </div>
+      )}
+     {!disableChat && <Chat
         //  participants={members}
-         localParticipant={localParticipant}
-         chatOpen={chatOpen}
-         setChatOpen={setChatOpen}
-       />
-     </>
-   );
- };
+        localParticipant={localParticipant}
+        chatOpen={chatOpen}
+        setChatOpen={setChatOpen}
+      />}
+    </>
+  );
+};
 export default RoomWrapper

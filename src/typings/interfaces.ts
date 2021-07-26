@@ -15,6 +15,7 @@ export interface CatalystChatProps {
   audioOnDefault?: boolean;
   videoOnDefault?: boolean;
   simulcast?: boolean;
+  disableChat?: boolean;
   arbData?: Uint8Array;
   handleReceiveArbData: (arbData: Uint8Array) => void;
   onEndCall: () => void;

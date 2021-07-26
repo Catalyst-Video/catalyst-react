@@ -20,6 +20,7 @@ const CatalystChat = ({
   audioOnDefault,
   videoOnDefault,
   simulcast,
+  disableChat,
   arbData,
   handleReceiveArbData,
   onEndCall,
@@ -91,6 +92,7 @@ const CatalystChat = ({
             }}
             fade={fade ?? DEFAULT_AUTOFADE}
             onEndCall={onEndCall}
+            disableChat={disableChat}
             arbData={arbData}
             handleReceiveArbData={handleReceiveArbData}
           />

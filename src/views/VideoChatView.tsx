@@ -33,6 +33,7 @@ const VideoChat = ({
   token,
   meta,
   fade,
+  disableChat,
   arbData,
   handleReceiveArbData,
   onEndCall,
@@ -40,6 +41,7 @@ const VideoChat = ({
   token: string;
   meta: RoomMetaData;
   fade: number;
+  disableChat?: boolean;
   arbData?: Uint8Array;
   handleReceiveArbData: (arbData: Uint8Array) => void;
   onEndCall: () => void;
@@ -212,6 +214,7 @@ const VideoChat = ({
                 onLeave={onLeave}
                 speakerMode={speakerMode}
                 setSpeakerMode={setSpeakerMode}
+                disableChat={disableChat}
               />
               {roomState.room && (
                 <div
