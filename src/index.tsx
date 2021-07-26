@@ -1,75 +1,69 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { CatalystChatProps } from "./typings/interfaces";
 
 // Styles
 import './styles/catalyst.css';
 import './styles/tailwind.output.css';
-
-// Types
-import { CatalystVideoChatProps } from './typings/interfaces';
-import { PermsLoading, SetupRoom } from './components';
-import { setThemeColor } from './utils/general';
-import VideoChat from './components/VideoChat';
-import DetectRTC from 'detectrtc';
-import {
-  DEFAULT_AUTOFADE,
-  DEFAULT_SERVER_ADDRESS,
-  DEFAULT_THEMECOLOR,
-} from './utils/globals';
+import VideoChat from "./views/VideoChatView";
+import { generateUUID, setThemeColor } from "./utils/general";
+import { DEFAULT_AUTOFADE, DEFAULT_THEME } from "./utils/globals";
+import genRandomName from "./utils/name_gen";
+import { useCookies } from 'react-cookie';
 
 const CatalystChat = ({
-  sessionKey,
-  uniqueAppId,
-  cstmServerAddress,
-  defaults,
-  hiddenTools,
-  picInPic,
-  onStartCall,
-  onAddPeer,
-  onRemovePeer,
-  onEndCall,
-  arbitraryData,
-  onReceiveArbitraryData,
-  onSubmitLog,
-  cstmWelcomeMsg,
-  cstmOptionBtns,
-  themeColor,
-  autoFade,
+  room,
+  appId,
   name,
-  alwaysBanner,
-  darkModeDefault,
-  disableLocalVidDrag,
-  disableSetupRoom,
-  cstmBackground,
-  disableRedIndicators,
-  fourThreeAspectRatioEnabled,
-  showSetNameBox,
-}: CatalystVideoChatProps) => {
-  const [hasPerms, setPermissions] = useState(false);
-  const [isUserReady, setUserReady] = useState(disableSetupRoom ?? false);
-  const [dark, setDark] = useState(darkModeDefault ?? false);
-  const [localName, setLocalName] = useState(name ?? '');
-  const [audioEnabled, setAudioEnabled] = useState<boolean>(
-    defaults?.audioOn ?? true
-  );
-  const [videoEnabled, setVideoEnabled] = useState<boolean>(
-    defaults?.videoOn ?? true
-  );
-  const [audInput, setAudInput] = useState<MediaDeviceInfo>();
-  const [vidInput, setVidInput] = useState<MediaDeviceInfo>();
+  theme,
+  dark,
+  fade,
+  audioOnDefault,
+  videoOnDefault,
+  simulcast,
+  disableChat,
+  arbData,
+  handleReceiveArbData,
+  onEndCall,
+}: CatalystChatProps) => {
+  const [ready, setReady] = useState(true);
+  const [token, setToken] = useState('');
+  const [userName, setUserName] = useState(name ?? genRandomName());
+  const [cookies, setCookie] = useCookies(['PERSISTENT_CLIENT_ID']);
+  
 
   useEffect(() => {
-    DetectRTC.load(() => {
-      setPermissions(
-        DetectRTC.isWebRTCSupported &&
-          DetectRTC.isWebsiteHasWebcamPermissions &&
-          DetectRTC.isWebsiteHasMicrophonePermissions
-      );
-    });
+    const persistentClientId = cookies.PERSISTENT_CLIENT_ID || generateUUID();
+    if (!cookies.PERSISTENT_CLIENT_ID)
+      setCookie('PERSISTENT_CLIENT_ID', persistentClientId, {
+        expires: new Date(Date.now() + (1000 * 60 * 60 * 24 * 365)),
+      });
+      // obtain user token
+      fetch(
+        `https://pricey-somber-silence.glitch.me/token?participantName=${userName}&customerUid=${appId}&roomName=${room}&persistentClientId=${persistentClientId}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            mode: 'no-cors',
+          },
+        }
+      )
+        .then(response => {
+          if (response.status === 200) {
+            response.json().then(json => {
+              setToken(json.token);
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      // set global theme
+    setThemeColor(
+      theme ?? DEFAULT_THEME
+    );
+
   }, []);
-
-  useEffect(() => {
-    setThemeColor(themeColor ?? DEFAULT_THEMECOLOR);
-  }, [themeColor]);
 
   return (
     <div
@@ -87,92 +81,30 @@ const CatalystChat = ({
       }}
     >
       <div
-        id="theme-wrapper"
+        id="dark-wrapper"
         className={`${
           dark ? 'dark' : ''
         } h-full w-full m-0 p-0 overflow-hidden max-h-screen max-w-screen box-border`}
       >
-        {hasPerms &&
-        isUserReady &&
-        DetectRTC.isWebRTCSupported &&
-        (DetectRTC.browser.isChrome ||
-          DetectRTC.browser.isEdge ||
-          DetectRTC.browser.isSafari) ? (
+        {ready ? (
           <VideoChat
-            sessionKey={sessionKey}
-            uniqueAppId={uniqueAppId}
-            cstmServerAddress={cstmServerAddress ?? DEFAULT_SERVER_ADDRESS}
-            defaults={defaults}
-            hiddenTools={hiddenTools}
-            picInPic={picInPic}
-            onStartCall={onStartCall}
-            onAddPeer={onAddPeer}
-            onRemovePeer={onRemovePeer}
+            token={token}
+            // theme={theme ?? 'teal'}
+            meta={{
+              audioEnabled: audioOnDefault ?? true,
+              videoEnabled: videoOnDefault ?? true,
+              simulcast: simulcast ?? true,
+              loglevel: 'trace',
+            }}
+            fade={fade ?? DEFAULT_AUTOFADE}
             onEndCall={onEndCall}
-            onSubmitLog={onSubmitLog}
-            localName={localName}
-            arbitraryData={arbitraryData}
-            onReceiveArbitraryData={onReceiveArbitraryData}
-            cstmWelcomeMsg={cstmWelcomeMsg}
-            cstmOptionBtns={cstmOptionBtns}
-            themeColor={themeColor ?? DEFAULT_THEMECOLOR}
-            autoFade={autoFade ?? DEFAULT_AUTOFADE}
-            alwaysBanner={alwaysBanner}
-            disableLocalVidDrag={disableLocalVidDrag}
-            dark={dark}
-            setDark={setDark}
-            audioEnabled={audioEnabled}
-            setAudioEnabled={setAudioEnabled}
-            videoEnabled={videoEnabled}
-            setVideoEnabled={setVideoEnabled}
-            audInput={audInput}
-            vidInput={vidInput}
-            setAudInput={setAudInput}
-            setVidInput={setVidInput}
-            disableRedIndicators={disableRedIndicators}
-            fourThreeAspectRatioEnabled={fourThreeAspectRatioEnabled}
+            disableChat={disableChat}
+            arbData={arbData}
+            handleReceiveArbData={handleReceiveArbData}
           />
-        ) : DetectRTC.isWebRTCSupported &&
-          (DetectRTC.browser.isChrome ||
-            DetectRTC.browser.isEdge ||
-            DetectRTC.browser.isSafari) &&
-          !disableSetupRoom &&
-          hasPerms &&
-          !isUserReady ? (
-          <SetupRoom
-            sessionKey={sessionKey}
-            setUserReady={setUserReady}
-            audioEnabled={audioEnabled}
-            setAudioEnabled={setAudioEnabled}
-            videoEnabled={videoEnabled}
-            setVideoEnabled={setVideoEnabled}
-            themeColor={themeColor ?? DEFAULT_THEMECOLOR}
-            audInput={audInput}
-            vidInput={vidInput}
-            setAudInput={setAudInput}
-            setVidInput={setVidInput}
-            cstmBackground={cstmBackground}
-            setLocalName={setLocalName}
-            showSetNameBox={showSetNameBox}
-          />
-        ) : (
-          <PermsLoading
-            hasPerms={hasPerms}
-            setPermissions={setPermissions}
-            cstmBackground={cstmBackground}
-            themeColor={themeColor ?? DEFAULT_THEMECOLOR}
-            browserSupported={
-              (DetectRTC.isWebRTCSupported &&
-                (DetectRTC.browser.isChrome ||
-                  DetectRTC.browser.isEdge ||
-                  DetectRTC.browser.isSafari)) ??
-              true
-            }
-          />
-        )}
+        ) : null}
       </div>
     </div>
   );
 };
-
 export default CatalystChat;
