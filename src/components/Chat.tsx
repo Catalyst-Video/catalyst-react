@@ -15,14 +15,12 @@ import { ChatMessage } from '../typings/interfaces';
 const Chat = ({
   chatOpen,
   setChatOpen,
-  //   participants,
     localParticipant,
     chatMessages,
   setChatMessages
 }: {
   chatOpen: boolean;
   setChatOpen: Function;
-  //   participants: Participant[];
   localParticipant?: LocalParticipant;
   chatMessages: ChatMessage[];
   setChatMessages: Function;
@@ -32,9 +30,8 @@ const Chat = ({
   const encoder = new TextEncoder();
 
   const handleSendMsg = (msg: string) => {
-    // Send message over data channel, add message to screen (if message contains content)
     if (msg && msg.length > 0 && RegExp(`.`).test(msg)) {
-      console.log(msg);
+      // console.log(msg);
       // Prevent cross site scripting
       msg = msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
       if (localParticipant) {
@@ -85,13 +82,13 @@ const Chat = ({
     <>
       {chatOpen && (
         <div
-          className={`bg-gray-700 flex h-full relative z-20 w-64 ${
+          className={`bg-gray-700 flex h-full absolute right-0 md:relative z-40 md:z-20 w-96 md:w-64 ${
             chatOpen ? 'animate-fade-in-right' : 'animate-fade-out-right'
           }`}
         >
           <div
             id="chat-zone"
-            className="flex h-full absolute overflow-x-none inset-0 pt-16 pb-36"
+            className="flex h-full absolute overflow-x-none inset-0 pt-6 md:pt-16 pb-36"
           >
             <div
               id="chat-messages"
@@ -163,7 +160,7 @@ const Chat = ({
               onClick={() => {
                 handleSendMsg(chatBox);
               }}
-              className={`bg-primary ml-2 p-2 cursor-pointer fixed right-0 z-30 rounded-xl text-white h-10 mr-1`}
+              className={`bg-primary mt-2 ml-2 p-2 cursor-pointer fixed right-0 z-30 rounded-xl text-white h-10 mr-1`}
             >
               <FontAwesomeIcon
                 id="chat-send"
@@ -179,7 +176,7 @@ const Chat = ({
       <div
         className={`absolute inset-y-0  ${
           chatOpen
-            ? 'right-48 animate-fade-in-right'
+            ? 'left-2 md:right-48 animate-fade-in-right'
             : 'right-2 animate-fade-in-left'
         } flex items-center h-full z-40`}
         //bottom-4 right-3
