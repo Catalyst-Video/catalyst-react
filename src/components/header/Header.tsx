@@ -18,7 +18,7 @@ const HeaderLogo = ({
       </div>
       {!alwaysBanner && (
           <div
-            className="hidden sm:block fixed not-selectable m-3 z-40"
+            className="hidden sm:block absolute not-selectable top-2 left-2 z-40"
           >
             <div
               id="header-img-wrapper"

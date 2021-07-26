@@ -21,6 +21,7 @@ export interface RoomState {
   room?: Room;
   /* all participants in the room, including the local participant. */
   participants: Participant[];
+  localParticipant?: LocalParticipant;
   /* all subscribed audio tracks in the room, not including local participant. */
   audioTracks: AudioTrack[];
   error?: Error;
@@ -30,6 +31,7 @@ export function useRoom(): RoomState {
   const [room, setRoom] = useState<Room>();
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<Error>();
+  const [localParticipant, setLocalParticipant] = useState<LocalParticipant>();
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [audioTracks, setAudioTracks] = useState<AudioTrack[]>([]);
 
@@ -37,8 +39,9 @@ export function useRoom(): RoomState {
     async (url: string, token: string, options?: ConnectOptions) => {
       setIsConnecting(true);
       try {
-        const newRoom = await connect(url, token, options);
+        const newRoom = await connect(url, token, options)
         setRoom(newRoom);
+        setLocalParticipant(newRoom.localParticipant);
         const onParticipantsChanged = () => {
           const remotes = Array.from(newRoom.participants.values());
           const participants: Participant[] = [newRoom.localParticipant];
@@ -85,7 +88,7 @@ export function useRoom(): RoomState {
       } catch (error) {
         setIsConnecting(false);
         setError(error);
-
+        console.error(error)
         return undefined;
       }
     },
@@ -97,12 +100,14 @@ export function useRoom(): RoomState {
     isConnecting,
     room,
     error,
+    localParticipant,
     participants,
     audioTracks,
   };
 }
 
 /**
+ * TODO: allow customization of this
  * Default sort for participants, it'll order participants by:
  * 1. dominant speaker (speaker with the loudest audio level)
  * 2. local participant

@@ -1,5 +1,5 @@
 import { Track } from "livekit-client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import { Property } from 'csstype';
 
 const VidWrapper = ({

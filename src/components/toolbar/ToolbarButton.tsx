@@ -72,6 +72,7 @@ export const ToolbarButton = ({
                            padding: '8px',
                            borderTop:
                              i > 0 ? '1px solid rgba(255, 255, 255, 0.2)' : '0',
+                           
                          }}
                          onClick={() => handleDeviceClick(id)}
                        >
@@ -116,7 +117,9 @@ export const ToolbarButton = ({
                  >
                    <FontAwesomeIcon
                      size="xs"
-                     className={iconColor ? 'text-gray-900' : 'text-white'}
+                     className={`transition transform hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none  ${
+                       iconColor ? 'text-gray-900' : 'text-white'
+                     }`}
                      icon={deviceMenu ? faChevronUp : faChevronDown}
                    />
                  </button>

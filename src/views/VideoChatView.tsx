@@ -16,42 +16,70 @@ import {
   ConnectOptions,
   TrackPublishOptions,
   createLocalTracks,
+  DataPacket_Kind,
 } from 'livekit-client';
 import React, { useEffect, useRef, useState } from 'react';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import AudWrapper from '../components/wrapper/AudWrapper';
-import { RoomMetaData } from '../typings/interfaces';
+import { ChatMessage, RoomMetaData } from '../typings/interfaces';
 import RoomWrapper  from '../components/RoomWrapper';
 import HeaderLogo from '../components/header/Header';
 import Toolbar from '../components/toolbar/Toolbar';
 import { useRoom } from '../hooks/useRoom';
 import { debounce } from 'ts-debounce';
+import { protobufPackage } from 'livekit-client/dist/proto/livekit_models';
 
 
 const VideoChat = ({
   token,
   meta,
   fade,
+  disableChat,
+  arbData,
+  handleReceiveArbData,
   onEndCall,
 }: {
   token: string;
   meta: RoomMetaData;
   fade: number;
+  disableChat?: boolean;
+  arbData?: Uint8Array;
+  handleReceiveArbData: (arbData: Uint8Array) => void;
   onEndCall: () => void;
 }) => {
   const fsHandle = useFullScreenHandle();
   const [numParticipants, setNumParticipants] = useState(0);
   const [speakerMode, setSpeakerMode] = useState(false);
   const roomState = useRoom();
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
 
   const toolbarRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
+  const decoder = new TextDecoder();
 
   const onConnected = async room => {
     room.on(RoomEvent.ParticipantConnected, () => updateParticipantSize(room));
     room.on(RoomEvent.ParticipantDisconnected, () =>
       updateParticipantSize(room)
     );
+    room.on(RoomEvent.DataReceived, (data: Uint8Array, participant: Participant, kind: DataPacket_Kind) => {
+      const strData = decoder.decode(data)
+      console.log(strData)
+      const parsedData = JSON.parse(strData)
+      if (JSON.parse(strData)?.type === 'ctw-chat') {
+        console.log('received chat ', JSON.parse(strData).text);
+        setChatMessages(chatMessages => [
+          ...chatMessages,
+          {
+            text: parsedData.text,
+            sender: room.participants?.get(parsedData.sender) ?? ''
+          },
+        ]);
+        
+      } else {
+        handleReceiveArbData(data);
+      }
+    });
     updateParticipantSize(room);
     console.log(room);
 
@@ -63,6 +91,14 @@ const VideoChat = ({
       room.localParticipant.publishTrack(track);
     });
   };
+
+  useEffect(() => {
+    if (arbData)
+      roomState.localParticipant?.publishData(
+        arbData,
+        DataPacket_Kind.RELIABLE
+      );
+  }, [arbData]);
 
   useEffect(() => {
     if (token && token.length > 0) {
@@ -91,7 +127,7 @@ const VideoChat = ({
   };
 
   const onLeave = () => {
-    onEndCall()
+    onEndCall();
   };
 
   // animate toolbar & header fadeIn/Out
@@ -155,7 +191,7 @@ const VideoChat = ({
             ref={headerRef}
           >
             <HeaderLogo alwaysBanner={false} />
-            <div className="absolute right-3 sm:right-5 top-10 sm:top-5 flex z-30">
+            <div className="absolute right-3 sm:right-5 top-10 sm:top-5 flex z-50">
               <FontAwesomeIcon
                 icon={faUserFriends}
                 size="lg"
@@ -198,6 +234,9 @@ const VideoChat = ({
                 onLeave={onLeave}
                 speakerMode={speakerMode}
                 setSpeakerMode={setSpeakerMode}
+                disableChat={disableChat}
+                chatMessages={chatMessages}
+                setChatMessages={setChatMessages}
               />
               {roomState.room && (
                 <div

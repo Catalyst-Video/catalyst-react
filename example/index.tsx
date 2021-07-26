@@ -53,7 +53,8 @@ const HoursTest = () => {
         Toggle
       </button>
       <img
-        src="https://user-images.githubusercontent.com/47064842/126739397-a87e0fa1-46c8-4920-91c7-5f1ff9924048.png"
+        // src="https://user-images.githubusercontent.com/47064842/126739397-a87e0fa1-46c8-4920-91c7-5f1ff9924048.png"
+        src="https://user-images.githubusercontent.com/47064842/126837587-6d0eb1cd-4ea6-4c99-88e6-c5e6b382f78a.png"
         alt="hours"
         style={{
           height: '100%',
@@ -76,7 +77,7 @@ const HoursTest = () => {
             <CatalystChat
               room={'testRoom'}
               appId={'testUid'}
-              dark={false}
+              dark={true}
               audioOnDefault={false}
               theme={{
                 primary: '#50c878',

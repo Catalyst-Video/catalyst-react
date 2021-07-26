@@ -13,11 +13,11 @@ import {
 import { VideoQuality } from "livekit-client/dist/proto/livekit_rtc";
 import React, { CSSProperties, ReactElement, useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { useParticipant } from "../hooks/useParticipant";
+import { useParticipant } from "../hooks/useMember";
 import VidWrapper from "./wrapper/VidWrapper";
 
 const MemberView = ({
-  member: m,
+  participant: m,
   width,
   height,
   classes,
@@ -28,7 +28,7 @@ const MemberView = ({
   onMouseLeave,
   onClick,
 }: {
-  member: Participant;
+  participant: Participant;
   displayName?: string;
   width: Property.Width;
   height: Property.Height;
@@ -108,9 +108,7 @@ const MemberView = ({
   let objectFit: Property.ObjectFit = 'contain';
   if (
     videoPub?.dimensions &&
-    (16 - 9) *
-      (videoPub.dimensions.width - videoPub.dimensions.height) >
-      0
+    (16 - 9) * (videoPub.dimensions.width - videoPub.dimensions.height) > 0
   ) {
     objectFit = 'cover';
   }
