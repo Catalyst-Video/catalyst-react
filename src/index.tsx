@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import { CatalystChatProps } from "./typings/interfaces";
 
 // Styles
 import './styles/catalyst.css';
 import './styles/tailwind.output.css';
 import VideoChat from "./views/VideoChatView";
-import { useEffect } from "react";
-import { setThemeColor } from "./utils/general";
+import { generateUUID, setThemeColor } from "./utils/general";
 import { DEFAULT_AUTOFADE, DEFAULT_THEME } from "./utils/globals";
 import genRandomName from "./utils/name_gen";
+import { useCookies } from 'react-cookie';
 
 const CatalystChat = ({
   room,
@@ -28,30 +28,36 @@ const CatalystChat = ({
   const [ready, setReady] = useState(true);
   const [token, setToken] = useState('');
   const [userName, setUserName] = useState(name ?? genRandomName());
+  const [cookies, setCookie] = useCookies(['PERSISTENT_CLIENT_ID']);
+  
 
   useEffect(() => {
-    // obtain user token
-    // TODO: store token as cookie in local storage for pricing
-    fetch(
-      `https://pricey-somber-silence.glitch.me/token?participantName=${userName}&customerUid=${appId}&roomName=${room}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          mode: 'no-cors',
-        },
-      }
-    )
-      .then(response => {
-        if (response.status === 200) {
-          response.json().then(json => {
-            setToken(json.token);
-          });
-        }
-      })
-      .catch(err => {
-        console.log(err);
+    const persistentClientId = cookies.PERSISTENT_CLIENT_ID || generateUUID();
+    if (!cookies.PERSISTENT_CLIENT_ID)
+      setCookie('PERSISTENT_CLIENT_ID', persistentClientId, {
+        expires: new Date(Date.now() + (1000 * 60 * 60 * 24 * 365)),
       });
+      // obtain user token
+      fetch(
+        `https://pricey-somber-silence.glitch.me/token?participantName=${userName}&customerUid=${appId}&roomName=${room}&persistentClientId=${persistentClientId}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            mode: 'no-cors',
+          },
+        }
+      )
+        .then(response => {
+          if (response.status === 200) {
+            response.json().then(json => {
+              setToken(json.token);
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
       // set global theme
     setThemeColor(
       theme ?? DEFAULT_THEME

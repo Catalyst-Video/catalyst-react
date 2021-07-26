@@ -102,7 +102,7 @@ const Chat = ({
                 if (msg.sender instanceof LocalParticipant)
                   return (
                     <div
-                      className="sent-message flex flex-col items-start content-end p-1 pr-2 float-right fade-in-bottom z-40"
+                      className="sent-message flex flex-col items-start content-end p-1 pr-2 ml-20 fade-in-bottom z-40"
                       key={idx}
                     >
                       <span className="text-white dark:text-white font-semibold text-xs ml-auto p-1 not-selectable">
@@ -137,7 +137,7 @@ const Chat = ({
               <div
                 ref={chatEndRef}
                 id="chat-end"
-                className="bg-red w-full h-2 content-end" //invisible
+                className="invisible w-full h-1 content-end" 
               ></div>
             </div>
           </div>
