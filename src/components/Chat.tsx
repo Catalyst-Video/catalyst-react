@@ -92,7 +92,7 @@ const Chat = ({
           >
             <div
               id="chat-messages"
-              className="w-full h-auto overflow-x-none overflow-y-auto z-20 inset-0 relative"
+              className="w-full h-auto overflow-x-none overflow-y-auto z-20 inset-0 relative no-scrollbar "
             >
               {chatMessages.map((msg, idx) => {
                 if (msg.sender instanceof LocalParticipant)

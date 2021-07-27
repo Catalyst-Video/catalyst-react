@@ -138,7 +138,7 @@ const MemberView = ({
           <div className={`w-full h-full bg-primary`} />
         )}{' '}
         <div className="absolute bottom-0 left-0 flex text-white justify-between p-1 w-full">
-          <div className="text-white text-xs md:text-sm not-selectable flex items-center justify-center bg-gray-700 bg-opacity-40 px-2 py-1 rounded-xl">
+          <div className="text-white text-xs not-selectable flex items-center justify-center bg-gray-700 bg-opacity-40 px-2 py-1 rounded-xl">
             {displayName ?? isLocal ? `${m.identity} (You)` : m.identity}
           </div>
           <div>
