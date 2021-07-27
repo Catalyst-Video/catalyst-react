@@ -50,8 +50,9 @@ const VideoChat = ({
   const fsHandle = useFullScreenHandle();
   const [numParticipants, setNumParticipants] = useState(0);
   const [speakerMode, setSpeakerMode] = useState(false);
-  const roomState = useRoom();
+  const [roomClosed, setRoomClosed] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const roomState = useRoom();
 
   const toolbarRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
@@ -128,6 +129,7 @@ const VideoChat = ({
 
   const onLeave = () => {
     onEndCall();
+    setRoomClosed(true);
   };
 
   // animate toolbar & header fadeIn/Out
@@ -225,35 +227,39 @@ const VideoChat = ({
           </div>
 
           <div id="call-section" className="w-full h-full items-end">
-            <div
-              id="vid-chat-cont"
-              className="absolute top-0 left-0 right-0 bottom-0 flex"
-            >
-              <RoomWrapper
-                roomState={roomState}
-                onLeave={onLeave}
-                speakerMode={speakerMode}
-                setSpeakerMode={setSpeakerMode}
-                disableChat={disableChat}
-                chatMessages={chatMessages}
-                setChatMessages={setChatMessages}
-              />
-              {roomState.room && (
-                <div
-                  ref={toolbarRef}
-                  className="absolute bottom-0 left-0 right-0 flex items-center justify-center mb-3 z-20"
-                >
-                  <Toolbar
-                    room={roomState.room}
-                    onLeave={onLeave}
-                    setSpeakerMode={setSpeakerMode}
-                  />
-                </div>
-              )}
-              {roomState.audioTracks.map(track => (
-                <AudWrapper key={track.sid} track={track} isLocal={false} />
-              ))}
-            </div>
+            {!roomClosed && (
+              <div id="vid-chat-cont" className="absolute inset-0 flex">
+                <RoomWrapper
+                  roomState={roomState}
+                  onLeave={onLeave}
+                  speakerMode={speakerMode}
+                  setSpeakerMode={setSpeakerMode}
+                  disableChat={disableChat}
+                  chatMessages={chatMessages}
+                  setChatMessages={setChatMessages}
+                />
+                {roomState.room && (
+                  <div
+                    ref={toolbarRef}
+                    className="absolute bottom-0 left-0 right-0 flex items-center justify-center mb-3 z-20"
+                  >
+                    <Toolbar
+                      room={roomState.room}
+                      onLeave={onLeave}
+                      setSpeakerMode={setSpeakerMode}
+                    />
+                  </div>
+                )}
+                {roomState.audioTracks.map(track => (
+                  <AudWrapper key={track.sid} track={track} isLocal={false} />
+                ))}
+              </div>
+            )}
+            {roomClosed && (
+              <div className="absolute not-selectable inset-0 w-full h-full flex justify-center items-center text-xl text-white z-40">
+                <span>🖐️ Call ended</span>
+              </div>
+            )}
           </div>
         </FullScreen>
       </div>
