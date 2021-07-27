@@ -86,11 +86,12 @@ const SetupView = ({
   };
 
     useEffect(() => {
-        if (!cookies.PREFERRED_VIDEO_DEVICE_ID) {
-            
-        }
+        // if (cookies.PREFERRED_VIDEO_DEVICE_ID) {
+        //     navigator.mediaDevices.map((d) => d.kind === cookies.PREFERRED_VIDEO_DEVICE_ID)
+        // }
+        // TODO: if media device changed in setup screen change it in real call 
       if(videoOn)
-          createLocalVideoTrack({ deviceId:  }).then(track => {
+          createLocalVideoTrack().then(track => {
             setVideoOn(true);
             setVideoTrack(track);
           });
