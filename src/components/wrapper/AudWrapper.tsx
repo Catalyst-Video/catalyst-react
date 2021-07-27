@@ -1,7 +1,8 @@
 import { Track } from "livekit-client";
+import React from "react";
 import { useEffect, useRef} from "react";
 
-const AudWrapper = ({ track, isLocal }: {
+const AudWrapper = React.memo(({ track, isLocal }: {
   track: Track;
   isLocal: boolean;
 }
@@ -22,5 +23,5 @@ const AudWrapper = ({ track, isLocal }: {
 
   // TODO: allow set sink id
   return null;
-};
+});
 export default AudWrapper;

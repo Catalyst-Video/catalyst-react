@@ -1,7 +1,7 @@
 import React from 'react';
 import HeaderImg from './HeaderImg';
 
-const HeaderLogo = ({
+const HeaderLogo = React.memo(({
   alwaysBanner,
 }: {
   alwaysBanner?: boolean;
@@ -35,6 +35,6 @@ const HeaderLogo = ({
       /> */}
     </div>
   );
-};
+});
 
 export default HeaderLogo;

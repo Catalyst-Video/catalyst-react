@@ -1,6 +1,6 @@
 import React from 'react';
 
-const HeaderImg = ({ color }: { color?: string }) => {
+const HeaderImg = React.memo(({ color }: { color?: string }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -28,5 +28,5 @@ const HeaderImg = ({ color }: { color?: string }) => {
       </g>
     </svg>
   );
-};
+});
 export default HeaderImg;

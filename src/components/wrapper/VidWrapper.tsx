@@ -2,7 +2,7 @@ import { Track } from "livekit-client";
 import React, { useEffect, useRef, useMemo } from "react";
 import { Property } from 'csstype';
 
-const VidWrapper = ({
+const VidWrapper = React.memo(({
   track,
   isLocal,
   objectFit,
@@ -41,5 +41,5 @@ const VidWrapper = ({
       // }}
     />
   );
-};
+});
 export default VidWrapper;

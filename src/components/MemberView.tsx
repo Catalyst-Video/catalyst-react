@@ -16,7 +16,7 @@ import { useInView } from "react-intersection-observer";
 import { useParticipant } from "../hooks/useMember";
 import VidWrapper from "./wrapper/VidWrapper";
 
-const MemberView = ({
+const MemberView = React.memo(({
   participant: m,
   width,
   height,
@@ -152,6 +152,6 @@ const MemberView = ({
       </div>
     </div>
   );
-};
+});
 export default MemberView;
 
