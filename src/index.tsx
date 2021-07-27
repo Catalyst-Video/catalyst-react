@@ -9,6 +9,8 @@ import { generateUUID, setThemeColor } from "./utils/general";
 import { DEFAULT_AUTOFADE, DEFAULT_THEME } from "./utils/globals";
 import genRandomName from "./utils/name_gen";
 import { useCookies } from 'react-cookie';
+import DetectRTC from 'detectrtc';
+import SetupView from './views/SetupView';
 
 const CatalystChat = ({
   room,
@@ -21,22 +23,45 @@ const CatalystChat = ({
   videoOnDefault,
   simulcast,
   disableChat,
+  disableSetupRoom,
   arbData,
   handleReceiveArbData,
   onEndCall,
 }: CatalystChatProps) => {
-  const [ready, setReady] = useState(true);
+  const [ready, setReady] = useState(disableSetupRoom ?? false);
   const [token, setToken] = useState('');
   const [userName, setUserName] = useState(name ?? genRandomName());
   const [cookies, setCookie] = useCookies(['PERSISTENT_CLIENT_ID']);
-  
+  const [hasPerms, setPermissions] = useState(false);
+  const [audioOn, setAudioOn] = useState(audioOnDefault ?? true);
+  const [videoOn, setVideoOn] = useState(videoOnDefault ?? true);
 
   useEffect(() => {
-    const persistentClientId = cookies.PERSISTENT_CLIENT_ID || generateUUID();
-    if (!cookies.PERSISTENT_CLIENT_ID)
-      setCookie('PERSISTENT_CLIENT_ID', persistentClientId, {
-        expires: new Date(Date.now() + (1000 * 60 * 60 * 24 * 365)),
-      });
+    // check for perms
+    DetectRTC.load(() => {
+      setPermissions(
+        DetectRTC.isWebRTCSupported &&
+        DetectRTC.isWebsiteHasWebcamPermissions &&
+        DetectRTC.isWebsiteHasMicrophonePermissions
+      )
+    });
+    // set global theme
+    setThemeColor(
+      theme ?? DEFAULT_THEME
+    );
+  }, []);
+
+  useEffect(() => {
+    if (ready && hasPerms) {
+      // set client ID
+      const persistentClientId =
+        cookies.PERSISTENT_CLIENT_ID || generateUUID();
+      if (!cookies.PERSISTENT_CLIENT_ID)
+        setCookie('PERSISTENT_CLIENT_ID', persistentClientId, {
+          expires: new Date(
+            Date.now() + 1000 * 60 * 60 * 24 * 365
+          ),
+        });
       // obtain user token
       fetch(
         `https://pricey-somber-silence.glitch.me/token?participantName=${userName}&customerUid=${appId}&roomName=${room}&persistentClientId=${persistentClientId}`,
@@ -58,18 +83,14 @@ const CatalystChat = ({
         .catch(err => {
           console.log(err);
         });
-      // set global theme
-    setThemeColor(
-      theme ?? DEFAULT_THEME
-    );
-
-  }, []);
+    }
+},[hasPerms, ready]);
 
   return (
     <div
       id="ctw"
       ref={ref => {
-        // dynamically make Catalyst work properly if there is no parent component
+        // dynamically make Catalyst size properly if there is no parent component
         if (ref && ref.parentNode?.parentNode?.nodeName === 'BODY') {
           ref.style.position = 'fixed';
           let ss = document.createElement('style');
@@ -86,25 +107,50 @@ const CatalystChat = ({
           dark ? 'dark' : ''
         } h-full w-full m-0 p-0 overflow-hidden max-h-screen max-w-screen box-border`}
       >
-        {ready ? (
+        {hasPerms &&
+        ready &&
+        (DetectRTC.browser.isChrome ||
+          DetectRTC.browser.isEdge ||
+          DetectRTC.browser.isSafari) ? (
           <VideoChat
             token={token}
-            // theme={theme ?? 'teal'}
             meta={{
-              audioEnabled: audioOnDefault ?? true,
-              videoEnabled: videoOnDefault ?? true,
+              audioEnabled: audioOn,
+              videoEnabled: videoOn,
               simulcast: simulcast ?? true,
               loglevel: 'trace',
             }}
             fade={fade ?? DEFAULT_AUTOFADE}
-            onEndCall={onEndCall}
             disableChat={disableChat}
             arbData={arbData}
             handleReceiveArbData={handleReceiveArbData}
+            onEndCall={onEndCall}
+          />
+        ) : DetectRTC.isWebRTCSupported &&
+          (DetectRTC.browser.isChrome ||
+            DetectRTC.browser.isEdge ||
+            DetectRTC.browser.isSafari) &&
+          !disableSetupRoom ? (
+          <SetupView
+                meta={{
+                  audioEnabled: audioOn,
+                  videoEnabled: videoOn,
+                  simulcast: simulcast ?? true,
+                  loglevel: 'trace',
+                }}
+                token={token}
+                setAudioOn={setAudioOn}
+                setVideoOn={setVideoOn}
+                audioOn={audioOn}
+                videoOn={videoOn}
+                setReady={setReady}
+                userName={userName}
+                setUserName={setUserName}
           />
         ) : null}
       </div>
     </div>
   );
+  
 };
 export default CatalystChat;

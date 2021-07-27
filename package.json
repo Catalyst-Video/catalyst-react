@@ -48,6 +48,7 @@
     "@tailwindcss/aspect-ratio": "^0.2.1",
     "@types/css-global-variables": "^3.0.1",
     "css-global-variables": "^3.0.2",
+    "detectrtc": "^1.4.1",
     "livekit-client": "^0.9.7",
     "lodash.debounce": "^4.0.8",
     "react-cookie": "^4.0.3",

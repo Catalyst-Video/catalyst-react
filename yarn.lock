@@ -5283,6 +5283,11 @@
     "defined" "^1.0.0"
     "minimist" "^1.1.1"
 
+"detectrtc@^1.4.1":
+  "integrity" "sha512-lxvyNN6/dSnwoVj1VstVFHel7S0BTmkfv1+01IBEy42D20pue27eB/MfphUOQz78jJ7WcQJDo6ZybhgBlUDi0Q=="
+  "resolved" "https://registry.npmjs.org/detectrtc/-/detectrtc-1.4.1.tgz"
+  "version" "1.4.1"
+
 "devtools-protocol@0.0.883894":
   "integrity" "sha512-33idhm54QJzf3Q7QofMgCvIVSd2o9H3kQPWaKT/fhoZh+digc+WSiMhbkeG3iN79WY4Hwr9G05NpbhEVrsOYAg=="
   "resolved" "https://registry.npmjs.org/devtools-protocol/-/devtools-protocol-0.0.883894.tgz"

@@ -253,7 +253,7 @@ const RoomWrapper = ({
           </div>
           <div
             className={
-              'flex flex-row sm:flex-col w-full h-1/5 sm:h-full sm:w-1/5 p-1 justify-center content-center no-scrollbar overflow-x-auto sm:overflow-y-auto top-0 left-0' //flex flex-row sm:flex-col  flex-wrap
+              'flex flex-row sm:flex-col w-full h-1/5 sm:h-full sm:w-1/5 p-1 justify-center content-center no-scrollbar overflow-x-auto sm:overflow-y-auto top-0 left-0'
             }
             onClick={() => setSpeakerMode(sm => !sm)}
           >
