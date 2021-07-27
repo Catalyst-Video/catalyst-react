@@ -14,6 +14,7 @@ import { RoomState } from "../hooks/useRoom";
 import { debounce } from 'ts-debounce';
 import Chat from "./Chat";
 import { ChatMessage } from "../typings/interfaces";
+import { useFullScreenHandle } from "react-full-screen";
 
 const RoomWrapper = ({
   roomState,
@@ -48,6 +49,7 @@ const RoomWrapper = ({
     width: '0px',
     height: '0px',
   });
+  const fsHandle = useFullScreenHandle()
 
   const resizeWrapper = () => {
     let margin = 2;
@@ -120,7 +122,7 @@ const RoomWrapper = ({
   useEffect(() => {
     if (!mainVid) setMainVid(members[0]);
     resizeWrapper();
-  }, [members, screens, chatOpen]);
+  }, [members, screens, chatOpen, fsHandle.active, speakerMode]);
 
   if (error || isConnecting || !room || members.length === 0) {
     return (
@@ -251,7 +253,7 @@ const RoomWrapper = ({
           </div>
           <div
             className={
-              'flex flex-row sm:flex-col sm:w-1/5 p-1 justify-center content-center no-scrollbar'
+              'flex flex-row sm:flex-col w-full h-1/5 sm:h-full sm:w-1/5 p-1 justify-center content-center no-scrollbar overflow-y-auto' //flex flex-row sm:flex-col
             }
             onClick={() => setSpeakerMode(sm => !sm)}
           >
@@ -272,10 +274,10 @@ const RoomWrapper = ({
                   return (
                     <ScreenShareWrapper
                       track={s}
-                      height={'100%'}
+                      height={'fit-content'}
                       width={'100%'}
                       classes={
-                        'ml-1 mr-1 sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9'
+                        'ml-1 mr-1 w-full sm:w-auto h-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9'
                       }
                       key={`sidebar-screen-${i}`}
                       onClick={() => {
@@ -292,10 +294,10 @@ const RoomWrapper = ({
                   <MemberView
                     key={m.identity}
                     participant={m}
-                    height={'100%'}
+                    height={'fit-content'}
                     width={'100%'}
                     classes={
-                      'ml-1 mr-1 sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9'
+                      'ml-1 mr-1 w-full sm:w-auto h-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9'
                     }
                     showOverlay={showOverlay}
                     quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}

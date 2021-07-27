@@ -31,7 +31,7 @@ const VidWrapper = ({
   return (
     <video
       ref={ref}
-      className={`min-h-0 min-w-0 rounded-lg h-full w-full ${
+      className={`min-h-0 min-w-0 rounded-lg h-auto w-full ${
         isLocal && isFrontFacing ? '' : ''
         // object-center
       } ${objectFit ?? ''}`}

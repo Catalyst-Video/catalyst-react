@@ -174,12 +174,11 @@ const Chat = ({
         </div>
       )}
       <div
-        className={`absolute inset-y-0  ${
+        className={`absolute  ${
           chatOpen
             ? 'left-2 sm:left-auto sm:right-48 animate-fade-in-right'
             : 'right-2 animate-fade-in-left'
-        } flex items-center h-full z-40`}
-        //bottom-4 right-3
+        } z-40 bottom-4 right-3`} // flex items-center h-full inset-y-0
       >
         <button
           className="z-40 focus:outline-none focus:border-0 flex bg-gray-600 dark:bg-gray-700 hover:bg-gray-500 dark:hover:bg-gray-600 rounded-full w-16 h-16 items-center justify-center"

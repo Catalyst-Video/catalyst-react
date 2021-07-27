@@ -137,15 +137,15 @@ const MemberView = ({
         ) : (
           <div className={`w-full h-full bg-primary`} />
         )}{' '}
-        <div className="absolute bottom-0 left-0 flex text-white justify-between p-2 w-full">
-          <div className="text-white text-sm not-selectable flex items-center justify-center bg-gray-700 bg-opacity-40 px-2 py-1 rounded-xl">
+        <div className="absolute bottom-0 left-0 flex text-white justify-between p-1 w-full">
+          <div className="text-white text-xs md:text-sm not-selectable flex items-center justify-center bg-gray-700 bg-opacity-40 px-2 py-1 rounded-xl">
             {displayName ?? isLocal ? `${m.identity} (You)` : m.identity}
           </div>
           <div>
             <FontAwesomeIcon
               icon={isMuted ? faMicrophoneSlash : faMicrophone}
               size="2x"
-              className={`text-white not-selectable bg-gray-700 h-8 w-8 bg-opacity-40 p-2 rounded-full`}
+              className={`text-white not-selectable bg-gray-700 h-7 w-7 md:h-8 md:w-8 bg-opacity-40 p-2 rounded-full`}
             />
           </div>
         </div>
