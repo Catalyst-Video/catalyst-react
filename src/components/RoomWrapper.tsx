@@ -253,14 +253,14 @@ const RoomWrapper = ({
           </div>
           <div
             className={
-              'flex flex-row sm:flex-col w-full h-1/5 sm:h-full sm:w-1/5 p-1 justify-center content-center no-scrollbar overflow-y-auto' //flex flex-row sm:flex-col
+              'flex flex-row sm:flex-col w-full h-1/5 sm:h-full sm:w-1/5 p-1 justify-center content-center no-scrollbar overflow-x-auto sm:overflow-y-auto top-0 left-0' //flex flex-row sm:flex-col  flex-wrap
             }
             onClick={() => setSpeakerMode(sm => !sm)}
           >
             {members.length === 1 && (
               <>
                 <div
-                  className={`ml-1 mr-1 w-full sm:w-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
+                  className={`box ml-1 mr-1 w-full sm:w-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
                 >
                   <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-sm md:text-md xl:text-lg text-white text-center px-1 sm:px-2 md:px-3 ">
                     <span>👋 Waiting for others to join...</span>
@@ -277,7 +277,7 @@ const RoomWrapper = ({
                       height={'fit-content'}
                       width={'100%'}
                       classes={
-                        'ml-1 mr-1 w-full sm:w-auto h-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9'
+                        'box ml-1 mr-1  w-full sm:w-auto h-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9'
                       }
                       key={`sidebar-screen-${i}`}
                       onClick={() => {
@@ -297,7 +297,7 @@ const RoomWrapper = ({
                     height={'fit-content'}
                     width={'100%'}
                     classes={
-                      'ml-1 mr-1 w-full sm:w-auto h-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9'
+                      'box ml-1 mr-1 w-full sm:w-auto h-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9'
                     }
                     showOverlay={showOverlay}
                     quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}

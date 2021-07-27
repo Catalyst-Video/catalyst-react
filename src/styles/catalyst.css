@@ -20,6 +20,10 @@
   padding: 32px;
 }
 
+/* #ctw .box {
+   flex: 1 1 80px;
+}
+ */
 
 /* highlight on drag */
 #ctw *::selection {
