@@ -1,4 +1,4 @@
-import { createLocalVideoTrack, CreateVideoTrackOptions, LocalVideoTrack } from "livekit-client"
+import { createLocalAudioTrack, createLocalVideoTrack, CreateVideoTrackOptions, LocalVideoTrack } from "livekit-client"
 import React, { useRef, useEffect, useState } from "react"
 import { RoomMetaData } from "../typings/interfaces";
 import VidWrapper from "../components/wrapper/VidWrapper";
@@ -83,12 +83,12 @@ const SetupView = ({
     }
   };
 
-  useEffect(() => {
-    // enable video by default
-    createLocalVideoTrack().then(track => {
-      setVideoOn(true);
-      setVideoTrack(track);
-    });
+    useEffect(() => {
+      if(videoOn)
+        createLocalVideoTrack().then(track => {
+            setVideoOn(true);
+            setVideoTrack(track);
+        });
   }, []);
 
   const toggleAudio = () => {
@@ -99,33 +99,54 @@ const SetupView = ({
     }
   };
 
-  const selectVideoDevice = (device: MediaDeviceInfo) => {
-    setVideoDevice(device);
-    if (videoTrack) {
-      if (
-        videoTrack.mediaStreamTrack.getSettings().deviceId === device.deviceId
-      ) {
-        return;
-      }
-      // stop video
-      toggleVideo();
+   const selectVideoDevice = (device: MediaDeviceInfo) => {
+     if (videoTrack) {
+         if (
+             videoTrack.mediaStreamTrack.getSettings().deviceId === device.deviceId
+         ) {
+             return;
+         } else {
+             setVideoDevice(device);
+         }
+     }
+   };
+
+useEffect(() => {
+    if (audioDevice) {
+    createLocalAudioTrack({ deviceId: audioDevice.deviceId })
+        .then(track => {
+            setAudioOn(true);
+        }).catch((err: Error) => {
+        console.log(err);
+        });
     }
+}, [audioDevice]);
 
-    // start video with correct device
-    toggleVideo();
-  };
+useEffect(() => {
+    if (videoDevice) {
+        createLocalVideoTrack({ deviceId: videoDevice.deviceId })
+            .then((track: LocalVideoTrack) => {
+                setVideoOn(true);
+                setVideoTrack(track);
+    
+            })
+        .catch((err: Error) => {
+        console.log(err);
+        });
+    }
+}, [videoDevice]);
 
-  const params: { [key: string]: string } = {
-    videoEnabled: videoOn ? '1' : '0',
-    audioEnabled: audioOn ? '1' : '0',
-    simulcast: meta.simulcast ? '1' : '0',
-  };
-  if (audioDevice) {
-    params.audioDeviceId = audioDevice.deviceId;
-  }
-  if (videoDevice) {
-    params.videoDeviceId = videoDevice.deviceId;
-  }
+//   const params: { [key: string]: string } = {
+//     videoEnabled: videoOn ? '1' : '0',
+//     audioEnabled: audioOn ? '1' : '0',
+//     simulcast: meta.simulcast ? '1' : '0',
+//   };
+//   if (audioDevice) {
+//     params.audioDeviceId = audioDevice.deviceId;
+//   }
+//   if (videoDevice) {
+//     params.videoDeviceId = videoDevice.deviceId;
+//   }
 
   return (
     <div
@@ -152,15 +173,13 @@ const SetupView = ({
       >
         <div
           id="setuproom-comp"
-          className="dark:bg-gray-800 rounded-2xl my-2 mx-1 shadow-md z-10 overflow-hidden"
+          className="dark:bg-gray-800 rounded-2xl my-2 mx-1z-10 overflow-hidden" // shadow-md
         >
           <div className="w-80 sm:w-96 lg:h-full rounded-t-xl bg-gray-700 rounded-b-none z-1">
             {videoTrack && videoOn ? (
               <VidWrapper track={videoTrack} isLocal={true} />
             ) : (
-              <div
-                className="min-h-0 min-w-0 rounded-lg h-52 w-full bg-black"
-              ></div>
+              <div className="min-h-0 min-w-0 rounded-lg h-52 w-full bg-black"></div>
             )}
             {!disableNameField && (
               <div className="pt-4 w-full flex justify-center">
