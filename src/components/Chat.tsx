@@ -82,7 +82,7 @@ const Chat = ({
     <>
       {chatOpen && (
         <div
-          className={`bg-gray-700 flex h-full absolute right-0 sm:relative z-40 sm:z-20 w-96 sm:w-64 ${
+          className={`bg-gray-700 flex h-full absolute right-0 sm:relative z-50 sm:z-20 w-72 sm:w-64 ${
             chatOpen ? 'animate-fade-in-right' : 'animate-fade-out-right'
           }`}
         >
@@ -176,9 +176,9 @@ const Chat = ({
       <div
         className={`absolute  ${
           chatOpen
-            ? 'left-2 sm:left-auto sm:right-48 animate-fade-in-right'
+            ? 'left-3 sm:left-auto sm:right-48 animate-fade-in-right'
             : 'right-2 animate-fade-in-left'
-        } z-40 bottom-4 right-3`} // flex items-center h-full inset-y-0
+        } z-40 top-10 sm:bottom-4 right-3`} // flex items-center h-full inset-y-0
       >
         <button
           className="z-40 focus:outline-none focus:border-0 flex bg-gray-600 dark:bg-gray-700 hover:bg-gray-500 dark:hover:bg-gray-600 rounded-full w-16 h-16 items-center justify-center"

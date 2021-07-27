@@ -168,7 +168,7 @@ const RoomWrapper = ({
           id="remote-vid-wrapper"
           ref={vidRef}
           className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border ${
-            chatOpen ? 'animate-fade-in-right' : 'animate-fade-in-left'
+            chatOpen ? 'sm:animate-fade-in-right' : 'sm:animate-fade-in-left'
           }`}
         >
           {sharedScreens &&
@@ -223,7 +223,7 @@ const RoomWrapper = ({
       {speakerMode && (
         <div
           className={`flex flex-col sm:flex-row z-20 py-10 px-1 w-full lg:px-10 xl:px-20 justify-center sm:justify-around  ${
-            chatOpen ? 'animate-fade-in-right' : 'animate-fade-in-left'
+            chatOpen ? 'sm:animate-fade-in-right' : 'sm:animate-fade-in-left'
           }`}
         >
           <div className="flex flex-col sm:w-4/5 p-1 justify-center content-center">
