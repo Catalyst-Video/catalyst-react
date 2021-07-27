@@ -5,6 +5,7 @@ import VidWrapper from "../components/wrapper/VidWrapper";
 import AudioDeviceBtn from "../components/toolbar/AudioDeviceBtn";
 import VidDeviceBtn from "../components/toolbar/VidDeviceBtn";
 import HeaderImg from "../components/header/HeaderImg";
+import { useCookies } from "react-cookie";
 
 
 const SetupView = ({
@@ -33,6 +34,7 @@ const SetupView = ({
   const [videoTrack, setVideoTrack] = useState<LocalVideoTrack>();
   const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
   const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
+  const [cookies, setCookies] = useCookies(['PREFERRED_VIDEO_DEVICE_ID']);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   //  TODO: determine bg gradient style
@@ -84,11 +86,14 @@ const SetupView = ({
   };
 
     useEffect(() => {
+        if (!cookies.PREFERRED_VIDEO_DEVICE_ID) {
+            
+        }
       if(videoOn)
-        createLocalVideoTrack().then(track => {
+          createLocalVideoTrack({ deviceId:  }).then(track => {
             setVideoOn(true);
             setVideoTrack(track);
-        });
+          });
   }, []);
 
   const toggleAudio = () => {

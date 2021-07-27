@@ -40,6 +40,12 @@ import CatalystChat from "catalyst-vc-react"
 | `videoOnDefault` | Is webcam enabled by default               |  `boolean` | `true` | Optional |
 | `theme` | Is webcam enabled by default               |  `boolean` | `true` | Optional |
 | `simulcast` | Publish multiple levels of quality for video streams              |  `boolean` | `true` | Optional |
+| `disableChat` | Hide text chat functionality              |  `boolean` | `true` | Optional |
+| `disableSetupRoom` | Skip setup view       |  `boolean` | `true` | Optional |
+| `disableNameField` | Hide user name input field in setup view     |  `boolean` | `true` | Optional |
+| `cstmSetupBg` | Gradient or hex-code background for setup view      |  `string` | `#fff` | Optional |
+| `arbData` | Data passed to all other members of room  |  `Uint8Array` | `TextEncoder().encode('str')` | Optional |
+| `handleReceiveArbData` | Function triggered whenever arbitrary data is received    |  `Function` | `(arbData: Uint8Array) => void` | Optional |
 | `onEndCall` | Function triggered when call ends       |  `Function` | `() => void` | Optional |
 
 ## Meta
