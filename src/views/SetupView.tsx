@@ -1,17 +1,14 @@
 import { createLocalVideoTrack, CreateVideoTrackOptions, LocalVideoTrack } from "livekit-client"
-import React, { useRef, useEffect, useState, ReactElement } from "react"
-import { faArrowAltCircleLeft, faArrowAltCircleRight } from "@fortawesome/free-solid-svg-icons";
+import React, { useRef, useEffect, useState } from "react"
 import { RoomMetaData } from "../typings/interfaces";
 import VidWrapper from "../components/wrapper/VidWrapper";
 import AudioDeviceBtn from "../components/toolbar/AudioDeviceBtn";
-import ToolbarButton from "../components/toolbar/ToolbarButton";
 import VidDeviceBtn from "../components/toolbar/VidDeviceBtn";
 import HeaderImg from "../components/header/HeaderImg";
 
 
 const SetupView = ({
   meta,
-  token,
   audioOn,
   videoOn,
   setAudioOn,
@@ -19,35 +16,43 @@ const SetupView = ({
   setReady,
   userName,
   setUserName,
+  cstmSetupBg,
+  disableNameField,
 }: {
   meta: RoomMetaData;
-  token: string;
   audioOn: boolean;
   videoOn: boolean;
   setAudioOn: Function;
   setVideoOn: Function;
   setReady: Function;
-  userName: string
+  userName: string;
   setUserName: Function;
+  cstmSetupBg?: string;
+  disableNameField?: boolean;
 }) => {
   const [videoTrack, setVideoTrack] = useState<LocalVideoTrack>();
   const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
   const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const [gradient] = useState(`linear-gradient(217deg, hsla(${~~(
-    360 * Math.random()
-  )},70%,70%,0.8),hsla(${~~(360 * Math.random())},70%,70%,0.8) 70.71%), 
-              linear-gradient(127deg, hsla(${~~(
-                360 * Math.random()
-              )},70%,70%,0.8),hsla(${~~(
-    360 * Math.random()
-  )},70%,70%,0.8) 70.71%),
-            linear-gradient(336deg, hsla(${~~(
-              360 * Math.random()
-            )},70%,70%,0.8),hsla(${~~(
-    360 * Math.random()
-  )},70%,70%,0.8) 70.71%)`);
+  //  TODO: determine bg gradient style
+  //    const [gradient] = useState(`linear-gradient(217deg, hsla(${~~(
+  //     360 * Math.random()
+  //   )},70%,70%,0.8),hsla(${~~(360 * Math.random())},70%,70%,0.8) 70.71%),
+  //               linear-gradient(127deg, hsla(${~~(
+  //                 360 * Math.random()
+  //               )},70%,70%,0.8),hsla(${~~(
+  //     360 * Math.random()
+  //   )},70%,70%,0.8) 70.71%),
+  //             linear-gradient(336deg, hsla(${~~(
+  //               360 * Math.random()
+  //             )},70%,70%,0.8),hsla(${~~(
+  //     360 * Math.random()
+  //       )},70%,70%,0.8) 70.71%)`);
+
+  const [gradient] = useState(
+    `linear-gradient(217deg, hsla(356, 90%, 64%, 0.8), hsla(280, 78%, 69%, 0.8), hsla(191, 86%, 49%, 0.8))`
+  );
 
   useEffect(() => {
     if (!videoRef.current || !videoTrack) {
@@ -60,7 +65,6 @@ const SetupView = ({
       videoTrack.stop();
     };
   }, [videoTrack, videoRef]);
-
 
   const toggleVideo = () => {
     if (videoTrack) {
@@ -112,10 +116,9 @@ const SetupView = ({
   };
 
   const params: { [key: string]: string } = {
-    token,
-      videoEnabled: videoOn ? '1' : '0',
-      audioEnabled: audioOn ? '1' : '0',
-      simulcast: meta.simulcast ? '1' : '0',
+    videoEnabled: videoOn ? '1' : '0',
+    audioEnabled: audioOn ? '1' : '0',
+    simulcast: meta.simulcast ? '1' : '0',
   };
   if (audioDevice) {
     params.audioDeviceId = audioDevice.deviceId;
@@ -124,15 +127,13 @@ const SetupView = ({
     params.videoDeviceId = videoDevice.deviceId;
   }
 
-  let cstmBackground, showSetNameBox = true;
-
   return (
     <div
       className="h-full w-full flex justify-between items-center flex-col flex-1"
       style={
-        cstmBackground
-          ? cstmBackground.length > 0
-            ? { background: cstmBackground }
+        cstmSetupBg
+          ? cstmSetupBg.length > 0
+            ? { background: cstmSetupBg }
             : {
                 background: '#f3f5fd', // TODO: dark/light theme
               }
@@ -140,10 +141,9 @@ const SetupView = ({
               background: gradient,
             }
       }
-      //   ref={setupRoomRef}
     >
       <span id="setuproom-header" className="mx-2 mt-5">
-        <HeaderImg />
+        <HeaderImg color="text-white" />
       </span>
 
       <div
@@ -152,29 +152,21 @@ const SetupView = ({
       >
         <div
           id="setuproom-comp"
-          className="dark:bg-gray-800 rounded-2xl my-2 mx-1 shadow-md bg-gray-700 z-10"
+          className="dark:bg-gray-800 rounded-2xl my-2 mx-1 shadow-md z-10 overflow-hidden"
         >
-          <div className="md:w-96 md:h-72 lg:h-full rounded-t-xl rounded-b-none z-1">
-            {videoTrack ? (
+          <div className="w-80 sm:w-96 lg:h-full rounded-t-xl bg-gray-700 rounded-b-none z-1">
+            {videoTrack && videoOn ? (
               <VidWrapper track={videoTrack} isLocal={true} />
             ) : (
-              <div className="min-h-0 min-w-0 rounded-lg h-auto w-full bg-gray-700"></div>
+              <div
+                className="min-h-0 min-w-0 rounded-lg h-52 w-full bg-black"
+              ></div>
             )}
-            {/* <video
-              id="setuproom-samp-video"
-              className="w-auto rounded-t-xl max-h-72 z-3"
-              ref={testVideoRef}
-              autoPlay
-              muted
-              playsInline
-            />
-          </div> */}
-            {/* <AudioAnalyser audio={testStream} /> */}
-            {showSetNameBox && (
+            {!disableNameField && (
               <div className="pt-4 w-full flex justify-center">
                 <input
-                  className="outline-none border-0 bg-gray-50 dark:bg-gray-700 rounded-2xl px-4 py-1 -mt-8 z-10 text-black dark:text-white text-center"
-                  placeholder="Enter display name"
+                  className="outline-none border-0 bg-gray-300 dark:bg-gray-700 rounded-2xl px-4 py-1 -mt-8 z-10 text-black dark:text-white text-center"
+                  placeholder={'Display name'}
                   value={userName}
                   onChange={e => setUserName(e.target.value)}
                 ></input>
@@ -182,7 +174,7 @@ const SetupView = ({
             )}
             <div
               id="opts"
-              className="flex flex-row justify-around items-center my-6"
+              className="flex flex-row justify-around bg-gray-700 items-center my-6"
             >
               <AudioDeviceBtn
                 isMuted={!audioOn}
@@ -206,36 +198,6 @@ const SetupView = ({
         </div>
       </div>
     </div>
-    // <div id="setupscreen" className="">
-    //   <h2>LiveKit Video</h2>
-
-    //   <div className="videoSection">
-    //     {videoTrack && <VidWrapper track={videoTrack} isLocal={true} />}
-    //   </div>
-
-    //   <div className="controlSection">
-    //     <div>
-    //       <AudioDeviceBtn
-    //         isMuted={!audioOn}
-    //         onClick={toggleAudio}
-    //         onSourceSelected={setAudioDevice}
-    //       />
-    //       <VidDeviceBtn
-    //         isEnabled={videoTrack !== undefined}
-    //         onClick={toggleVideo}
-    //         onSourceSelected={selectVideoDevice}
-    //       />
-    //     </div>
-    //     <div className="right">
-    //       <ToolbarButton
-    //         label="Connect"
-    //         disabled={connectDisabled}
-    //         icon={faArrowAltCircleRight}
-    //         onClick={() => setReady(true)}
-    //       />
-    //     </div>
-    //   </div>
-    // </div>
   );
 };
   export default SetupView

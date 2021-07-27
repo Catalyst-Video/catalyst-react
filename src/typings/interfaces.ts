@@ -19,6 +19,8 @@ export interface CatalystChatProps {
   simulcast?: boolean;
   disableChat?: boolean;
   disableSetupRoom?: boolean;
+  disableNameField?: boolean;
+  cstmSetupBg?: string
   arbData?: Uint8Array;
   handleReceiveArbData: (arbData: Uint8Array) => void;
   onEndCall: () => void;

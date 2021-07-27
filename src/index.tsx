@@ -24,6 +24,8 @@ const CatalystChat = ({
   simulcast,
   disableChat,
   disableSetupRoom,
+  disableNameField,
+  cstmSetupBg,
   arbData,
   handleReceiveArbData,
   onEndCall,
@@ -108,10 +110,10 @@ const CatalystChat = ({
         } h-full w-full m-0 p-0 overflow-hidden max-h-screen max-w-screen box-border`}
       >
         {hasPerms &&
-        ready &&
-        (DetectRTC.browser.isChrome ||
-          DetectRTC.browser.isEdge ||
-          DetectRTC.browser.isSafari) ? (
+          ready &&
+          (DetectRTC.browser.isChrome ||
+            DetectRTC.browser.isEdge ||
+            DetectRTC.browser.isSafari) ? (
           <VideoChat
             token={token}
             meta={{
@@ -132,20 +134,21 @@ const CatalystChat = ({
             DetectRTC.browser.isSafari) &&
           !disableSetupRoom ? (
           <SetupView
-                meta={{
-                  audioEnabled: audioOn,
-                  videoEnabled: videoOn,
-                  simulcast: simulcast ?? true,
-                  loglevel: 'trace',
-                }}
-                token={token}
-                setAudioOn={setAudioOn}
-                setVideoOn={setVideoOn}
-                audioOn={audioOn}
-                videoOn={videoOn}
-                setReady={setReady}
-                userName={userName}
-                setUserName={setUserName}
+            meta={{
+              audioEnabled: audioOn,
+              videoEnabled: videoOn,
+              simulcast: simulcast ?? true,
+              loglevel: 'trace',
+            }}
+            setAudioOn={setAudioOn}
+            setVideoOn={setVideoOn}
+            audioOn={audioOn}
+            videoOn={videoOn}
+            setReady={setReady}
+            userName={userName}
+            setUserName={setUserName}
+            disableNameField={disableNameField}
+            cstmSetupBg={cstmSetupBg}
           />
         ) : null}
       </div>

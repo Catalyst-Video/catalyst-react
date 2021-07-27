@@ -1,6 +1,6 @@
 import React from 'react';
 
-const HeaderImg = () => {
+const HeaderImg = ({ color }: { color?: string }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,13 +8,13 @@ const HeaderImg = () => {
       height="48"
       viewBox="0 0 1561.000000 421.000000"
       preserveAspectRatio="xMidYMid meet"
-      className={`fill-current text-primary`}
+      className={`fill-current ${color ?? 'text-primary'}`}
     >
       <g
         transform="translate(0.000000,421.000000) scale(0.100000,-0.100000)"
         fill="#000000"
         stroke="none"
-        className={`fill-current text-primary`}
+        className={`fill-current ${color ?? 'text-primary'}`}
       >
         <path d="M3790 3883 c-614 -58 -1138 -421 -1395 -966 -100 -213 -164 -470 -165 -664 l0 -53 -425 0 -425 0 0 450 0 450 -450 0 -450 0 0 -450 0 -450 448 0 449 0 7 -111 c28 -458 246 -898 591 -1187 298 -250 617 -379 1013 -408 l92 -7 0 427 0 426 -45 0 c-178 0 -425 110 -562 252 -144 149 -242 370 -243 551 l0 57 425 0 425 0 0 53 c0 111 56 279 132 399 141 220 433 388 674 388 l44 0 0 425 0 425 -52 -2 c-29 0 -69 -3 -88 -5z" />
         <path d="M10240 2200 l0 -840 175 0 175 0 0 840 0 840 -175 0 -175 0 0 -840z" />
@@ -27,7 +27,6 @@ const HeaderImg = () => {
         <path d="M11007 1964 c263 -612 265 -617 250 -648 -23 -49 -68 -97 -104 -112 -18 -8 -59 -14 -92 -14 -49 0 -72 6 -127 35 -37 19 -68 34 -69 33 -1 -2 -30 -58 -65 -126 -71 -140 -72 -129 27 -177 73 -35 165 -55 258 -55 197 0 346 86 440 254 26 48 389 890 600 1394 l14 32 -172 0 -173 0 -169 -409 c-93 -225 -172 -408 -174 -405 -3 2 -79 185 -171 407 l-166 402 -186 3 -186 2 265 -616z" />
       </g>
     </svg>
-  
   );
 };
 export default HeaderImg;
