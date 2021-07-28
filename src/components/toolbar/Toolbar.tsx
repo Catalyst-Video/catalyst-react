@@ -62,7 +62,7 @@ import VidDeviceBtn from './VidDeviceBtn';
    const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
 
 
-  //  useEffect(() => {
+   useEffect(() => {
    if (!audioDevice || !videoDevice) {
      navigator.mediaDevices.enumerateDevices().then(devices => {
        if (!audioDevice) {
@@ -74,7 +74,7 @@ import VidDeviceBtn from './VidDeviceBtn';
              d.deviceId ===
              audioPub?.audioTrack?.mediaStreamTrack.getSettings().deviceId
          );
-         setAudioDevice(defaultAudDevice ?? audioDevices[0]);
+         setAudioDevice(defaultAudDevice);
        }
        if (!videoDevice) {
          const videoDevices = devices.filter(
@@ -85,12 +85,11 @@ import VidDeviceBtn from './VidDeviceBtn';
              d.deviceId ===
              videoPub?.videoTrack?.mediaStreamTrack.getSettings().deviceId
          );
-         setVideoDevice(defaultVidDevice ?? videoDevices[0]);
+         setVideoDevice(defaultVidDevice);
        }
      });
    }
-
-  //  }, []);
+   }, [publications]);
 
  
 
@@ -147,7 +146,11 @@ import VidDeviceBtn from './VidDeviceBtn';
    };
 
    useEffect(() => {
-     if (audioDevice) {
+     if (
+       audioDevice &&
+       audioDevice.deviceId !==
+         audioPub?.audioTrack?.mediaStreamTrack.getSettings().deviceId
+     ) {
        createLocalAudioTrack({ deviceId: audioDevice.deviceId })
          .then(track => {
            if (audioPub) unpublishTrack(audioPub.track as LocalAudioTrack);
@@ -161,7 +164,11 @@ import VidDeviceBtn from './VidDeviceBtn';
    }, [audioDevice]);
 
    useEffect(() => {
-     if (videoDevice) {
+     if (
+       videoDevice &&
+       videoDevice.deviceId !==
+         videoPub?.videoTrack?.mediaStreamTrack.getSettings().deviceId
+     ) {
        createLocalVideoTrack({ deviceId: videoDevice.deviceId })
          .then((track: LocalVideoTrack) => {
            if (videoPub) unpublishTrack(videoPub.track as LocalVideoTrack);
