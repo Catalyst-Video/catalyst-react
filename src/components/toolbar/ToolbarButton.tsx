@@ -110,7 +110,7 @@ export const ToolbarButton = ({
                          {id.label === selectedDevice?.label ? (
                            <FontAwesomeIcon
                              icon={faCheckCircle}
-                             className="mr-1 text-accent"
+                             className="mr-1 text-primary"
                            />
                          ) : (
                            <FontAwesomeIcon icon={faCircle} className="mr-1 " />
@@ -129,7 +129,7 @@ export const ToolbarButton = ({
                  className={`rounded-full w-16 h-16 flex justify-center items-center ${
                    bgColor
                      ? bgColor
-                     : 'bg-button dark:bg-background hover:bg-gray-500 dark:hover:bg-button'
+                     : 'bg-tertiary dark:bg-secondary hover:bg-gray-500 dark:hover:bg-tertiary'
                  } focus:outline-none focus:border-0 `}
                  onClick={onClick}
                >
@@ -150,7 +150,7 @@ export const ToolbarButton = ({
                    className={`absolute z-10 -right-1 -bottom-1 ${
                      bgColor
                        ? bgColor
-                       : 'bg-button dark:bg-background hover:bg-gray-500 dark:hover:bg-button'
+                       : 'bg-tertiary dark:bg-secondary hover:bg-gray-500 dark:hover:bg-tertiary'
                    }  rounded-full border-4 border-gray-700 h-6 w-6 flex justify-center items-center focus:outline-none focus:border-0 `}
                    onClick={() => setDeviceMenu(!deviceMenu)}
                  >

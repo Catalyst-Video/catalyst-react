@@ -193,10 +193,10 @@ const VideoChat = ({
 
   return (
     <div id="video-chat" className="h-full w-full relative">
-      <div id="bg-theme" className="h-full w-full bg-background dark:bg-gray-900">
+      <div id="bg-theme" className="h-full w-full bg-secondary dark:bg-gray-900">
         <FullScreen
           handle={fsHandle}
-          className="h-full w-full bg-background dark:bg-gray-900"
+          className="h-full w-full bg-secondary dark:bg-gray-900"
         >
           <div
             id="header-wrapper"

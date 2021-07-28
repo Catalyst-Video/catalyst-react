@@ -38,13 +38,8 @@ export interface ChatMessage {
 }
 
 export interface CatalystTheme {
-  accent?: string;
-  button?: string;
-  background?: string;
-  // accent: string;
-  // accentDark: string;
-  // secondary: string;
-  // secondaryDark: string;
-  // tertiary: string;
-  // tertiaryDark: string;
+  primary?: string;
+  secondary?: string;
+  tertiary?: string;
+  quaternary?: string;
 }

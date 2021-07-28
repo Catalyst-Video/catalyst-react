@@ -207,8 +207,8 @@ import VidDeviceBtn from './VidDeviceBtn';
            icon={screenPub?.track ? faStop : faDesktop}
            bgColor={
              screenPub?.track
-               ? `bg-accent`
-               : 'bg-button hover:bg-gray-500 dark:bg-background dark:hover:bg-button'
+               ? `bg-primary`
+               : 'bg-tertiary hover:bg-gray-500 dark:bg-secondary dark:hover:bg-tertiary'
            }
            onClick={
              screenPub?.track

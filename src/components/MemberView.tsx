@@ -118,7 +118,7 @@ const MemberView = React.memo(({
       <div
         ref={ref}
         className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-xl ${
-          m.isSpeaking ? `ring-4 ring-accent ring-opacity-50` : ''
+          m.isSpeaking ? `ring-4 ring-primary ring-opacity-50` : ''
         }`}
         style={{
           height: height,
@@ -135,10 +135,10 @@ const MemberView = React.memo(({
             objectFit={objectFit}
           />
         ) : (
-          <div className={`w-full h-full bg-accent`} />
+          <div className={`w-full h-full bg-primary`} />
         )}{' '}
         <div className="absolute bottom-0 left-0 flex text-white justify-between p-1 w-full">
-          <div className="text-white h-7 md:h-8 text-xs not-selectable flex items-center justify-center bg-background bg-opacity-40 px-2 py-1 rounded-xl">
+          <div className="text-white h-7 md:h-8 text-xs not-selectable flex items-center justify-center bg-secondary bg-opacity-40 px-2 py-1 rounded-xl">
             {displayName ?? isLocal ? `${m.identity} (You)` : m.identity}
           </div>
           {isMuted && (
@@ -146,7 +146,7 @@ const MemberView = React.memo(({
               <FontAwesomeIcon
                 icon={faMicrophoneSlash}
                 size="2x"
-                className={`text-white not-selectable bg-background h-7 w-7 md:h-8 md:w-8 bg-opacity-40 p-2 rounded-full`}
+                className={`text-white not-selectable bg-secondary h-7 w-7 md:h-8 md:w-8 bg-opacity-40 p-2 rounded-full`}
               />
             </div>
           )}

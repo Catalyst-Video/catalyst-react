@@ -63,141 +63,27 @@ export function millisecondsToTime(duration: number): string {
 
 export function setThemeColor(theme: CatalystTheme | string): void {
   let cssVar = new CSSGlobalVariables();
+  let newTheme = DEFAULT_THEME;
   if (typeof theme === 'string') {
+    // TODO: inbuilt custom themes (light, gray, dark, night)
     // cssVar.setTheme(theme);
   } else {
-    let newTheme = DEFAULT_THEME;
-    if(theme.accent) cssVar.ctwAccent = theme.accent;
-    if (theme.background) cssVar.ctwBackground = theme.background;
-    if (theme.button) cssVar.ctwButton = theme.button;
+    cssVar.ctwPrimary = theme.primary ?? DEFAULT_THEME.primary!;
+    cssVar.ctwSecondary = theme.secondary ?? DEFAULT_THEME.secondary!;
+    cssVar.ctwTertiary = theme.tertiary ?? DEFAULT_THEME.tertiary!;
+    cssVar.ctwQuaternary = theme.quaternary ?? DEFAULT_THEME.quaternary!;
   }
 
-  // // light
-  // // TODO: set dark modes to a lighter color by default
-  //        switch (theme) {
-  //          case 'red':
-  //            cssVar.ctwPrimary = '#EF4444';
-  //            break;
-  //          case 'orange':
-  //            cssVar.ctwPrimary = '#F97316';
-  //            break;
-  //          case 'amber':
-  //            cssVar.ctwPrimary = '#F59E0B';
-  //            break;
-  //          case 'yellow':
-  //            cssVar.ctwPrimary = '#EAB308';
-  //            break;
-  //          case 'lime':
-  //            cssVar.ctwPrimary = '#84CC16';
-  //            break;
-  //          case 'green':
-  //            cssVar.ctwPrimary = '#22C55E';
-  //            break;
-  //          case 'emerald':
-  //            cssVar.ctwPrimary = '#10B981';
-  //            break;
-  //          case 'teal':
-  //            cssVar.ctwPrimary = '#14B8A6';
-  //            break;
-  //          case 'cyan':
-  //            cssVar.ctwPrimary = '#06B6D4';
-  //            break;
-  //          case 'lightBlue':
-  //            cssVar.ctwPrimary = '#0EA5E9';
-  //            break;
-  //          case 'blue':
-  //            cssVar.ctwPrimary = '#3B82F6';
-  //            break;
-  //          case 'violet':
-  //            cssVar.ctwPrimary = '#8B5CF6';
-  //            break;
-  //          case 'indigo':
-  //            cssVar.ctwPrimary = '#6366F1';
-  //            break;
-  //          case 'purple':
-  //            cssVar.ctwPrimary = '#A855F7';
-  //            break;
-  //          case 'fuchsia':
-  //            cssVar.ctwPrimary = '#D946EF';
-  //            break;
-  //          case 'rose':
-  //            cssVar.ctwPrimary = '#F43F5E';
-  //            break;
-  //          case 'pink':
-  //            cssVar.ctwPrimary = '#EC4899';
-  //            break;
-  //          default:
-  //            cssVar.ctwPrimary = theme.accent;
-  // }
-  // // dark
-  //  switch (theme.accentDark) {
-  //    case 'red':
-  //      cssVar.ctwPrimaryDark = '#EF4444';
-  //      break;
-  //    case 'orange':
-  //      cssVar.ctwPrimaryDark = '#F97316';
-  //      break;
-  //    case 'amber':
-  //      cssVar.ctwPrimaryDark = '#F59E0B';
-  //      break;
-  //    case 'yellow':
-  //      cssVar.ctwPrimaryDark = '#EAB308';
-  //      break;
-  //    case 'lime':
-  //      cssVar.ctwPrimaryDark = '#84CC16';
-  //      break;
-  //    case 'green':
-  //      cssVar.ctwPrimaryDark = '#22C55E';
-  //      break;
-  //    case 'emerald':
-  //      cssVar.ctwPrimaryDark = '#10B981';
-  //      break;
-  //    case 'teal':
-  //      cssVar.ctwPrimaryDark = '#14B8A6';
-  //      break;
-  //    case 'cyan':
-  //      cssVar.ctwPrimaryDark = '#06B6D4';
-  //      break;
-  //    case 'lightBlue':
-  //      cssVar.ctwPrimaryDark = '#0EA5E9';
-  //      break;
-  //    case 'blue':
-  //      cssVar.ctwPrimaryDark = '#3B82F6';
-  //      break;
-  //    case 'violet':
-  //      cssVar.ctwPrimaryDark = '#8B5CF6';
-  //      break;
-  //    case 'indigo':
-  //      cssVar.ctwPrimaryDark = '#6366F1';
-  //      break;
-  //    case 'purple':
-  //      cssVar.ctwPrimaryDark = '#A855F7';
-  //      break;
-  //    case 'fuchsia':
-  //      cssVar.ctwPrimaryDark = '#D946EF';
-  //      break;
-  //    case 'rose':
-  //      cssVar.ctwPrimaryDark = '#F43F5E';
-  //      break;
-  //    case 'pink':
-  //      cssVar.ctwPrimaryDark = '#EC4899';
-  //      break;
-  //    default:
-  //  }
-
-      var style = document.createElement('style');
-      document.head.appendChild(style);
-      style.sheet?.insertRule(
-        `:root { -- cssVar.ctwAccent: ${cssVar.ctwAccent},
-                -- cssVar.ctwBackground: ${cssVar.ctwBackground},
-                -- cssVar.ctwButton: ${cssVar.ctwButton},
-        }`
-      );
-    // style.sheet?.insertRule(
-    //   `:root { -- cssVar.ctwPrimaryDark: ${cssVar.ctwPrimaryDark}}`
-    // );
-  
-       }
+    var style = document.createElement('style');
+    document.head.appendChild(style);
+    style.sheet?.insertRule(
+      `:root { -- cssVar.ctwPrimary: ${cssVar.ctwPrimary},
+              -- cssVar.ctwSecondary: ${cssVar.ctwSecondary},
+              -- cssVar.ctwTertiary: ${cssVar.ctwTertiary},
+                -- cssVar.ctwQuaternary: ${cssVar.ctwQuaternary},
+      }`
+    );
+      }
 
 
        

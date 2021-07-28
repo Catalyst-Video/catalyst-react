@@ -70,7 +70,7 @@ const Chat = ({
         <a
           target="_blank"
           href={matches[0]}
-          className={`${isSelf ? 'text-white' : `text-accent`} underline`}
+          className={`${isSelf ? 'text-white' : `text-primary`} underline`}
         >
           {matches[0]}
         </a>
@@ -82,7 +82,7 @@ const Chat = ({
     <>
       {chatOpen && (
         <div
-          className={`bg-background flex h-full absolute right-0 sm:relative z-50 sm:z-20 w-72 sm:w-64 ${
+          className={`bg-secondary flex h-full absolute right-0 sm:relative z-50 sm:z-20 w-72 sm:w-64 ${
             chatOpen ? 'animate-fade-in-right' : 'animate-fade-out-right'
           }`}
         >
@@ -105,7 +105,7 @@ const Chat = ({
                         {msg.sender?.identity} (You)
                       </span>
                       <div
-                        className={`bg-accent text-white rounded-tl-2xl rounded-tr-2xl rounded-br-sm rounded-bl-2xl  ml-auto p-2`}
+                        className={`bg-primary text-white rounded-tl-2xl rounded-tr-2xl rounded-br-sm rounded-bl-2xl  ml-auto p-2`}
                       >
                         <div className="message break-all px-2 py-1 text-xs">
                           {autolink(msg.text, true)}
@@ -139,12 +139,12 @@ const Chat = ({
           </div>
           <div
             id="chat-compose-wrapper"
-            className="w-full bottom-0 fixed bg-background flex z-30 flex-row"
+            className="w-full bottom-0 fixed bg-secondary flex z-30 flex-row"
           >
             <textarea
               id="chat-compose"
               placeholder="Type your message"
-              className="focus:outline-none focus:border-0 w-full resize-none text-white bg-background ml-1"
+              className="focus:outline-none focus:border-0 w-full resize-none text-white bg-secondary ml-1"
               rows={6}
               value={chatBox}
               onKeyUp={e => {
@@ -160,7 +160,7 @@ const Chat = ({
               onClick={() => {
                 handleSendMsg(chatBox);
               }}
-              className={`bg-accent mt-2 ml-2 p-2 cursor-pointer fixed right-0 z-30 rounded-xl text-white h-10 mr-1`}
+              className={`bg-primary mt-2 ml-2 p-2 cursor-pointer fixed right-0 z-30 rounded-xl text-white h-10 mr-1`}
             >
               <FontAwesomeIcon
                 id="chat-send"
@@ -181,7 +181,7 @@ const Chat = ({
         } z-40 top-10 sm:top-auto sm:bottom-4 right-3`} // flex items-center h-full inset-y-0
       >
         <button
-          className="z-40 focus:outline-none focus:border-0 flex bg-button dark:bg-background hover:bg-gray-500 dark:hover:bg-button rounded-full w-16 h-16 items-center justify-center"
+          className="z-40 focus:outline-none focus:border-0 flex bg-tertiary dark:bg-secondary hover:bg-gray-500 dark:hover:bg-tertiary rounded-full w-16 h-16 items-center justify-center"
           onClick={() => setChatOpen(chatOpen => !chatOpen)}
         >
           {!chatOpen && (

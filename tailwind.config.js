@@ -11,32 +11,16 @@ module.exports = {
   important: '#ctw',
   theme: {
     colors: {
-      // Build your palette here
-      accent: 'var(--ctwAccent)',
-      background: 'var(--ctwBackground)',
-      button: 'var(--ctwButton)',
+      primary: 'var(--ctwPrimary)', // accent color
+      secondary: 'var(--ctwSecondary)', // background color
+      tertiary: 'var(--ctwTertiary)', // button/element color
+      quaternary: 'var(--ctwQuaternary)', // hover color for buttons/elements
       transparent: 'transparent',
       current: 'currentColor',
       white: colors.white,
       black: colors.black,
       gray: colors.coolGray, // coolGray
       red: colors.red[500],
-      // orange: colors.orange[500],
-      // amber: colors.amber[500],
-      // yellow: colors.yellow[500],
-      // lime: colors.lime[500],
-      // green: colors.green[500],
-      // emerald: colors.emerald[500],
-      // teal: colors.teal[500],
-      // cyan: colors.cyan[500],
-      // sky: colors.sky[500],
-      // blue: colors.blue[500],
-      // indigo: colors.indigo[500],
-      // violet: colors.violet[500],
-      // purple: colors.purple[500],
-      // fuchsia: colors.fuchsia[500],
-      // pink: colors.pink[500],
-      // rose: colors.rose[500],
     },
     extend: {
       keyframes: {
