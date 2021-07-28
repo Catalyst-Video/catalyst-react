@@ -94,6 +94,8 @@ export const ToolbarButton = ({
                      );
                    })} */}
                    {devices?.map((id, i) => {
+                     // TODO: add prop to allow for enabling showing device ids
+                     let idLabel = id.label.includes('(') ? id.label.substring(0, id.label.indexOf('(')) : id.label;
                      return (
                        <li
                          key={i}
@@ -108,12 +110,12 @@ export const ToolbarButton = ({
                          {id.label === selectedDevice?.label ? (
                            <FontAwesomeIcon
                              icon={faCheckCircle}
-                             className="mr-1 "
+                             className="mr-1 text-accent"
                            />
                          ) : (
                            <FontAwesomeIcon icon={faCircle} className="mr-1 " />
                          )}
-                         {id.label}
+                         {idLabel}
                        </li>
                      );
                    })}
@@ -127,7 +129,7 @@ export const ToolbarButton = ({
                  className={`rounded-full w-16 h-16 flex justify-center items-center ${
                    bgColor
                      ? bgColor
-                     : 'bg-gray-600 dark:bg-gray-700 hover:bg-gray-500 dark:hover:bg-gray-600'
+                     : 'bg-button dark:bg-background hover:bg-gray-500 dark:hover:bg-button'
                  } focus:outline-none focus:border-0 `}
                  onClick={onClick}
                >
@@ -148,7 +150,7 @@ export const ToolbarButton = ({
                    className={`absolute z-10 -right-1 -bottom-1 ${
                      bgColor
                        ? bgColor
-                       : 'bg-gray-600 dark:bg-gray-700 hover:bg-gray-500 dark:hover:bg-gray-600'
+                       : 'bg-button dark:bg-background hover:bg-gray-500 dark:hover:bg-button'
                    }  rounded-full border-4 border-gray-700 h-6 w-6 flex justify-center items-center focus:outline-none focus:border-0 `}
                    onClick={() => setDeviceMenu(!deviceMenu)}
                  >

@@ -22,10 +22,10 @@ const GeneralTest = () => {
       // dark={true}
       audioOnDefault={false}
       // name={(Math.random() * 1000).toString().slice(0, 4)}
-      theme={{
-        primary: '#11c1e8',
-        primaryDark: '#50c878',
-      }}
+      // theme={{
+      //   accent: '#11c1e8',
+      //   accentDark: '#50c878',
+      // }}
       // theme={ }
       onEndCall={() => console.log('end')}
     />
@@ -81,8 +81,8 @@ const HoursTest = () => {
               dark={true}
               audioOnDefault={false}
               theme={{
-                primary: '#50c878',
-                primaryDark: '#50c878',
+                accent: '#50c878',
+                accentDark: '#50c878',
               }}
               onEndCall={() => setShowVideoCall(false)}
             />

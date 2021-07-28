@@ -181,7 +181,7 @@ useEffect(() => {
           id="setuproom-comp"
           className="dark:bg-gray-800 rounded-2xl my-2 mx-1z-10 overflow-hidden" // shadow-md
         >
-          <div className="w-80 sm:w-96 lg:h-full rounded-t-xl bg-gray-700 rounded-b-none z-1">
+          <div className="w-80 sm:w-96 lg:h-full rounded-t-xl bg-background rounded-b-none z-1">
             {videoTrack && videoOn ? (
               <VidWrapper track={videoTrack} isLocal={true} />
             ) : (
@@ -190,7 +190,7 @@ useEffect(() => {
             {!disableNameField && (
               <div className="pt-4 w-full flex justify-center">
                 <input
-                  className="outline-none border-0 bg-gray-300 dark:bg-gray-700 rounded-2xl px-4 py-1 -mt-8 z-10 text-black dark:text-white text-center"
+                  className="outline-none border-0 bg-gray-300 dark:bg-background rounded-2xl px-4 py-1 -mt-8 z-10 text-black dark:text-white text-center"
                   placeholder={'Display name'}
                   value={userName}
                   onChange={e => setUserName(e.target.value)}
@@ -199,7 +199,7 @@ useEffect(() => {
             )}
             <div
               id="opts"
-              className="flex flex-row justify-around bg-gray-700 items-center my-6"
+              className="flex flex-row justify-around bg-background items-center my-6"
             >
               <AudioDeviceBtn
                 isMuted={!audioOn}
@@ -214,7 +214,7 @@ useEffect(() => {
             </div>
             <button
               id="setuproom-but"
-              className={`rounded-b-xl cursor-pointer block outline-none border-0 font-bold text-md h-14 text-white w-full focus:outline-none focus:border-0 bg-primary`}
+              className={`rounded-b-xl cursor-pointer block outline-none border-0 font-bold text-md h-14 text-white w-full focus:outline-none focus:border-0 bg-accent`}
               onClick={() => setReady(true)}
             >
               Join Call

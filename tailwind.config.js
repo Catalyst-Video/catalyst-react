@@ -12,11 +12,9 @@ module.exports = {
   theme: {
     colors: {
       // Build your palette here
-      primary: 'var(--ctwPrimary)',
-      secondary: 'var(--ctwSecondary)',
-      tertiary: 'var(--ctwTertiary)',
-      // primaryDark: 'var(--ctwPrimaryDark)',
-      // secondaryDark: 'var(--ctwSecondaryDark)',
+      accent: 'var(--ctwAccent)',
+      background: 'var(--ctwBackground)',
+      button: 'var(--ctwButton)',
       transparent: 'transparent',
       current: 'currentColor',
       white: colors.white,

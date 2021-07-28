@@ -5,14 +5,7 @@ export interface CatalystChatProps {
   appId: string;
   name?: string;
   dark?: boolean;
-  theme?: {
-    primary: string;
-    primaryDark: string;
-    secondary: string;
-    secondaryDark: string;
-    tertiary: string;
-    tertiaryDark: string;
-  };
+  theme?: CatalystTheme | string;
   fade?: number;
   audioOnDefault?: boolean;
   videoOnDefault?: boolean;
@@ -42,4 +35,16 @@ export interface RoomMetaData {
 export interface ChatMessage {
   text: string;
   sender?: Participant;
+}
+
+export interface CatalystTheme {
+  accent?: string;
+  button?: string;
+  background?: string;
+  // accent: string;
+  // accentDark: string;
+  // secondary: string;
+  // secondaryDark: string;
+  // tertiary: string;
+  // tertiaryDark: string;
 }

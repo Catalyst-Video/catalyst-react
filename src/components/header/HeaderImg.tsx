@@ -8,13 +8,13 @@ const HeaderImg = React.memo(({ color }: { color?: string }) => {
       height="48"
       viewBox="0 0 1561.000000 421.000000"
       preserveAspectRatio="xMidYMid meet"
-      className={`fill-current ${color ?? 'text-primary'}`}
+      className={`fill-current ${color ?? 'text-accent'}`}
     >
       <g
         transform="translate(0.000000,421.000000) scale(0.100000,-0.100000)"
         fill="#000000"
         stroke="none"
-        className={`fill-current ${color ?? 'text-primary'}`}
+        className={`fill-current ${color ?? 'text-accent'}`}
       >
         <path d="M3790 3883 c-614 -58 -1138 -421 -1395 -966 -100 -213 -164 -470 -165 -664 l0 -53 -425 0 -425 0 0 450 0 450 -450 0 -450 0 0 -450 0 -450 448 0 449 0 7 -111 c28 -458 246 -898 591 -1187 298 -250 617 -379 1013 -408 l92 -7 0 427 0 426 -45 0 c-178 0 -425 110 -562 252 -144 149 -242 370 -243 551 l0 57 425 0 425 0 0 53 c0 111 56 279 132 399 141 220 433 388 674 388 l44 0 0 425 0 425 -52 -2 c-29 0 -69 -3 -88 -5z" />
         <path d="M10240 2200 l0 -840 175 0 175 0 0 840 0 840 -175 0 -175 0 0 -840z" />
