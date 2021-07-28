@@ -15,8 +15,8 @@ import { ChatMessage } from '../typings/interfaces';
 const Chat = ({
   chatOpen,
   setChatOpen,
-    localParticipant,
-    chatMessages,
+  localParticipant,
+  chatMessages,
   setChatMessages
 }: {
   chatOpen: boolean;

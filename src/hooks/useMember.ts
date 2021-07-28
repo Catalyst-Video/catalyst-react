@@ -3,6 +3,7 @@ import {
   LocalTrack,
   Participant,
   ParticipantEvent,
+  RemoteVideoTrack,
   Track,
   TrackPublication,
 } from "livekit-client";
@@ -12,6 +13,7 @@ export interface ParticipantState {
   isSpeaking: boolean;
   isLocal: boolean;
   isMuted: boolean;
+  // isSharing: boolean;
   metadata?: string;
   publications: TrackPublication[];
   subscribedTracks: TrackPublication[];
@@ -23,6 +25,7 @@ export function useParticipant(participant: Participant): ParticipantState {
   const [isSpeaking, setSpeaking] = useState(false);
   const [metadata, setMetadata] = useState<string>();
   const [publications, setPublications] = useState<TrackPublication[]>([]);
+  // const [isSharing, setSharing] = useState(false);
   const [subscribedTracks, setSubscribedTracks] = useState<TrackPublication[]>(
     []
   );
@@ -34,11 +37,24 @@ export function useParticipant(participant: Participant): ParticipantState {
         return pub.track !== undefined;
       })
     );
+    // if (!isSharing) {
+    //   participant.tracks.forEach((pub) => {
+    //     if (pub.trackName === 'screen' && pub.track) {
+    //       setSharing(true)
+    //     }
+    //   });
+    // }
   };
+  
   const unpublishTrack = async (track: LocalTrack) => {
     if (!(participant instanceof LocalParticipant)) {
       throw new Error("could not unpublish, not a local participant");
     }
+    // if (isSharing) {
+    //   if (track.name === 'screen' && track) {
+    //     setSharing(false);
+    //   }
+    // }
     (participant as LocalParticipant).unpublishTrack(track);
     participant.emit("localtrackchanged");
   };
@@ -111,6 +127,7 @@ export function useParticipant(participant: Participant): ParticipantState {
     isLocal: participant instanceof LocalParticipant,
     isSpeaking,
     isMuted,
+    // isSharing,
     publications,
     subscribedTracks,
     metadata,

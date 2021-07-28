@@ -7,6 +7,7 @@ import {
   createLocalAudioTrack,
   createLocalVideoTrack,
   CreateVideoTrackOptions,
+  DataPacket_Kind,
   LocalAudioTrack,
   LocalTrackPublication,
   LocalVideoTrack,
@@ -28,13 +29,15 @@ import VidDeviceBtn from './VidDeviceBtn';
    enableVideo,
    onLeave,
    setSpeakerMode,
+   setChatMessages,
  }: {
    room: Room;
    enableScreenShare?: boolean;
    enableAudio?: boolean;
    enableVideo?: boolean;
    onLeave?: (room: Room) => void;
-   setSpeakerMode: Function
+   setSpeakerMode: Function;
+   setChatMessages: Function;
  }) => {
    const { publications, isMuted, unpublishTrack } = useParticipant(
      room.localParticipant
@@ -61,37 +64,34 @@ import VidDeviceBtn from './VidDeviceBtn';
    const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
    const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
 
-
    useEffect(() => {
-   if (!audioDevice || !videoDevice) {
-     navigator.mediaDevices.enumerateDevices().then(devices => {
-       if (!audioDevice) {
-         const audioDevices = devices.filter(
-           id => id.kind === 'audioinput' && id.deviceId
-         );
-         let defaultAudDevice = audioDevices.find(
-           d =>
-             d.deviceId ===
-             audioPub?.audioTrack?.mediaStreamTrack.getSettings().deviceId
-         );
-         setAudioDevice(defaultAudDevice);
-       }
-       if (!videoDevice) {
-         const videoDevices = devices.filter(
-           id => id.kind === 'videoinput' && id.deviceId
-         );
-         let defaultVidDevice = videoDevices.find(
-           d =>
-             d.deviceId ===
-             videoPub?.videoTrack?.mediaStreamTrack.getSettings().deviceId
-         );
-         setVideoDevice(defaultVidDevice);
-       }
-     });
-   }
+     if (!audioDevice || !videoDevice) {
+       navigator.mediaDevices.enumerateDevices().then(devices => {
+         if (!audioDevice) {
+           const audioDevices = devices.filter(
+             id => id.kind === 'audioinput' && id.deviceId
+           );
+           let defaultAudDevice = audioDevices.find(
+             d =>
+               d.deviceId ===
+               audioPub?.audioTrack?.mediaStreamTrack.getSettings().deviceId
+           );
+           setAudioDevice(defaultAudDevice);
+         }
+         if (!videoDevice) {
+           const videoDevices = devices.filter(
+             id => id.kind === 'videoinput' && id.deviceId
+           );
+           let defaultVidDevice = videoDevices.find(
+             d =>
+               d.deviceId ===
+               videoPub?.videoTrack?.mediaStreamTrack.getSettings().deviceId
+           );
+           setVideoDevice(defaultVidDevice);
+         }
+       });
+     }
    }, [publications]);
-
- 
 
    const toggleVideo = () => {
      if (videoPub?.track) {
@@ -142,6 +142,26 @@ import VidDeviceBtn from './VidDeviceBtn';
        ) {
          return;
        }
+     }
+   };
+
+   const sendMsg = (msg: string) => {
+     const encoder = new TextEncoder();
+     if (room.localParticipant) {
+       let chat = {
+         type: 'ctw-chat',
+         text: msg,
+         sender: room.localParticipant.sid,
+       };
+       const data = encoder.encode(JSON.stringify(chat));
+       room.localParticipant.publishData(data, DataPacket_Kind.RELIABLE);
+       setChatMessages(chatMessages => [
+         ...chatMessages,
+         {
+           text: msg,
+           sender: room.localParticipant,
+         },
+       ]);
      }
    };
 
@@ -212,7 +232,10 @@ import VidDeviceBtn from './VidDeviceBtn';
            }
            onClick={
              screenPub?.track
-               ? () => unpublishTrack(screenPub.track as LocalVideoTrack)
+               ? () => {
+                 unpublishTrack(screenPub.track as LocalVideoTrack)
+                //  sendMsg('I finished screen sharing!');
+               }
                : () => {
                    navigator.mediaDevices
                      // @ts-ignore
@@ -234,6 +257,7 @@ import VidDeviceBtn from './VidDeviceBtn';
                          })
                          .then(track => {
                            setSpeakerMode(true);
+                          //  sendMsg('I started screen sharing!');
                          });
                      })
                      .catch(err => {
