@@ -27,8 +27,6 @@ import HeaderLogo from '../components/header/Header';
 import Toolbar from '../components/toolbar/Toolbar';
 import { useRoom } from '../hooks/useRoom';
 import { debounce } from 'ts-debounce';
-import { protobufPackage } from 'livekit-client/dist/proto/livekit_models';
-
 
 const VideoChat = ({
   token,
@@ -65,14 +63,14 @@ const VideoChat = ({
   const decoder = new TextDecoder();
 
   const onConnected = async room => {
-    onJoinCall()
+    if(onJoinCall) onJoinCall()
     room.on(RoomEvent.ParticipantConnected, () => {
       bumpMemberSize(room);
-      onMemberJoin();
+      if (onMemberJoin) onMemberJoin();
     });
     room.on(RoomEvent.ParticipantDisconnected, () =>{
       bumpMemberSize(room);
-      onMemberLeave();
+      if(onMemberLeave) onMemberLeave();
     });
     room.on(
       RoomEvent.DataReceived,
@@ -141,7 +139,7 @@ const VideoChat = ({
   };
 
   const onLeave = () => {
-    onLeaveCall();
+    if(onLeaveCall) onLeaveCall();
     setRoomClosed(true);
   };
 
