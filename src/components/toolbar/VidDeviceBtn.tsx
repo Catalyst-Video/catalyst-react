@@ -6,18 +6,19 @@ const VidDeviceBtn = ({
   isEnabled,
   onClick,
   onSourceSelected,
+  videoDevice,
 }: {
   isEnabled: boolean;
   onClick?: () => void;
   onSourceSelected?: (device: MediaDeviceInfo) => void;
-}
-) => {
+  videoDevice?: MediaDeviceInfo;
+}) => {
   const [sources, setSources] = useState<MediaDeviceInfo[]>([]);
   const [devices, setMenuItems] = useState<Device[]>([]);
   const vidBtnRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    navigator.mediaDevices.enumerateDevices().then((devices) => {
+    navigator.mediaDevices.enumerateDevices().then(devices => {
       const videoDevices = devices.filter(
         id => id.kind === 'videoinput' && id.deviceId
       );
@@ -48,6 +49,7 @@ const VidDeviceBtn = ({
         parentRef={vidBtnRef}
         onClick={onClick}
         devices={devices}
+        selectedDevice={videoDevice}
       />
     </div>
   );

@@ -9,17 +9,19 @@ const AudioDeviceBtn = ({
   isMuted,
   onClick,
   onSourceSelected,
+  audioDevice,
 }: {
   isMuted: boolean;
   onClick?: () => void;
   onSourceSelected?: (device: MediaDeviceInfo) => void;
+  audioDevice?: MediaDeviceInfo;
 }) => {
   const [sources, setSources] = useState<MediaDeviceInfo[]>([]);
   const [devices, setMenuItems] = useState<Device[]>([]);
   const audBtnRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    navigator.mediaDevices.enumerateDevices().then((devices) => {
+    navigator.mediaDevices.enumerateDevices().then(devices => {
       const audioDevices = devices.filter(
         id => id.kind === 'audioinput' && id.deviceId
       );
@@ -49,6 +51,7 @@ const AudioDeviceBtn = ({
         onClick={onClick}
         devices={devices}
         onDeviceClick={handleDeviceClick}
+        selectedDevice={audioDevice}
         parentRef={audBtnRef}
       />
     </div>

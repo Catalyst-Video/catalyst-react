@@ -1,5 +1,9 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { faCheckCircle, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircle,
+} from '@fortawesome/free-regular-svg-icons';
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Popover } from 'react-tiny-popover';
 import React, {  RefObject, useState } from "react";
@@ -30,6 +34,7 @@ export const ToolbarButton = ({
          onDeviceClick,
          bgColor,
          iconColor,
+         selectedDevice,
          parentRef,
        }: {
          label: string;
@@ -41,7 +46,8 @@ export const ToolbarButton = ({
          onDeviceClick?: (id: Device) => void;
          bgColor?: string;
          iconColor?: string;
-         parentRef?: RefObject<HTMLDivElement>
+         selectedDevice?: MediaDeviceInfo;
+         parentRef?: RefObject<HTMLDivElement>;
        }) => {
          const [deviceMenu, setDeviceMenu] = useState(false);
 
@@ -67,15 +73,26 @@ export const ToolbarButton = ({
                      return (
                        <li
                          key={i}
+                         className="flex items-center text-xs text-white"
                          style={{
-                           color: 'white',
+                           //  color: 'white',
                            padding: '8px',
                            borderTop:
                              i > 0 ? '1px solid rgba(255, 255, 255, 0.2)' : '0',
-                           
                          }}
                          onClick={() => handleDeviceClick(id)}
                        >
+                         {id.label === selectedDevice?.label ? (
+                           <FontAwesomeIcon
+                             icon={faCheckCircle}
+                             className="mr-1 "
+                           />
+                         ) : (
+                           <FontAwesomeIcon
+                             icon={faCircle}
+                             className="mr-1 "
+                           />
+                         )}
                          {id.label}
                        </li>
                      );

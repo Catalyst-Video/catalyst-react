@@ -57,7 +57,6 @@ import VidDeviceBtn from './VidDeviceBtn';
      enableAudio = true;
    }
 
-
    const [videoTrack, setVideoTrack] = useState<LocalVideoTrack>();
    const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
    const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
@@ -150,6 +149,7 @@ import VidDeviceBtn from './VidDeviceBtn';
            isMuted={!audioPub || isMuted}
            onSourceSelected={setAudioDevice}
            onClick={toggleAudio}
+           audioDevice={audioDevice}
          />
        )}
        {/* Pause Video Button */}
@@ -158,6 +158,7 @@ import VidDeviceBtn from './VidDeviceBtn';
            isEnabled={videoPub?.track ? true : false}
            onSourceSelected={selectVideoDevice}
            onClick={toggleVideo}
+           videoDevice={videoDevice}
          />
        )}
        {/* Screen Share Button */}

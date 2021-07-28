@@ -149,7 +149,7 @@ const VideoChat = ({
             tClasses?.remove('animate-fade-out-down');
             tClasses?.add('hidden');
             isHidden = true;
-          }, 350);
+          }, 190);
           timedelay = 1;
         }
         timedelay += 1;
@@ -170,12 +170,12 @@ const VideoChat = ({
 
       var timedelay = 1;
       var isHidden = false;
-      const debounceHandleMouse = debounce(handleMouse, 50);
+      const debounceHandleMouse = debounce(handleMouse, 25);
       document.addEventListener('mousemove', debounceHandleMouse);
       var _delay = setInterval(delayCheck, fade);
 
       () => {
-        document.removeEventListener('mousemove', handleMouse);
+        document.removeEventListener('mousemove', debounceHandleMouse);
       };
     }
   }, []);
