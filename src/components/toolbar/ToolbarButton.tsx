@@ -73,7 +73,7 @@ export const ToolbarButton = ({
                      return (
                        <li
                          key={i}
-                         className="flex items-center text-xs text-white"
+                         className="flex items-center text-xs lg:text-sm text-white"
                          style={{
                            //  color: 'white',
                            padding: '8px',
