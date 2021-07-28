@@ -46,7 +46,10 @@ import CatalystChat from "catalyst-vc-react"
 | `cstmSetupBg` | Gradient or hex-code background for setup view      |  `string` | `#fff` | Optional |
 | `arbData` | Data passed to all other members of room  |  `Uint8Array` | `TextEncoder().encode('str')` | Optional |
 | `handleReceiveArbData` | Function triggered whenever arbitrary data is received    |  `Function` | `(arbData: Uint8Array) => void` | Optional |
-| `onEndCall` | Function triggered when call ends       |  `Function` | `() => void` | Optional |
+| `onJoinCall` | Function triggered when user joins the call  |  `Function` | `() => void` | Optional |
+| `onMemberJoin` | Function triggered when a member joins the call     |  `Function` | `() => void` | Optional |
+| `onMemberLeave` | Function triggered when a member leaves the call       |  `Function` | `() => void` | Optional |
+| `onLeaveCall` | Function triggered when user leaves call       |  `Function` | `() => void` | Optional |
 
 ## Meta
 
