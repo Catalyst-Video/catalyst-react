@@ -28,7 +28,10 @@ const CatalystChat = ({
   cstmSetupBg,
   arbData,
   handleReceiveArbData,
-  onEndCall,
+  onJoinCall,
+  onMemberJoin,
+  onMemberLeave,
+  onLeaveCall,
 }: CatalystChatProps) => {
   const [ready, setReady] = useState(disableSetupRoom ?? false);
   const [token, setToken] = useState('');
@@ -43,26 +46,21 @@ const CatalystChat = ({
     DetectRTC.load(() => {
       setPermissions(
         DetectRTC.isWebRTCSupported &&
-        DetectRTC.isWebsiteHasWebcamPermissions &&
-        DetectRTC.isWebsiteHasMicrophonePermissions
-      )
+          DetectRTC.isWebsiteHasWebcamPermissions &&
+          DetectRTC.isWebsiteHasMicrophonePermissions
+      );
     });
     // set global theme
-    setThemeColor(
-      theme ?? DEFAULT_THEME
-    );
+    setThemeColor(theme ?? DEFAULT_THEME);
   }, []);
 
   useEffect(() => {
     if (ready && hasPerms) {
       // set client ID
-      const persistentClientId =
-        cookies.PERSISTENT_CLIENT_ID || generateUUID();
+      const persistentClientId = cookies.PERSISTENT_CLIENT_ID || generateUUID();
       if (!cookies.PERSISTENT_CLIENT_ID)
         setCookie('PERSISTENT_CLIENT_ID', persistentClientId, {
-          expires: new Date(
-            Date.now() + 1000 * 60 * 60 * 24 * 365
-          ),
+          expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
         });
       // obtain user token
       fetch(
@@ -86,7 +84,7 @@ const CatalystChat = ({
           console.log(err);
         });
     }
-},[hasPerms, ready]);
+  }, [hasPerms, ready]);
 
   return (
     <div
@@ -110,10 +108,10 @@ const CatalystChat = ({
         } h-full w-full m-0 p-0 overflow-hidden max-h-screen max-w-screen box-border`}
       >
         {hasPerms &&
-          ready &&
-          (DetectRTC.browser.isChrome ||
-            DetectRTC.browser.isEdge ||
-            DetectRTC.browser.isSafari) ? (
+        ready &&
+        (DetectRTC.browser.isChrome ||
+          DetectRTC.browser.isEdge ||
+          DetectRTC.browser.isSafari) ? (
           <VideoChat
             token={token}
             meta={{
@@ -126,7 +124,10 @@ const CatalystChat = ({
             disableChat={disableChat}
             arbData={arbData}
             handleReceiveArbData={handleReceiveArbData}
-            onEndCall={onEndCall}
+            onJoinCall={onJoinCall}
+            onMemberJoin={onMemberJoin}
+            onMemberLeave={onMemberLeave}
+            onLeaveCall={onLeaveCall}
           />
         ) : DetectRTC.isWebRTCSupported &&
           (DetectRTC.browser.isChrome ||
@@ -154,6 +155,5 @@ const CatalystChat = ({
       </div>
     </div>
   );
-  
 };
 export default CatalystChat;

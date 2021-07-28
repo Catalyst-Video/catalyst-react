@@ -37,7 +37,10 @@ const VideoChat = ({
   disableChat,
   arbData,
   handleReceiveArbData,
-  onEndCall,
+  onJoinCall,
+  onMemberJoin,
+  onMemberLeave,
+  onLeaveCall
 }: {
   token: string;
   meta: RoomMetaData;
@@ -45,10 +48,13 @@ const VideoChat = ({
   disableChat?: boolean;
   arbData?: Uint8Array;
   handleReceiveArbData: (arbData: Uint8Array) => void;
-  onEndCall: () => void;
+  onJoinCall: () => void;
+  onMemberJoin: () => void;
+  onMemberLeave: () => void;
+  onLeaveCall: () => void;
 }) => {
   const fsHandle = useFullScreenHandle();
-  const [numParticipants, setNumParticipants] = useState(0);
+  const [memberCount, setMemberCount] = useState(0);
   const [speakerMode, setSpeakerMode] = useState(false);
   const [roomClosed, setRoomClosed] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
@@ -59,29 +65,36 @@ const VideoChat = ({
   const decoder = new TextDecoder();
 
   const onConnected = async room => {
-    room.on(RoomEvent.ParticipantConnected, () => updateParticipantSize(room));
-    room.on(RoomEvent.ParticipantDisconnected, () =>
-      updateParticipantSize(room)
-    );
-    room.on(RoomEvent.DataReceived, (data: Uint8Array, participant: Participant, kind: DataPacket_Kind) => {
-      const strData = decoder.decode(data)
-      console.log(strData)
-      const parsedData = JSON.parse(strData)
-      if (JSON.parse(strData)?.type === 'ctw-chat') {
-        console.log('received chat ', JSON.parse(strData).text);
-        setChatMessages(chatMessages => [
-          ...chatMessages,
-          {
-            text: parsedData.text,
-            sender: room.participants?.get(parsedData.sender) ?? ''
-          },
-        ]);
-        
-      } else {
-        handleReceiveArbData(data);
-      }
+    onJoinCall()
+    room.on(RoomEvent.ParticipantConnected, () => {
+      bumpMemberSize(room);
+      onMemberJoin();
     });
-    updateParticipantSize(room);
+    room.on(RoomEvent.ParticipantDisconnected, () =>{
+      bumpMemberSize(room);
+      onMemberLeave();
+    });
+    room.on(
+      RoomEvent.DataReceived,
+      (data: Uint8Array, member: Participant, kind: DataPacket_Kind) => {
+        const strData = decoder.decode(data);
+        console.log(strData);
+        const parsedData = JSON.parse(strData);
+        if (JSON.parse(strData)?.type === 'ctw-chat') {
+          console.log('received chat ', JSON.parse(strData).text);
+          setChatMessages(chatMessages => [
+            ...chatMessages,
+            {
+              text: parsedData.text,
+              sender: room.participants?.get(parsedData.sender) ?? '',
+            },
+          ]);
+        } else {
+          handleReceiveArbData(data);
+        }
+      }
+    );
+    bumpMemberSize(room);
     console.log(room);
 
     const tracks = await createLocalTracks({
@@ -123,12 +136,12 @@ const VideoChat = ({
     }
   }, [token]);
 
-  const updateParticipantSize = (room: Room) => {
-    setNumParticipants(room.participants.size + 1);
+  const bumpMemberSize = (room: Room) => {
+    setMemberCount(room.participants.size + 1);
   };
 
   const onLeave = () => {
-    onEndCall();
+    onLeaveCall();
     setRoomClosed(true);
   };
 
@@ -199,7 +212,7 @@ const VideoChat = ({
                 size="lg"
                 className="text-white mr-1"
               />
-              <span className="text-white">{numParticipants}</span>
+              <span className="text-white">{memberCount}</span>
               <button
                 className="cursor-pointer focus:border-0 focus:outline-none"
                 onClick={() => setSpeakerMode(sMode => !sMode)}

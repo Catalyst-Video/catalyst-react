@@ -20,10 +20,13 @@ export interface CatalystChatProps {
   disableChat?: boolean;
   disableSetupRoom?: boolean;
   disableNameField?: boolean;
-  cstmSetupBg?: string
+  cstmSetupBg?: string;
   arbData?: Uint8Array;
   handleReceiveArbData: (arbData: Uint8Array) => void;
-  onEndCall: () => void;
+  onJoinCall: () => void;
+  onMemberJoin: () => void;
+  onMemberLeave: () => void;
+  onLeaveCall: () => void;
 }
 
 export interface RoomMetaData {
