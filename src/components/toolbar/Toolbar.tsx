@@ -181,6 +181,7 @@ import VidDeviceBtn from './VidDeviceBtn';
                          width: VideoPresets.fhd.resolution.width,
                          height: VideoPresets.fhd.resolution.height,
                        },
+                       audio: true, // TODO: get working properly
                      })
                      .then((captureStream: MediaStream) => {
                        room.localParticipant
@@ -196,7 +197,7 @@ import VidDeviceBtn from './VidDeviceBtn';
                          });
                      })
                      .catch(err => {
-                      console.log('Error sharing screen: ' + err);
+                       console.log('Error sharing screen: ' + err);
                      });
                  }
            }

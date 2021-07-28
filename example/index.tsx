@@ -26,6 +26,7 @@ const GeneralTest = () => {
         primary: '#50c878',
         primaryDark: '#50c878',
       }}
+      // theme={ }
       onEndCall={() => console.log('end')}
     />
   );
