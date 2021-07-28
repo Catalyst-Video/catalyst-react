@@ -208,7 +208,7 @@ import VidDeviceBtn from './VidDeviceBtn';
            bgColor={
              screenPub?.track
                ? `bg-primary`
-               : 'bg-tertiary hover:bg-gray-500 dark:bg-secondary dark:hover:bg-tertiary'
+               : 'bg-tertiary hover:bg-quaternary dark:bg-secondary dark:hover:bg-tertiary'
            }
            onClick={
              screenPub?.track

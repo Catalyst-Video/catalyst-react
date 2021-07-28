@@ -142,6 +142,36 @@ useEffect(() => {
     }
 }, [videoDevice]);
 
+ useEffect(() => {
+   if (!audioDevice || !videoDevice) {
+     navigator.mediaDevices.enumerateDevices().then(devices => {
+       // TODO: allow testing of audio devices
+       // if (!audioDevice) {
+      //    const audioDevices = devices.filter(
+      //      id => id.kind === 'audioinput' && id.deviceId
+      //    );
+      //    let defaultAudDevice = audioDevices.find(
+      //      d =>
+      //        d.deviceId ===
+      //      audioTrack?.mediaStreamTrack.getSettings().deviceId
+      //    );
+      //    setAudioDevice(defaultAudDevice);
+      //  }
+       if (!videoDevice) {
+         const videoDevices = devices.filter(
+           id => id.kind === 'videoinput' && id.deviceId
+         );
+         let defaultVidDevice = videoDevices.find(
+           d =>
+             d.deviceId ===
+           videoTrack?.mediaStreamTrack.getSettings().deviceId
+         );
+         setVideoDevice(defaultVidDevice);
+       }
+     });
+   }
+ }, [videoTrack]);
+
 //   const params: { [key: string]: string } = {
 //     videoEnabled: videoOn ? '1' : '0',
 //     audioEnabled: audioOn ? '1' : '0',
@@ -209,6 +239,7 @@ useEffect(() => {
               <VidDeviceBtn
                 isEnabled={videoTrack !== undefined}
                 onClick={toggleVideo}
+                videoDevice={videoDevice}
                 onSourceSelected={selectVideoDevice}
               />
             </div>

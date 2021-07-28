@@ -22,10 +22,12 @@ const GeneralTest = () => {
       // dark={true}
       audioOnDefault={false}
       // name={(Math.random() * 1000).toString().slice(0, 4)}
-      // theme={{
-      //   primary: '#11c1e8',
-      //   primaryDark: '#50c878',
-      // }}
+      theme={{
+        primary: '#11c1e8',
+        secondary: '#374151',
+        tertiary: '#4B5563',
+        quaternary: '#6B7280',
+      }}
       // theme={ }
       onEndCall={() => console.log('end')}
     />

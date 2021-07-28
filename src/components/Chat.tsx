@@ -181,7 +181,7 @@ const Chat = ({
         } z-40 top-10 sm:top-auto sm:bottom-4 right-3`} // flex items-center h-full inset-y-0
       >
         <button
-          className="z-40 focus:outline-none focus:border-0 flex bg-tertiary dark:bg-secondary hover:bg-gray-500 dark:hover:bg-tertiary rounded-full w-16 h-16 items-center justify-center"
+          className="z-40 focus:outline-none focus:border-0 flex bg-tertiary dark:bg-secondary hover:bg-quaternary dark:hover:bg-tertiary rounded-full w-16 h-16 items-center justify-center"
           onClick={() => setChatOpen(chatOpen => !chatOpen)}
         >
           {!chatOpen && (
