@@ -38,7 +38,7 @@ import CatalystChat from "catalyst-vc-react"
 | `fade` | Milliseconds of no user interaction before fading out controls. Disabled when set to `0`                   |  `number` | `600` | Optional |
 | `audioOnDefault` |Is microphone enabled by default                        |  `boolean` | `true` | Optional |
 | `videoOnDefault` | Is webcam enabled by default               |  `boolean` | `true` | Optional |
-| `theme` | Is webcam enabled by default               |  `boolean` | `true` | Optional |
+| `theme` | Color scheme. Includes: **primary** _(main color)_, **secondary** _(background color)_, **tertiary** _(button color)_, **quaternary** _(button hover color)_              |  `string | { primary?: string; secondary?: string; tertiary?: string; quaternary?: string; }` | `light` | Optional |
 | `simulcast` | Publish multiple levels of quality for video streams              |  `boolean` | `true` | Optional |
 | `disableChat` | Hide text chat functionality              |  `boolean` | `true` | Optional |
 | `disableSetupRoom` | Skip setup view       |  `boolean` | `true` | Optional |
