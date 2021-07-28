@@ -138,15 +138,18 @@ const MemberView = React.memo(({
           <div className={`w-full h-full bg-primary`} />
         )}{' '}
         <div className="absolute bottom-0 left-0 flex text-white justify-between p-1 w-full">
-          <div className="text-white h-7 md:h-8 text-xs not-selectable flex items-center justify-center bg-secondary bg-opacity-40 px-2 py-1 rounded-xl">
-            {displayName ?? isLocal ? `${m.identity} (You)` : m.identity}
+          <div className="h-7 md:h-8 not-selectable flex items-center justify-center px-2 py-1 relative">
+            <span className="absolute top-0 left-0 opacity-50 bg-secondary rounded-xl w-full h-full"></span>
+            <span className="text-xs lg:text-sm text-white z-30">
+              {displayName ?? isLocal ? `${m.identity} (You)` : m.identity}
+            </span>
           </div>
           {isMuted && (
             <div>
               <FontAwesomeIcon
                 icon={faMicrophoneSlash}
                 size="2x"
-                className={`text-white not-selectable bg-secondary h-7 w-7 md:h-8 md:w-8 bg-opacity-40 p-2 rounded-full`}
+                className={`text-white not-selectable bg-secondary h-7 w-7 md:h-8 md:w-8 opacity-50 text-opacity-100 p-2 rounded-full`}
               />
             </div>
           )}
