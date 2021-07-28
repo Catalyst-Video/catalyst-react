@@ -14,8 +14,9 @@ module.exports = {
       // Build your palette here
       primary: 'var(--ctwPrimary)',
       secondary: 'var(--ctwSecondary)',
-      primaryDark: 'var(--ctwPrimaryDark)',
-      secondaryDark: 'var(--ctwSecondaryDark)',
+      tertiary: 'var(--ctwTertiary)',
+      // primaryDark: 'var(--ctwPrimaryDark)',
+      // secondaryDark: 'var(--ctwSecondaryDark)',
       transparent: 'transparent',
       current: 'currentColor',
       white: colors.white,
