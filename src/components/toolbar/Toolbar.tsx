@@ -62,6 +62,38 @@ import VidDeviceBtn from './VidDeviceBtn';
    const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
 
 
+  //  useEffect(() => {
+   if (!audioDevice || !videoDevice) {
+     navigator.mediaDevices.enumerateDevices().then(devices => {
+       if (!audioDevice) {
+         const audioDevices = devices.filter(
+           id => id.kind === 'audioinput' && id.deviceId
+         );
+         let defaultAudDevice = audioDevices.find(
+           d =>
+             d.deviceId ===
+             audioPub?.audioTrack?.mediaStreamTrack.getSettings().deviceId
+         );
+         setAudioDevice(defaultAudDevice ?? audioDevices[0]);
+       }
+       if (!videoDevice) {
+         const videoDevices = devices.filter(
+           id => id.kind === 'videoinput' && id.deviceId
+         );
+         let defaultVidDevice = videoDevices.find(
+           d =>
+             d.deviceId ===
+             videoPub?.videoTrack?.mediaStreamTrack.getSettings().deviceId
+         );
+         setVideoDevice(defaultVidDevice ?? videoDevices[0]);
+       }
+     });
+   }
+
+  //  }, []);
+
+ 
+
    const toggleVideo = () => {
      if (videoPub?.track) {
        if (videoPub) unpublishTrack(videoPub.track as LocalVideoTrack);

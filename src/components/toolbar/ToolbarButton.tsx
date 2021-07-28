@@ -69,13 +69,12 @@ export const ToolbarButton = ({
              content={
                <div>
                  <ul style={popoverStyles}>
-                   {devices?.map((id, i) => {
+                   {/* {devices?.map((id, i) => {
                      return (
                        <li
                          key={i}
                          className="flex items-center text-xs lg:text-sm text-white"
                          style={{
-                           //  color: 'white',
                            padding: '8px',
                            borderTop:
                              i > 0 ? '1px solid rgba(255, 255, 255, 0.2)' : '0',
@@ -88,10 +87,31 @@ export const ToolbarButton = ({
                              className="mr-1 "
                            />
                          ) : (
+                           <FontAwesomeIcon icon={faCircle} className="mr-1 " />
+                         )}
+                         {id.label}
+                       </li>
+                     );
+                   })} */}
+                   {devices?.map((id, i) => {
+                     return (
+                       <li
+                         key={i}
+                         className="flex items-center text-xs lg:text-sm text-white"
+                         style={{
+                           padding: '8px',
+                           borderTop:
+                             i > 0 ? '1px solid rgba(255, 255, 255, 0.2)' : '0',
+                         }}
+                         onClick={() => handleDeviceClick(id)}
+                       >
+                         {id.label === selectedDevice?.label ? (
                            <FontAwesomeIcon
-                             icon={faCircle}
+                             icon={faCheckCircle}
                              className="mr-1 "
                            />
+                         ) : (
+                           <FontAwesomeIcon icon={faCircle} className="mr-1 " />
                          )}
                          {id.label}
                        </li>

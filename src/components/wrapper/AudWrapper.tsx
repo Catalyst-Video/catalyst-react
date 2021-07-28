@@ -5,6 +5,7 @@ import { useEffect, useRef} from "react";
 const AudWrapper = React.memo(({ track, isLocal }: {
   track: Track;
   isLocal: boolean;
+  sinkId?: string;
 }
 ) => {
   const audioEl = useRef<HTMLAudioElement>();
@@ -18,10 +19,15 @@ const AudWrapper = React.memo(({ track, isLocal }: {
     if (track.sid) {
       audioEl.current.setAttribute("data-audio-track-id", track.sid);
     }
+    // TODO: Audio output device 
+    // if (sinkId) {
+    //    (audioEl.current as HTMLMediaElement)?.setSinkId(audioOutputDevice.deviceId).then(() => {
+    //     document.body.appendChild(audioElement);
+    //   });
+    // }
     return () => track.detach().forEach((el) => el.remove());
   }, [track, isLocal]);
 
-  // TODO: allow set sink id
   return null;
 });
 export default AudWrapper;
