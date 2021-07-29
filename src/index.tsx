@@ -9,7 +9,7 @@ import { generateUUID, setThemeColor } from "./utils/general";
 import { DEFAULT_AUTOFADE, DEFAULT_THEME } from "./utils/globals";
 import genRandomName from "./utils/name_gen";
 import { useCookies } from 'react-cookie';
-import DetectRTC from 'detectrtc';
+// import DetectRTC from 'detectrtc';
 import SetupView from './views/SetupView';
 
 const CatalystChat = ({

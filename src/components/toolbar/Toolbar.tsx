@@ -13,6 +13,7 @@ import {
   LocalVideoTrack,
   Room,
   Track,
+  TrackPublication,
   VideoPresets,
 } from "livekit-client";
 import React, { ReactElement, useRef, useState, useEffect } from 'react';
@@ -42,60 +43,59 @@ import VidDeviceBtn from './VidDeviceBtn';
    const { publications, isMuted, unpublishTrack } = useParticipant(
      room.localParticipant
    );
-
-   const audioPub = publications.find(val => val.kind === Track.Kind.Audio);
-   const videoPub = publications.find(val => {
-     return val.kind === Track.Kind.Video && val.trackName !== 'screen';
-   });
-   const screenPub = publications.find(val => {
-     return val.kind === Track.Kind.Video && val.trackName === 'screen';
-   });
-   if (enableScreenShare === undefined) {
-     enableScreenShare = true;
-   }
-   if (enableVideo === undefined) {
-     enableVideo = true;
-   }
-   if (enableAudio === undefined) {
-     enableAudio = true;
-   }
-
-   const [videoTrack, setVideoTrack] = useState<LocalVideoTrack>();
+   const [audio, setAudioPub] = useState<TrackPublication>();
+   const [video, setVideoPub] = useState<TrackPublication>();
+   const [screen, setScreenPub] = useState<TrackPublication>(
+   );
    const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
    const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
 
    useEffect(() => {
-     if (!audioDevice || !videoDevice) {
-       navigator.mediaDevices.enumerateDevices().then(devices => {
-         if (!audioDevice) {
-           const audioDevices = devices.filter(
-             id => id.kind === 'audioinput' && id.deviceId
-           );
-           let defaultAudDevice = audioDevices.find(
-             d =>
-               d.deviceId ===
-               audioPub?.audioTrack?.mediaStreamTrack.getSettings().deviceId
-           );
-           setAudioDevice(defaultAudDevice);
-         }
-         if (!videoDevice) {
-           const videoDevices = devices.filter(
-             id => id.kind === 'videoinput' && id.deviceId
-           );
-           let defaultVidDevice = videoDevices.find(
-             d =>
-               d.deviceId ===
-               videoPub?.videoTrack?.mediaStreamTrack.getSettings().deviceId
-           );
-           setVideoDevice(defaultVidDevice);
-         }
-       });
-     }
+     setAudioPub(publications.find(p => p.kind === Track.Kind.Audio));
+     setVideoPub(
+       publications.find(
+         p => p.kind === Track.Kind.Video && p.trackName !== 'screen'
+       )
+     );
+     setScreenPub(
+       publications.find(
+         p => p.kind === Track.Kind.Video && p.trackName === 'screen'
+       )
+     );
    }, [publications]);
 
+   useEffect(() => {
+ if (!audioDevice || !videoDevice) {
+   navigator.mediaDevices.enumerateDevices().then(devices => {
+     if (!audioDevice) {
+       const audioDevices = devices.filter(
+         id => id.kind === 'audioinput' && id.deviceId
+       );
+       let defaultAudDevice = audioDevices.find(
+         d =>
+           d.deviceId ===
+           audio?.audioTrack?.mediaStreamTrack.getSettings().deviceId
+       );
+       setAudioDevice(defaultAudDevice);
+     }
+     if (!videoDevice) {
+       const videoDevices = devices.filter(
+         id => id.kind === 'videoinput' && id.deviceId
+       );
+       let defaultVidDevice = videoDevices.find(
+         d =>
+           d.deviceId ===
+           video?.videoTrack?.mediaStreamTrack.getSettings().deviceId
+       );
+       setVideoDevice(defaultVidDevice);
+     }
+   });
+ }
+   }, [audio, video]);
+   
    const toggleVideo = () => {
-     if (videoPub?.track) {
-       if (videoPub) unpublishTrack(videoPub.track as LocalVideoTrack);
+     if (video?.track) {
+       if (video) unpublishTrack(video.track as LocalVideoTrack);
      } else {
        const options: CreateVideoTrackOptions = {};
        if (videoDevice) {
@@ -112,9 +112,9 @@ import VidDeviceBtn from './VidDeviceBtn';
    };
 
    const toggleAudio = () => {
-     if (!audioPub || isMuted) {
-       if (audioPub) {
-         (audioPub as LocalTrackPublication).unmute();
+     if (!audio || isMuted) {
+       if (audio) {
+         (audio as LocalTrackPublication).unmute();
        } else {
          const options: CreateVideoTrackOptions = {};
          if (audioDevice) {
@@ -130,16 +130,14 @@ import VidDeviceBtn from './VidDeviceBtn';
            });
        }
      } else {
-       (audioPub as LocalTrackPublication).mute();
+       (audio as LocalTrackPublication).mute();
      }
    };
 
    const selectVideoDevice = (device: MediaDeviceInfo) => {
      setVideoDevice(device);
-     if (videoTrack) {
-       if (
-         videoTrack.mediaStreamTrack.getSettings().deviceId === device.deviceId
-       ) {
+     if (video) {
+       if (video?.videoTrack?.mediaStreamTrack.getSettings().deviceId === device.deviceId) {
          return;
        }
      }
@@ -169,11 +167,11 @@ import VidDeviceBtn from './VidDeviceBtn';
      if (
        audioDevice &&
        audioDevice.deviceId !==
-         audioPub?.audioTrack?.mediaStreamTrack.getSettings().deviceId
+         audio?.audioTrack?.mediaStreamTrack.getSettings().deviceId
      ) {
        createLocalAudioTrack({ deviceId: audioDevice.deviceId })
          .then(track => {
-           if (audioPub) unpublishTrack(audioPub.track as LocalAudioTrack);
+           if (audio) unpublishTrack(audio.track as LocalAudioTrack);
            room.localParticipant.publishTrack(track);
            //  (audioPub as LocalTrackPublication).unmute();
          })
@@ -187,11 +185,11 @@ import VidDeviceBtn from './VidDeviceBtn';
      if (
        videoDevice &&
        videoDevice.deviceId !==
-         videoPub?.videoTrack?.mediaStreamTrack.getSettings().deviceId
+         video?.videoTrack?.mediaStreamTrack.getSettings().deviceId
      ) {
        createLocalVideoTrack({ deviceId: videoDevice.deviceId })
          .then((track: LocalVideoTrack) => {
-           if (videoPub) unpublishTrack(videoPub.track as LocalVideoTrack);
+           if (video) unpublishTrack(video.track as LocalVideoTrack);
            room.localParticipant.publishTrack(track);
          })
          .catch((err: Error) => {
@@ -203,39 +201,34 @@ import VidDeviceBtn from './VidDeviceBtn';
    return (
      <div className={'controlsWrapper'}>
        {/* Mute Audio Button */}
-       {enableAudio && (
          <AudioDeviceBtn
-           isMuted={!audioPub || isMuted}
+           isMuted={!audio || isMuted}
            onSourceSelected={setAudioDevice}
            onClick={toggleAudio}
            audioDevice={audioDevice}
          />
-       )}
        {/* Pause Video Button */}
-       {enableVideo && (
          <VidDeviceBtn
-           isEnabled={videoPub?.track ? true : false}
+           isEnabled={video?.track ? true : false}
            onSourceSelected={selectVideoDevice}
            onClick={toggleVideo}
            videoDevice={videoDevice}
          />
-       )}
        {/* Screen Share Button */}
-       {enableScreenShare && (
          <ToolbarButton
-           label={screenPub?.track ? 'Stop sharing' : 'Share screen'}
-           icon={screenPub?.track ? faStop : faDesktop}
+           label={screen?.track ? 'Stop sharing' : 'Share screen'}
+           icon={screen?.track ? faStop : faDesktop}
            bgColor={
-             screenPub?.track
+             screen?.track
                ? `bg-primary`
                : 'bg-tertiary hover:bg-quaternary dark:bg-secondary dark:hover:bg-tertiary'
            }
            onClick={
-             screenPub?.track
+             screen?.track
                ? () => {
-                 unpublishTrack(screenPub.track as LocalVideoTrack)
-                //  sendMsg('I finished screen sharing!');
-               }
+                   unpublishTrack(screen.track as LocalVideoTrack);
+                   //  sendMsg('I finished screen sharing!');
+                 }
                : () => {
                    navigator.mediaDevices
                      // @ts-ignore
@@ -257,7 +250,7 @@ import VidDeviceBtn from './VidDeviceBtn';
                          })
                          .then(track => {
                            setSpeakerMode(true);
-                          //  sendMsg('I started screen sharing!');
+                           //  sendMsg('I started screen sharing!');
                          });
                      })
                      .catch(err => {
@@ -266,7 +259,6 @@ import VidDeviceBtn from './VidDeviceBtn';
                  }
            }
          />
-       )}
        {/* End Call Button */}
        {onLeave && (
          <ToolbarButton
