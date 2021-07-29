@@ -29,7 +29,7 @@ import CatalystChat from "catalyst-vc-react"
 		/>
 ```
 
-You will need a Catalyst `appId` API key to connect to our servers. This can be obtained in under a minute by visiting our [management portal](https://manage.catalyst.chat/). 
+You will need a Catalyst `appId` API key to connect to our servers. This can be obtained in under a minute by visiting the *API keys* tab of our [management portal](https://manage.catalyst.chat/). 
 
 Our servers are free for your first 30 monthly active users, which means they should not cost you anything in development (and possibly production)!
 
@@ -38,7 +38,7 @@ Our servers are free for your first 30 monthly active users, which means they sh
 | Prop        | Description                                                                                                 |  Type                             | Example Value                             | Required |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- | -------------------------------------- | -------- |
 | `room` | Unique session identifier _(peers with the same `room` are connected)_                                                                    |  `string` | `ROOM_NAME` |  Required      |
-| `appId` | Unique project identifier, obtained from our [management portal](https://manage.catalyst.chat/)                                                   |  `string` | `YOUR_CATALYST_PROJECT_ID` |  Required  |
+| `appId` | Unique project identifier, obtained from the *API keys* tab of our [management portal](https://manage.catalyst.chat/)                                                   |  `string` | `YOUR_CATALYST_PROJECT_ID` |  Required  |
 | `name` | Display name of participant joining the call |  `string` | `MEMBER_NAME` |  Optional |
 | `dark` | Is dark mode enabled by default                                                    |  `boolean` | `false` | Optional |
 | `fade` | Milliseconds of no user interaction before fading out controls. Disabled when set to `0`                   |  `number` | `600` | Optional |
@@ -60,5 +60,7 @@ Our servers are free for your first 30 monthly active users, which means they sh
 ## Meta
 
 Created by [@GoldinGuy](https://github.com/GoldinGuy) and [@JoeSemrai](https://github.com/JosephSemrai)
+
+Designed with safety and security in mind. Visit our [terms of service and privacy policy](https://catalyst.chat/tos.html) to learn more.
 
 Distributed under the AGPL-3.0-only license. See [LICENSE](https://github.com/Catalyst-Video/catalyst-react/blob/master/LICENSE) for more information.
