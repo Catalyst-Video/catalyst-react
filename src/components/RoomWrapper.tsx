@@ -43,8 +43,9 @@ const RoomWrapper = ({
     room,
   } = roomState;
   const [showOverlay, setShowOverlay] = useState(false);
+  // const [screens, setNumScreens] = useState<number>(0);
   const [screens, setNumScreens] = useState<number>(0);
-  const [mainVid, setMainVid] = useState<Participant | RemoteVideoTrack>();
+  const [mainVid, setMainVid] = useState<string>();
   const vidRef = useRef<HTMLDivElement>(null);
   const [vidDims, setVidDims] = useState({
     width: '0px',
@@ -121,7 +122,7 @@ const RoomWrapper = ({
   }, []);
 
   useEffect(() => {
-    if (!mainVid) setMainVid(members[0]);
+    if (!mainVid) setMainVid(members[0]?.sid);
     resizeWrapper();
   }, [members, screens, chatOpen, fsHandle.active, speakerMode]);
 
@@ -149,9 +150,10 @@ const RoomWrapper = ({
         screenTrack = track.track as RemoteVideoTrack;
         //  console.log(screenTrack);
         if (!sharedScreens.includes(screenTrack)) {
+          // screenTrack.addListener('')
           sharedScreens = [...sharedScreens, screenTrack];
-          if (mainVid !== screenTrack && sharedScreens.length != screens) {
-            setMainVid(screenTrack);
+          if (mainVid !== screenTrack.sid && sharedScreens.length != screens) {
+            setMainVid(screenTrack.sid);
             // setSpeakerMode(true);
           }
         }
@@ -160,7 +162,12 @@ const RoomWrapper = ({
   });
   if (sharedScreens.length != screens) {
     setNumScreens(sharedScreens.length);
+    if (!members.find(m => m.sid === mainVid) && !sharedScreens.find(s => s.sid === mainVid)) {
+      setMainVid(members[0].sid);
+    }
   }
+
+  // var mainTrack = members.find(m => m.sid === mainVid) ?? sharedScreens.find(s => s.sid === mainVid) ?? members[0].getTracks()[0];
 
   return (
     <>
@@ -181,7 +188,7 @@ const RoomWrapper = ({
                   width={vidDims.width}
                   key={`${i}-screen`}
                   onClick={() => {
-                    setMainVid(s);
+                    setMainVid(s.sid);
                     setSpeakerMode(sm => !sm);
                   }}
                 />
@@ -199,7 +206,7 @@ const RoomWrapper = ({
                 onMouseEnter={() => setShowOverlay(true)}
                 onMouseLeave={() => setShowOverlay(false)}
                 onClick={() => {
-                  setMainVid(m);
+                  setMainVid(m.sid);
                   setSpeakerMode(sm => !sm);
                 }}
               />
@@ -228,29 +235,38 @@ const RoomWrapper = ({
           }`}
         >
           <div className="flex flex-col sm:w-4/5 p-1 justify-center content-center">
-            {!mainVid || 'identity' in mainVid ? (
-              <MemberView
-                key={mainVid?.identity ?? 'first-vid'}
-                participant={mainVid ?? members[0]}
-                height={'100%'}
-                width={'100%'}
-                classes={'aspect-w-16 aspect-h-9'}
-                showOverlay={showOverlay}
-                quality={VideoQuality.HIGH}
-                onMouseEnter={() => setShowOverlay(true)}
-                onMouseLeave={() => setShowOverlay(false)}
-                onClick={() => setSpeakerMode(sm => !sm)}
-              />
-            ) : (
-              <ScreenShareWrapper
-                track={mainVid}
-                height={'100%'}
-                width={'100%'}
-                classes={'aspect-w-16 aspect-h-9'}
-                key={`main-screen`}
-                onClick={() => setSpeakerMode(sm => !sm)}
-              />
-            )}
+            {members.map((m, i) => {
+              if (m.sid === mainVid) {
+                return (
+                  <MemberView
+                    key={m.identity ?? 'first-vid'}
+                    participant={m ?? members[0]}
+                    height={'100%'}
+                    width={'100%'}
+                    classes={'aspect-w-16 aspect-h-9'}
+                    showOverlay={showOverlay}
+                    quality={VideoQuality.HIGH}
+                    onMouseEnter={() => setShowOverlay(true)}
+                    onMouseLeave={() => setShowOverlay(false)}
+                    onClick={() => setSpeakerMode(sm => !sm)}
+                  />
+                );
+              } else return null;
+            })}
+            {sharedScreens.map(s => {
+              if (s.sid === mainVid) {
+                return (
+                  <ScreenShareWrapper
+                    track={s}
+                    height={'100%'}
+                    width={'100%'}
+                    classes={'aspect-w-16 aspect-h-9'}
+                    key={`main-screen`}
+                    onClick={() => setSpeakerMode(sm => !sm)}
+                  />
+                );
+              } else return null;
+            })}
           </div>
           <div
             className={
@@ -263,9 +279,7 @@ const RoomWrapper = ({
                 <div
                   className={`box ml-1 mr-1 w-full sm:w-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
                 >
-                  <div
-                    className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-sm md:text-md xl:text-lg text-white text-center px-1 sm:px-2 md:px-3 "
-                  >
+                  <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-sm md:text-md xl:text-lg text-white text-center px-1 sm:px-2 md:px-3 ">
                     <span>👋 Waiting for others to join...</span>
                   </div>
                 </div>
@@ -273,7 +287,7 @@ const RoomWrapper = ({
             )}
             {sharedScreens &&
               sharedScreens.map((s, i) => {
-                if (s !== mainVid)
+                if (s.sid !== mainVid)
                   return (
                     <ScreenShareWrapper
                       track={s}
@@ -284,7 +298,7 @@ const RoomWrapper = ({
                       }
                       key={`sidebar-screen-${i}`}
                       onClick={() => {
-                        setMainVid(s);
+                        setMainVid(s.sid);
                         setSpeakerMode(sm => !sm);
                       }}
                     />
@@ -292,7 +306,7 @@ const RoomWrapper = ({
                 else return null;
               })}
             {members.map((m, i) => {
-              if (m !== mainVid)
+              if (m.sid !== mainVid)
                 return (
                   <MemberView
                     key={m.identity}
@@ -307,7 +321,7 @@ const RoomWrapper = ({
                     onMouseEnter={() => setShowOverlay(true)}
                     onMouseLeave={() => setShowOverlay(false)}
                     onClick={() => {
-                      setMainVid(m);
+                      setMainVid(m.sid);
                       setSpeakerMode(sm => !sm);
                     }}
                   />
@@ -319,10 +333,8 @@ const RoomWrapper = ({
       )}
       {!disableChat && (
         <Chat
-          //  participants={members}
-          localParticipant={localParticipant}
           chatOpen={chatOpen}
-          // setChatOpen={setChatOpen}
+          localParticipant={localParticipant}
           chatMessages={chatMessages}
           setChatMessages={setChatMessages}
         />
