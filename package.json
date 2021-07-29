@@ -1,7 +1,7 @@
 {
   "name": "catalyst-vc-react",
-  "version": "3.0.1",
-  "author": "@GoldinGuy seth@goldin.io & @JoeSemrai josephsemrai@gmail.com",
+  "version": "3.0.2",
+  "author": "@GoldinGuy <seth@goldin.io> & @JoeSemrai <josephsemrai@gmail.com>",
   "private": false,
   "license": "AGPL-3.0-only",
   "description": "Reliable and scalable open-source video chat in a few lines of code",
