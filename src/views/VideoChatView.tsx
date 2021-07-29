@@ -108,7 +108,11 @@ const VideoChat = ({
       video: meta.videoEnabled ? { deviceId: cookies.PREFERRED_AUDIO_DEVICE_ID } : false,
     });
     tracks.forEach(track => {
-      room.localParticipant.publishTrack(track);
+      room.localParticipant.publishTrack(track,
+        meta.simulcast ? {
+          simulcast: true,
+        } : {}
+      );
     });
   };
 
