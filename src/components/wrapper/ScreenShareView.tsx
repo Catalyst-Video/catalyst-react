@@ -19,7 +19,6 @@ import VidWrapper from "./VidWrapper";
   classes?: string
   onClick?: () => void;
 }) => {
-
          return (
            <div className={classes} onClick={onClick}>
              <div
@@ -31,19 +30,18 @@ import VidWrapper from "./VidWrapper";
              >
                <VidWrapper track={track} isLocal={false} />
                <div className="absolute bottom-0 left-0 flex text-white justify-end p-2 w-full">
-                 {/* <div className="text-white text-sm not-selectable flex items-center justify-center bg-secondary bg-opacity-40 px-2 py-1 rounded-xl">
-                   {'Sharing'}
-                 </div> */}
-                 <div>
+                 <div className="relative h-7 w-7 md:h-8 md:w-8 flex items-center justify-center p-1">
+                   <span className="absolute rounded-full top-0 left-0 opacity-50 bg-secondary  w-full h-full"></span>
                    <FontAwesomeIcon
                      icon={faDesktop}
                      size="2x"
-                     className={`text-white not-selectable bg-secondary h-10 w-10 opacity-50 p-2 rounded-full`}
+                     className={`text-white not-selectable p-2 z-30`}
                    />
                  </div>
                </div>
              </div>
            </div>
-         );
+     );
        };
+       
 export default ScreenShareWrapper;

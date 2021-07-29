@@ -87,7 +87,7 @@ const VideoChat = ({
         console.log(strData);
         const parsedData = JSON.parse(strData);
         if (JSON.parse(strData)?.type === 'ctw-chat') {
-          console.log('received chat ', JSON.parse(strData).text);
+          // console.log('received chat ', JSON.parse(strData).text);
           setChatMessages(chatMessages => [
             ...chatMessages,
             {
@@ -101,7 +101,7 @@ const VideoChat = ({
       }
     );
     bumpMemberSize(room);
-    console.log(room);
+    // console.log(room);
 
     const tracks = await createLocalTracks({
       audio: meta.audioEnabled ? { deviceId: cookies.PREFERRED_AUDIO_DEVICE_ID } : false,
