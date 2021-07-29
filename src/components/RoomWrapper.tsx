@@ -166,9 +166,6 @@ const RoomWrapper = ({
       setMainVid(members[0].sid);
     }
   }
-
-  // var mainTrack = members.find(m => m.sid === mainVid) ?? sharedScreens.find(s => s.sid === mainVid) ?? members[0].getTracks()[0];
-
   return (
     <>
       {!speakerMode && (

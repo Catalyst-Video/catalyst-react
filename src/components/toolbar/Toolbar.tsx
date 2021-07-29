@@ -226,7 +226,6 @@ import VidDeviceBtn from './VidDeviceBtn';
            onClick={
              screen?.track
                ? () => {
-                 (screen as LocalTrackPublication).mute();
                    unpublishTrack(screen.track as LocalVideoTrack);
                    //  sendMsg('I finished screen sharing!');
                  }

@@ -64,7 +64,7 @@ const CatalystChat = ({
         });
       // obtain user token
       fetch(
-        `https://pricey-somber-silence.glitch.me/token?participantName=${userName}&customerUid=${appId}&roomName=${room}&persistentClientId=${persistentClientId}`,
+        `https://staging.catalyst.chat/auth/meeting/token?participantName=${userName}&customerUid=${appId}&roomName=${room}&persistentClientId=${persistentClientId}`,
         {
           method: 'GET',
           headers: {
