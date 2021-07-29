@@ -37,25 +37,25 @@ const CatalystChat = ({
   const [token, setToken] = useState('');
   const [userName, setUserName] = useState(name ?? genRandomName());
   const [cookies, setCookie] = useCookies(['PERSISTENT_CLIENT_ID']);
-  const [hasPerms, setPermissions] = useState(false);
+  // const [hasPerms, setPermissions] = useState(false);
   const [audioOn, setAudioOn] = useState(audioOnDefault ?? true);
   const [videoOn, setVideoOn] = useState(videoOnDefault ?? true);
 
   useEffect(() => {
     // check for perms
-    DetectRTC.load(() => {
-      setPermissions(
-        DetectRTC.isWebRTCSupported &&
-          DetectRTC.isWebsiteHasWebcamPermissions &&
-          DetectRTC.isWebsiteHasMicrophonePermissions
-      );
-    });
+    // DetectRTC.load(() => {
+    //   setPermissions(
+    //     DetectRTC.isWebRTCSupported &&
+    //       DetectRTC.isWebsiteHasWebcamPermissions &&
+    //       DetectRTC.isWebsiteHasMicrophonePermissions
+    //   );
+    // });
     // set global theme
     setThemeColor(theme ?? DEFAULT_THEME);
   }, []);
 
   useEffect(() => {
-    if (ready && hasPerms) {
+    if (ready) { //  && hasPerms
       // set client ID
       const persistentClientId = cookies.PERSISTENT_CLIENT_ID || generateUUID();
       if (!cookies.PERSISTENT_CLIENT_ID)
@@ -84,7 +84,7 @@ const CatalystChat = ({
           console.log(err);
         });
     }
-  }, [hasPerms, ready]);
+  }, [ready]); // hasPerms, 
 
   return (
     <div
@@ -107,11 +107,13 @@ const CatalystChat = ({
           dark ? 'dark' : ''
         } h-full w-full m-0 p-0 overflow-hidden max-h-screen max-w-screen box-border`}
       >
-        {hasPerms &&
-        ready &&
-        (DetectRTC.browser.isChrome ||
-          DetectRTC.browser.isEdge ||
-          DetectRTC.browser.isSafari) ? (
+        { //hasPerms &&
+          ready
+        //     &&
+        // (DetectRTC.browser.isChrome ||
+        //   DetectRTC.browser.isEdge ||
+        //       DetectRTC.browser.isSafari)
+            ? (
           <VideoChat
             token={token}
             meta={{
@@ -129,10 +131,11 @@ const CatalystChat = ({
             onMemberLeave={onMemberLeave}
             onLeaveCall={onLeaveCall}
           />
-        ) : DetectRTC.isWebRTCSupported &&
-          (DetectRTC.browser.isChrome ||
-            DetectRTC.browser.isEdge ||
-            DetectRTC.browser.isSafari) &&
+          ) :
+          //   DetectRTC.isWebRTCSupported &&
+          // (DetectRTC.browser.isChrome ||
+          //   DetectRTC.browser.isEdge ||
+          //   DetectRTC.browser.isSafari) &&
           !disableSetupRoom ? (
           <SetupView
             meta={{
