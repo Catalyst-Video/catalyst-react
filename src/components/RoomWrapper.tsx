@@ -21,6 +21,7 @@ const RoomWrapper = ({
   onLeave,
   speakerMode,
   setSpeakerMode,
+  chatOpen,
   disableChat,
   chatMessages,
   setChatMessages,
@@ -29,9 +30,10 @@ const RoomWrapper = ({
   onLeave?: (room: Room) => void;
   speakerMode: boolean;
   setSpeakerMode: Function;
+  chatOpen: boolean;
   disableChat?: boolean;
-  chatMessages: ChatMessage[]
-  setChatMessages: Function
+  chatMessages: ChatMessage[];
+  setChatMessages: Function;
 }) => {
   const {
     isConnecting,
@@ -44,12 +46,11 @@ const RoomWrapper = ({
   const [screens, setNumScreens] = useState<number>(0);
   const [mainVid, setMainVid] = useState<Participant | RemoteVideoTrack>();
   const vidRef = useRef<HTMLDivElement>(null);
-  const [chatOpen, setChatOpen] = useState(false);
   const [vidDims, setVidDims] = useState({
     width: '0px',
     height: '0px',
   });
-  const fsHandle = useFullScreenHandle()
+  const fsHandle = useFullScreenHandle();
 
   const resizeWrapper = () => {
     let margin = 2;
@@ -151,7 +152,7 @@ const RoomWrapper = ({
           sharedScreens = [...sharedScreens, screenTrack];
           if (mainVid !== screenTrack && sharedScreens.length != screens) {
             setMainVid(screenTrack);
-            //  setSpeakerMode(true);
+            // setSpeakerMode(true);
           }
         }
       }
@@ -319,7 +320,7 @@ const RoomWrapper = ({
           //  participants={members}
           localParticipant={localParticipant}
           chatOpen={chatOpen}
-          setChatOpen={setChatOpen}
+          // setChatOpen={setChatOpen}
           chatMessages={chatMessages}
           setChatMessages={setChatMessages}
         />

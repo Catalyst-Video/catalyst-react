@@ -32,9 +32,13 @@ const SetupView = ({
   disableNameField?: boolean;
 }) => {
   const [videoTrack, setVideoTrack] = useState<LocalVideoTrack>();
+  const [cookies, setCookies] = useCookies([
+    'PREFERRED_AUDIO_DEVICE_ID',
+    'PREFERRED_VIDEO_DEVICE_ID',
+    'PREFERRED_OUTPUT_DEVICE_ID',
+  ]);
   const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
   const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
-  const [cookies, setCookies] = useCookies(['PREFERRED_VIDEO_DEVICE_ID']);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   //  TODO: determine bg gradient style
@@ -112,7 +116,10 @@ const SetupView = ({
          ) {
              return;
          } else {
-             setVideoDevice(device);
+           setVideoDevice(device);
+            setCookies('PREFERRED_VIDEO_DEVICE_ID', device.deviceId, {
+              expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+            });
          }
      }
    };
@@ -121,7 +128,11 @@ useEffect(() => {
     if (audioDevice) {
     createLocalAudioTrack({ deviceId: audioDevice.deviceId })
         .then(track => {
-            setAudioOn(true);
+          setAudioOn(true);
+            setCookies('PREFERRED_AUDIO_DEVICE_ID', audioDevice.deviceId, {
+               expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+            });
+            
         }).catch((err: Error) => {
         console.log(err);
         });
@@ -144,6 +155,7 @@ useEffect(() => {
 
  useEffect(() => {
    if (!audioDevice || !videoDevice) {
+
      navigator.mediaDevices.enumerateDevices().then(devices => {
        // TODO: allow testing of audio devices
        // if (!audioDevice) {
@@ -158,15 +170,36 @@ useEffect(() => {
       //    setAudioDevice(defaultAudDevice);
       //  }
        if (!videoDevice) {
-         const videoDevices = devices.filter(
-           id => id.kind === 'videoinput' && id.deviceId
-         );
-         let defaultVidDevice = videoDevices.find(
-           d =>
-             d.deviceId ===
-           videoTrack?.mediaStreamTrack.getSettings().deviceId
-         );
-         setVideoDevice(defaultVidDevice);
+          const videoDevices = devices.filter(
+            id => id.kind === 'videoinput' && id.deviceId
+          );
+         if (cookies.PREFERRED_VIDEO_DEVICE_ID) {
+            let vidDevice = videoDevices.find(
+              d => d.deviceId === cookies.PREFERRED_VIDEO_DEVICE_ID
+           );
+            setVideoDevice(vidDevice);
+         } else {
+        
+           let defaultVidDevice = videoDevices.find(
+             d =>
+               d.deviceId ===
+               videoTrack?.mediaStreamTrack.getSettings().deviceId
+           );
+           if (defaultVidDevice) {
+             setVideoDevice(defaultVidDevice);
+             if (!cookies.PREFERRED_VIDEO_DEVICE_ID) {
+               setCookies(
+                 'PREFERRED_VIDEO_DEVICE_ID',
+                 defaultVidDevice.deviceId,
+                 {
+                   expires: new Date(Date.now() + 1 * 60 * 60 * 24 * 365),
+                 }
+               );
+             }
+           }
+         }
+    
+           
        }
      });
    }

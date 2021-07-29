@@ -14,13 +14,13 @@ import { ChatMessage } from '../typings/interfaces';
 
 const Chat = ({
   chatOpen,
-  setChatOpen,
+  // setChatOpen,
   localParticipant,
   chatMessages,
   setChatMessages
 }: {
   chatOpen: boolean;
-  setChatOpen: Function;
+  // setChatOpen: Function;
   localParticipant?: LocalParticipant;
   chatMessages: ChatMessage[];
   setChatMessages: Function;
@@ -173,7 +173,7 @@ const Chat = ({
           </div>
         </div>
       )}
-      <div
+      {/* <div
         className={`absolute  ${
           chatOpen
             ? 'left-3 sm:left-auto sm:right-48 animate-fade-in-right'
@@ -210,7 +210,7 @@ const Chat = ({
             />
           )}
         </button>
-      </div>
+      </div> */}
     </>
   );
 };

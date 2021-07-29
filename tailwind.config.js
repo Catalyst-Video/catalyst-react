@@ -7,7 +7,7 @@ module.exports = {
     './public/index.html',
   ],
   // mode: 'jit',
-  darkMode: 'class', // or 'media' or 'class'
+  darkMode: 'class', // or 'media'
   important: '#ctw',
   theme: {
     colors: {
@@ -19,8 +19,8 @@ module.exports = {
       current: 'currentColor',
       white: colors.white,
       black: colors.black,
-      gray: colors.coolGray, // coolGray
-      red: colors.red[500],
+      gray: colors.coolGray, 
+      red: '#F64F59' // colors.red[500],
     },
     extend: {
       keyframes: {
