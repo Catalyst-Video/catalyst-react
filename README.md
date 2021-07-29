@@ -25,20 +25,26 @@ import CatalystChat from "catalyst-vc-react"
 			room="ROOM_NAME"
 			appId="YOUR_CATALYST_PROJECT_ID"
 			name="MEMBER_NAME"
+			onEndCall={() => console.log('Call ended!')}
 		/>
 ```
+
+You will need a Catalyst `appId` API key to connect to our servers. This can be obtained in under a minute by visiting our [management portal](https://manage.catalyst.chat/). 
+
+Our servers are free for your first 30 monthly active users, which means they should not cost you anything in development (and possibly production)!
+
 ## Parameters
 
 | Prop        | Description                                                                                                 |  Type                             | Example Value                             | Required |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- | -------------------------------------- | -------- |
 | `room` | Unique session identifier _(peers with the same `room` are connected)_                                                                    |  `string` | `ROOM_NAME` |  Required      |
-| `appId` | Unique project identifier                                                     |  `string` | `YOUR_CATALYST_PROJECT_ID` |  Required  |
+| `appId` | Unique project identifier, obtained from our [management portal](https://manage.catalyst.chat/)                                                   |  `string` | `YOUR_CATALYST_PROJECT_ID` |  Required  |
 | `name` | Display name of participant joining the call |  `string` | `MEMBER_NAME` |  Optional |
 | `dark` | Is dark mode enabled by default                                                    |  `boolean` | `false` | Optional |
 | `fade` | Milliseconds of no user interaction before fading out controls. Disabled when set to `0`                   |  `number` | `600` | Optional |
 | `audioOnDefault` |Is microphone enabled by default                        |  `boolean` | `true` | Optional |
 | `videoOnDefault` | Is webcam enabled by default               |  `boolean` | `true` | Optional |
-| `theme` | Color scheme. Includes: **primary** _(main color)_, **secondary** _(background color)_, **tertiary** _(button color)_, **quaternary** _(button hover color)_              |  `string | { primary?: string; secondary?: string; tertiary?: string; quaternary?: string; }` | `light` | Optional |
+| `theme` | Color scheme. Includes: **primary** _(main color)_, **secondary** _(background color)_, **tertiary** _(button color)_, **quaternary** _(button hover color)_              |  `string` | `{ primary?: string; secondary?: string; tertiary?: string; quaternary?: string; }` | `light` | Optional |
 | `simulcast` | Publish multiple levels of quality for video streams              |  `boolean` | `true` | Optional |
 | `disableChat` | Hide text chat functionality              |  `boolean` | `true` | Optional |
 | `disableSetupRoom` | Skip setup view       |  `boolean` | `true` | Optional |

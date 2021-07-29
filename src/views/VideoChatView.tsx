@@ -84,7 +84,7 @@ const VideoChat = ({
       RoomEvent.DataReceived,
       (data: Uint8Array, member: Participant, kind: DataPacket_Kind) => {
         const strData = decoder.decode(data);
-        console.log(strData);
+        // console.log(strData);
         const parsedData = JSON.parse(strData);
         if (JSON.parse(strData)?.type === 'ctw-chat') {
           // console.log('received chat ', JSON.parse(strData).text);
