@@ -206,19 +206,21 @@ const VideoChat = ({
       };
     }
     // set default output device
-    if (cookies.PREFERRED_OUTPUT_DEVICE_ID) {
-      setOutputDevice(cookies.PREFERRED_OUTPUT_DEVICE_ID);
-    } else {
-      navigator.mediaDevices.enumerateDevices().then(devices => {
-         if (!outputDevice) {
-           const outputDevices = devices.filter(
-             id => id.kind === 'audiooutput' && id.deviceId
-           );
-           setOutputDevice(outputDevices[0]);
-         }
-      });
-     
-    }
+   if (!outputDevice) {
+     navigator.mediaDevices.enumerateDevices().then(devices => {
+       const outputDevices = devices.filter(
+         id => id.kind === 'audiooutput' && id.deviceId
+       );
+       if (cookies.PREFERRED_OUTPUT_DEVICE_ID) {
+         let outDevice = outputDevices.find(
+           d => d.deviceId === cookies.PREFERRED_OUTPUT_DEVICE_ID
+         );
+         setOutputDevice(outDevice);
+       } else {
+         setOutputDevice(outputDevices[0]);
+       }
+     });
+   }
   }, []);
 
   return (
