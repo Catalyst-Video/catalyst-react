@@ -61,6 +61,10 @@ Our servers are free for your first 30 monthly active users, which means they sh
 
 Created by [@GoldinGuy](https://github.com/GoldinGuy) and [@JoeSemrai](https://github.com/JosephSemrai)
 
-Designed with safety and security in mind. Visit our [terms of service and privacy policy](https://catalyst.chat/tos.html) to learn more.
+The master branch of this repository contains Catalyst V3, the [latest version](https://www.npmjs.com/package/catalyst-vc-react). The older V2 version can be found on the [Catalyst V2 Branch](https://github.com/Catalyst-Video/catalyst-react/tree/CatalystV2). 
+
+Catalyst is designed with safety and security in mind. Visit our [terms of service and privacy policy](https://catalyst.chat/tos.html) to learn more.
+
+Catalyst V3 is based on a custom version of [WebRTC SFU](https://github.com/pion/ion-sfu) [LiveKit](https://github.com/Catalyst-Video/catalyst-client) infrastructure to allow for more stability and scalability. Prior versions of Catalyst made use of direct P2P protocols.
 
 Distributed under the AGPL-3.0-only license. See [LICENSE](https://github.com/Catalyst-Video/catalyst-react/blob/master/LICENSE) for more information.

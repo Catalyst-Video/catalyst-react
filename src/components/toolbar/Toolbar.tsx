@@ -31,6 +31,8 @@ import VidDeviceBtn from './VidDeviceBtn';
    onLeave,
    setSpeakerMode,
    setChatMessages,
+   updateOutputDevice,
+   outputDevice,
  }: {
    room: Room;
    enableScreenShare?: boolean;
@@ -39,14 +41,15 @@ import VidDeviceBtn from './VidDeviceBtn';
    onLeave?: (room: Room) => void;
    setSpeakerMode: Function;
    setChatMessages: Function;
+   updateOutputDevice: (device: MediaDeviceInfo) => void;
+   outputDevice?: MediaDeviceInfo;
  }) => {
    const { publications, isMuted, unpublishTrack } = useParticipant(
      room.localParticipant
    );
    const [audio, setAudioPub] = useState<TrackPublication>();
    const [video, setVideoPub] = useState<TrackPublication>();
-   const [screen, setScreenPub] = useState<TrackPublication>(
-   );
+   const [screen, setScreenPub] = useState<TrackPublication>();
    const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
    const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
 
@@ -65,34 +68,35 @@ import VidDeviceBtn from './VidDeviceBtn';
    }, [publications]);
 
    useEffect(() => {
- if (!audioDevice || !videoDevice) {
-   navigator.mediaDevices.enumerateDevices().then(devices => {
-     if (!audioDevice) {
-       const audioDevices = devices.filter(
-         id => id.kind === 'audioinput' && id.deviceId
-       );
-       let defaultAudDevice = audioDevices.find(
-         d =>
-           d.deviceId ===
-           audio?.audioTrack?.mediaStreamTrack.getSettings().deviceId
-       );
-       setAudioDevice(defaultAudDevice);
+     if (!audioDevice || !videoDevice) {
+       navigator.mediaDevices.enumerateDevices().then(devices => {
+         if (!audioDevice) {
+           const audioDevices = devices.filter(
+             id => id.kind === 'audioinput' && id.deviceId
+           );
+           let defaultAudDevice = audioDevices.find(
+             d =>
+               d.deviceId ===
+               audio?.audioTrack?.mediaStreamTrack.getSettings().deviceId
+           ) ?? audioDevices[0];
+           setAudioDevice(defaultAudDevice);
+         }
+         if (!videoDevice) {
+           const videoDevices = devices.filter(
+             id => id.kind === 'videoinput' && id.deviceId
+           );
+           let defaultVidDevice =
+             videoDevices.find(
+               d =>
+                 d.deviceId ===
+                 video?.videoTrack?.mediaStreamTrack.getSettings().deviceId
+             ) ?? videoDevices[0];
+           setVideoDevice(defaultVidDevice);
+         }
+       });
      }
-     if (!videoDevice) {
-       const videoDevices = devices.filter(
-         id => id.kind === 'videoinput' && id.deviceId
-       );
-       let defaultVidDevice = videoDevices.find(
-         d =>
-           d.deviceId ===
-           video?.videoTrack?.mediaStreamTrack.getSettings().deviceId
-       );
-       setVideoDevice(defaultVidDevice);
-     }
-   });
- }
    }, [audio, video]);
-   
+
    const toggleVideo = () => {
      if (video?.track) {
        if (video) unpublishTrack(video.track as LocalVideoTrack);
@@ -137,7 +141,10 @@ import VidDeviceBtn from './VidDeviceBtn';
    const selectVideoDevice = (device: MediaDeviceInfo) => {
      setVideoDevice(device);
      if (video) {
-       if (video?.videoTrack?.mediaStreamTrack.getSettings().deviceId === device.deviceId) {
+       if (
+         video?.videoTrack?.mediaStreamTrack.getSettings().deviceId ===
+         device.deviceId
+       ) {
          return;
        }
      }
@@ -199,70 +206,72 @@ import VidDeviceBtn from './VidDeviceBtn';
    }, [videoDevice]);
 
    return (
-     <div className={'controlsWrapper'}>
+     <div id="toolbar" className="">
        {/* Mute Audio Button */}
-         <AudioDeviceBtn
-           isMuted={!audio || isMuted}
-           onSourceSelected={setAudioDevice}
-           onClick={toggleAudio}
-           audioDevice={audioDevice}
-         />
+       <AudioDeviceBtn
+         isMuted={!audio || isMuted}
+         onIpSourceSelected={setAudioDevice}
+         onOpSourceSelected={updateOutputDevice}
+         onClick={toggleAudio}
+         audioDevice={audioDevice}
+         outputDevice={outputDevice}
+       />
        {/* Pause Video Button */}
-         <VidDeviceBtn
-           isEnabled={video?.track ? true : false}
-           onSourceSelected={selectVideoDevice}
-           onClick={toggleVideo}
-           videoDevice={videoDevice}
-         />
+       <VidDeviceBtn
+         isEnabled={video?.track ? true : false}
+         onSourceSelected={selectVideoDevice}
+         onClick={toggleVideo}
+         videoDevice={videoDevice}
+       />
        {/* Screen Share Button */}
-         <ToolbarButton
-           label={screen?.track ? 'Stop sharing' : 'Share screen'}
-           icon={screen?.track ? faStop : faDesktop}
-           bgColor={
-             screen?.track
-               ? `bg-primary`
-               : 'bg-tertiary hover:bg-quaternary dark:bg-secondary dark:hover:bg-tertiary'
-           }
-           onClick={
-             screen?.track
-               ? () => {
-                   unpublishTrack(screen.track as LocalVideoTrack);
-                   //  sendMsg('I finished screen sharing!');
-                 }
-               : () => {
-                   navigator.mediaDevices
-                     // @ts-ignore
-                     .getDisplayMedia({
-                       video: {
-                         width: VideoPresets.fhd.resolution.width,
-                         height: VideoPresets.fhd.resolution.height,
-                       },
-                       audio: true, // TODO: get working properly
-                     })
-                     .then((captureStream: MediaStream) => {
-                       room.localParticipant
-                         .publishTrack(captureStream.getTracks()[0], {
-                           name: 'screen',
-                           videoEncoding: {
-                             maxBitrate: 3000000,
-                             maxFramerate: 30,
-                           },
-                         })
-                         .then(track => {
-                           setSpeakerMode(true);
-                           //  sendMsg('I started screen sharing!');
-                         });
-                     })
-                     .catch(err => {
-                       console.log('Error sharing screen: ' + err);
-                     });
-                 }
-           }
-         />
+       <ToolbarButton
+         tooltip={screen?.track ? 'Stop sharing' : 'Share screen'}
+         icon={screen?.track ? faStop : faDesktop}
+         bgColor={
+           screen?.track
+             ? `bg-primary`
+             : 'bg-tertiary hover:bg-quaternary dark:bg-secondary dark:hover:bg-tertiary'
+         }
+         onClick={
+           screen?.track
+             ? () => {
+                 unpublishTrack(screen.track as LocalVideoTrack);
+                 //  sendMsg('I finished screen sharing!');
+               }
+             : () => {
+                 navigator.mediaDevices
+                   // @ts-ignore
+                   .getDisplayMedia({
+                     video: {
+                       width: VideoPresets.fhd.resolution.width,
+                       height: VideoPresets.fhd.resolution.height,
+                     },
+                     audio: true, // TODO: get working properly
+                   })
+                   .then((captureStream: MediaStream) => {
+                     room.localParticipant
+                       .publishTrack(captureStream.getTracks()[0], {
+                         name: 'screen',
+                         videoEncoding: {
+                           maxBitrate: 3000000,
+                           maxFramerate: 30,
+                         },
+                       })
+                       .then(track => {
+                         setSpeakerMode(true);
+                         //  sendMsg('I started screen sharing!');
+                       });
+                   })
+                   .catch(err => {
+                     console.log('Error sharing screen: ' + err);
+                   });
+               }
+         }
+       />
        {/* End Call Button */}
        {onLeave && (
          <ToolbarButton
-           label="End"
+           tooltip="End"
            icon={faPhoneSlash}
            bgColor={'bg-red'}
            onClick={() => {

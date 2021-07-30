@@ -1,20 +1,9 @@
-import { faArrowsAlt, faChevronLeft, faChevronRight, faCommentAlt, faCompressAlt, faExpand, faExpandAlt, faExpandArrowsAlt, faTh, faThLarge, faUserFriends } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronRight, faCommentAlt, faCompressAlt, faExpandAlt, faTh, faThLarge, faUserFriends } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  connect,
   RoomEvent,
-  RemoteParticipant,
-  RemoteTrackPublication,
-  RemoteTrack,
   Participant,
-  Track,
-  CreateAudioTrackOptions,
-  createLocalAudioTrack,
-  createLocalVideoTrack,
-  CreateVideoTrackOptions,
 	Room,
-  ConnectOptions,
-  TrackPublishOptions,
   createLocalTracks,
   DataPacket_Kind,
 } from 'livekit-client';
@@ -58,11 +47,12 @@ const VideoChat = ({
   const [roomClosed, setRoomClosed] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [chatOpen, setChatOpen] = useState(false);
-   const [cookies, setCookies] = useCookies([
+  const [cookies, setCookies] = useCookies([
      'PREFERRED_AUDIO_DEVICE_ID',
      'PREFERRED_VIDEO_DEVICE_ID',
      'PREFERRED_OUTPUT_DEVICE_ID',
-   ]);
+  ]);
+  const [outputDevice, setOutputDevice] = useState<MediaDeviceInfo>();
   const roomState = useRoom();
 
   const toolbarRef = useRef<HTMLDivElement>(null);
@@ -126,7 +116,6 @@ const VideoChat = ({
 
   useEffect(() => {
     if (token && token.length > 0) {
-      // 'wss://demo.livekit.io'
       roomState
         .connect('wss://infra.catalyst.chat', token, meta)
         .then(room => {
@@ -155,7 +144,14 @@ const VideoChat = ({
     setRoomClosed(true);
   };
 
-  // animate toolbar & header fadeIn/Out
+  const updateOutputDevice = (device: MediaDeviceInfo) => {
+    setOutputDevice(device);
+    setCookies('PREFERRED_OUTPUT_DEVICE_ID', device.deviceId, {
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+    });
+  }
+
+  // animate toolbar & header fade in/out
   useEffect(() => {
     if (fade > 0) {
       const delayCheck = () => {
@@ -208,6 +204,20 @@ const VideoChat = ({
       () => {
         document.removeEventListener('mousemove', debounceHandleMouse);
       };
+    }
+    // set default output device
+    if (cookies.PREFERRED_OUTPUT_DEVICE_ID) {
+      setOutputDevice(cookies.PREFERRED_OUTPUT_DEVICE_ID);
+    } else {
+      navigator.mediaDevices.enumerateDevices().then(devices => {
+         if (!outputDevice) {
+           const outputDevices = devices.filter(
+             id => id.kind === 'audiooutput' && id.deviceId
+           );
+           setOutputDevice(outputDevices[0]);
+         }
+      });
+     
     }
   }, []);
 
@@ -283,11 +293,18 @@ const VideoChat = ({
                       onLeave={onLeave}
                       setSpeakerMode={setSpeakerMode}
                       setChatMessages={setChatMessages}
+                      updateOutputDevice={updateOutputDevice}
+                      outputDevice={outputDevice}
                     />
                   </div>
                 )}
                 {roomState.audioTracks.map(track => (
-                  <AudWrapper key={track.sid} track={track} isLocal={false} />
+                  <AudWrapper
+                    key={track.sid}
+                    track={track}
+                    isLocal={false}
+                    sinkId={outputDevice?.deviceId}
+                  />
                 ))}
                 {!disableChat && (
                   <div

@@ -8,16 +8,22 @@ import  ToolbarButton, { Device } from "./ToolbarButton";
 const AudioDeviceBtn = ({
   isMuted,
   onClick,
-  onSourceSelected,
+  onIpSourceSelected,
+  onOpSourceSelected,
   audioDevice,
+  outputDevice,
 }: {
   isMuted: boolean;
   onClick?: () => void;
-  onSourceSelected?: (device: MediaDeviceInfo) => void;
+    onIpSourceSelected?: (device: MediaDeviceInfo) => void;
+  onOpSourceSelected?: (device: MediaDeviceInfo) => void;
   audioDevice?: MediaDeviceInfo;
+  outputDevice?: MediaDeviceInfo;
 }) => {
-  const [sources, setSources] = useState<MediaDeviceInfo[]>([]);
-  const [devices, setMenuItems] = useState<Device[]>([]);
+  const [ipSources, setIpSources] = useState<MediaDeviceInfo[]>([]);
+  const [opSources, setOpSources] = useState<MediaDeviceInfo[]>([]);
+  const [devices, setDevices] = useState<Device[]>([]);
+  const [outputDevices, setOutputDevices] = useState<Device[]>([]);
   const audBtnRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,33 +31,53 @@ const AudioDeviceBtn = ({
       const audioDevices = devices.filter(
         id => id.kind === 'audioinput' && id.deviceId
       );
-      setSources(audioDevices);
-      setMenuItems(
+      setIpSources(audioDevices);
+      setDevices(
         audioDevices.map(id => {
+          return { label: id.label };
+        })
+      );
+      const opDevices = devices.filter(
+        id => id.kind === 'audiooutput' && id.deviceId
+      );
+      setOpSources(opDevices);
+      setOutputDevices(
+        opDevices.map(id => {
           return { label: id.label };
         })
       );
     });
   }, [isMuted]);
 
-  const handleDeviceClick = (id: Device) => {
-    const device = sources.find(d => d.label === id.label);
-    if (device && onSourceSelected) {
-      onSourceSelected(device);
+  const handleIpDeviceClick = (id: Device) => {
+    const device = ipSources.find(d => d.label === id.label);
+    if (device && onIpSourceSelected) {
+      onIpSourceSelected(device);
+    }
+  };
+
+  const handleOpDeviceClick = (id: Device) => {
+    const device = opSources.find(d => d.label === id.label);
+    if (device && onOpSourceSelected) {
+      onOpSourceSelected(device);
     }
   };
 
   return (
     <div ref={audBtnRef} className="inline">
       <ToolbarButton
-        label={isMuted ? 'Unmute' : 'Mute'}
+        type="Audio"
+        tooltip={isMuted ? 'Unmute' : 'Mute'}
         icon={isMuted ? faMicrophoneSlash : faMicrophone}
         bgColor={isMuted ? 'bg-white hover:bg-gray-100' : undefined}
         iconColor={isMuted ? 'text-red' : undefined}
         onClick={onClick}
-        devices={devices}
-        onDeviceClick={handleDeviceClick}
-        selectedDevice={audioDevice}
+        inputDevices={devices}
+        outputDevices={outputDevices}
+        onIpDeviceClick={handleIpDeviceClick}
+        onOpDeviceClick={handleOpDeviceClick}
+        selectedIpDevice={audioDevice}
+        selectedOpDevice={outputDevice}
         parentRef={audBtnRef}
       />
     </div>

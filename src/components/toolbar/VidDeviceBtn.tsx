@@ -14,7 +14,7 @@ const VidDeviceBtn = ({
   videoDevice?: MediaDeviceInfo;
 }) => {
   const [sources, setSources] = useState<MediaDeviceInfo[]>([]);
-  const [devices, setMenuItems] = useState<Device[]>([]);
+  const [devices, setDevices] = useState<Device[]>([]);
   const vidBtnRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const VidDeviceBtn = ({
         id => id.kind === 'videoinput' && id.deviceId
       );
       setSources(videoDevices);
-      setMenuItems(
+      setDevices(
         videoDevices.map(id => {
           return { label: id.label };
         })
@@ -41,15 +41,16 @@ const VidDeviceBtn = ({
   return (
     <div ref={vidBtnRef} className="inline">
       <ToolbarButton
-        label={isEnabled ? 'Disable Video' : 'Enable Video'}
+        type="Video"
+        tooltip={isEnabled ? 'Disable Video' : 'Enable Video'}
         icon={isEnabled ? faVideo : faVideoSlash}
         bgColor={isEnabled ? undefined : 'bg-white hover:bg-gray-100'}
         iconColor={isEnabled ? undefined : 'text-red'}
-        onDeviceClick={handleDevice}
+        onIpDeviceClick={handleDevice}
         parentRef={vidBtnRef}
         onClick={onClick}
-        devices={devices}
-        selectedDevice={videoDevice}
+        inputDevices={devices}
+        selectedIpDevice={videoDevice}
       />
     </div>
   );

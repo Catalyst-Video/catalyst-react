@@ -26,34 +26,49 @@ const popoverStyles = {
 };
 
 export const ToolbarButton = ({
-         label,
+         type,
+         tooltip,
          disabled,
          onClick,
          icon,
-         devices,
-         onDeviceClick,
+         inputDevices,
+         outputDevices,
+         onIpDeviceClick,
+         onOpDeviceClick,
          bgColor,
          iconColor,
-         selectedDevice,
+         selectedOpDevice,
+         selectedIpDevice,
          parentRef,
        }: {
-         label: string;
+         type?: string;
+         tooltip?: string;
          disabled?: boolean;
          onClick?: () => void;
          icon?: IconProp;
          className?: string;
-         devices?: Device[];
-         onDeviceClick?: (id: Device) => void;
+         inputDevices?: Device[];
+         outputDevices?: Device[];
+         onIpDeviceClick?: (id: Device) => void;
+         onOpDeviceClick?: (id: Device) => void;
          bgColor?: string;
          iconColor?: string;
-         selectedDevice?: MediaDeviceInfo;
+         selectedOpDevice?: MediaDeviceInfo;
+         selectedIpDevice?: MediaDeviceInfo;
          parentRef?: RefObject<HTMLDivElement>;
        }) => {
          const [deviceMenu, setDeviceMenu] = useState(false);
 
-         const handleDeviceClick = (id: Device) => {
-           if (onDeviceClick) {
-             onDeviceClick(id);
+         const handleOnIpDeviceClick = (id: Device) => {
+           if (onIpDeviceClick) {
+             onIpDeviceClick(id);
+           }
+           setDeviceMenu(false);
+         };
+
+         const handleOnOpDeviceClick = (id: Device) => {
+           if (onOpDeviceClick) {
+             onOpDeviceClick(id);
            }
            setDeviceMenu(false);
          };
@@ -69,45 +84,66 @@ export const ToolbarButton = ({
              content={
                <div>
                  <ul style={popoverStyles}>
-                   {/* {devices?.map((id, i) => {
-                     return (
+                   {outputDevices && outputDevices.length > 0 && (
+                     <>
                        <li
-                         key={i}
-                         className="flex items-center text-xs lg:text-sm text-white"
-                         style={{
-                           padding: '8px',
-                           borderTop:
-                             i > 0 ? '1px solid rgba(255, 255, 255, 0.2)' : '0',
-                         }}
-                         onClick={() => handleDeviceClick(id)}
+                         key={'input-row'}
+                         className="flex items-center text-xs lg:text-sm text-white font-semibold p-2"
                        >
-                         {id.label === selectedDevice?.label ? (
-                           <FontAwesomeIcon
-                             icon={faCheckCircle}
-                             className="mr-1 "
-                           />
-                         ) : (
-                           <FontAwesomeIcon icon={faCircle} className="mr-1 " />
-                         )}
-                         {id.label}
+                         {type} Output
                        </li>
-                     );
-                   })} */}
-                   {devices?.map((id, i) => {
+                       {outputDevices?.map((id, i) => {
+                         // TODO: add prop to allow for enabling showing device ids
+                         let idLabel = id.label.includes('(')
+                           ? id.label.substring(0, id.label.indexOf('('))
+                           : id.label;
+                         return (
+                           <li
+                             key={i}
+                             className="flex items-center text-xs lg:text-sm text-white p-2"
+                             style={{
+                               borderTop: '1px solid rgba(255, 255, 255, 0.2)',
+                             }}
+                             onClick={() => handleOnOpDeviceClick(id)}
+                           >
+                             {id.label === selectedOpDevice?.label ? (
+                               <FontAwesomeIcon
+                                 icon={faCheckCircle}
+                                 className="mr-1 text-primary"
+                               />
+                             ) : (
+                               <FontAwesomeIcon
+                                 icon={faCircle}
+                                 className="mr-1 "
+                               />
+                             )}
+                             {idLabel}
+                           </li>
+                         );
+                       })}
+                     </>
+                   )}
+                   <li
+                     key={'input-row'}
+                     className="flex items-center text-xs lg:text-sm text-white font-semibold p-2"
+                   >
+                     {type} Input
+                   </li>
+                   {inputDevices?.map((id, i) => {
                      // TODO: add prop to allow for enabling showing device ids
-                     let idLabel = id.label.includes('(') ? id.label.substring(0, id.label.indexOf('(')) : id.label;
+                     let idLabel = id.label.includes('(')
+                       ? id.label.substring(0, id.label.indexOf('('))
+                       : id.label;
                      return (
                        <li
                          key={i}
-                         className="flex items-center text-xs lg:text-sm text-white"
+                         className="flex items-center text-xs lg:text-sm text-white p-2"
                          style={{
-                           padding: '8px',
-                           borderTop:
-                             i > 0 ? '1px solid rgba(255, 255, 255, 0.2)' : '0',
+                           borderTop: '1px solid rgba(255, 255, 255, 0.2)',
                          }}
-                         onClick={() => handleDeviceClick(id)}
+                         onClick={() => handleOnIpDeviceClick(id)}
                        >
-                         {id.label === selectedDevice?.label ? (
+                         {id.label === selectedIpDevice?.label ? (
                            <FontAwesomeIcon
                              icon={faCheckCircle}
                              className="mr-1 text-primary"
@@ -144,7 +180,7 @@ export const ToolbarButton = ({
                  )}
                  {/*TODO: tooltip {label} */}
                </button>
-               {devices && devices.length > 0 && (
+               {inputDevices && inputDevices.length > 0 && (
                  <button
                    disabled={disabled}
                    className={`absolute z-10 -right-1 -bottom-1 ${

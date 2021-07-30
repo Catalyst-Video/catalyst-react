@@ -39,22 +39,8 @@ const SetupView = ({
   ]);
   const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
   const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
+  const [outputDevice, setOutputDevice] = useState<MediaDeviceInfo>()
   const videoRef = useRef<HTMLVideoElement>(null);
-
-  //  TODO: determine bg gradient style
-  //    const [gradient] = useState(`linear-gradient(217deg, hsla(${~~(
-  //     360 * Math.random()
-  //   )},70%,70%,0.8),hsla(${~~(360 * Math.random())},70%,70%,0.8) 70.71%),
-  //               linear-gradient(127deg, hsla(${~~(
-  //                 360 * Math.random()
-  //               )},70%,70%,0.8),hsla(${~~(
-  //     360 * Math.random()
-  //   )},70%,70%,0.8) 70.71%),
-  //             linear-gradient(336deg, hsla(${~~(
-  //               360 * Math.random()
-  //             )},70%,70%,0.8),hsla(${~~(
-  //     360 * Math.random()
-  //       )},70%,70%,0.8) 70.71%)`);
 
   const [gradient] = useState(
     `linear-gradient(217deg, hsla(356, 90%, 64%, 0.8), hsla(280, 78%, 69%, 0.8), hsla(191, 86%, 49%, 0.8))`
@@ -75,7 +61,7 @@ const SetupView = ({
   const toggleVideo = () => {
     if (videoTrack) {
       videoTrack.stop();
-      setVideoOn(false);
+      // setVideoOn(false);
       setVideoTrack(undefined);
     } else {
       const options: CreateVideoTrackOptions = {};
@@ -83,30 +69,41 @@ const SetupView = ({
         options.deviceId = videoDevice.deviceId;
       }
       createLocalVideoTrack(options).then(track => {
-        setVideoOn(true);
+        // setVideoOn(true);
         setVideoTrack(track);
       });
     }
   };
 
-    useEffect(() => {
+  useEffect(() => {
+      if (!outputDevice) {
+        navigator.mediaDevices.enumerateDevices().then(devices => {
+          const outputDevices = devices.filter(
+            id => id.kind === 'audiooutput' && id.deviceId
+          );
+          if (cookies.PREFERRED_OUTPUT_DEVICE_ID) {
+              let outDevice = outputDevices.find(
+                d => d.deviceId === cookies.PREFERRED_OUTPUT_DEVICE_ID
+              );
+            setOutputDevice(outDevice);
+          } else {
+            setOutputDevice(outputDevices[0]);
+          }
+        });
+      }
         // if (cookies.PREFERRED_VIDEO_DEVICE_ID) {
         //     navigator.mediaDevices.map((d) => d.kind === cookies.PREFERRED_VIDEO_DEVICE_ID)
         // }
         // TODO: if media device changed in setup screen change it in real call 
       if(videoOn)
           createLocalVideoTrack().then(track => {
-            setVideoOn(true);
+            // setVideoOn(true);
             setVideoTrack(track);
           });
   }, []);
 
   const toggleAudio = () => {
-    if (audioOn) {
-      setAudioOn(false);
-    } else {
-      setAudioOn(true);
-    }
+    setAudioOn(aud => !aud);
   };
 
    const selectVideoDevice = (device: MediaDeviceInfo) => {
@@ -128,11 +125,10 @@ useEffect(() => {
     if (audioDevice) {
     createLocalAudioTrack({ deviceId: audioDevice.deviceId })
         .then(track => {
-          setAudioOn(true);
-            setCookies('PREFERRED_AUDIO_DEVICE_ID', audioDevice.deviceId, {
-               expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-            });
-            
+          // setAudioOn(true);
+          setCookies('PREFERRED_AUDIO_DEVICE_ID', audioDevice.deviceId, {
+              expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+          });
         }).catch((err: Error) => {
         console.log(err);
         });
@@ -143,9 +139,8 @@ useEffect(() => {
     if (videoDevice) {
         createLocalVideoTrack({ deviceId: videoDevice.deviceId })
             .then((track: LocalVideoTrack) => {
-                setVideoOn(true);
+                // setVideoOn(true);
                 setVideoTrack(track);
-    
             })
         .catch((err: Error) => {
         console.log(err);
@@ -158,17 +153,41 @@ useEffect(() => {
 
      navigator.mediaDevices.enumerateDevices().then(devices => {
        // TODO: allow testing of audio devices
-       // if (!audioDevice) {
-      //    const audioDevices = devices.filter(
-      //      id => id.kind === 'audioinput' && id.deviceId
-      //    );
-      //    let defaultAudDevice = audioDevices.find(
-      //      d =>
-      //        d.deviceId ===
-      //      audioTrack?.mediaStreamTrack.getSettings().deviceId
-      //    );
-      //    setAudioDevice(defaultAudDevice);
-      //  }
+       if (!audioDevice) {
+         const audioDevices = devices.filter(
+           id => id.kind === 'audioinput' && id.deviceId
+         );
+         if (cookies.PREFERRED_AUDIO_DEVICE_ID) {
+           let audDevice = audioDevices.find(
+             d => d.deviceId === cookies.PREFERRED_AUDIO_DEVICE_ID
+           );
+           setAudioDevice(audDevice);
+         } else {
+           setAudioDevice(audioDevices[0]);
+           setCookies(
+             'PREFERRED_AUDIO_DEVICE_ID',
+             audioDevices[0].deviceId,
+             {
+               expires: new Date(Date.now() + 1 * 60 * 60 * 24 * 365),
+             }
+           );
+        
+           //  let defaultAudDevice = audioDevices.find(
+           //    d =>
+           //      d.deviceId ===
+           //    audioTrack?.mediaStreamTrack.getSettings().deviceId
+           //  );
+          //      setCookies(
+          //        'PREFERRED_AUDIO_DEVICE_ID',
+          //        defaultVidDevice.deviceId,
+          //        {
+          //          expires: new Date(Date.now() + 1 * 60 * 60 * 24 * 365),
+          //        }
+          //      );
+          //    }
+          //  setAudioDevice(defaultAudDevice);
+         }
+       }
        if (!videoDevice) {
           const videoDevices = devices.filter(
             id => id.kind === 'videoinput' && id.deviceId
@@ -205,17 +224,12 @@ useEffect(() => {
    }
  }, [videoTrack]);
 
-//   const params: { [key: string]: string } = {
-//     videoEnabled: videoOn ? '1' : '0',
-//     audioEnabled: audioOn ? '1' : '0',
-//     simulcast: meta.simulcast ? '1' : '0',
-//   };
-//   if (audioDevice) {
-//     params.audioDeviceId = audioDevice.deviceId;
-//   }
-//   if (videoDevice) {
-//     params.videoDeviceId = videoDevice.deviceId;
-//   }
+  const updateOutputDevice = (device: MediaDeviceInfo) => {
+    setOutputDevice(device);
+    setCookies('PREFERRED_OUTPUT_DEVICE_ID', device.deviceId, {
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+    });
+  };
 
   return (
     <div
@@ -267,7 +281,10 @@ useEffect(() => {
               <AudioDeviceBtn
                 isMuted={!audioOn}
                 onClick={toggleAudio}
-                onSourceSelected={setAudioDevice}
+                onIpSourceSelected={setAudioDevice}
+                onOpSourceSelected={updateOutputDevice}
+                audioDevice={audioDevice}
+                outputDevice={outputDevice}
               />
               <VidDeviceBtn
                 isEnabled={videoTrack !== undefined}
