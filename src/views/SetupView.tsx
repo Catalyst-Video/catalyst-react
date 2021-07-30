@@ -61,7 +61,6 @@ const SetupView = ({
   const toggleVideo = () => {
     if (videoTrack) {
       videoTrack.stop();
-      // setVideoOn(false);
       setVideoTrack(undefined);
     } else {
       const options: CreateVideoTrackOptions = {};
@@ -69,7 +68,6 @@ const SetupView = ({
         options.deviceId = videoDevice.deviceId;
       }
       createLocalVideoTrack(options).then(track => {
-        // setVideoOn(true);
         setVideoTrack(track);
       });
     }
@@ -97,7 +95,6 @@ const SetupView = ({
         // TODO: if media device changed in setup screen change it in real call 
       if(videoOn)
           createLocalVideoTrack().then(track => {
-            // setVideoOn(true);
             setVideoTrack(track);
           });
   }, []);
@@ -125,7 +122,6 @@ useEffect(() => {
     if (audioDevice) {
     createLocalAudioTrack({ deviceId: audioDevice.deviceId })
         .then(track => {
-          // setAudioOn(true);
           setCookies('PREFERRED_AUDIO_DEVICE_ID', audioDevice.deviceId, {
               expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
           });
@@ -281,8 +277,8 @@ useEffect(() => {
               <AudioDeviceBtn
                 isMuted={!audioOn}
                 onClick={toggleAudio}
-                onIpSourceSelected={setAudioDevice}
-                onOpSourceSelected={updateOutputDevice}
+                onIpSelected={setAudioDevice}
+                onOpSelected={updateOutputDevice}
                 audioDevice={audioDevice}
                 outputDevice={outputDevice}
               />

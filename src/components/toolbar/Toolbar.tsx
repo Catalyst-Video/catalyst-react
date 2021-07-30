@@ -7,7 +7,6 @@ import {
   createLocalAudioTrack,
   createLocalVideoTrack,
   CreateVideoTrackOptions,
-  DataPacket_Kind,
   LocalAudioTrack,
   LocalTrackPublication,
   LocalVideoTrack,
@@ -16,7 +15,7 @@ import {
   TrackPublication,
   VideoPresets,
 } from "livekit-client";
-import React, { ReactElement, useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParticipant } from "../../hooks/useMember";
 import AudioDeviceBtn from "./AudioDeviceBtn";
 import ToolbarButton from "./ToolbarButton";
@@ -124,7 +123,6 @@ import VidDeviceBtn from './VidDeviceBtn';
          if (audioDevice) {
            options.deviceId = audioDevice.deviceId;
          }
-         // track not published
          createLocalAudioTrack(options)
            .then(track => {
              room.localParticipant.publishTrack(track);
@@ -138,37 +136,25 @@ import VidDeviceBtn from './VidDeviceBtn';
      }
    };
 
-   const selectVideoDevice = (device: MediaDeviceInfo) => {
-     setVideoDevice(device);
-     if (video) {
-       if (
-         video?.videoTrack?.mediaStreamTrack.getSettings().deviceId ===
-         device.deviceId
-       ) {
-         return;
-       }
-     }
-   };
-
-   const sendMsg = (msg: string) => {
-     const encoder = new TextEncoder();
-     if (room.localParticipant) {
-       let chat = {
-         type: 'ctw-chat',
-         text: msg,
-         sender: room.localParticipant.sid,
-       };
-       const data = encoder.encode(JSON.stringify(chat));
-       room.localParticipant.publishData(data, DataPacket_Kind.RELIABLE);
-       setChatMessages(chatMessages => [
-         ...chatMessages,
-         {
-           text: msg,
-           sender: room.localParticipant,
-         },
-       ]);
-     }
-   };
+  //  const sendMsg = (msg: string) => {
+  //    const encoder = new TextEncoder();
+  //    if (room.localParticipant) {
+  //      let chat = {
+  //        type: 'ctw-chat',
+  //        text: msg,
+  //        sender: room.localParticipant.sid,
+  //      };
+  //      const data = encoder.encode(JSON.stringify(chat));
+  //      room.localParticipant.publishData(data, DataPacket_Kind.RELIABLE);
+  //      setChatMessages(chatMessages => [
+  //        ...chatMessages,
+  //        {
+  //          text: msg,
+  //          sender: room.localParticipant,
+  //        },
+  //      ]);
+  //    }
+  //  };
 
    useEffect(() => {
      if (
@@ -180,7 +166,6 @@ import VidDeviceBtn from './VidDeviceBtn';
          .then(track => {
            if (audio) unpublishTrack(audio.track as LocalAudioTrack);
            room.localParticipant.publishTrack(track);
-           //  (audioPub as LocalTrackPublication).unmute();
          })
          .catch((err: Error) => {
            console.log(err);
@@ -210,8 +195,8 @@ import VidDeviceBtn from './VidDeviceBtn';
        {/* Mute Audio Button */}
        <AudioDeviceBtn
          isMuted={!audio || isMuted}
-         onIpSourceSelected={setAudioDevice}
-         onOpSourceSelected={updateOutputDevice}
+         onIpSelected={setAudioDevice}
+         onOpSelected={updateOutputDevice}
          onClick={toggleAudio}
          audioDevice={audioDevice}
          outputDevice={outputDevice}
@@ -219,7 +204,7 @@ import VidDeviceBtn from './VidDeviceBtn';
        {/* Pause Video Button */}
        <VidDeviceBtn
          isEnabled={video?.track ? true : false}
-         onSourceSelected={selectVideoDevice}
+         onIpSelected={setVideoDevice}
          onClick={toggleVideo}
          videoDevice={videoDevice}
        />

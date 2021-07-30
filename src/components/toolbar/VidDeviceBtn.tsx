@@ -5,12 +5,12 @@ import ToolbarButton, { Device } from "./ToolbarButton";
 const VidDeviceBtn = ({
   isEnabled,
   onClick,
-  onSourceSelected,
+  onIpSelected,
   videoDevice,
 }: {
   isEnabled: boolean;
   onClick?: () => void;
-  onSourceSelected?: (device: MediaDeviceInfo) => void;
+  onIpSelected?: (device: MediaDeviceInfo) => void;
   videoDevice?: MediaDeviceInfo;
 }) => {
   const [sources, setSources] = useState<MediaDeviceInfo[]>([]);
@@ -33,8 +33,8 @@ const VidDeviceBtn = ({
 
   const handleDevice = (id: Device) => {
     const device = sources.find(d => d.label === id.label);
-    if (device && onSourceSelected) {
-      onSourceSelected(device);
+    if (device && onIpSelected) {
+      onIpSelected(device);
     }
   };
 

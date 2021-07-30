@@ -8,15 +8,15 @@ import  ToolbarButton, { Device } from "./ToolbarButton";
 const AudioDeviceBtn = ({
   isMuted,
   onClick,
-  onIpSourceSelected,
-  onOpSourceSelected,
+  onIpSelected,
+  onOpSelected,
   audioDevice,
   outputDevice,
 }: {
   isMuted: boolean;
   onClick?: () => void;
-    onIpSourceSelected?: (device: MediaDeviceInfo) => void;
-  onOpSourceSelected?: (device: MediaDeviceInfo) => void;
+    onIpSelected?: (device: MediaDeviceInfo) => void;
+  onOpSelected?: (device: MediaDeviceInfo) => void;
   audioDevice?: MediaDeviceInfo;
   outputDevice?: MediaDeviceInfo;
 }) => {
@@ -51,15 +51,15 @@ const AudioDeviceBtn = ({
 
   const handleIpDeviceClick = (id: Device) => {
     const device = ipSources.find(d => d.label === id.label);
-    if (device && onIpSourceSelected) {
-      onIpSourceSelected(device);
+    if (device && onIpSelected) {
+      onIpSelected(device);
     }
   };
 
   const handleOpDeviceClick = (id: Device) => {
     const device = opSources.find(d => d.label === id.label);
-    if (device && onOpSourceSelected) {
-      onOpSourceSelected(device);
+    if (device && onOpSelected) {
+      onOpSelected(device);
     }
   };
 
