@@ -16,7 +16,7 @@ import HeaderLogo from '../components/header/Header';
 import Toolbar from '../components/toolbar/Toolbar';
 import { useRoom } from '../hooks/useRoom';
 import { debounce } from 'ts-debounce';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 
 const VideoChat = ({
   token,
@@ -213,9 +213,9 @@ const VideoChat = ({
        const outputDevices = devices.filter(
          id => id.kind === 'audiooutput' && id.deviceId
        );
-       if (localStorage.get('PREFERRED_OUTPUT_DEVICE_ID')) {
+       if (localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')) {
          let outDevice = outputDevices.find(
-           d => d.deviceId === localStorage.get('PREFERRED_OUTPUT_DEVICE_ID')
+           d => d.deviceId === localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')
          );
          setOutputDevice(outDevice);
        } else {

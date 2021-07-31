@@ -78,11 +78,11 @@ import VidDeviceBtn from './VidDeviceBtn';
            const audioDevices = devices.filter(
              id => id.kind === 'audioinput' && id.deviceId
            );
-           if (localStorage.get('PREFERRED_AUDIO_DEVICE_ID')) {
+           if (localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')) {
              setAudioDevice(
                audioDevices.find(
                  d =>
-                   d.deviceId === localStorage.get('PREFERRED_AUDIO_DEVICE_ID')
+                   d.deviceId === localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')
                )
              );
            } else {
@@ -99,11 +99,11 @@ import VidDeviceBtn from './VidDeviceBtn';
            const videoDevices = devices.filter(
              id => id.kind === 'videoinput' && id.deviceId
            );
-           if (localStorage.get('PREFERRED_VIDEO_DEVICE_ID')) {
+           if (localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')) {
              setVideoDevice(
                videoDevices.find(
                  d =>
-                   d.deviceId === localStorage.get('PREFERRED_VIDEO_DEVICE_ID')
+                   d.deviceId === localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')
                )
              );
            } else {
@@ -125,7 +125,7 @@ import VidDeviceBtn from './VidDeviceBtn';
        audioDevice &&
        audioDevice.deviceId !==
          audio?.audioTrack?.mediaStreamTrack.getSettings().deviceId &&
-       audioDevice.deviceId !== localStorage.get('PREFERRED_AUDIO_DEVICE_ID')
+       audioDevice.deviceId !== localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')
      ) {
        localStorage.setItem('PREFERRED_AUDIO_DEVICE_ID', audioDevice.deviceId);
       //  setCookies('PREFERRED_AUDIO_DEVICE_ID', audioDevice.deviceId, {
@@ -148,7 +148,7 @@ import VidDeviceBtn from './VidDeviceBtn';
        videoDevice.deviceId !==
          video?.videoTrack?.mediaStreamTrack.getSettings() &&
        videoDevice &&
-       videoDevice.deviceId !== localStorage.get('PREFERRED_VIDEO_DEVICE_ID')
+       videoDevice.deviceId !== localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')
      ) {
        localStorage.setItem('PREFERRED_VIDEO_DEVICE_ID', videoDevice.deviceId);
        //  setCookies('PREFERRED_VIDEO_DEVICE_ID', videoDevice.deviceId, {
