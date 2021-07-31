@@ -16,7 +16,6 @@ import {
   VideoPresets,
 } from "livekit-client";
 import React, { useState, useEffect } from 'react';
-import { useCookies } from "react-cookie";
 import { useParticipant } from "../../hooks/useMember";
 import AudioDeviceBtn from "./AudioDeviceBtn";
 import ToolbarButton from "./ToolbarButton";
@@ -52,10 +51,6 @@ import VidDeviceBtn from './VidDeviceBtn';
    const [screen, setScreenPub] = useState<TrackPublication>();
    const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
    const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
-  //  const [cookies, setCookies] = useCookies([
-  //   'PREFERRED_AUDIO_DEVICE_ID',
-  //   'PREFERRED_VIDEO_DEVICE_ID',
-  // ]);
 
    useEffect(() => {
      setAudioPub(publications.find(p => p.kind === Track.Kind.Audio));
@@ -128,9 +123,6 @@ import VidDeviceBtn from './VidDeviceBtn';
        audioDevice.deviceId !== localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')
      ) {
        localStorage.setItem('PREFERRED_AUDIO_DEVICE_ID', audioDevice.deviceId);
-      //  setCookies('PREFERRED_AUDIO_DEVICE_ID', audioDevice.deviceId, {
-      //    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-      //  });
        createLocalAudioTrack({ deviceId: audioDevice.deviceId })
          .then(track => {
            if (audio) unpublishTrack(audio.track as LocalAudioTrack);
@@ -151,9 +143,6 @@ import VidDeviceBtn from './VidDeviceBtn';
        videoDevice.deviceId !== localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')
      ) {
        localStorage.setItem('PREFERRED_VIDEO_DEVICE_ID', videoDevice.deviceId);
-       //  setCookies('PREFERRED_VIDEO_DEVICE_ID', videoDevice.deviceId, {
-       //    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-       //  });
        createLocalVideoTrack({ deviceId: videoDevice.deviceId })
          .then((track: LocalVideoTrack) => {
            if (video) unpublishTrack(video.track as LocalVideoTrack);

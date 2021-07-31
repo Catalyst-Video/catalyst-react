@@ -5,8 +5,6 @@ import VidWrapper from "../components/wrapper/VidWrapper";
 import AudioDeviceBtn from "../components/toolbar/AudioDeviceBtn";
 import VidDeviceBtn from "../components/toolbar/VidDeviceBtn";
 import HeaderImg from "../components/header/HeaderImg";
-// import { useCookies } from "react-cookie";
-
 
 const SetupView = ({
   meta,
@@ -113,7 +111,6 @@ const SetupView = ({
               id => id.kind === 'videoinput' && id.deviceId
             );
             if (localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')) {
-              console.log(localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID'));
               let vidDevice = videoDevices.find(
                 d =>
                   d.deviceId === localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')

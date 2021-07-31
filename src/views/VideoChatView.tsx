@@ -16,7 +16,6 @@ import HeaderLogo from '../components/header/Header';
 import Toolbar from '../components/toolbar/Toolbar';
 import { useRoom } from '../hooks/useRoom';
 import { debounce } from 'ts-debounce';
-// import { useCookies } from 'react-cookie';
 
 const VideoChat = ({
   token,
@@ -47,11 +46,6 @@ const VideoChat = ({
   const [roomClosed, setRoomClosed] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [chatOpen, setChatOpen] = useState(false);
-  // const [cookies, setCookies] = useCookies([
-  //    'PREFERRED_AUDIO_DEVICE_ID',
-  //    'PREFERRED_VIDEO_DEVICE_ID',
-  //    'PREFERRED_OUTPUT_DEVICE_ID',
-  // ]);
   const [outputDevice, setOutputDevice] = useState<MediaDeviceInfo>();
   const roomState = useRoom();
 
@@ -148,9 +142,6 @@ const VideoChat = ({
   const updateOutputDevice = (device: MediaDeviceInfo) => {
     setOutputDevice(device);
     localStorage.setItem('PREFERRED_OUTPUT_DEVICE_ID', device.deviceId);
-    // setCookies('PREFERRED_OUTPUT_DEVICE_ID', device.deviceId, {
-    //   expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-    // });
   }
 
   // animate toolbar & header fade in/out
