@@ -1,17 +1,50 @@
-import { faChevronLeft, faChevronRight, faCommentAlt, faCompressAlt, faExpandAlt, faTh, faThLarge, faUserFriends } from '@fortawesome/free-solid-svg-icons';
+/*  Catalyst Scientific Video Chat Component File
+Copyright (C) 2021 Catalyst Scientific LLC, Seth Goldin & Joseph Semrai
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version. 
+
+While this code is open-source, you may not use your own version of this
+program commerically for free (whether as a business or attempting to sell a variation
+of Catalyst for a profit). If you are interested in using Catalyst in an 
+enterprise setting, please either visit our website at https://catalyst.chat 
+or contact us for more information.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+You can contact us for more details at support@catalyst.chat. */
+
+import {
+  faChevronLeft,
+  faChevronRight,
+  faCommentAlt,
+  faCompressAlt,
+  faExpandAlt,
+  faTh,
+  faThLarge,
+  faUserFriends,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   RoomEvent,
   Participant,
-	Room,
+  Room,
   createLocalTracks,
   DataPacket_Kind,
 } from 'livekit-client';
 import React, { useEffect, useRef, useState } from 'react';
-import { FullScreen, useFullScreenHandle } from "react-full-screen";
+import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import AudWrapper from '../components/wrapper/AudWrapper';
 import { ChatMessage, RoomMetaData } from '../typings/interfaces';
-import RoomWrapper  from '../components/RoomWrapper';
+import RoomWrapper from '../components/RoomWrapper';
 import HeaderLogo from '../components/header/Header';
 import Toolbar from '../components/toolbar/Toolbar';
 import { useRoom } from '../hooks/useRoom';
@@ -27,7 +60,7 @@ const VideoChat = ({
   onJoinCall,
   onMemberJoin,
   onMemberLeave,
-  onLeaveCall
+  onLeaveCall,
 }: {
   token: string;
   meta: RoomMetaData;
@@ -55,14 +88,14 @@ const VideoChat = ({
   const decoder = new TextDecoder();
 
   const onConnected = async room => {
-    if(onJoinCall) onJoinCall()
+    if (onJoinCall) onJoinCall();
     room.on(RoomEvent.ParticipantConnected, () => {
       bumpMemberSize(room);
       if (onMemberJoin) onMemberJoin();
     });
-    room.on(RoomEvent.ParticipantDisconnected, () =>{
+    room.on(RoomEvent.ParticipantDisconnected, () => {
       bumpMemberSize(room);
-      if(onMemberLeave) onMemberLeave();
+      if (onMemberLeave) onMemberLeave();
     });
     room.on(
       RoomEvent.DataReceived,
@@ -93,10 +126,13 @@ const VideoChat = ({
       video: meta.videoEnabled ? (vidDId ? { deviceId: vidDId } : true) : false,
     });
     tracks.forEach(track => {
-      room.localParticipant.publishTrack(track,
-        meta.simulcast ? {
-          simulcast: true,
-        } : {}
+      room.localParticipant.publishTrack(
+        track,
+        meta.simulcast
+          ? {
+              simulcast: true,
+            }
+          : {}
       );
     });
   };
@@ -135,14 +171,14 @@ const VideoChat = ({
   };
 
   const onLeave = () => {
-    if(onLeaveCall) onLeaveCall();
+    if (onLeaveCall) onLeaveCall();
     setRoomClosed(true);
   };
 
   const updateOutputDevice = (device: MediaDeviceInfo) => {
     setOutputDevice(device);
     localStorage.setItem('PREFERRED_OUTPUT_DEVICE_ID', device.deviceId);
-  }
+  };
 
   // animate toolbar & header fade in/out
   useEffect(() => {
@@ -199,21 +235,22 @@ const VideoChat = ({
       };
     }
     // set default output device
-   if (!outputDevice) {
-     navigator.mediaDevices.enumerateDevices().then(devices => {
-       const outputDevices = devices.filter(
-         id => id.kind === 'audiooutput' && id.deviceId
-       );
-       if (localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')) {
-         let outDevice = outputDevices.find(
-           d => d.deviceId === localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')
-         );
-         setOutputDevice(outDevice);
-       } else {
-         setOutputDevice(outputDevices[0]);
-       }
-     });
-   }
+    if (!outputDevice) {
+      navigator.mediaDevices.enumerateDevices().then(devices => {
+        const outputDevices = devices.filter(
+          id => id.kind === 'audiooutput' && id.deviceId
+        );
+        if (localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')) {
+          let outDevice = outputDevices.find(
+            d =>
+              d.deviceId === localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')
+          );
+          setOutputDevice(outDevice);
+        } else {
+          setOutputDevice(outputDevices[0]);
+        }
+      });
+    }
   }, []);
 
   return (
@@ -353,5 +390,3 @@ const VideoChat = ({
   );
 };
 export default VideoChat;
-
-

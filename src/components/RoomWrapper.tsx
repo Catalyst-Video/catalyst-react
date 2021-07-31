@@ -1,20 +1,40 @@
+/*  Catalyst Scientific Video Chat Component File
+Copyright (C) 2021 Catalyst Scientific LLC, Seth Goldin & Joseph Semrai
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version. 
+
+While this code is open-source, you may not use your own version of this
+program commerically for free (whether as a business or attempting to sell a variation
+of Catalyst for a profit). If you are interested in using Catalyst in an 
+enterprise setting, please either visit our website at https://catalyst.chat 
+or contact us for more information.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+You can contact us for more details at support@catalyst.chat. */
+
 import {
-  LocalParticipant,
-  Participant,
   RemoteVideoTrack,
   Room,
-  RoomEvent,
-  TrackPublication,
-} from "livekit-client";
-import { VideoQuality } from "livekit-client/dist/proto/livekit_rtc";
-import React, { ReactElement, Ref, useEffect, useRef, useState } from "react";
-import MemberView from "./MemberView";
-import ScreenShareWrapper from "./wrapper/ScreenShareView";
-import { RoomState } from "../hooks/useRoom";
+} from 'livekit-client';
+import { VideoQuality } from 'livekit-client/dist/proto/livekit_rtc';
+import React, { ReactElement, Ref, useEffect, useRef, useState } from 'react';
+import MemberView from './MemberView';
+import ScreenShareWrapper from './wrapper/ScreenShareView';
+import { RoomState } from '../hooks/useRoom';
 import { debounce } from 'ts-debounce';
-import Chat from "./Chat";
-import { ChatMessage } from "../typings/interfaces";
-import { useFullScreenHandle } from "react-full-screen";
+import Chat from './Chat';
+import { ChatMessage } from '../typings/interfaces';
+import { useFullScreenHandle } from 'react-full-screen';
 
 const RoomWrapper = ({
   roomState,
@@ -162,7 +182,10 @@ const RoomWrapper = ({
   });
   if (sharedScreens.length != screens) {
     setNumScreens(sharedScreens.length);
-    if (!members.find(m => m.sid === mainVid) && !sharedScreens.find(s => s.sid === mainVid)) {
+    if (
+      !members.find(m => m.sid === mainVid) &&
+      !sharedScreens.find(s => s.sid === mainVid)
+    ) {
       setMainVid(members[0].sid);
     }
   }
@@ -339,4 +362,4 @@ const RoomWrapper = ({
     </>
   );
 };
-export default RoomWrapper
+export default RoomWrapper;
