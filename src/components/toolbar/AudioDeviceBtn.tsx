@@ -88,7 +88,7 @@ const AudioDeviceBtn = ({
   };
 
   return (
-    <div ref={audBtnRef} className="inline">
+    <div ref={audBtnRef} className="inline relative">
       <ToolbarButton
         type="Audio"
         tooltip={isMuted ? 'Unmute' : 'Mute'}

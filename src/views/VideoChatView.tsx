@@ -165,6 +165,9 @@ const VideoChat = ({
           console.error(err);
         });
     }
+    // () => {
+      
+    // }
   }, [token]);
 
   const bumpMemberSize = (room: Room) => {
@@ -232,6 +235,7 @@ const VideoChat = ({
       var _delay = setInterval(delayCheck, fade);
 
       () => {
+        clearInterval(_delay);
         videoChatRef.current?.removeEventListener(
           'mousemove',
           debounceHandleMouse

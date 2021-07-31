@@ -28,7 +28,7 @@ import './styles/catalyst.css';
 import './styles/tailwind.output.css';
 import VideoChat from "./views/VideoChatView";
 import { generateUUID, setThemeColor } from "./utils/general";
-import { DEFAULT_AUTOFADE, DEFAULT_THEME } from "./utils/globals";
+import { AUTH_ADDRESS, DEFAULT_AUTOFADE, THEMES } from "./utils/globals";
 import genRandomName from "./utils/name_gen";
 import { useCookies } from 'react-cookie';
 // import DetectRTC from 'detectrtc';
@@ -64,7 +64,7 @@ const CatalystChat = ({
 
   useEffect(() => {
     // set global theme
-    setThemeColor(theme ?? DEFAULT_THEME);
+    setThemeColor(theme ?? THEMES.default);
   }, []);
 
   useEffect(() => {
@@ -77,7 +77,7 @@ const CatalystChat = ({
         });
       // obtain user token
       fetch(
-        `https://staging.catalyst.chat/auth/meeting/token?participantName=${userName}&customerUid=${appId}&roomName=${room}&persistentClientId=${persistentClientId}`,
+        `${AUTH_ADDRESS}?participantName=${userName}&customerUid=${appId}&roomName=${room}&persistentClientId=${persistentClientId}`,
         {
           method: 'GET',
           headers: {

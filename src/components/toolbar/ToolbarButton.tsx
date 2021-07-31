@@ -51,7 +51,7 @@ const popoverStyles = {
     'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
 };
 
-export const ToolbarButton = ({
+const ToolbarButton = React.memo(({
   type,
   tooltip,
   disabled,
@@ -99,13 +99,21 @@ export const ToolbarButton = ({
     setDeviceMenu(false);
   };
 
+  // console.log(parentRef?.current);
+
   return (
     <Popover
       isOpen={deviceMenu}
-      positions={['top', 'right']}
-      reposition={true}
+      positions={['top']}
+      reposition={false}
       onClickOutside={() => setDeviceMenu(false)}
       containerStyle={{ zIndex: '40' }}
+      // contentLocation={{
+      //   left: 0,
+      //   top: 20,
+      // }}
+      // boundaryInset={0}
+      // boundaryTolerance={0}
       containerParent={parentRef?.current ?? document.body}
       content={
         <div>
@@ -225,5 +233,5 @@ export const ToolbarButton = ({
       </div>
     </Popover>
   );
-};
+})
 export default ToolbarButton;

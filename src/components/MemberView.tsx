@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 You can contact us for more details at support@catalyst.chat. */
 
 import {
-  faMicrophone,
   faMicrophoneSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -35,7 +34,7 @@ import {
   TrackPublication,
 } from "livekit-client";
 import { VideoQuality } from "livekit-client/dist/proto/livekit_rtc";
-import React, { CSSProperties, ReactElement, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useParticipant } from "../hooks/useMember";
 import VidWrapper from "./wrapper/VidWrapper";
