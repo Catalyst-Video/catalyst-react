@@ -286,7 +286,7 @@ useEffect(() => {
                 isEnabled={videoTrack !== undefined}
                 onClick={toggleVideo}
                 videoDevice={videoDevice}
-                onSourceSelected={selectVideoDevice}
+                onIpSelected={selectVideoDevice}
               />
             </div>
             <button

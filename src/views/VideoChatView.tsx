@@ -95,7 +95,7 @@ const VideoChat = ({
 
     const tracks = await createLocalTracks({
       audio: meta.audioEnabled ? { deviceId: cookies.PREFERRED_AUDIO_DEVICE_ID } : false,
-      video: meta.videoEnabled ? { deviceId: cookies.PREFERRED_AUDIO_DEVICE_ID,  } : false,
+      video: meta.videoEnabled ? { deviceId: cookies.PREFERRED_VIDEO_DEVICE_ID,  } : false,
     });
     tracks.forEach(track => {
       room.localParticipant.publishTrack(track,

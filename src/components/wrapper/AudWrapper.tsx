@@ -10,9 +10,6 @@ const AudWrapper = React.memo(({ track, isLocal, sinkId }: {
 }
 ) => {
   const audioEl = useRef<HTMLAudioElement>();
-    // const [cookies, setCookies] = useCookies([
-    //    'PREFERRED_OUTPUT_DEVICE_ID',
-    // ]);
 
   useEffect(() => {
     if (isLocal) {
@@ -29,7 +26,6 @@ const AudWrapper = React.memo(({ track, isLocal, sinkId }: {
     if (sinkId) {
       // @ts-ignore
       (audioEl.current as HTMLAudioElement)?.setSinkId(sinkId);
-      console.log('sink')
     }
     }, [])
     // if (sinkId) {

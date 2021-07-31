@@ -16,6 +16,7 @@ import {
   VideoPresets,
 } from "livekit-client";
 import React, { useState, useEffect } from 'react';
+import { useCookies } from "react-cookie";
 import { useParticipant } from "../../hooks/useMember";
 import AudioDeviceBtn from "./AudioDeviceBtn";
 import ToolbarButton from "./ToolbarButton";
@@ -51,6 +52,10 @@ import VidDeviceBtn from './VidDeviceBtn';
    const [screen, setScreenPub] = useState<TrackPublication>();
    const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
    const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
+   const [cookies, setCookies] = useCookies([
+    'PREFERRED_AUDIO_DEVICE_ID',
+    'PREFERRED_VIDEO_DEVICE_ID',
+  ]);
 
    useEffect(() => {
      setAudioPub(publications.find(p => p.kind === Track.Kind.Audio));
@@ -73,28 +78,88 @@ import VidDeviceBtn from './VidDeviceBtn';
            const audioDevices = devices.filter(
              id => id.kind === 'audioinput' && id.deviceId
            );
-           let defaultAudDevice = audioDevices.find(
-             d =>
-               d.deviceId ===
-               audio?.audioTrack?.mediaStreamTrack.getSettings().deviceId
-           ) ?? audioDevices[0];
-           setAudioDevice(defaultAudDevice);
+           if (cookies.PREFERRED_AUDIO_DEVICE_ID) {
+             setAudioDevice(
+               audioDevices.find(
+                 d => d.deviceId === cookies.PREFERRED_AUDIO_DEVICE_ID
+               )
+             );
+           } else {
+             let defaultAudDevice =
+               audioDevices.find(
+                 d =>
+                   d.deviceId ===
+                   audio?.audioTrack?.mediaStreamTrack.getSettings().deviceId
+               ) ?? audioDevices[0];
+             setAudioDevice(defaultAudDevice);
+           }
          }
          if (!videoDevice) {
            const videoDevices = devices.filter(
              id => id.kind === 'videoinput' && id.deviceId
            );
-           let defaultVidDevice =
-             videoDevices.find(
-               d =>
-                 d.deviceId ===
-                 video?.videoTrack?.mediaStreamTrack.getSettings().deviceId
-             ) ?? videoDevices[0];
-           setVideoDevice(defaultVidDevice);
+           if (cookies.PREFERRED_VIDEO_DEVICE_ID) {
+             setVideoDevice(
+               videoDevices.find(
+                 d => d.deviceId === cookies.PREFERRED_VIDEO_DEVICE_ID
+               )
+             );
+           } else {
+             let defaultVidDevice =
+               videoDevices.find(
+                 d =>
+                   d.deviceId ===
+                   video?.videoTrack?.mediaStreamTrack.getSettings().deviceId
+               ) ?? videoDevices[0];
+             setVideoDevice(defaultVidDevice);
+           }
          }
        });
      }
    }, [audio, video]);
+
+   useEffect(() => {
+     if (
+       audioDevice &&
+       audioDevice.deviceId !==
+         audio?.audioTrack?.mediaStreamTrack.getSettings().deviceId &&
+       audioDevice.deviceId !== cookies.PREFERRED_AUDIO_DEVICE_ID
+     ) {
+       setCookies('PREFERRED_AUDIO_DEVICE_ID', audioDevice.deviceId, {
+         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+       });
+       createLocalAudioTrack({ deviceId: audioDevice.deviceId })
+         .then(track => {
+           if (audio) unpublishTrack(audio.track as LocalAudioTrack);
+           room.localParticipant.publishTrack(track);
+         })
+         .catch((err: Error) => {
+           console.log(err);
+         });
+     }
+   }, [audioDevice]);
+
+   useEffect(() => {
+     if (
+       videoDevice &&
+       videoDevice.deviceId !==
+         video?.videoTrack?.mediaStreamTrack.getSettings() &&
+       videoDevice &&
+       videoDevice.deviceId !== cookies.PREFERRED_VIDEO_DEVICE_ID
+     ) {
+       setCookies('PREFERRED_VIDEO_DEVICE_ID', videoDevice.deviceId, {
+         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+       });
+       createLocalVideoTrack({ deviceId: videoDevice.deviceId })
+         .then((track: LocalVideoTrack) => {
+           if (video) unpublishTrack(video.track as LocalVideoTrack);
+           room.localParticipant.publishTrack(track);
+         })
+         .catch((err: Error) => {
+           console.log(err);
+         });
+     }
+   }, [videoDevice]);
 
    const toggleVideo = () => {
      if (video?.track) {
@@ -136,59 +201,25 @@ import VidDeviceBtn from './VidDeviceBtn';
      }
    };
 
-  //  const sendMsg = (msg: string) => {
-  //    const encoder = new TextEncoder();
-  //    if (room.localParticipant) {
-  //      let chat = {
-  //        type: 'ctw-chat',
-  //        text: msg,
-  //        sender: room.localParticipant.sid,
-  //      };
-  //      const data = encoder.encode(JSON.stringify(chat));
-  //      room.localParticipant.publishData(data, DataPacket_Kind.RELIABLE);
-  //      setChatMessages(chatMessages => [
-  //        ...chatMessages,
-  //        {
-  //          text: msg,
-  //          sender: room.localParticipant,
-  //        },
-  //      ]);
-  //    }
-  //  };
-
-   useEffect(() => {
-     if (
-       audioDevice &&
-       audioDevice.deviceId !==
-         audio?.audioTrack?.mediaStreamTrack.getSettings().deviceId
-     ) {
-       createLocalAudioTrack({ deviceId: audioDevice.deviceId })
-         .then(track => {
-           if (audio) unpublishTrack(audio.track as LocalAudioTrack);
-           room.localParticipant.publishTrack(track);
-         })
-         .catch((err: Error) => {
-           console.log(err);
-         });
-     }
-   }, [audioDevice]);
-
-   useEffect(() => {
-     if (
-       videoDevice &&
-       videoDevice.deviceId !==
-         video?.videoTrack?.mediaStreamTrack.getSettings().deviceId
-     ) {
-       createLocalVideoTrack({ deviceId: videoDevice.deviceId })
-         .then((track: LocalVideoTrack) => {
-           if (video) unpublishTrack(video.track as LocalVideoTrack);
-           room.localParticipant.publishTrack(track);
-         })
-         .catch((err: Error) => {
-           console.log(err);
-         });
-     }
-   }, [videoDevice]);
+   //  const sendMsg = (msg: string) => {
+   //    const encoder = new TextEncoder();
+   //    if (room.localParticipant) {
+   //      let chat = {
+   //        type: 'ctw-chat',
+   //        text: msg,
+   //        sender: room.localParticipant.sid,
+   //      };
+   //      const data = encoder.encode(JSON.stringify(chat));
+   //      room.localParticipant.publishData(data, DataPacket_Kind.RELIABLE);
+   //      setChatMessages(chatMessages => [
+   //        ...chatMessages,
+   //        {
+   //          text: msg,
+   //          sender: room.localParticipant,
+   //        },
+   //      ]);
+   //    }
+   //  };
 
    return (
      <div id="toolbar" className="">
