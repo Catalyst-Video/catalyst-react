@@ -52,10 +52,10 @@ import VidDeviceBtn from './VidDeviceBtn';
    const [screen, setScreenPub] = useState<TrackPublication>();
    const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
    const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
-   const [cookies, setCookies] = useCookies([
-    'PREFERRED_AUDIO_DEVICE_ID',
-    'PREFERRED_VIDEO_DEVICE_ID',
-  ]);
+  //  const [cookies, setCookies] = useCookies([
+  //   'PREFERRED_AUDIO_DEVICE_ID',
+  //   'PREFERRED_VIDEO_DEVICE_ID',
+  // ]);
 
    useEffect(() => {
      setAudioPub(publications.find(p => p.kind === Track.Kind.Audio));
@@ -78,10 +78,11 @@ import VidDeviceBtn from './VidDeviceBtn';
            const audioDevices = devices.filter(
              id => id.kind === 'audioinput' && id.deviceId
            );
-           if (cookies.PREFERRED_AUDIO_DEVICE_ID) {
+           if (localStorage.get('PREFERRED_AUDIO_DEVICE_ID')) {
              setAudioDevice(
                audioDevices.find(
-                 d => d.deviceId === cookies.PREFERRED_AUDIO_DEVICE_ID
+                 d =>
+                   d.deviceId === localStorage.get('PREFERRED_AUDIO_DEVICE_ID')
                )
              );
            } else {
@@ -98,10 +99,11 @@ import VidDeviceBtn from './VidDeviceBtn';
            const videoDevices = devices.filter(
              id => id.kind === 'videoinput' && id.deviceId
            );
-           if (cookies.PREFERRED_VIDEO_DEVICE_ID) {
+           if (localStorage.get('PREFERRED_VIDEO_DEVICE_ID')) {
              setVideoDevice(
                videoDevices.find(
-                 d => d.deviceId === cookies.PREFERRED_VIDEO_DEVICE_ID
+                 d =>
+                   d.deviceId === localStorage.get('PREFERRED_VIDEO_DEVICE_ID')
                )
              );
            } else {
@@ -123,11 +125,12 @@ import VidDeviceBtn from './VidDeviceBtn';
        audioDevice &&
        audioDevice.deviceId !==
          audio?.audioTrack?.mediaStreamTrack.getSettings().deviceId &&
-       audioDevice.deviceId !== cookies.PREFERRED_AUDIO_DEVICE_ID
+       audioDevice.deviceId !== localStorage.get('PREFERRED_AUDIO_DEVICE_ID')
      ) {
-       setCookies('PREFERRED_AUDIO_DEVICE_ID', audioDevice.deviceId, {
-         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-       });
+       localStorage.setItem('PREFERRED_AUDIO_DEVICE_ID', audioDevice.deviceId);
+      //  setCookies('PREFERRED_AUDIO_DEVICE_ID', audioDevice.deviceId, {
+      //    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+      //  });
        createLocalAudioTrack({ deviceId: audioDevice.deviceId })
          .then(track => {
            if (audio) unpublishTrack(audio.track as LocalAudioTrack);
@@ -145,11 +148,12 @@ import VidDeviceBtn from './VidDeviceBtn';
        videoDevice.deviceId !==
          video?.videoTrack?.mediaStreamTrack.getSettings() &&
        videoDevice &&
-       videoDevice.deviceId !== cookies.PREFERRED_VIDEO_DEVICE_ID
+       videoDevice.deviceId !== localStorage.get('PREFERRED_VIDEO_DEVICE_ID')
      ) {
-       setCookies('PREFERRED_VIDEO_DEVICE_ID', videoDevice.deviceId, {
-         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-       });
+       localStorage.setItem('PREFERRED_VIDEO_DEVICE_ID', videoDevice.deviceId);
+       //  setCookies('PREFERRED_VIDEO_DEVICE_ID', videoDevice.deviceId, {
+       //    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+       //  });
        createLocalVideoTrack({ deviceId: videoDevice.deviceId })
          .then((track: LocalVideoTrack) => {
            if (video) unpublishTrack(video.track as LocalVideoTrack);

@@ -32,11 +32,11 @@ const SetupView = ({
   disableNameField?: boolean;
 }) => {
   const [videoTrack, setVideoTrack] = useState<LocalVideoTrack>();
-  const [cookies, setCookies] = useCookies([
-    'PREFERRED_AUDIO_DEVICE_ID',
-    'PREFERRED_VIDEO_DEVICE_ID',
-    'PREFERRED_OUTPUT_DEVICE_ID',
-  ]);
+  // const [cookies, setCookies] = useCookies([
+  //   'PREFERRED_AUDIO_DEVICE_ID',
+  //   'PREFERRED_VIDEO_DEVICE_ID',
+  //   'PREFERRED_OUTPUT_DEVICE_ID',
+  // ]);
   const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
   const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
   const [outputDevice, setOutputDevice] = useState<MediaDeviceInfo>()
@@ -79,10 +79,10 @@ const SetupView = ({
           const outputDevices = devices.filter(
             id => id.kind === 'audiooutput' && id.deviceId
           );
-          if (cookies.PREFERRED_OUTPUT_DEVICE_ID) {
-              let outDevice = outputDevices.find(
-                d => d.deviceId === cookies.PREFERRED_OUTPUT_DEVICE_ID
-              );
+          if (localStorage.get('PREFERRED_OUTPUT_DEVICE_ID')) {
+            let outDevice = outputDevices.find(
+              d => d.deviceId === localStorage.get('PREFERRED_OUTPUT_DEVICE_ID')
+            );
             setOutputDevice(outDevice);
           } else {
             setOutputDevice(outputDevices[0]);
@@ -111,9 +111,13 @@ const SetupView = ({
              return;
          } else {
            setVideoDevice(device);
-            setCookies('PREFERRED_VIDEO_DEVICE_ID', device.deviceId, {
-              expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-            });
+                   localStorage.setItem(
+                     'PREFERRED_VIDEO_DEVICE_ID',
+                     device.deviceId
+                   );
+            // setCookies('PREFERRED_VIDEO_DEVICE_ID', device.deviceId, {
+            //   expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+            // });
          }
      }
    };
@@ -121,10 +125,14 @@ const SetupView = ({
 useEffect(() => {
     if (audioDevice) {
     createLocalAudioTrack({ deviceId: audioDevice.deviceId })
-        .then(track => {
-          setCookies('PREFERRED_AUDIO_DEVICE_ID', audioDevice.deviceId, {
-              expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-          });
+      .then(track => {
+        localStorage.setItem(
+          'PREFERRED_AUDIO_DEVICE_ID',
+          audioDevice.deviceId
+        );
+          // setCookies('PREFERRED_AUDIO_DEVICE_ID', audioDevice.deviceId, {
+          //     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+          // });
         }).catch((err: Error) => {
         console.log(err);
         });
@@ -153,48 +161,51 @@ useEffect(() => {
          const audioDevices = devices.filter(
            id => id.kind === 'audioinput' && id.deviceId
          );
-         if (cookies.PREFERRED_AUDIO_DEVICE_ID) {
+         if (localStorage.get('PREFERRED_AUDIO_DEVICE_ID')) {
            let audDevice = audioDevices.find(
-             d => d.deviceId === cookies.PREFERRED_AUDIO_DEVICE_ID
+             d => d.deviceId === localStorage.get('PREFERRED_AUDIO_DEVICE_ID')
            );
            setAudioDevice(audDevice);
          } else {
            setAudioDevice(audioDevices[0]);
-           setCookies(
+           localStorage.setItem(
              'PREFERRED_AUDIO_DEVICE_ID',
-             audioDevices[0].deviceId,
-             {
-               expires: new Date(Date.now() + 1 * 60 * 60 * 24 * 365),
-             }
+             audioDevices[0].deviceId
            );
-        
+           //  setCookies(
+           //    'PREFERRED_AUDIO_DEVICE_ID',
+           //    audioDevices[0].deviceId,
+           //    {
+           //      expires: new Date(Date.now() + 1 * 60 * 60 * 24 * 365),
+           //    }
+           //  );
+
            //  let defaultAudDevice = audioDevices.find(
            //    d =>
            //      d.deviceId ===
            //    audioTrack?.mediaStreamTrack.getSettings().deviceId
            //  );
-          //      setCookies(
-          //        'PREFERRED_AUDIO_DEVICE_ID',
-          //        defaultVidDevice.deviceId,
-          //        {
-          //          expires: new Date(Date.now() + 1 * 60 * 60 * 24 * 365),
-          //        }
-          //      );
-          //    }
-          //  setAudioDevice(defaultAudDevice);
+           //      setCookies(
+           //        'PREFERRED_AUDIO_DEVICE_ID',
+           //        defaultVidDevice.deviceId,
+           //        {
+           //          expires: new Date(Date.now() + 1 * 60 * 60 * 24 * 365),
+           //        }
+           //      );
+           //    }
+           //  setAudioDevice(defaultAudDevice);
          }
        }
        if (!videoDevice) {
           const videoDevices = devices.filter(
             id => id.kind === 'videoinput' && id.deviceId
           );
-         if (cookies.PREFERRED_VIDEO_DEVICE_ID) {
-            let vidDevice = videoDevices.find(
-              d => d.deviceId === cookies.PREFERRED_VIDEO_DEVICE_ID
+         if (localStorage.get('PREFERRED_VIDEO_DEVICE_ID')) {
+           let vidDevice = videoDevices.find(
+             d => d.deviceId === localStorage.get('PREFERRED_VIDEO_DEVICE_ID')
            );
-            setVideoDevice(vidDevice);
+           setVideoDevice(vidDevice);
          } else {
-        
            let defaultVidDevice = videoDevices.find(
              d =>
                d.deviceId ===
@@ -202,14 +213,18 @@ useEffect(() => {
            );
            if (defaultVidDevice) {
              setVideoDevice(defaultVidDevice);
-             if (!cookies.PREFERRED_VIDEO_DEVICE_ID) {
-               setCookies(
-                 'PREFERRED_VIDEO_DEVICE_ID',
-                 defaultVidDevice.deviceId,
-                 {
-                   expires: new Date(Date.now() + 1 * 60 * 60 * 24 * 365),
-                 }
-               );
+             if (!localStorage.get('PREFERRED_VIDEO_DEVICE_ID')) {
+                 localStorage.setItem(
+                   'PREFERRED_VIDEO_DEVICE_ID',
+                   defaultVidDevice.deviceId
+                 );
+              //  setCookies(
+              //    'PREFERRED_VIDEO_DEVICE_ID',
+              //    defaultVidDevice.deviceId,
+              //    {
+              //      expires: new Date(Date.now() + 1 * 60 * 60 * 24 * 365),
+              //    }
+              //  );
              }
            }
          }
@@ -222,9 +237,10 @@ useEffect(() => {
 
   const updateOutputDevice = (device: MediaDeviceInfo) => {
     setOutputDevice(device);
-    setCookies('PREFERRED_OUTPUT_DEVICE_ID', device.deviceId, {
-      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-    });
+    localStorage.setItem('PREFERRED_OUTPUT_DEVICE_ID', device.deviceId);
+    // setCookies('PREFERRED_OUTPUT_DEVICE_ID', device.deviceId, {
+    //   expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+    // });
   };
 
   return (

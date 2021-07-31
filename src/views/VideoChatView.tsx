@@ -47,11 +47,11 @@ const VideoChat = ({
   const [roomClosed, setRoomClosed] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [chatOpen, setChatOpen] = useState(false);
-  const [cookies, setCookies] = useCookies([
-     'PREFERRED_AUDIO_DEVICE_ID',
-     'PREFERRED_VIDEO_DEVICE_ID',
-     'PREFERRED_OUTPUT_DEVICE_ID',
-  ]);
+  // const [cookies, setCookies] = useCookies([
+  //    'PREFERRED_AUDIO_DEVICE_ID',
+  //    'PREFERRED_VIDEO_DEVICE_ID',
+  //    'PREFERRED_OUTPUT_DEVICE_ID',
+  // ]);
   const [outputDevice, setOutputDevice] = useState<MediaDeviceInfo>();
   const roomState = useRoom();
 
@@ -92,10 +92,11 @@ const VideoChat = ({
     );
     bumpMemberSize(room);
     // console.log(room);
-
+    const audDId = localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID');
+    const vidDId = localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID');
     const tracks = await createLocalTracks({
-      audio: meta.audioEnabled ? { deviceId: cookies.PREFERRED_AUDIO_DEVICE_ID } : false,
-      video: meta.videoEnabled ? { deviceId: cookies.PREFERRED_VIDEO_DEVICE_ID,  } : false,
+      audio: meta.audioEnabled ? (audDId ? { deviceId: audDId } : true) : false,
+      video: meta.videoEnabled ? (vidDId ? { deviceId: vidDId } : true) : false,
     });
     tracks.forEach(track => {
       room.localParticipant.publishTrack(track,
@@ -146,9 +147,10 @@ const VideoChat = ({
 
   const updateOutputDevice = (device: MediaDeviceInfo) => {
     setOutputDevice(device);
-    setCookies('PREFERRED_OUTPUT_DEVICE_ID', device.deviceId, {
-      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-    });
+    localStorage.setItem('PREFERRED_OUTPUT_DEVICE_ID', device.deviceId);
+    // setCookies('PREFERRED_OUTPUT_DEVICE_ID', device.deviceId, {
+    //   expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+    // });
   }
 
   // animate toolbar & header fade in/out
@@ -211,9 +213,9 @@ const VideoChat = ({
        const outputDevices = devices.filter(
          id => id.kind === 'audiooutput' && id.deviceId
        );
-       if (cookies.PREFERRED_OUTPUT_DEVICE_ID) {
+       if (localStorage.get('PREFERRED_OUTPUT_DEVICE_ID')) {
          let outDevice = outputDevices.find(
-           d => d.deviceId === cookies.PREFERRED_OUTPUT_DEVICE_ID
+           d => d.deviceId === localStorage.get('PREFERRED_OUTPUT_DEVICE_ID')
          );
          setOutputDevice(outDevice);
        } else {
