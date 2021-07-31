@@ -85,6 +85,7 @@ const VideoChat = ({
   const toolbarRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const chatBtnRef = useRef<HTMLDivElement>(null);
+  const videoChatRef = useRef<HTMLDivElement>(null);
   const decoder = new TextDecoder();
 
   const onConnected = async room => {
@@ -227,11 +228,14 @@ const VideoChat = ({
       var timedelay = 1;
       var isHidden = false;
       const debounceHandleMouse = debounce(handleMouse, 25);
-      document.addEventListener('mousemove', debounceHandleMouse);
+      videoChatRef.current?.addEventListener('mousemove', debounceHandleMouse);
       var _delay = setInterval(delayCheck, fade);
 
       () => {
-        document.removeEventListener('mousemove', debounceHandleMouse);
+        videoChatRef.current?.removeEventListener(
+          'mousemove',
+          debounceHandleMouse
+        );
       };
     }
     // set default output device
@@ -254,7 +258,7 @@ const VideoChat = ({
   }, []);
 
   return (
-    <div id="video-chat" className="h-full w-full relative">
+    <div id="video-chat" className="h-full w-full relative" ref={videoChatRef}>
       <div
         id="bg-theme"
         className="h-full w-full bg-secondary dark:bg-gray-900"

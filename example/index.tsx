@@ -8,8 +8,8 @@ const App = () => {
 
   return (
     <>
-      <GeneralTest />
-      {/* <HoursTest /> */}
+      {/* <GeneralTest /> */}
+      <HoursTest />
     </>
   );
 };
@@ -17,8 +17,8 @@ const App = () => {
 const GeneralTest = () => {
   return (
     <CatalystChat
-      room={'testRoom'}
-      appId={'testUid'}
+      room='testing-ground'
+      appId='testing-ground-uuid'
       // dark={true}
       audioOnDefault={false}
       // name={(Math.random() * 1000).toString().slice(0, 4)}
@@ -28,8 +28,9 @@ const GeneralTest = () => {
         tertiary: '#4B5563',
         quaternary: '#6B7280',
       }}
+      // name={'bob'}
       // theme={ }
-      onEndCall={() => console.log('end')}
+      onLeaveCall={() => console.log('end')}
     />
   );
 };
@@ -68,7 +69,7 @@ const HoursTest = () => {
         <Draggable bounds="parent">
           <div
             style={{
-              width: '40vw',
+              width: '35vw',
               height: '60vh',
               bottom: '40px',
               right: '40px',
@@ -80,13 +81,23 @@ const HoursTest = () => {
             <CatalystChat
               room={'testRoom'}
               appId={'testUid'}
-              dark={true}
+              // dark={true}
               audioOnDefault={false}
+              disableSetupRoom
+              disableChat
               theme={{
                 primary: '#50c878',
-                primaryDark: '#50c878',
+                secondary: '#17171d',
+                tertiary: '#252429',
+                quaternary: '#50c878',
               }}
-              onEndCall={() => setShowVideoCall(false)}
+              // theme={{
+              //   primary: '#50c878',
+              //   secondary: '#eee',
+              //   tertiary: 'rgba(0,0,0,.5)',
+              //   quaternary: '#fff',
+              // }}
+              onLeaveCall={() => setShowVideoCall(false)}
             />
           </div>
         </Draggable>
