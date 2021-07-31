@@ -32,11 +32,6 @@ const SetupView = ({
   disableNameField?: boolean;
 }) => {
   const [videoTrack, setVideoTrack] = useState<LocalVideoTrack>();
-  // const [cookies, setCookies] = useCookies([
-  //   'PREFERRED_AUDIO_DEVICE_ID',
-  //   'PREFERRED_VIDEO_DEVICE_ID',
-  //   'PREFERRED_OUTPUT_DEVICE_ID',
-  // ]);
   const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
   const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
   const [outputDevice, setOutputDevice] = useState<MediaDeviceInfo>()
@@ -89,10 +84,6 @@ const SetupView = ({
           }
         });
       }
-        // if (cookies.PREFERRED_VIDEO_DEVICE_ID) {
-        //     navigator.mediaDevices.map((d) => d.kind === cookies.PREFERRED_VIDEO_DEVICE_ID)
-        // }
-        // TODO: if media device changed in setup screen change it in real call 
       if(videoOn)
           createLocalVideoTrack().then(track => {
             setVideoTrack(track);
@@ -115,9 +106,6 @@ const SetupView = ({
                      'PREFERRED_VIDEO_DEVICE_ID',
                      device.deviceId
                    );
-            // setCookies('PREFERRED_VIDEO_DEVICE_ID', device.deviceId, {
-            //   expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-            // });
          }
      }
    };
@@ -130,9 +118,6 @@ useEffect(() => {
           'PREFERRED_AUDIO_DEVICE_ID',
           audioDevice.deviceId
         );
-          // setCookies('PREFERRED_AUDIO_DEVICE_ID', audioDevice.deviceId, {
-          //     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-          // });
         }).catch((err: Error) => {
         console.log(err);
         });
@@ -172,28 +157,6 @@ useEffect(() => {
              'PREFERRED_AUDIO_DEVICE_ID',
              audioDevices[0].deviceId
            );
-           //  setCookies(
-           //    'PREFERRED_AUDIO_DEVICE_ID',
-           //    audioDevices[0].deviceId,
-           //    {
-           //      expires: new Date(Date.now() + 1 * 60 * 60 * 24 * 365),
-           //    }
-           //  );
-
-           //  let defaultAudDevice = audioDevices.find(
-           //    d =>
-           //      d.deviceId ===
-           //    audioTrack?.mediaStreamTrack.getSettings().deviceId
-           //  );
-           //      setCookies(
-           //        'PREFERRED_AUDIO_DEVICE_ID',
-           //        defaultVidDevice.deviceId,
-           //        {
-           //          expires: new Date(Date.now() + 1 * 60 * 60 * 24 * 365),
-           //        }
-           //      );
-           //    }
-           //  setAudioDevice(defaultAudDevice);
          }
        }
        if (!videoDevice) {
@@ -218,13 +181,6 @@ useEffect(() => {
                    'PREFERRED_VIDEO_DEVICE_ID',
                    defaultVidDevice.deviceId
                  );
-              //  setCookies(
-              //    'PREFERRED_VIDEO_DEVICE_ID',
-              //    defaultVidDevice.deviceId,
-              //    {
-              //      expires: new Date(Date.now() + 1 * 60 * 60 * 24 * 365),
-              //    }
-              //  );
              }
            }
          }
@@ -238,9 +194,6 @@ useEffect(() => {
   const updateOutputDevice = (device: MediaDeviceInfo) => {
     setOutputDevice(device);
     localStorage.setItem('PREFERRED_OUTPUT_DEVICE_ID', device.deviceId);
-    // setCookies('PREFERRED_OUTPUT_DEVICE_ID', device.deviceId, {
-    //   expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-    // });
   };
 
   return (
