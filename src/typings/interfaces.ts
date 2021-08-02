@@ -67,3 +67,7 @@ export interface CatalystTheme {
   tertiary?: string;
   quaternary?: string;
 }
+
+export interface CatalystDev {
+  label: string;
+}

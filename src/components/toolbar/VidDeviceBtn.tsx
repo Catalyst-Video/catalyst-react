@@ -24,7 +24,8 @@ You can contact us for more details at support@catalyst.chat. */
 
 import { faVideo, faVideoSlash } from '@fortawesome/free-solid-svg-icons';
 import React, { useEffect, useRef, useState } from 'react';
-import ToolbarButton, { Device } from './ToolbarButton';
+import { CatalystDev } from '../../typings/interfaces';
+import ToolbarButton from './ToolbarButton';
 
 const VidDeviceBtn = ({
   isEnabled,
@@ -38,7 +39,7 @@ const VidDeviceBtn = ({
   videoDevice?: MediaDeviceInfo;
 }) => {
   const [sources, setSources] = useState<MediaDeviceInfo[]>([]);
-  const [devices, setDevices] = useState<Device[]>([]);
+  const [devices, setDevices] = useState<CatalystDev[]>([]);
   const vidBtnRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -55,7 +56,7 @@ const VidDeviceBtn = ({
     });
   }, [isEnabled]);
 
-  const handleDevice = (id: Device) => {
+  const handleDevice = (id: CatalystDev) => {
     const device = sources.find(d => d.label === id.label);
     if (device && onIpSelected) {
       onIpSelected(device);
@@ -63,7 +64,7 @@ const VidDeviceBtn = ({
   };
 
   return (
-    <div ref={vidBtnRef} className="inline">
+   // <div ref={vidBtnRef} className="inline">
       <ToolbarButton
         type="Video"
         tooltip={isEnabled ? 'Disable Video' : 'Enable Video'}
@@ -71,12 +72,12 @@ const VidDeviceBtn = ({
         bgColor={isEnabled ? undefined : 'bg-white hover:bg-gray-100'}
         iconColor={isEnabled ? undefined : 'text-red'}
         onIpDeviceClick={handleDevice}
-        parentRef={vidBtnRef}
+      //  parentRef={vidBtnRef}
         onClick={onClick}
         inputDevices={devices}
         selectedIpDevice={videoDevice}
       />
-    </div>
+   // </div>
   );
 };
 

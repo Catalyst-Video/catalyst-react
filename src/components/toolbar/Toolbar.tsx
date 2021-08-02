@@ -259,6 +259,7 @@ const Toolbar = ({
       />
       {/* Screen Share Button */}
       <ToolbarButton
+        type="screenshare"
         tooltip={screen?.track ? 'Stop sharing' : 'Share screen'}
         icon={screen?.track ? faStop : faDesktop}
         bgColor={
@@ -305,7 +306,8 @@ const Toolbar = ({
       {/* End Call Button */}
       {onLeave && (
         <ToolbarButton
-          tooltip="End"
+          type="endcall"
+          tooltip="End Call"
           icon={faPhoneSlash}
           bgColor={'bg-red'}
           onClick={() => {

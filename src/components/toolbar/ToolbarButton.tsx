@@ -29,27 +29,25 @@ import {
   faChevronUp,
 } from '@fortawesome/free-solid-svg-icons';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Popover } from 'react-tiny-popover';
 import React, { RefObject, useState } from 'react';
+import { CatalystDev } from '../../typings/interfaces';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
 
-export interface Device {
-  label: string;
-}
-
-const popoverStyles = {
-  cursor: 'pointer',
-  listStyle: 'none',
-  background: '#4B5563',
-  borderRadius: '5px',
-  padding: 0,
-  margin: 0,
-  paddingInline: 'none',
-  marginBottom: '10px',
-  fontFamily:
-    'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-};
+// const popoverStyles = {
+//   cursor: 'pointer',
+//   listStyle: 'none',
+//   // background: '#4B5563',
+//   // borderRadius: '5px',
+//   padding: 0,
+//   margin: 0,
+//   paddingInline: 'none',
+//   // marginBottom: '10px',
+//   fontFamily:
+//     'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+// };
 
 const ToolbarButton = React.memo(({
   type,
@@ -73,10 +71,10 @@ const ToolbarButton = React.memo(({
   onClick?: () => void;
   icon?: IconProp;
   className?: string;
-  inputDevices?: Device[];
-  outputDevices?: Device[];
-  onIpDeviceClick?: (id: Device) => void;
-  onOpDeviceClick?: (id: Device) => void;
+  inputDevices?: CatalystDev[];
+  outputDevices?: CatalystDev[];
+  onIpDeviceClick?: (id: CatalystDev) => void;
+  onOpDeviceClick?: (id: CatalystDev) => void;
   bgColor?: string;
   iconColor?: string;
   selectedOpDevice?: MediaDeviceInfo;
@@ -85,40 +83,129 @@ const ToolbarButton = React.memo(({
 }) => {
   const [deviceMenu, setDeviceMenu] = useState(false);
 
-  const handleOnIpDeviceClick = (id: Device) => {
+  const handleOnIpDeviceClick = (id: CatalystDev) => {
     if (onIpDeviceClick) {
       onIpDeviceClick(id);
     }
     setDeviceMenu(false);
   };
 
-  const handleOnOpDeviceClick = (id: Device) => {
+  const handleOnOpDeviceClick = (id: CatalystDev) => {
     if (onOpDeviceClick) {
       onOpDeviceClick(id);
     }
     setDeviceMenu(false);
   };
 
+//   useEffect(() => {
+//     tippy(`#${type}-btn`, {
+//       content: tooltip
+//     });
+
+//     if () {
+//       let popover = 
+//    
+//          tippy(`#${type}-btn`, {
+//                       content: popover,
+//                     });
+//   }
+
+//  }, []);
   // console.log(parentRef?.current);
 
   return (
-    <Popover
-      isOpen={deviceMenu}
-      positions={['top']}
-      reposition={false}
-      onClickOutside={() => setDeviceMenu(false)}
-      containerStyle={{ zIndex: '40' }}
-      // contentLocation={{
-      //   left: 0,
-      //   top: 20,
-      // }}
-      // boundaryInset={0}
-      // boundaryTolerance={0}
-      containerParent={parentRef?.current ?? document.body}
-      content={
-        <div>
-          <ul style={popoverStyles}>
-            {outputDevices && outputDevices.length > 0 && (
+    // <Popover
+    //   isOpen={deviceMenu}
+    //   positions={['top']}
+    //   reposition={false}
+    //   onClickOutside={() => setDeviceMenu(false)}
+    //   containerStyle={{ zIndex: '40' }}
+    //   // contentLocation={{
+    //   //   left: 0,
+    //   //   top: 20,
+    //   // }}
+    //   // boundaryInset={0}
+    //   // boundaryTolerance={0}
+    //   containerParent={parentRef?.current ?? document.body}
+    //   content={
+    //     <div>
+    //       <ul style={popoverStyles}>
+    //         {outputDevices && outputDevices.length > 0 && (
+    //           <>
+    //             <li
+    //               key={'input-row'}
+    //               className="flex items-center text-xs lg:text-sm text-white font-semibold p-2"
+    //             >
+    //               {type} Output
+    //             </li>
+    //             {outputDevices?.map((id, i) => {
+    //               // TODO: add prop to allow for enabling showing device ids
+    //               let idLabel = id.label.includes('(')
+    //                 ? id.label.substring(0, id.label.indexOf('('))
+    //                 : id.label;
+    //               return (
+    //                 <li
+    //                   key={i}
+    //                   className="flex items-center text-xs lg:text-sm text-white p-2"
+    //                   style={{
+    //                     borderTop: '1px solid rgba(255, 255, 255, 0.2)',
+    //                   }}
+    //                   onClick={() => handleOnOpDeviceClick(id)}
+    //                 >
+    //                   {id.label === selectedOpDevice?.label ? (
+    //                     <FontAwesomeIcon
+    //                       icon={faCheckCircle}
+    //                       className="mr-1 text-primary"
+    //                     />
+    //                   ) : (
+    //                     <FontAwesomeIcon icon={faCircle} className="mr-1 " />
+    //                   )}
+    //                   {idLabel}
+    //                 </li>
+    //               );
+    //             })}
+    //           </>
+    //         )}
+    //         <li
+    //           key={'input-row'}
+    //           className="flex items-center text-xs lg:text-sm text-white font-semibold p-2"
+    //         >
+    //           {type} Input
+    //         </li>
+    //         {inputDevices?.map((id, i) => {
+    //           // TODO: add prop to allow for enabling showing device ids
+    //           let idLabel = id.label.includes('(')
+    //             ? id.label.substring(0, id.label.indexOf('('))
+    //             : id.label;
+    //           return (
+    //             <li
+    //               key={i}
+    //               className="flex items-center text-xs lg:text-sm text-white p-2"
+    //               style={{
+    //                 borderTop: '1px solid rgba(255, 255, 255, 0.2)',
+    //               }}
+    //               onClick={() => handleOnIpDeviceClick(id)}
+    //             >
+    //               {id.label === selectedIpDevice?.label ? (
+    //                 <FontAwesomeIcon
+    //                   icon={faCheckCircle}
+    //                   className="mr-1 text-primary"
+    //                 />
+    //               ) : (
+    //                 <FontAwesomeIcon icon={faCircle} className="mr-1 " />
+    //               )}
+    //               {idLabel}
+    //             </li>
+    //           );
+    //         })}
+    //       </ul>
+    //     </div>
+    //   }
+    // >
+    <Tippy interactive className="bg-tertiary font-sans" trigger="click" content={outputDevices || inputDevices ? <div>
+      <ul className="font-sans list-none m-0 p-0" //style={popoverStyles}
+      >
+          {outputDevices && outputDevices.length > 0 && (
               <>
                 <li
                   key={'input-row'}
@@ -187,11 +274,11 @@ const ToolbarButton = React.memo(({
               );
             })}
           </ul>
-        </div>
-      }
-    >
-      <div className="inline-block m-1 relative">
+        </div>: null}>
+    <div className="inline-block m-1 relative">
+      <Tippy content={tooltip} className="font-sans">
         <button
+          id={`${type}-btn`}
           disabled={disabled}
           className={`rounded-full w-16 h-16 flex justify-center items-center ${
             bgColor
@@ -209,29 +296,33 @@ const ToolbarButton = React.memo(({
               icon={icon}
             />
           )}
+          {/* {tooltip} */}
           {/*TODO: tooltip {label} */}
         </button>
-        {inputDevices && inputDevices.length > 0 && (
-          <button
-            disabled={disabled}
-            className={`absolute z-10 -right-1 -bottom-1 ${
-              bgColor
-                ? bgColor
-                : 'bg-tertiary dark:bg-secondary hover:bg-quaternary dark:hover:bg-tertiary'
-            }  rounded-full border-4 border-secondary h-6 w-6 flex justify-center items-center focus:outline-none focus:border-0 `}
-            onClick={() => setDeviceMenu(!deviceMenu)}
-          >
-            <FontAwesomeIcon
-              size="xs"
-              className={`transition transform hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none  ${
-                iconColor ? 'text-gray-900' : 'text-white'
-              }`}
-              icon={deviceMenu ? faChevronUp : faChevronDown}
-            />
-          </button>
-        )}
-      </div>
-    </Popover>
+      </Tippy>
+      {inputDevices && inputDevices.length > 0 && (
+        <button
+          disabled={disabled}
+          className={`absolute z-10 -right-1 -bottom-1 ${
+            bgColor
+              ? bgColor
+              : 'bg-tertiary dark:bg-secondary hover:bg-quaternary dark:hover:bg-tertiary'
+          }  rounded-full border-4 border-secondary h-6 w-6 flex justify-center items-center focus:outline-none focus:border-0 `}
+          onClick={() => setDeviceMenu(!deviceMenu)}
+        >
+          <FontAwesomeIcon
+            size="xs"
+            className={`transition transform hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none  ${
+              iconColor ? 'text-gray-900' : 'text-white'
+            }`}
+            icon={deviceMenu ? faChevronUp : faChevronDown}
+          />
+        </button>
+      )}
+    </div>
+    </Tippy>
+    //  </Popover>
+
   );
 })
 export default ToolbarButton;

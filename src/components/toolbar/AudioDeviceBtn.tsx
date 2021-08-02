@@ -27,7 +27,8 @@ import {
   faMicrophoneSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import React, { useEffect, useRef, useState } from 'react';
-import ToolbarButton, { Device } from './ToolbarButton';
+import { CatalystDev } from '../../typings/interfaces';
+import ToolbarButton from './ToolbarButton';
 
 const AudioDeviceBtn = ({
   isMuted,
@@ -46,8 +47,8 @@ const AudioDeviceBtn = ({
 }) => {
   const [ipSources, setIpSources] = useState<MediaDeviceInfo[]>([]);
   const [opSources, setOpSources] = useState<MediaDeviceInfo[]>([]);
-  const [devices, setDevices] = useState<Device[]>([]);
-  const [outputDevices, setOutputDevices] = useState<Device[]>([]);
+  const [devices, setDevices] = useState<CatalystDev[]>([]);
+  const [outputDevices, setOutputDevices] = useState<CatalystDev[]>([]);
   const audBtnRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -73,14 +74,14 @@ const AudioDeviceBtn = ({
     });
   }, [isMuted]);
 
-  const handleIpDeviceClick = (id: Device) => {
+  const handleIpDeviceClick = (id: CatalystDev) => {
     const device = ipSources.find(d => d.label === id.label);
     if (device && onIpSelected) {
       onIpSelected(device);
     }
   };
 
-  const handleOpDeviceClick = (id: Device) => {
+  const handleOpDeviceClick = (id: CatalystDev) => {
     const device = opSources.find(d => d.label === id.label);
     if (device && onOpSelected) {
       onOpSelected(device);
@@ -88,7 +89,7 @@ const AudioDeviceBtn = ({
   };
 
   return (
-    <div ref={audBtnRef} className="inline relative">
+   // <div ref={audBtnRef} className="inline relative">
       <ToolbarButton
         type="Audio"
         tooltip={isMuted ? 'Unmute' : 'Mute'}
@@ -102,9 +103,9 @@ const AudioDeviceBtn = ({
         onOpDeviceClick={handleOpDeviceClick}
         selectedIpDevice={audioDevice}
         selectedOpDevice={outputDevice}
-        parentRef={audBtnRef}
+    //    parentRef={audBtnRef}
       />
-    </div>
+ //   </div>
   );
 };
 export default AudioDeviceBtn;

@@ -5,7 +5,6 @@ import CatalystChat from '../dist/index';
 import Draggable from 'react-draggable'; 
 
 const App = () => {
-
   return (
     <>
       {/* <GeneralTest /> */}
@@ -18,7 +17,7 @@ const GeneralTest = () => {
   return (
     <CatalystChat
       room="testing-ground"
-      appId="REAL_APP_ID_HERE"
+      appId={process.env.REACT_APP_APP_ID ?? 'REAL_APP_ID_HERE'}
       // dark={true}
       audioOnDefault={false}
       // name={(Math.random() * 1000).toString().slice(0, 4)}
@@ -80,7 +79,7 @@ const HoursTest = () => {
           >
             <CatalystChat
               room={'testRoom'}
-              appId={'REAL_APP_ID_HERE'}
+              appId={process.env.REACT_APP_APP_ID ?? 'REAL_APP_ID_HERE'}
               // dark={true}
               audioOnDefault={false}
               disableSetupRoom
