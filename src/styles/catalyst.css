@@ -285,3 +285,23 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
     transform: rotate(360deg);
   }
 }
+
+/* tooltips */
+.tippy-box[data-theme~='catalyst'] {
+  background-color: var(--ctwTertiary);
+  color: white;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+}
+
+.tippy-box[data-theme~='catalyst'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: var(--ctwTertiary);
+}
+.tippy-box[data-theme~='catalyst'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color:var(--ctwTertiary);
+}
+.tippy-box[data-theme~='catalyst'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: var(--ctwTertiary);
+}
+.tippy-box[data-theme~='catalyst'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: var(--ctwTertiary);
+}
