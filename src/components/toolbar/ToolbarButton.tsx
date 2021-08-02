@@ -30,25 +30,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Popover } from 'react-tiny-popover';
 import React, { RefObject, useState } from 'react';
 import { CatalystDev } from '../../typings/interfaces';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { useRef } from 'react';
-
-// const popoverStyles = {
-//   cursor: 'pointer',
-//   listStyle: 'none',
-//   // background: '#4B5563',
-//   // borderRadius: '5px',
-//   padding: 0,
-//   margin: 0,
-//   paddingInline: 'none',
-//   // marginBottom: '10px',
-//   fontFamily:
-//     'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-// };
 
 const ToolbarButton = React.memo(({
   type,
@@ -110,7 +96,7 @@ const ToolbarButton = React.memo(({
         setPopover(true);
       }}
       onHidden={() => {
-        setDeviceMenu(!deviceMenu)
+        setDeviceMenu(!deviceMenu);
         setPopover(false);
       }}
       content={
@@ -123,7 +109,7 @@ const ToolbarButton = React.memo(({
                 <>
                   <li
                     key={'input-row'}
-                    className="flex items-center text-xs text-white dark:text-black font-semibold p-2"
+                    className="flex items-center text-xs text-white dark:text-black font-semibold p-2 border-white dark:border-black border-b border-opacity-20 whitespace-nowrap "
                   >
                     {type} Output
                   </li>
@@ -135,16 +121,13 @@ const ToolbarButton = React.memo(({
                     return (
                       <li
                         key={i}
-                        className="flex items-center text-xs text-white dark:text-black p-2"
-                        style={{
-                          borderTop: '1px solid rgba(255, 255, 255, 0.2)',
-                        }}
+                        className="flex items-center text-xs text-white dark:text-black p-2 cursor-pointer whitespace-nowrap"
                         onClick={() => handleOnOpDeviceClick(id)}
                       >
                         {id.label === selectedOpDevice?.label ? (
                           <FontAwesomeIcon
                             icon={faCheckCircle}
-                            className="mr-1 text-primary"
+                            className="mr-1 text-primary "
                           />
                         ) : (
                           <FontAwesomeIcon icon={faCircle} className="mr-1 " />
@@ -157,7 +140,7 @@ const ToolbarButton = React.memo(({
               )}
               <li
                 key={'input-row'}
-                className="flex items-center text-xs text-white dark:text-black font-semibold p-2"
+                className="flex items-center text-xs text-white dark:text-black font-semibold p-2 border-white dark:border-black border-b border-opacity-20 whitespace-nowrap"
               >
                 {type} Input
               </li>
@@ -169,10 +152,7 @@ const ToolbarButton = React.memo(({
                 return (
                   <li
                     key={i}
-                    className="flex items-center text-xs text-white dark:text-black p-2"
-                    style={{
-                      borderTop: '1px solid rgba(255, 255, 255, 0.2)',
-                    }}
+                    className="flex items-center text-xs text-white dark:text-black p-2 whitespace-nowrap cursor-pointer"
                     onClick={() => handleOnIpDeviceClick(id)}
                   >
                     {id.label === selectedIpDevice?.label ? (
@@ -207,7 +187,9 @@ const ToolbarButton = React.memo(({
             {icon && (
               <FontAwesomeIcon
                 className={
-                  iconColor ? iconColor : 'text-white dark:text-black hover:text-gray-50'
+                  iconColor
+                    ? iconColor
+                    : 'text-white dark:text-black hover:text-gray-50'
                 }
                 size="lg"
                 icon={icon}

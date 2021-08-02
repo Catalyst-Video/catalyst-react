@@ -250,11 +250,11 @@ const RoomWrapper = ({
       )}
       {speakerMode && (
         <div
-          className={`speaker-view flex z-20 w-full ${
-            chatOpen ? 'sm:animate-fade-in-right' : 'sm:animate-fade-in-left' // lg: xl:px-20
+          className={`flex flex-col sm:flex-row z-20 py-10 px-1 w-full lg:px-6 justify-center sm:justify-around  ${
+            chatOpen ? 'sm:animate-fade-in-right' : 'sm:animate-fade-in-left' // lg:px-10 xl:px-20
           }`}
         >
-          <div className="speaker-vid flex flex-col p-1 justify-center content-center">
+          <div className="flex flex-col sm:w-4/5 p-1 justify-center content-center">
             {members.map((m, i) => {
               if (m.sid === mainVid) {
                 return (
@@ -290,7 +290,7 @@ const RoomWrapper = ({
           </div>
           <div
             className={
-              'other-vids flex p-1 justify-center content-center no-scrollbar overflow-x-auto top-0 left-0' // TODO: make this w-1/4 when container is small
+              'flex flex-row sm:flex-col w-full h-1/4 sm:h-full sm:w-1/5 p-1 justify-center content-center no-scrollbar overflow-x-auto sm:overflow-y-auto top-0 left-0' // TODO: make this w-1/4 when container is small
             }
             onClick={() => setSpeakerMode(sm => !sm)}
           >
