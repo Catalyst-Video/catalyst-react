@@ -17,8 +17,8 @@ const App = () => {
 const GeneralTest = () => {
   return (
     <CatalystChat
-      room='testing-ground'
-      appId='testing-ground-uuid'
+      room="testing-ground"
+      appId="REAL_APP_ID_HERE"
       // dark={true}
       audioOnDefault={false}
       // name={(Math.random() * 1000).toString().slice(0, 4)}
@@ -80,7 +80,7 @@ const HoursTest = () => {
           >
             <CatalystChat
               room={'testRoom'}
-              appId={'testUid'}
+              appId={'REAL_APP_ID_HERE'}
               // dark={true}
               audioOnDefault={false}
               disableSetupRoom

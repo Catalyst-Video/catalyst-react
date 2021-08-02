@@ -70,14 +70,14 @@ const CatalystChat = ({
   useEffect(() => {
     if (ready) { 
       // set client ID
-      const persistentClientId = cookies.PERSISTENT_CLIENT_ID || generateUUID();
+      const uniqueClientIdentifier = cookies.PERSISTENT_CLIENT_ID || generateUUID();
       if (!cookies.PERSISTENT_CLIENT_ID)
-        setCookie('PERSISTENT_CLIENT_ID', persistentClientId, {
+        setCookie('PERSISTENT_CLIENT_ID', uniqueClientIdentifier, {
           expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
         });
       // obtain user token
       fetch(
-        `${AUTH_ADDRESS}?participantName=${userName}&customerUid=${appId}&roomName=${room}&persistentClientId=${persistentClientId}`,
+        `${AUTH_ADDRESS}?participantName=${userName}&appId=${appId}&roomName=${room}&uniqueClientIdentifier=${uniqueClientIdentifier}`,
         {
           method: 'GET',
           headers: {
@@ -89,6 +89,7 @@ const CatalystChat = ({
         .then(response => {
           if (response.status === 200) {
             response.json().then(json => {
+              // TODO: expose rest of return data 
               setToken(json.token);
             });
           }
