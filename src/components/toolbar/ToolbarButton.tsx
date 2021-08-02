@@ -84,6 +84,7 @@ const ToolbarButton = React.memo(({
 }) => {
   const [deviceMenu, setDeviceMenu] = useState(false);
   const selectRef = useRef<HTMLButtonElement>(null)
+  const [popover, setPopover] = useState(false);
 
   const handleOnIpDeviceClick = (id: CatalystDev) => {
     if (onIpDeviceClick) {
@@ -105,6 +106,12 @@ const ToolbarButton = React.memo(({
       triggerTarget={selectRef.current}
       className="bg-tertiary font-sans"
       trigger="click"
+      onShown={() => {
+        setPopover(true);
+      }}
+      onHidden={() => {
+        setPopover(false);
+      }}
       content={
         outputDevices || inputDevices ? (
           <div>
@@ -115,7 +122,7 @@ const ToolbarButton = React.memo(({
                 <>
                   <li
                     key={'input-row'}
-                    className="flex items-center text-xs lg:text-sm text-white font-semibold p-2"
+                    className="flex items-center text-xs text-white font-semibold p-2"
                   >
                     {type} Output
                   </li>
@@ -127,7 +134,7 @@ const ToolbarButton = React.memo(({
                     return (
                       <li
                         key={i}
-                        className="flex items-center text-xs lg:text-sm text-white p-2"
+                        className="flex items-center text-xs text-white p-2"
                         style={{
                           borderTop: '1px solid rgba(255, 255, 255, 0.2)',
                         }}
@@ -149,7 +156,7 @@ const ToolbarButton = React.memo(({
               )}
               <li
                 key={'input-row'}
-                className="flex items-center text-xs lg:text-sm text-white font-semibold p-2"
+                className="flex items-center text-xs text-white font-semibold p-2"
               >
                 {type} Input
               </li>
@@ -161,7 +168,7 @@ const ToolbarButton = React.memo(({
                 return (
                   <li
                     key={i}
-                    className="flex items-center text-xs lg:text-sm text-white p-2"
+                    className="flex items-center text-xs text-white p-2"
                     style={{
                       borderTop: '1px solid rgba(255, 255, 255, 0.2)',
                     }}
@@ -185,7 +192,7 @@ const ToolbarButton = React.memo(({
       }
     >
       <div className="inline-block m-1 relative">
-        <Tippy content={tooltip} theme="catalyst">
+        <Tippy content={tooltip} theme="catalyst" disabled={popover}>
           <button
             id={`${type}-btn`}
             disabled={disabled}

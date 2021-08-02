@@ -291,6 +291,7 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
   background-color: var(--ctwTertiary);
   color: white;
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+  z-index: 40;
 }
 
 .tippy-box[data-theme~='catalyst'][data-placement^='top'] > .tippy-arrow::before {
