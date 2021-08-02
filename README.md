@@ -2,7 +2,7 @@
 
 📷💬 Reliable and scalable open-source video chat in a few lines of code.
 
-Check out the full [Catalyst documentation](https://docs.catalyst.chat/docs-intro)!
+Check out the full [Catalyst documentation](https://docs.catalyst.chat/docs-getting-started)!
 
 ## Quick Start
 
