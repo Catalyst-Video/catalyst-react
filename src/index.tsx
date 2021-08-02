@@ -26,13 +26,16 @@ import React, { useState, useEffect } from 'react';
 import { CatalystChatProps } from "./typings/interfaces";
 import './styles/catalyst.css';
 import './styles/tailwind.output.css';
-import VideoChat from "./views/VideoChatView";
 import { generateUUID, setThemeColor } from "./utils/general";
 import { AUTH_ADDRESS, DEFAULT_AUTOFADE, THEMES } from "./utils/globals";
 import genRandomName from "./utils/name_gen";
 import { useCookies } from 'react-cookie';
 // import DetectRTC from 'detectrtc';
 import SetupView from './views/SetupView';
+import VideoChat from './views/VideoChatView';
+
+import ElementQueries from 'css-element-queries/src/ElementQueries';
+ElementQueries.listen();
 
 const CatalystChat = ({
   room,
@@ -103,6 +106,7 @@ const CatalystChat = ({
   return (
     <div
       id="ctw"
+      className="catalyst-parent"
       ref={ref => {
         // dynamically make Catalyst size properly if there is no parent component
         if (ref && ref.parentNode?.parentNode?.nodeName === 'BODY') {

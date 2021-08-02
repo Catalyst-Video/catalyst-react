@@ -306,3 +306,127 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
 .tippy-box[data-theme~='catalyst'][data-placement^='right'] > .tippy-arrow::before {
   border-right-color: var(--ctwTertiary);
 }
+
+
+/* container queries */
+
+/* text */
+#ctw.catalyst-parent .text-c {
+   	font-size: 0.75rem;
+    line-height: 1rem;
+}
+
+#ctw.catalyst-parent[min-width~="640px"] .text-c {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+#ctw.catalyst-parent[min-width~="768px"] .text-c {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+#ctw.catalyst-parent[min-width~="1024px"] .text-c {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+#ctw.catalyst-parent[min-width~="1280px"] .text-c {
+ 	font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+
+/* nav bar */
+#ctw.catalyst-parent .header-bar {
+  display: block;
+}
+
+#ctw.catalyst-parent[min-width~="768px"] .header-bar {
+  display: none;
+}
+
+#ctw.catalyst-parent .header-img {
+  display: none;
+}
+
+#ctw.catalyst-parent[min-width~="768px"] .header-img {
+  display: block;
+}
+
+#ctw.catalyst-parent .nav-ops {
+  right: 0.75rem;
+  top: 2.5rem;
+}
+
+#ctw.catalyst-parent[min-width~="768px"] .nav-ops {
+  right: 1.25rem;
+  top: 1.25rem
+}
+
+
+/* speaker-view */
+
+#ctw.catalyst-parent .speaker-view {
+    padding-top: 2.5rem/* 40px */;
+    padding-bottom: 2.5rem/* 40px */;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#ctw.catalyst-parent[min-width~="640px"] .speaker-view  {
+  padding-left: 0.5rem/* 40px */;
+  padding-right: 0.5rem/* 40px */;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+#ctw.catalyst-parent[min-width~="768px"] .speaker-view  {
+  padding-left: 1.5rem/* 40px */;
+  padding-right: 1.5rem/* 40px */;
+}
+
+#ctw.catalyst-parent[min-width~="1024px"] .speaker-view  {
+  padding-left: 2.5rem/* 40px */;
+  padding-right: 2.5rem/* 40px */;
+}
+
+#ctw.catalyst-parent[min-width~="1280px"] .speaker-view {
+ 	padding-left: 5rem/* 80px */;
+  padding-right: 5rem/* 80px */;
+}
+
+/* other vids  */
+#ctw.catalyst-parent .other-vids {
+   height: 25%;
+   width: 100%;
+}
+
+#ctw.catalyst-parent[min-width~="640px"] .other-vids  {
+  width: 34%;
+  height: 100%;
+  overflow-y: auto;
+}
+
+#ctw.catalyst-parent[min-width~="1024px"] .other-vids  {
+  width: 20%;
+  height: 100%;
+}
+
+/* speaker vid  */
+#ctw.catalyst-parent .speaker-vid  {
+  flex-direction: row;
+  width: 100%;
+  height: 75%;
+}
+
+#ctw.catalyst-parent[min-width~="640px"] .speaker-vid  {
+flex-direction: column;
+width: 66%;
+height: 100%;
+}
+
+#ctw.catalyst-parent[min-width~="1024px"] .speaker-vid  {
+  width: 80%;
+}
+

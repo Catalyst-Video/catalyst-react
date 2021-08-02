@@ -257,7 +257,7 @@ const SetupView = ({
             {!disableNameField && (
               <div className="pt-4 w-full flex justify-center">
                 <input
-                  className="outline-none border-0 bg-gray-300 dark:bg-secondary rounded-2xl px-4 py-1 -mt-8 z-10 text-black dark:text-white dark:text-black text-center"
+                  className="outline-none border-0 bg-gray-300 dark:bg-secondary rounded-2xl px-4 py-1 -mt-8 z-10 text-black dark:text-black text-center"
                   placeholder={'Display name'}
                   value={userName}
                   onChange={e => setUserName(e.target.value)}

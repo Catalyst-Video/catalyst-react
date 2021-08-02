@@ -33,6 +33,8 @@ You will need a Catalyst `appId` API key to connect to our servers. This can be 
 
 Our servers are free for your first 30 monthly active users, which means they should not cost you anything in development (and possibly production)!
 
+We recommend a minimum parent container size of 350px X 450px.
+
 ## Parameters
 
 | Prop        | Description                                                                                                 |  Type                             | Example Value                             | Required |
