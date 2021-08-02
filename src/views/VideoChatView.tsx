@@ -281,9 +281,9 @@ const VideoChat = ({
               <FontAwesomeIcon
                 icon={faUserFriends}
                 size="lg"
-                className="text-white mr-1"
+                className="text-white dark:text-black mr-1"
               />
-              <span className="text-white">{memberCount}</span>
+              <span className="text-white dark:text-black">{memberCount}</span>
               <button
                 className="cursor-pointer focus:border-0 focus:outline-none"
                 onClick={() => setSpeakerMode(sMode => !sMode)}
@@ -291,7 +291,7 @@ const VideoChat = ({
                 <FontAwesomeIcon
                   icon={speakerMode ? faTh : faThLarge}
                   size="lg"
-                  className="text-white ml-5"
+                  className="text-white dark:text-black ml-5"
                 />
               </button>
               <button
@@ -304,7 +304,7 @@ const VideoChat = ({
                 <FontAwesomeIcon
                   icon={fsHandle.active ? faCompressAlt : faExpandAlt}
                   size="lg"
-                  className="text-white ml-5"
+                  className="text-white dark:text-black ml-5"
                 />
               </button>
             </div>
@@ -363,21 +363,21 @@ const VideoChat = ({
                         <FontAwesomeIcon
                           id="chat-open-left"
                           icon={faChevronLeft}
-                          className={`text-white mr-1`}
+                          className={`text-white dark:text-black mr-1`}
                           size="lg"
                         />
                       )}
                       <FontAwesomeIcon
                         id="chat-open"
                         icon={faCommentAlt}
-                        className={`text-white `}
+                        className={`text-white dark:text-black `}
                         size="lg"
                       />
                       {chatOpen && (
                         <FontAwesomeIcon
                           id="chat-open-right"
                           icon={faChevronRight}
-                          className={`text-white ml-1`}
+                          className={`text-white dark:text-black ml-1`}
                           size="lg"
                         />
                       )}
@@ -387,7 +387,7 @@ const VideoChat = ({
               </div>
             )}
             {roomClosed && (
-              <div className="absolute not-selectable inset-0 w-full h-full flex justify-center items-center text-xl text-white z-40">
+              <div className="absolute not-selectable inset-0 w-full h-full flex justify-center items-center text-xl text-white dark:text-black z-40">
                 <span>🖐️ Call ended</span>
               </div>
             )}

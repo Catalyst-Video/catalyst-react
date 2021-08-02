@@ -86,7 +86,7 @@ const Chat = ({
         <a
           target="_blank"
           href={matches[0]}
-          className={`${isSelf ? 'text-white' : `text-primary`} underline`}
+          className={`${isSelf ? 'text-white dark:text-black' : `text-primary`} underline`}
         >
           {matches[0]}
         </a>
@@ -117,11 +117,11 @@ const Chat = ({
                       className="sent-message flex flex-col items-start content-end p-1 pr-2 ml-20 fade-in-bottom z-40"
                       key={idx}
                     >
-                      <span className="text-white dark:text-white font-semibold text-xs ml-auto p-1 not-selectable">
+                      <span className="text-white dark:text-black dark:text-white dark:text-black font-semibold text-xs ml-auto p-1 not-selectable">
                         {msg.sender?.identity} (You)
                       </span>
                       <div
-                        className={`bg-primary text-white rounded-tl-2xl rounded-tr-2xl rounded-br-sm rounded-bl-2xl  ml-auto p-2`}
+                        className={`bg-primary text-white dark:text-black rounded-tl-2xl rounded-tr-2xl rounded-br-sm rounded-bl-2xl  ml-auto p-2`}
                       >
                         <div className="message break-all px-2 py-1 text-xs">
                           {autolink(msg.text, true)}
@@ -135,7 +135,7 @@ const Chat = ({
                       className="received-message flex flex-col items-start content-end p-1 pl-2 fade-in-bottom"
                       key={idx}
                     >
-                      <span className="text-white dark:text-white font-semibold text-xs p-1 not-selectable">
+                      <span className="text-white dark:text-black dark:text-white dark:text-black font-semibold text-xs p-1 not-selectable">
                         {msg?.sender?.identity}
                       </span>
                       <div className="bg-gray-100 text-black flex items-center justify-center rounded-tl-2xl rounded-tr-2xl rounded-br-2xl rounded-bl-sm p-2">
@@ -160,7 +160,7 @@ const Chat = ({
             <textarea
               id="chat-compose"
               placeholder="Type your message"
-              className="focus:outline-none focus:border-0 w-full resize-none text-white bg-secondary ml-1"
+              className="focus:outline-none focus:border-0 w-full resize-none text-white dark:text-black bg-secondary ml-1"
               rows={6}
               value={chatBox}
               onKeyUp={e => {
@@ -176,14 +176,14 @@ const Chat = ({
               onClick={() => {
                 handleSendMsg(chatBox);
               }}
-              className={`bg-primary mt-2 ml-2 p-2 cursor-pointer fixed right-0 z-30 rounded-xl text-white h-10 mr-1`}
+              className={`bg-primary mt-2 ml-2 p-2 cursor-pointer fixed right-0 z-30 rounded-xl text-white dark:text-black h-10 mr-1`}
             >
               <FontAwesomeIcon
                 id="chat-send"
                 icon={faPaperPlane}
                 size="lg"
                 // title="Send Message"
-                className={`text-white`}
+                className={`text-white dark:text-black`}
               />
             </span>
           </div>
@@ -206,7 +206,7 @@ const Chat = ({
               icon={faChevronLeft}
               size="lg"
               // title="Send Message"
-              className={`text-white mr-1`}
+              className={`text-white dark:text-black mr-1`}
             />
           )}
           <FontAwesomeIcon
@@ -214,7 +214,7 @@ const Chat = ({
             icon={faCommentAlt}
             size="lg"
             // title="Send Message"
-            className={`text-white `}
+            className={`text-white dark:text-black `}
           />
           {chatOpen && (
             <FontAwesomeIcon
@@ -222,7 +222,7 @@ const Chat = ({
               icon={faChevronRight}
               size="lg"
               // title="Send Message"
-              className={`text-white ml-1`}
+              className={`text-white dark:text-black ml-1`}
             />
           )}
         </button>

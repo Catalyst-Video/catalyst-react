@@ -18,7 +18,7 @@ const GeneralTest = () => {
     <CatalystChat
       room="testing-ground"
       appId={process.env.REACT_APP_APP_ID ?? 'REAL_APP_ID_HERE'}
-      // dark={true}
+      // dark
       audioOnDefault={false}
       // name={(Math.random() * 1000).toString().slice(0, 4)}
       theme={{

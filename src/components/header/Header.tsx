@@ -30,7 +30,7 @@ const HeaderLogo = React.memo(
     return (
       <div id="header">
         <div
-          className={`absolute left-0 top-0 block w-full text-center bg-primary p-1 text-white text-sm font-semibold z-40 ${
+          className={`absolute left-0 top-0 block w-full text-center bg-primary p-1 text-white dark:text-black text-sm font-semibold z-40 ${
             alwaysBanner ? '' : 'sm:hidden'
           }`}
         >

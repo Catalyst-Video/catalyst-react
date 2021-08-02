@@ -110,6 +110,7 @@ const ToolbarButton = React.memo(({
         setPopover(true);
       }}
       onHidden={() => {
+        setDeviceMenu(!deviceMenu)
         setPopover(false);
       }}
       content={
@@ -122,7 +123,7 @@ const ToolbarButton = React.memo(({
                 <>
                   <li
                     key={'input-row'}
-                    className="flex items-center text-xs text-white font-semibold p-2"
+                    className="flex items-center text-xs text-white dark:text-black font-semibold p-2"
                   >
                     {type} Output
                   </li>
@@ -134,7 +135,7 @@ const ToolbarButton = React.memo(({
                     return (
                       <li
                         key={i}
-                        className="flex items-center text-xs text-white p-2"
+                        className="flex items-center text-xs text-white dark:text-black p-2"
                         style={{
                           borderTop: '1px solid rgba(255, 255, 255, 0.2)',
                         }}
@@ -156,7 +157,7 @@ const ToolbarButton = React.memo(({
               )}
               <li
                 key={'input-row'}
-                className="flex items-center text-xs text-white font-semibold p-2"
+                className="flex items-center text-xs text-white dark:text-black font-semibold p-2"
               >
                 {type} Input
               </li>
@@ -168,7 +169,7 @@ const ToolbarButton = React.memo(({
                 return (
                   <li
                     key={i}
-                    className="flex items-center text-xs text-white p-2"
+                    className="flex items-center text-xs text-white dark:text-black p-2"
                     style={{
                       borderTop: '1px solid rgba(255, 255, 255, 0.2)',
                     }}
@@ -206,7 +207,7 @@ const ToolbarButton = React.memo(({
             {icon && (
               <FontAwesomeIcon
                 className={
-                  iconColor ? iconColor : 'text-white hover:text-gray-50'
+                  iconColor ? iconColor : 'text-white dark:text-black hover:text-gray-50'
                 }
                 size="lg"
                 icon={icon}
@@ -228,7 +229,7 @@ const ToolbarButton = React.memo(({
             <FontAwesomeIcon
               size="xs"
               className={`transition transform hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none  ${
-                iconColor ? 'text-gray-900' : 'text-white'
+                iconColor ? 'text-gray-900' : 'text-white dark:text-black'
               }`}
               icon={deviceMenu ? faChevronUp : faChevronDown}
             />
