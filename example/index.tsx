@@ -7,8 +7,8 @@ import Draggable from 'react-draggable';
 const App = () => {
   return (
     <>
-      {/* <GeneralTest /> */}
-      <HoursTest />
+      <GeneralTest />
+      {/* <HoursTest /> */}
     </>
   );
 };
@@ -26,7 +26,7 @@ const GeneralTest = () => {
       //   tertiary: '#4B5563',
       //   quaternary: '#6B7280',
       // }}
-      theme='dark'
+      // theme='light'
       // name={'bob'}
       // theme={ }
       onLeaveCall={() => console.log('end')}
