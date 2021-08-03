@@ -19,10 +19,10 @@ export interface RoomState {
   ) => Promise<Room | undefined>;
   isConnecting: boolean;
   room?: Room;
-  /* all participants in the room, including the local participant. */
+  /* all participants in the room, including the local member. */
   participants: Participant[];
   localParticipant?: LocalParticipant;
-  /* all subscribed audio tracks in the room, not including local participant. */
+  /* all subscribed audio tracks in the room, not including local member. */
   audioTracks: AudioTrack[];
   error?: Error;
 }
@@ -110,7 +110,7 @@ export function useRoom(): RoomState {
  * TODO: allow customization of this
  * Default sort for participants, it'll order participants by:
  * 1. dominant speaker (speaker with the loudest audio level)
- * 2. local participant
+ * 2. local member
  * 3. other speakers that are recently active
  * 4. participants with video on
  * 5. by joinedAt

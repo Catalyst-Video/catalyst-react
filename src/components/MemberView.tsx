@@ -36,11 +36,11 @@ import {
 import { VideoQuality } from "livekit-client/dist/proto/livekit_rtc";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { useParticipant } from "../hooks/useMember";
+import { useMember } from "../hooks/useMember";
 import VidWrapper from "./wrapper/VidWrapper";
 
 const MemberView = React.memo(({
-  participant: m,
+  member: m,
   width,
   height,
   classes,
@@ -51,7 +51,7 @@ const MemberView = React.memo(({
   onMouseLeave,
   onClick,
 }: {
-  participant: Participant;
+  member: Participant;
   displayName?: string;
   width: Property.Width;
   height: Property.Height;
@@ -62,7 +62,7 @@ const MemberView = React.memo(({
   onMouseLeave?: () => void;
   onClick?: () => void;
 }) => {
-  const { isLocal, isMuted, subscribedTracks } = useParticipant(m);
+  const { isLocal, isMuted, subscribedTracks } = useMember(m);
   const { ref, inView } = useInView();
   const [videoPub, setVideoPub] = useState<TrackPublication>();
   const [videoEnabled, setVideoEnabled] = useState(true);
