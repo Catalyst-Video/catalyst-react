@@ -314,7 +314,7 @@ const RoomWrapper = ({
                       height={'fit-content'}
                       width={'100%'}
                       classes={
-                        'box ml-1 mr-1 w-full sm:w-auto h-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9'
+                        'box w-full vid-p sm:w-auto h-auto aspect-w-16 aspect-h-9'
                       }
                       key={`sidebar-screen-${i}`}
                       onClick={() => {
@@ -334,7 +334,7 @@ const RoomWrapper = ({
                     height={'fit-content'}
                     width={'100%'}
                     classes={
-                      'box ml-1 mr-1 w-full h-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9'
+                      'box vid-p w-full h-auto aspect-w-16 aspect-h-9'
                     }
                     showOverlay={showOverlay}
                     quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
