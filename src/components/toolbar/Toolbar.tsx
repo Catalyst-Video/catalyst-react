@@ -279,7 +279,7 @@ const Toolbar = ({
           bgColor={
             screen?.track
               ? `bg-primary`
-              : 'bg-tertiary hover:bg-quaternary dark:bg-secondary dark:hover:bg-tertiary'
+              : 'bg-tertiary hover:bg-quaternary'
           }
           onClick={
             screen?.track
@@ -325,7 +325,7 @@ const Toolbar = ({
           bgColor={
           chatOpen
               ? `bg-primary`
-              : 'bg-tertiary hover:bg-quaternary dark:bg-secondary dark:hover:bg-tertiary'
+              : 'bg-tertiary hover:bg-quaternary  '
           }
           onClick={() => {
             setChatOpen(chatOpen => !chatOpen);
@@ -354,7 +354,7 @@ const Toolbar = ({
           } z-40 bottom-1 right-3 animate-fade-in-up`}
         >
           <button
-            className="z-40 focus:outline-none focus:border-0 flex bg-tertiary dark:bg-secondary hover:bg-quaternary dark:hover:bg-tertiary rounded-full w-16 h-16 items-center justify-center"
+            className="z-40 focus:outline-none focus:border-0 flex bg-tertiary  hover:bg-quaternary  rounded-full w-16 h-16 items-center justify-center"
             onClick={() => setChatOpen(chatOpen => !chatOpen)}
           >
             {!chatOpen && (

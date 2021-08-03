@@ -108,7 +108,7 @@ const ToolbarButton = React.memo(({
                 <>
                   <li
                     key={'input-row'}
-                    className="flex items-center text-xs text-quinary  font-semibold p-2 border-white dark:border-black border-b border-opacity-20 whitespace-nowrap "
+                    className="flex items-center text-xs text-quinary  font-semibold p-2 border-white  border-b border-opacity-20 whitespace-nowrap "
                   >
                     {type} Output
                   </li>
@@ -139,7 +139,7 @@ const ToolbarButton = React.memo(({
               )}
               <li
                 key={'input-row'}
-                className="flex items-center text-xs text-quinary  font-semibold p-2 border-white dark:border-black border-b border-opacity-20 whitespace-nowrap"
+                className="flex items-center text-xs text-quinary  font-semibold p-2 border-white  border-b border-opacity-20 whitespace-nowrap"
               >
                 {type} Input
               </li>
@@ -179,7 +179,7 @@ const ToolbarButton = React.memo(({
             className={`rounded-full w-16 h-16 flex justify-center items-center ${
               bgColor
                 ? bgColor
-                : 'bg-tertiary hover:bg-quaternary dark:hover:bg-tertiary'
+                : 'bg-tertiary hover:bg-quaternary'
             } focus:outline-none focus:border-0 `}
             onClick={onClick}
           >
@@ -203,7 +203,7 @@ const ToolbarButton = React.memo(({
             className={`absolute z-10 -right-1 -bottom-1 ${
               bgColor
                 ? bgColor
-                : 'bg-tertiary hover:bg-quaternary dark:hover:bg-tertiary'
+                : 'bg-tertiary hover:bg-quaternary '
             }  rounded-full border-4 border-secondary h-6 w-6 flex justify-center items-center focus:outline-none focus:border-0 `}
             onClick={() => setDeviceMenu(deviceMenu =>!deviceMenu)}
           >

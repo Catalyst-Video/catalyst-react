@@ -246,7 +246,7 @@ const SetupView = ({
       >
         <div
           id="setuproom-comp"
-          className="dark:bg-gray-800 rounded-2xl my-2 mx-1z-10 overflow-hidden" // shadow-md
+          className="rounded-2xl my-2 mx-1z-10 overflow-hidden" // shadow-md
         >
           <div className="w-80 sm:w-96 lg:h-full rounded-t-xl bg-secondary rounded-b-none z-1">
             {videoTrack && videoOn ? (
@@ -257,7 +257,7 @@ const SetupView = ({
             {!disableNameField && (
               <div className="pt-4 w-full flex justify-center">
                 <input
-                  className="outline-none border-0 bg-gray-300 dark:bg-secondary rounded-2xl px-4 py-1 -mt-8 z-10 text-black  text-center"
+                  className="outline-none border-0 bg-gray-300 rounded-2xl px-4 py-1 -mt-8 z-10 text-black  text-center"
                   placeholder={'Display name'}
                   value={userName}
                   onChange={e => setUserName(e.target.value)}

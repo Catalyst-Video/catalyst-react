@@ -7,7 +7,7 @@ module.exports = {
     './public/index.html',
   ],
   // mode: 'jit',
-  darkMode: 'class', // or 'media'
+  // darkMode: 'class', // or 'media'
   important: '#ctw',
   theme: {
     colors: {
