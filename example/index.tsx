@@ -83,7 +83,7 @@ const HoursTest = () => {
               audioOnDefault={false}
               disableSetupRoom
               disableChat
-              theme={'hoursLight'}
+              theme={'hoursDark'}
               // theme={{
               //   primary: '#50c878',
               //   secondary: '#eee',
