@@ -218,7 +218,7 @@ const RoomWrapper = ({
             return (
               <MemberView
                 key={m.identity}
-                participant={m}
+                member={m}
                 height={vidDims.height}
                 width={vidDims.width}
                 showOverlay={showOverlay}
@@ -260,7 +260,7 @@ const RoomWrapper = ({
                 return (
                   <MemberView
                     key={m.identity ?? 'first-vid'}
-                    participant={m ?? members[0]}
+                    member={m ?? members[0]}
                     height={'100%'}
                     width={'100%'}
                     classes={'aspect-w-16 aspect-h-9'}
@@ -330,7 +330,7 @@ const RoomWrapper = ({
                 return (
                   <MemberView
                     key={m.identity}
-                    participant={m}
+                    member={m}
                     height={'fit-content'}
                     width={'100%'}
                     classes={
@@ -363,7 +363,7 @@ const RoomWrapper = ({
                 return (
                   <MemberView
                     key={m.identity ?? 'first-vid'}
-                    participant={m ?? members[0]}
+                    member={m ?? members[0]}
                     height={'100%'}
                     width={'100%'}
                     classes={'aspect-w-16 aspect-h-9'}
@@ -433,7 +433,7 @@ const RoomWrapper = ({
                 return (
                   <MemberView
                     key={m.identity}
-                    participant={m}
+                    member={m}
                     height={'fit-content'}
                     width={'100%'}
                     classes={

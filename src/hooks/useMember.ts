@@ -20,7 +20,7 @@ export interface ParticipantState {
   unpublishTrack: (track: LocalTrack) => void;
 }
 
-export function useParticipant(participant: Participant): ParticipantState {
+export function useMember(member: Participant): ParticipantState {
   const [isMuted, setMuted] = useState(false);
   const [isSpeaking, setSpeaking] = useState(false);
   const [metadata, setMetadata] = useState<string>();
@@ -31,14 +31,14 @@ export function useParticipant(participant: Participant): ParticipantState {
   );
 
   const onPublicationsChanged = () => {
-    setPublications(Array.from(participant.tracks.values()));
+    setPublications(Array.from(member.tracks.values()));
     setSubscribedTracks(
-      Array.from(participant.tracks.values()).filter((pub) => {
+      Array.from(member.tracks.values()).filter((pub) => {
         return pub.track !== undefined;
       })
     );
     // if (!isSharing) {
-    //   participant.tracks.forEach((pub) => {
+    //   member.tracks.forEach((pub) => {
     //     if (pub.trackName === 'screen' && pub.track) {
     //       setSharing(true)
     //     }
@@ -47,16 +47,16 @@ export function useParticipant(participant: Participant): ParticipantState {
   };
   
   const unpublishTrack = async (track: LocalTrack) => {
-    if (!(participant instanceof LocalParticipant)) {
-      throw new Error("could not unpublish, not a local participant");
+    if (!(member instanceof LocalParticipant)) {
+      throw new Error("could not unpublish, not a local member");
     }
     // if (isSharing) {
     //   if (track.name === 'screen' && track) {
     //     setSharing(false);
     //   }
     // }
-    (participant as LocalParticipant).unpublishTrack(track);
-    participant.emit("localtrackchanged");
+    (member as LocalParticipant).unpublishTrack(track);
+    member.emit("localtrackchanged");
   };
 
   useEffect(() => {
@@ -71,24 +71,24 @@ export function useParticipant(participant: Participant): ParticipantState {
       }
     };
     const onMetadataChanged = () => {
-      if (participant.metadata) {
-        setMetadata(participant.metadata);
+      if (member.metadata) {
+        setMetadata(member.metadata);
       }
     };
     const onIsSpeakingChanged = () => {
-      setSpeaking(participant.isSpeaking);
+      setSpeaking(member.isSpeaking);
     };
 
     // register listeners
-    participant.on(ParticipantEvent.TrackMuted, onMuted);
-    participant.on(ParticipantEvent.TrackUnmuted, onUnmuted);
-    participant.on(ParticipantEvent.MetadataChanged, onMetadataChanged);
-    participant.on(ParticipantEvent.IsSpeakingChanged, onIsSpeakingChanged);
-    participant.on(ParticipantEvent.TrackPublished, onPublicationsChanged);
-    participant.on(ParticipantEvent.TrackUnpublished, onPublicationsChanged);
-    participant.on(ParticipantEvent.TrackSubscribed, onPublicationsChanged);
-    participant.on(ParticipantEvent.TrackUnsubscribed, onPublicationsChanged);
-    participant.on("localtrackchanged", onPublicationsChanged);
+    member.on(ParticipantEvent.TrackMuted, onMuted);
+    member.on(ParticipantEvent.TrackUnmuted, onUnmuted);
+    member.on(ParticipantEvent.MetadataChanged, onMetadataChanged);
+    member.on(ParticipantEvent.IsSpeakingChanged, onIsSpeakingChanged);
+    member.on(ParticipantEvent.TrackPublished, onPublicationsChanged);
+    member.on(ParticipantEvent.TrackUnpublished, onPublicationsChanged);
+    member.on(ParticipantEvent.TrackSubscribed, onPublicationsChanged);
+    member.on(ParticipantEvent.TrackUnsubscribed, onPublicationsChanged);
+    member.on("localtrackchanged", onPublicationsChanged);
 
     // set initial state
     onMetadataChanged();
@@ -97,23 +97,23 @@ export function useParticipant(participant: Participant): ParticipantState {
 
     return () => {
       // cleanup
-      participant.off(ParticipantEvent.TrackMuted, onMuted);
-      participant.off(ParticipantEvent.TrackUnmuted, onUnmuted);
-      participant.off(ParticipantEvent.MetadataChanged, onMetadataChanged);
-      participant.off(ParticipantEvent.IsSpeakingChanged, onIsSpeakingChanged);
-      participant.off(ParticipantEvent.TrackPublished, onPublicationsChanged);
-      participant.off(ParticipantEvent.TrackUnpublished, onPublicationsChanged);
-      participant.off(ParticipantEvent.TrackSubscribed, onPublicationsChanged);
-      participant.off(
+      member.off(ParticipantEvent.TrackMuted, onMuted);
+      member.off(ParticipantEvent.TrackUnmuted, onUnmuted);
+      member.off(ParticipantEvent.MetadataChanged, onMetadataChanged);
+      member.off(ParticipantEvent.IsSpeakingChanged, onIsSpeakingChanged);
+      member.off(ParticipantEvent.TrackPublished, onPublicationsChanged);
+      member.off(ParticipantEvent.TrackUnpublished, onPublicationsChanged);
+      member.off(ParticipantEvent.TrackSubscribed, onPublicationsChanged);
+      member.off(
         ParticipantEvent.TrackUnsubscribed,
         onPublicationsChanged
       );
-      participant.off("localtrackchanged", onPublicationsChanged);
+      member.off("localtrackchanged", onPublicationsChanged);
     };
-  }, [participant]);
+  }, [member]);
 
   let muted: boolean | undefined;
-  participant.audioTracks.forEach((pub) => {
+  member.audioTracks.forEach((pub) => {
     muted = pub.isMuted;
   });
   if (muted === undefined) {
@@ -124,7 +124,7 @@ export function useParticipant(participant: Participant): ParticipantState {
   }
 
   return {
-    isLocal: participant instanceof LocalParticipant,
+    isLocal: member instanceof LocalParticipant,
     isSpeaking,
     isMuted,
     // isSharing,

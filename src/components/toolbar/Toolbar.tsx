@@ -43,7 +43,7 @@ import {
   VideoPresets,
 } from 'livekit-client';
 import React, { useState, useEffect } from 'react';
-import { useParticipant } from '../../hooks/useMember';
+import { useMember } from '../../hooks/useMember';
 import { isMobile } from 'react-device-detect';
 import AudioDeviceBtn from './AudioDeviceBtn';
 import ToolbarButton from './ToolbarButton';
@@ -78,7 +78,7 @@ const Toolbar = ({
   disableChat?: boolean;
   
 }) => {
-  const { publications, isMuted, unpublishTrack } = useParticipant(
+  const { publications, isMuted, unpublishTrack } = useMember(
     room.localParticipant
   );
   const [audio, setAudioPub] = useState<TrackPublication>();
