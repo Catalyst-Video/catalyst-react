@@ -34,6 +34,7 @@
     "prebuild": "npm run prebuild:tailwind",
     "start": "tsdx watch",
     "build": "tsdx build",
+    "watch": "tsdx watch",
     "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint",
     "prepare": "npm run prebuild && tsdx build",
@@ -121,5 +122,8 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|less|scss|sass)$": "identity-obj-proxy"
     }
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
   }
 }
