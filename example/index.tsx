@@ -2,7 +2,7 @@ import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import CatalystChat from '../dist/index';
-import Draggable from 'react-draggable'; 
+import Draggable from 'react-draggable';
 
 const App = () => {
   return (
@@ -34,10 +34,9 @@ const GeneralTest = () => {
   );
 };
 
-
 const HoursTest = () => {
   const [showVideoCall, setShowVideoCall] = React.useState(true);
-  
+
   return (
     <div
       style={{
@@ -84,7 +83,7 @@ const HoursTest = () => {
               audioOnDefault={false}
               disableSetupRoom
               disableChat
-              theme={'hoursDark'}
+              theme={'hoursLight'}
               // theme={{
               //   primary: '#50c878',
               //   secondary: '#eee',
