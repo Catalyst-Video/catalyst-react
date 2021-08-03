@@ -36,8 +36,8 @@ export const THEMES = {
          },
          light: {
            primary: '#11c1e8',
-           secondary: '#374151',
-           tertiary: '#4B5563',
+           secondary: '#d4def7',
+           tertiary: '#b4bdc0',
            quaternary: '#6B7280',
            quinary: '#fff',
          },
