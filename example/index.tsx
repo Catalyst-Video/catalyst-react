@@ -18,15 +18,15 @@ const GeneralTest = () => {
     <CatalystChat
       room="testingGround"
       appId={process.env.REACT_APP_APP_ID ?? 'REAL_APP_ID_HERE'}
-      // dark
       audioOnDefault={false}
       // name={(Math.random() * 1000).toString().slice(0, 4)}
-      theme={{
-        primary: '#11c1e8',
-        secondary: '#374151',
-        tertiary: '#4B5563',
-        quaternary: '#6B7280',
-      }}
+      // theme={{
+      //   primary: '#11c1e8',
+      //   secondary: '#374151',
+      //   tertiary: '#4B5563',
+      //   quaternary: '#6B7280',
+      // }}
+      theme='dark'
       // name={'bob'}
       // theme={ }
       onLeaveCall={() => console.log('end')}
@@ -79,12 +79,10 @@ const HoursTest = () => {
             <CatalystChat
               room={'testingGround'}
               appId={process.env.REACT_APP_APP_ID ?? 'REAL_APP_ID_HERE'}
-              // dark={true}
               audioOnDefault={false}
               disableSetupRoom
               disableChat
-              theme="light"
-              // theme={'hoursLight'}
+              theme="hoursDark"
               // theme={{
               //   primary: '#50c878',
               //   secondary: '#eee',
