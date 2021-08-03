@@ -48,13 +48,12 @@ const AudWrapper = React.memo(
         audioEl.current.setAttribute('data-audio-track-id', track.sid);
       }
 
-      useEffect(() => {
-        // TODO: Audio output device
-        if (sinkId) {
-          // @ts-ignore
-          (audioEl.current as HTMLAudioElement)?.setSinkId(sinkId);
-        }
-      }, []);
+  
+      // TODO: Audio output device
+      if (sinkId) {
+        // @ts-ignore
+        (audioEl.current as HTMLAudioElement)?.setSinkId(sinkId);
+      }
       // if (sinkId) {
       //    (audioEl.current as HTMLMediaElement)?.setSinkId(audioOutputDevice.deviceId).then(() => {
       //     document.body.appendChild(audioElement);
