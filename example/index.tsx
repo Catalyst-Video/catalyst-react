@@ -2,7 +2,7 @@ import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import CatalystChat from '../dist/index';
-import Draggable from 'react-draggable';
+import Draggable from 'react-draggable'; 
 
 const App = () => {
   return (
@@ -34,9 +34,10 @@ const GeneralTest = () => {
   );
 };
 
+
 const HoursTest = () => {
   const [showVideoCall, setShowVideoCall] = React.useState(true);
-
+  
   return (
     <div
       style={{
@@ -67,8 +68,8 @@ const HoursTest = () => {
         <Draggable bounds="parent">
           <div
             style={{
-              width: '25vw',
-              height: '40vh',
+              width: '35vw',
+              height: '60vh',
               bottom: '40px',
               right: '40px',
               position: 'absolute',
