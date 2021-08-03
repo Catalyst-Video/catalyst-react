@@ -314,7 +314,7 @@ const RoomWrapper = ({
                       height={'fit-content'}
                       width={'100%'}
                       classes={
-                        'box w-full vid-p sm:w-auto h-auto aspect-w-16 aspect-h-9'
+                        'box w-full vid-p h-auto aspect-w-16 aspect-h-9'
                       }
                       key={`sidebar-screen-${i}`}
                       onClick={() => {
