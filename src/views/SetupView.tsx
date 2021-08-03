@@ -96,7 +96,7 @@ const SetupView = ({
             setOutputDevice(outDevice);
           } else {
             setOutputDevice(outputDevices[0]);
-            localStorage.set(
+            localStorage.setItem(
               'PREFERRED_OUTPUT_DEVICE_ID',
               outputDevices[0].deviceId
             );
