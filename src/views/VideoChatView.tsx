@@ -67,11 +67,11 @@ const VideoChat = ({
   fade: number;
   disableChat?: boolean;
   arbData?: Uint8Array;
-  handleReceiveArbData: (arbData: Uint8Array) => void;
-  onJoinCall: () => void;
-  onMemberJoin: () => void;
-  onMemberLeave: () => void;
-  onLeaveCall: () => void;
+  handleReceiveArbData?: (arbData: Uint8Array) => void;
+  onJoinCall?: () => void;
+  onMemberJoin?: () => void;
+  onMemberLeave?: () => void;
+  onLeaveCall?: () => void;
 }) => {
   const fsHandle = useFullScreenHandle();
   const [memberCount, setMemberCount] = useState(0);
@@ -113,7 +113,7 @@ const VideoChat = ({
             },
           ]);
         } else {
-          handleReceiveArbData(data);
+         if(handleReceiveArbData) handleReceiveArbData(data);
         }
       }
     );
