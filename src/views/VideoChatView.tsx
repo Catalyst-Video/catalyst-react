@@ -84,7 +84,6 @@ const VideoChat = ({
 
   const toolbarRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
-  const chatBtnRef = useRef<HTMLDivElement>(null);
   const videoChatRef = useRef<HTMLDivElement>(null);
   const decoder = new TextDecoder();
 
@@ -187,21 +186,16 @@ const VideoChat = ({
       const delayCheck = () => {
         const hClasses = headerRef.current?.classList;
         const tClasses = toolbarRef.current?.classList;
-        const cClasses = chatBtnRef.current?.classList;
         if (timedelay === 5 && !isHidden) {
           hClasses?.remove('animate-fade-in-down');
           hClasses?.add('animate-fade-out-up');
           tClasses?.remove('animate-fade-in-up');
           tClasses?.add('animate-fade-out-down');
-          cClasses?.remove('animate-fade-in-up');
-          cClasses?.add('animate-fade-out-down');
           setTimeout(() => {
             hClasses?.remove('animate-fade-out-up');
             hClasses?.add('hidden');
             tClasses?.remove('animate-fade-out-down');
             tClasses?.add('hidden');
-            cClasses?.remove('animate-fade-out-down');
-            cClasses?.add('hidden');
             isHidden = true;
           }, 190);
           timedelay = 1;
@@ -212,13 +206,10 @@ const VideoChat = ({
       const handleMouse = () => {
         const hClasses = headerRef.current?.classList;
         const tClasses = toolbarRef.current?.classList;
-        const cClasses = chatBtnRef.current?.classList;
         hClasses?.remove('hidden');
         hClasses?.add('animate-fade-in-down');
         tClasses?.remove('hidden');
         tClasses?.add('animate-fade-in-up');
-        cClasses?.remove('hidden');
-        cClasses?.add('animate-fade-in-up');
         isHidden = false;
         timedelay = 1;
         clearInterval(_delay);
@@ -332,6 +323,9 @@ const VideoChat = ({
                       setChatMessages={setChatMessages}
                       updateOutputDevice={updateOutputDevice}
                       outputDevice={outputDevice}
+                      chatOpen={chatOpen}
+                      setChatOpen={setChatOpen}
+                      disableChat={disableChat}
                     />
                   </div>
                 )}
@@ -343,44 +337,7 @@ const VideoChat = ({
                     sinkId={outputDevice?.deviceId}
                   />
                 ))}
-                {!disableChat && (
-                  <div
-                    ref={chatBtnRef}
-                    className={`absolute ${
-                      chatOpen
-                        ? 'left-3 sm:left-auto sm:right-48 animate-fade-in-right'
-                        : 'right-2' //  animate-fade-in-left
-                    } z-40 top-10 sm:top-auto sm:bottom-4 right-3 animate-fade-in-up`}
-                  >
-                    <button
-                      className="z-40 focus:outline-none focus:border-0 flex bg-tertiary dark:bg-secondary hover:bg-quaternary dark:hover:bg-tertiary rounded-full w-16 h-16 items-center justify-center"
-                      onClick={() => setChatOpen(chatOpen => !chatOpen)}
-                    >
-                      {!chatOpen && (
-                        <FontAwesomeIcon
-                          id="chat-open-left"
-                          icon={faChevronLeft}
-                          className={`text-white dark:text-black mr-1`}
-                          size="lg"
-                        />
-                      )}
-                      <FontAwesomeIcon
-                        id="chat-open"
-                        icon={faCommentAlt}
-                        className={`text-white dark:text-black `}
-                        size="lg"
-                      />
-                      {chatOpen && (
-                        <FontAwesomeIcon
-                          id="chat-open-right"
-                          icon={faChevronRight}
-                          className={`text-white dark:text-black ml-1`}
-                          size="lg"
-                        />
-                      )}
-                    </button>
-                  </div>
-                )}
+              
               </div>
             )}
             {roomClosed && (

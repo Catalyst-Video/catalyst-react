@@ -54,6 +54,7 @@
     "livekit-client": "^0.9.7",
     "lodash.debounce": "^4.0.8",
     "react-cookie": "^4.0.3",
+    "react-device-detect": "^1.17.0",
     "react-full-screen": "^1.0.1",
     "react-intersection-observer": "^8.32.0",
     "react-scripts": "^4.0.3",

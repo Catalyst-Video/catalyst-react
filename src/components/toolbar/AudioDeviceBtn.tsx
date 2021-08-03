@@ -49,7 +49,7 @@ const AudioDeviceBtn = ({
   const [opSources, setOpSources] = useState<MediaDeviceInfo[]>([]);
   const [devices, setDevices] = useState<CatalystDev[]>([]);
   const [outputDevices, setOutputDevices] = useState<CatalystDev[]>([]);
-  const audBtnRef = useRef<HTMLDivElement>(null);
+  // const audBtnRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     navigator.mediaDevices.enumerateDevices().then(devices => {
