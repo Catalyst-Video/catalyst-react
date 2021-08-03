@@ -50,10 +50,10 @@ export const THEMES = {
          },
          hoursLight: {
            primary: '#50c878',
-           secondary: '#F3F4F6',
-           tertiary: '#D1D5DB',
+           secondary: '#e5e7eb',
+           tertiary: '#b4bdc0', // D1D5DB
            quaternary: '#6B7280',
-           quinary: '#333',
+           quinary: '#fff',
          },
          hoursDark: {
            primary: '#50c878',

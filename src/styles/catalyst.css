@@ -484,7 +484,19 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
     line-height: 1rem;
 }
 
-#ctw.catalyst-parent[min-width~="768px"] .text-n  {
+#ctw.catalyst-parent[min-width~="768px"] .vid-p  {
+ padding: 0;
+ margin: 0;
+}
+
+
+/* name text */
+#ctw.catalyst-parent .text-n  {
+   	font-size: 0.75rem;
+    line-height: 1rem;
+}
+
+#ctw.catalyst-parent[min-width~="640px"] .vid-p  {
   font-size: .875rem;
   line-height: 1.25rem;
 }

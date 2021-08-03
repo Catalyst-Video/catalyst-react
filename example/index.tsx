@@ -16,7 +16,7 @@ const App = () => {
 const GeneralTest = () => {
   return (
     <CatalystChat
-      room="testing-ground"
+      room="testingGround"
       appId={process.env.REACT_APP_APP_ID ?? 'REAL_APP_ID_HERE'}
       // dark
       audioOnDefault={false}
@@ -77,13 +77,13 @@ const HoursTest = () => {
             }}
           >
             <CatalystChat
-              room={'testRoom'}
+              room={'testingGround'}
               appId={process.env.REACT_APP_APP_ID ?? 'REAL_APP_ID_HERE'}
               // dark={true}
               audioOnDefault={false}
               disableSetupRoom
               disableChat
-              theme={'hoursDark'}
+              theme={'hoursLight'}
               // theme={{
               //   primary: '#50c878',
               //   secondary: '#eee',

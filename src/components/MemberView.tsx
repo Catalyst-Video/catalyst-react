@@ -162,14 +162,14 @@ const MemberView = React.memo(({
         )}{' '}
         <div className="absolute bottom-0 left-0 flex text-quinary  justify-between p-1 lg:p-2 w-full">
           <div className="h-7 md:h-8 not-selectable flex items-center justify-center px-2 py-1 relative">
-            <span className="absolute top-0 left-0 opacity-50 bg-secondary rounded-xl w-full h-full"></span>
+            <span className="absolute top-0 left-0 opacity-50 bg-tertiary rounded-xl w-full h-full"></span>
             <span className="text-n text-quinary  z-30">
               {displayName ?? isLocal ? `${m.identity} (You)` : m.identity}
             </span>
           </div>
           {isMuted && (
             <div className="relative h-7 w-7 md:h-8 md:w-8 flex items-center justify-center p-1">
-              <span className="absolute rounded-full top-0 left-0 opacity-50 bg-secondary  w-full h-full"></span>
+              <span className="absolute rounded-full top-0 left-0 opacity-50 bg-tertiary w-full h-full"></span>
               <FontAwesomeIcon
                 icon={faMicrophoneSlash}
                 size="2x"
