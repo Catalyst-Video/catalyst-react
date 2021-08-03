@@ -74,7 +74,7 @@ const RoomWrapper = ({
   const fsHandle = useFullScreenHandle();
 
   const resizeWrapper = () => {
-    let margin = 2;
+    let margin = 4;
     let width = 0;
     let height = 0;
     if (vidRef.current) {
@@ -127,7 +127,7 @@ const RoomWrapper = ({
     else return increment;
   };
 
-  const debouncedResize = debounce(resizeWrapper, 15);
+  // TODO: const debouncedResize = debounce(resizeWrapper, 15);
 
   useEffect(() => {
     window.addEventListener(
@@ -248,13 +248,13 @@ const RoomWrapper = ({
           )}
         </div>
       )}
-      {speakerMode && (
+      {/* {speakerMode && (
         <div
-          className={`flex flex-col sm:flex-row z-20 py-10 px-1 w-full lg:px-6 justify-center sm:justify-around  ${
+          className={`speaker-view flex z-20 w-full justify-center sm:justify-around  ${
             chatOpen ? 'sm:animate-fade-in-right' : 'sm:animate-fade-in-left' // lg:px-10 xl:px-20
           }`}
         >
-          <div className="flex flex-col sm:w-4/5 p-1 justify-center content-center">
+          <div className="speaker-vid p-1 flex flex-col justify-center">
             {members.map((m, i) => {
               if (m.sid === mainVid) {
                 return (
@@ -290,14 +290,117 @@ const RoomWrapper = ({
           </div>
           <div
             className={
-              'flex flex-row sm:flex-col w-full h-1/4 sm:h-full sm:w-1/5 p-1 justify-center content-center no-scrollbar overflow-x-auto sm:overflow-y-auto top-0 left-0' // TODO: make this w-1/4 when container is small
+              'other-vids flex p-1 justify-center content-center no-scrollbar overflow-x-auto top-0 left-0' 
             }
             onClick={() => setSpeakerMode(sm => !sm)}
           >
             {members.length === 1 && (
               <>
                 <div
-                  className={`box ml-1 mr-1 w-full sm:w-auto sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
+                  className={`box ml-1 mr-1 w-full sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
+                >
+                  <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-c text-white dark:text-black text-center px-1 sm:px-2 md:px-3 ">
+                    <span>👋 Waiting for others to join...</span>
+                  </div>
+                </div>
+              </>
+            )}
+            {sharedScreens &&
+              sharedScreens.map((s, i) => {
+                if (s.sid !== mainVid)
+                  return (
+                    <ScreenShareWrapper
+                      track={s}
+                      height={'fit-content'}
+                      width={'100%'}
+                      classes={
+                        'box ml-1 mr-1 sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 w-full aspect-w-16 aspect-h-9'
+                      }
+                      key={`sidebar-screen-${i}`}
+                      onClick={() => {
+                        setMainVid(s.sid);
+                        setSpeakerMode(sm => !sm);
+                      }}
+                    />
+                  );
+                else return null;
+              })}
+            {members.map((m, i) => {
+              if (m.sid !== mainVid)
+                return (
+                  <MemberView
+                    key={m.identity}
+                    participant={m}
+                    height={'fit-content'}
+                    width={'100%'}
+                    classes={
+                      'box ml-1 mr-1 sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 w-full aspect-w-16 aspect-h-9'
+                    }
+                    showOverlay={showOverlay}
+                    quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
+                    onMouseEnter={() => setShowOverlay(true)}
+                    onMouseLeave={() => setShowOverlay(false)}
+                    onClick={() => {
+                      setMainVid(m.sid);
+                      setSpeakerMode(sm => !sm);
+                    }}
+                  />
+                );
+              else return null;
+            })}
+          </div>
+        </div>
+      )} */}
+      {speakerMode && (
+        <div
+          className={`speaker-view flex z-20 w-full justify-center sm:justify-around  ${
+            chatOpen ? 'sm:animate-fade-in-right' : 'sm:animate-fade-in-left' // lg:px-10 xl:px-20
+          }`}
+        >
+          <div className="speaker-vid flex flex-col p-1 justify-center content-center">
+            {members.map((m, i) => {
+              if (m.sid === mainVid) {
+                return (
+                  <MemberView
+                    key={m.identity ?? 'first-vid'}
+                    participant={m ?? members[0]}
+                    height={'100%'}
+                    width={'100%'}
+                    classes={'aspect-w-16 aspect-h-9'}
+                    showOverlay={showOverlay}
+                    quality={VideoQuality.HIGH}
+                    onMouseEnter={() => setShowOverlay(true)}
+                    onMouseLeave={() => setShowOverlay(false)}
+                    onClick={() => setSpeakerMode(sm => !sm)}
+                  />
+                );
+              } else return null;
+            })}
+            {sharedScreens.map(s => {
+              if (s.sid === mainVid) {
+                return (
+                  <ScreenShareWrapper
+                    track={s}
+                    height={'100%'}
+                    width={'100%'}
+                    classes={'aspect-w-16 aspect-h-9'}
+                    key={`main-screen`}
+                    onClick={() => setSpeakerMode(sm => !sm)}
+                  />
+                );
+              } else return null;
+            })}
+          </div>
+          <div
+            className={
+              'other-vids flex p-1 justify-center content-center no-scrollbar overflow-x-auto top-0 left-0' 
+            }
+            onClick={() => setSpeakerMode(sm => !sm)}
+          >
+            {members.length === 1 && (
+              <>
+                <div
+                  className={`box ml-1 mr-1 w-full sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
                 >
                   <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-c text-white dark:text-black text-center px-1 sm:px-2 md:px-3 ">
                     <span>👋 Waiting for others to join...</span>

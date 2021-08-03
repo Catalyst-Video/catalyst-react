@@ -23,6 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 You can contact us for more details at support@catalyst.chat. */
 
 import {
+  faChevronLeft,
+  faChevronRight,
+  faCommentAlt,
   faDesktop,
   faPhoneSlash,
   faStop,
@@ -41,9 +44,11 @@ import {
 } from 'livekit-client';
 import React, { useState, useEffect } from 'react';
 import { useParticipant } from '../../hooks/useMember';
+import { isMobile } from 'react-device-detect';
 import AudioDeviceBtn from './AudioDeviceBtn';
 import ToolbarButton from './ToolbarButton';
 import VidDeviceBtn from './VidDeviceBtn';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Toolbar = ({
   room,
@@ -55,6 +60,9 @@ const Toolbar = ({
   setChatMessages,
   updateOutputDevice,
   outputDevice,
+  chatOpen,
+  setChatOpen,
+  disableChat
 }: {
   room: Room;
   enableScreenShare?: boolean;
@@ -65,6 +73,10 @@ const Toolbar = ({
   setChatMessages: Function;
   updateOutputDevice: (device: MediaDeviceInfo) => void;
   outputDevice?: MediaDeviceInfo;
+  chatOpen: boolean;
+  setChatOpen: Function;
+  disableChat?: boolean;
+  
 }) => {
   const { publications, isMuted, unpublishTrack } = useParticipant(
     room.localParticipant
@@ -258,51 +270,68 @@ const Toolbar = ({
         videoDevice={videoDevice}
       />
       {/* Screen Share Button */}
-      <ToolbarButton
-        type="screenshare"
-        tooltip={screen?.track ? 'Stop sharing' : 'Share screen'}
-        icon={screen?.track ? faStop : faDesktop}
-        bgColor={
-          screen?.track
-            ? `bg-primary`
-            : 'bg-tertiary hover:bg-quaternary dark:bg-secondary dark:hover:bg-tertiary'
-        }
-        onClick={
-          screen?.track
-            ? () => {
-                unpublishTrack(screen.track as LocalVideoTrack);
-                //  sendMsg('I finished screen sharing!');
-              }
-            : () => {
-                navigator.mediaDevices
-                  // @ts-ignore
-                  .getDisplayMedia({
-                    video: {
-                      width: VideoPresets.fhd.resolution.width,
-                      height: VideoPresets.fhd.resolution.height,
-                    },
-                    audio: true, // TODO: get working properly
-                  })
-                  .then((captureStream: MediaStream) => {
-                    room.localParticipant
-                      .publishTrack(captureStream.getTracks()[0], {
-                        name: 'screen',
-                        videoEncoding: {
-                          maxBitrate: 3000000,
-                          maxFramerate: 30,
-                        },
-                      })
-                      .then(track => {
-                        setSpeakerMode(true);
-                        //  sendMsg('I started screen sharing!');
-                      });
-                  })
-                  .catch(err => {
-                    console.log('Error sharing screen: ' + err);
-                  });
-              }
-        }
-      />
+      {/* TODO: screen share on mobile  */}
+      {!isMobile ? (
+        <ToolbarButton
+          type="screenshare"
+          tooltip={screen?.track ? 'Stop sharing' : 'Share screen'}
+          icon={screen?.track ? faStop : faDesktop}
+          bgColor={
+            screen?.track
+              ? `bg-primary`
+              : 'bg-tertiary hover:bg-quaternary dark:bg-secondary dark:hover:bg-tertiary'
+          }
+          onClick={
+            screen?.track
+              ? () => {
+                  unpublishTrack(screen.track as LocalVideoTrack);
+                  //  sendMsg('I finished screen sharing!');
+                }
+              : () => {
+                  navigator.mediaDevices
+                    // @ts-ignore
+                    .getDisplayMedia({
+                      video: {
+                        width: VideoPresets.fhd.resolution.width,
+                        height: VideoPresets.fhd.resolution.height,
+                      },
+                      audio: true, // TODO: get working properly
+                    })
+                    .then((captureStream: MediaStream) => {
+                      room.localParticipant
+                        .publishTrack(captureStream.getTracks()[0], {
+                          name: 'screen',
+                          videoEncoding: {
+                            maxBitrate: 3000000,
+                            maxFramerate: 30,
+                          },
+                        })
+                        .then(track => {
+                          setSpeakerMode(true);
+                          //  sendMsg('I started screen sharing!');
+                        });
+                    })
+                    .catch(err => {
+                      console.log('Error sharing screen: ' + err);
+                    });
+                }
+          }
+        />
+      ) : (
+        <ToolbarButton
+          type="chat"
+          tooltip="Toggle Chat"
+          icon={faCommentAlt}
+          bgColor={
+          chatOpen
+              ? `bg-primary`
+              : 'bg-tertiary hover:bg-quaternary dark:bg-secondary dark:hover:bg-tertiary'
+          }
+          onClick={() => {
+            setChatOpen(chatOpen => !chatOpen);
+          }}
+        />
+      )}
       {/* End Call Button */}
       {onLeave && (
         <ToolbarButton
@@ -315,6 +344,43 @@ const Toolbar = ({
             onLeave(room);
           }}
         />
+      )}
+      {!disableChat && !isMobile && (
+        <div
+          className={`absolute ${
+            chatOpen
+              ? 'right-48 animate-fade-in-right'
+              : 'right-3' //  animate-fade-in-left
+          } z-40 bottom-0 right-3 animate-fade-in-up`}
+        >
+          <button
+            className="z-40 focus:outline-none focus:border-0 flex bg-tertiary dark:bg-secondary hover:bg-quaternary dark:hover:bg-tertiary rounded-full w-16 h-16 items-center justify-center"
+            onClick={() => setChatOpen(chatOpen => !chatOpen)}
+          >
+            {!chatOpen && (
+              <FontAwesomeIcon
+                id="chat-open-left"
+                icon={faChevronLeft}
+                className={`text-white dark:text-black mr-1`}
+                size="lg"
+              />
+            )}
+            <FontAwesomeIcon
+              id="chat-open"
+              icon={faCommentAlt}
+              className={`text-white dark:text-black `}
+              size="lg"
+            />
+            {chatOpen && (
+              <FontAwesomeIcon
+                id="chat-open-right"
+                icon={faChevronRight}
+                className={`text-white dark:text-black ml-1`}
+                size="lg"
+              />
+            )}
+          </button>
+        </div>
       )}
     </div>
   );

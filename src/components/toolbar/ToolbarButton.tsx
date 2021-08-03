@@ -70,7 +70,6 @@ const ToolbarButton = React.memo(({
 }) => {
   const [deviceMenu, setDeviceMenu] = useState(false);
   const selectRef = useRef<HTMLButtonElement>(null)
-  const [popover, setPopover] = useState(false);
 
   const handleOnIpDeviceClick = (id: CatalystDev) => {
     if (onIpDeviceClick) {
@@ -93,11 +92,11 @@ const ToolbarButton = React.memo(({
       className="bg-tertiary font-sans"
       trigger="click"
       onShown={() => {
-        setPopover(true);
+        setDeviceMenu(true);
       }}
       onHidden={() => {
-        setDeviceMenu(!deviceMenu);
-        setPopover(false);
+        // setDeviceMenu(deviceMenu => !deviceMenu);
+        setDeviceMenu(false);
       }}
       content={
         outputDevices || inputDevices ? (
@@ -173,7 +172,7 @@ const ToolbarButton = React.memo(({
       }
     >
       <div className="inline-block m-1 relative">
-        <Tippy content={tooltip} theme="catalyst" disabled={popover}>
+        <Tippy content={tooltip} theme="catalyst" disabled={deviceMenu}>
           <button
             id={`${type}-btn`}
             disabled={disabled}
@@ -206,7 +205,7 @@ const ToolbarButton = React.memo(({
                 ? bgColor
                 : 'bg-tertiary dark:bg-secondary hover:bg-quaternary dark:hover:bg-tertiary'
             }  rounded-full border-4 border-secondary h-6 w-6 flex justify-center items-center focus:outline-none focus:border-0 `}
-            onClick={() => setDeviceMenu(!deviceMenu)}
+            onClick={() => setDeviceMenu(deviceMenu =>!deviceMenu)}
           >
             <FontAwesomeIcon
               size="xs"

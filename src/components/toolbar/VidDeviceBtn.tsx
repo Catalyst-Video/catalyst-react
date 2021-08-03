@@ -40,7 +40,7 @@ const VidDeviceBtn = ({
 }) => {
   const [sources, setSources] = useState<MediaDeviceInfo[]>([]);
   const [devices, setDevices] = useState<CatalystDev[]>([]);
-  const vidBtnRef = useRef<HTMLDivElement>(null);
+  // const vidBtnRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     navigator.mediaDevices.enumerateDevices().then(devices => {

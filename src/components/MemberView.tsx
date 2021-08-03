@@ -137,7 +137,7 @@ const MemberView = React.memo(({
   }
 
   return (
-    <div className={`m-1 ${classes}`}>
+    <div className={`m-1 ${classes} cursor-pointer`}>
       <div
         ref={ref}
         className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-xl ${
@@ -163,7 +163,7 @@ const MemberView = React.memo(({
         <div className="absolute bottom-0 left-0 flex text-white dark:text-black justify-between p-1 lg:p-2 w-full">
           <div className="h-7 md:h-8 not-selectable flex items-center justify-center px-2 py-1 relative">
             <span className="absolute top-0 left-0 opacity-50 bg-secondary rounded-xl w-full h-full"></span>
-            <span className="text-xs lg:text-sm text-white dark:text-black z-30">
+            <span className="text-n text-white dark:text-black z-30">
               {displayName ?? isLocal ? `${m.identity} (You)` : m.identity}
             </span>
           </div>

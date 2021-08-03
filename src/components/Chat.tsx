@@ -98,7 +98,7 @@ const Chat = ({
     <>
       {chatOpen && (
         <div
-          className={`bg-secondary flex h-full absolute right-0 sm:relative z-50 sm:z-20 w-72 sm:w-64 ${
+          className={`bg-secondary flex h-full absolute right-0 sm:relative z-50 shadow-lg sm:z-20 w-72 sm:w-64 ${
             chatOpen ? 'animate-fade-in-right' : 'animate-fade-out-right'
           }`}
         >
@@ -117,7 +117,7 @@ const Chat = ({
                       className="sent-message flex flex-col items-start content-end p-1 pr-2 ml-20 fade-in-bottom z-40"
                       key={idx}
                     >
-                      <span className="text-white dark:text-black dark:text-white dark:text-black font-semibold text-xs ml-auto p-1 not-selectable">
+                      <span className="text-white dark:text-black font-semibold text-xs ml-auto p-1 not-selectable">
                         {msg.sender?.identity} (You)
                       </span>
                       <div
@@ -135,7 +135,7 @@ const Chat = ({
                       className="received-message flex flex-col items-start content-end p-1 pl-2 fade-in-bottom"
                       key={idx}
                     >
-                      <span className="text-white dark:text-black dark:text-white dark:text-black font-semibold text-xs p-1 not-selectable">
+                      <span className="text-white dark:text-black font-semibold text-xs p-1 not-selectable">
                         {msg?.sender?.identity}
                       </span>
                       <div className="bg-gray-100 text-black flex items-center justify-center rounded-tl-2xl rounded-tr-2xl rounded-br-2xl rounded-bl-sm p-2">
