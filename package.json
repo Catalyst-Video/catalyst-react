@@ -6,6 +6,7 @@
   "license": "AGPL-3.0-only",
   "description": "Reliable and scalable open-source video chat in a few lines of code",
   "repository": "https://github.com/Catalyst-Video/catalyst-react",
+  "homepage": "https://catalyst.chat/",
   "bugs": "https://github.com/Catalyst-Video/catalyst-react/issues",
   "keywords": [
     "video chat",

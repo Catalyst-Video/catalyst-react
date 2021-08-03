@@ -67,8 +67,8 @@ const HoursTest = () => {
         <Draggable bounds="parent">
           <div
             style={{
-              width: '35vw',
-              height: '60vh',
+              width: '767px',
+              height: '450px',
               bottom: '40px',
               right: '40px',
               position: 'absolute',

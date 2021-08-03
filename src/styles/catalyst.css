@@ -47,13 +47,13 @@ You can contact us for more details at support@catalyst.chat. */
 
 /* highlight on drag */
 #ctw *::selection {
-    background: var(--themeColor);
+    background: var(--ctwPrimary);
 }
 #ctw *::-moz-selection {
-  background: var(--themeColor);
+  background: var(--ctwPrimary);
 }
 #ctw *::-webkit-selection {
-    background: var(--themeColor);
+    background: var(--ctwPrimary);
 }
 
 /* util */
@@ -505,4 +505,12 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
 
 #ctw .bg-placeholder {
   min-height: 4.2rem;
+}
+
+#ctw.catalyst-parent[min-width~="640px"] .bg-placeholder {
+  min-height: 6.5rem;
+}
+
+#ctw.catalyst-parent[min-width~="1024px"] .bg-placeholder {
+  min-height: 10rem;
 }

@@ -311,11 +311,10 @@ const RoomWrapper = ({
                   return (
                     <ScreenShareWrapper
                       track={s}
-                      height={'fit-content'}
+                      height={'100%'}
+                      //height={'fit-content'}
                       width={'100%'}
-                      classes={
-                        'box w-full vid-p h-auto aspect-w-16 aspect-h-9'
-                      }
+                      classes={'box w-full vid-p h-auto aspect-w-16 aspect-h-9'}
                       key={`sidebar-screen-${i}`}
                       onClick={() => {
                         setMainVid(s.sid);
@@ -331,7 +330,8 @@ const RoomWrapper = ({
                   <MemberView
                     key={m.identity}
                     member={m}
-                    height={'fit-content'}
+                    height={'100%'}
+                    //height={'fit-content'}
                     width={'100%'}
                     classes={
                       'box vid-p w-full h-auto aspect-w-16 aspect-h-9'

@@ -6,7 +6,7 @@ module.exports = {
     './src/*.{js,jsx,ts,tsx}',
     './public/index.html',
   ],
-  // mode: 'jit',
+  mode: 'jit',
   // darkMode: 'class', // or 'media'
   important: '#ctw',
   theme: {

@@ -230,7 +230,7 @@ const ToolbarButton = React.memo(({
             ref={selectRef}
             className={`absolute z-10 -right-1 -bottom-1 ${
               bgColor ? bgColor : 'bg-tertiary hover:bg-quaternary '
-            }  rounded-full border-4 border-secondary h-6 w-6 flex justify-center items-center focus:outline-none focus:border-0 `}
+            }  rounded-full border-4 border-secondary h-6 w-6 flex justify-center items-center focus:outline-none`}
             onClick={() => setDeviceMenu(deviceMenu => !deviceMenu)}
           >
             <FontAwesomeIcon
