@@ -274,7 +274,7 @@ const Toolbar = ({
       {!isMobile ? (
         <ToolbarButton
           type="screenshare"
-          tooltip={screen?.track ? 'Stop sharing' : 'Share screen'}
+          tooltip={screen?.track ? 'Stop Sharing' : 'Share Screen'}
           icon={screen?.track ? faStop : faDesktop}
           bgColor={
             screen?.track
@@ -350,8 +350,8 @@ const Toolbar = ({
           className={`absolute ${
             chatOpen
               ? 'right-48 animate-fade-in-right'
-              : 'right-3' //  animate-fade-in-left
-          } z-40 bottom-1 right-3 animate-fade-in-up`}
+              : 'right-3 ' //  animate-fade-in-left
+          } z-40 bottom-1 animate-fade-in-up`}
         >
           <button
             className="z-40 focus:outline-none focus:border-0 flex bg-tertiary  hover:bg-quaternary  rounded-full w-16 h-16 items-center justify-center"

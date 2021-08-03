@@ -28,6 +28,7 @@ import {
   faCommentAlt,
   faCompressAlt,
   faExpandAlt,
+  faQuestion,
   faTh,
   faThLarge,
   faUserFriends,
@@ -49,6 +50,8 @@ import HeaderLogo from '../components/header/Header';
 import Toolbar from '../components/toolbar/Toolbar';
 import { useRoom } from '../hooks/useRoom';
 import { debounce } from 'ts-debounce';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
 
 const VideoChat = ({
   token,
@@ -251,20 +254,15 @@ const VideoChat = ({
 
   return (
     <div id="video-chat" className="h-full w-full relative" ref={videoChatRef}>
-      <div
-        id="bg-theme"
-        className="h-full w-full bg-secondary "
-      >
-        <FullScreen
-          handle={fsHandle}
-          className="h-full w-full bg-secondary"
-        >
+      <div id="bg-theme" className="h-full w-full bg-secondary ">
+        <FullScreen handle={fsHandle} className="h-full w-full bg-secondary">
           <div
             id="header-wrapper"
             className="animate-fade-in-down"
             ref={headerRef}
           >
             <HeaderLogo alwaysBanner={false} />
+            {/* room count */}
             <div className="nav-ops absolute flex z-50">
               <FontAwesomeIcon
                 icon={faUserFriends}
@@ -272,18 +270,40 @@ const VideoChat = ({
                 className="text-quinary  mr-1"
               />
               <span className="text-quinary ">{memberCount}</span>
-              <button
-                className="cursor-pointer focus:border-0 focus:outline-none"
+              {/* help */}
+              <Tippy content="Help" theme="catalyst" placement="bottom">
+                <button
+                  className="cursor-pointer focus:border-0 focus:outline-none ml-5"
+                  onClick={() =>
+                    window.open(
+                      'mailto:support@catalyst.chat?subject=Catalyst%20Inquiry'
+                    )
+                  }
+                >
+                  <FontAwesomeIcon
+                    icon={faQuestion}
+                    size="lg"
+                    className="text-quinary"
+                  />
+                </button>
+              </Tippy>
+              {/* speaker mode toggle  */}
+               <Tippy content="Toggle View" theme="catalyst" placement="bottom">
+                <button
+                  className="cursor-pointer focus:border-0 focus:outline-none ml-5"
                 onClick={() => setSpeakerMode(sMode => !sMode)}
               >
                 <FontAwesomeIcon
                   icon={speakerMode ? faTh : faThLarge}
                   size="lg"
-                  className="text-quinary  ml-5"
+                  className="text-quinary"
                 />
-              </button>
-              <button
-                className="cursor-pointer focus:border-0 focus:outline-none"
+                </button>
+                </Tippy>
+              {/* full screen  */}
+              <Tippy content="Full Screen" theme="catalyst" placement="bottom">
+                <button
+                  className="cursor-pointer focus:border-0 focus:outline-none ml-5"
                 onClick={() => {
                   if (fsHandle.active) fsHandle.exit();
                   else fsHandle.enter();
@@ -292,9 +312,10 @@ const VideoChat = ({
                 <FontAwesomeIcon
                   icon={fsHandle.active ? faCompressAlt : faExpandAlt}
                   size="lg"
-                  className="text-quinary  ml-5"
+                  className="text-quinary"
                 />
-              </button>
+                </button>
+                </ Tippy>
             </div>
           </div>
 
@@ -337,7 +358,6 @@ const VideoChat = ({
                     sinkId={outputDevice?.deviceId}
                   />
                 ))}
-              
               </div>
             )}
             {roomClosed && (
