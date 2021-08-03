@@ -503,3 +503,6 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
   margin-bottom: 0.25rem;
 }
 
+#ctw .bg-placeholder {
+  min-height: 4.2rem;
+}
