@@ -42,7 +42,6 @@ const CatalystChat = ({
   appId,
   name,
   theme,
-  dark,
   fade,
   audioOnDefault,
   videoOnDefault,
@@ -120,10 +119,8 @@ const CatalystChat = ({
       }}
     >
       <div
-        id="dark-wrapper"
-        className={`${
-          dark ? 'dark' : ''
-        } h-full w-full m-0 p-0 overflow-hidden max-h-screen max-w-screen box-border`}
+        id="catalyst-wrapper"
+        className={`h-full w-full m-0 p-0 overflow-hidden max-h-screen max-w-screen box-border`}
       >
         { 
           ready

@@ -42,7 +42,6 @@ We recommend a minimum parent container size of 400px X 450px.
 | `room` | Unique session identifier _(peers with the same `room` are connected)_                                                                    |  `string` | `ROOM_NAME` |  Required      |
 | `appId` | Unique project identifier, obtained from the *API keys* tab of our [management portal](https://manage.catalyst.chat/)                                                   |  `string` | `YOUR_CATALYST_PROJECT_ID` |  Required  |
 | `name` | Display name of member joining the call |  `string` | `MEMBER_NAME` |  Optional |
-| `dark` | Is dark mode enabled by default                                                    |  `boolean` | `false` | Optional |
 | `fade` | Milliseconds of no user interaction before fading out controls. Disabled when set to `0`                   |  `number` | `600` | Optional |
 | `audioOnDefault` |Is microphone enabled by default                        |  `boolean` | `true` | Optional |
 | `videoOnDefault` | Is webcam enabled by default               |  `boolean` | `true` | Optional |
