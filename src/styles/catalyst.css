@@ -376,7 +376,7 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
     padding-right: 0.25rem/* 4px */;
 }
 
-#ctw.catalyst-parent[min-width~="640px"] .speaker-view  {
+#ctw.catalyst-parent[min-width~="400px"] .speaker-view  {
   padding-left: 0.5rem/* 40px */;
   padding-right: 0.5rem/* 40px */;
   flex-direction: row;
@@ -401,12 +401,14 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
 
 /* other vids  */
 #ctw.catalyst-parent .other-vids {
-   height: 25%;
-   width: 100%;
-   flex-direction: row;
+   /* height: 25%; */
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+   /* flex-direction: row; */
 }
 
-#ctw.catalyst-parent[min-width~="640px"] .other-vids  {
+#ctw.catalyst-parent[min-width~="400px"] .other-vids  {
   width: 30%;
   height: auto;
   overflow-y: auto;
@@ -424,7 +426,7 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
   width: 80%;
 } */
 
-#ctw.catalyst-parent[min-width~="640px"] .speaker-vid  {
+#ctw.catalyst-parent[min-width~="400px"] .speaker-vid  {
   width: 70%;
 }
 

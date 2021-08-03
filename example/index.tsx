@@ -7,8 +7,8 @@ import Draggable from 'react-draggable';
 const App = () => {
   return (
     <>
-      <GeneralTest />
-      {/* <HoursTest /> */}
+      {/* <GeneralTest /> */}
+      <HoursTest />
     </>
   );
 };
@@ -68,8 +68,8 @@ const HoursTest = () => {
         <Draggable bounds="parent">
           <div
             style={{
-              width: '35vw',
-              height: '60vh',
+              width: '25vw',
+              height: '40vh',
               bottom: '40px',
               right: '40px',
               position: 'absolute',

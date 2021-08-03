@@ -189,44 +189,6 @@ const Chat = ({
           </div>
         </div>
       )}
-      {/* <div
-        className={`absolute  ${
-          chatOpen
-            ? 'left-3 sm:left-auto sm:right-48 animate-fade-in-right'
-            : 'right-2 animate-fade-in-left'
-        } z-40 top-10 sm:top-auto sm:bottom-4 right-3`} // flex items-center h-full inset-y-0
-      >
-        <button
-          className="z-40 focus:outline-none focus:border-0 flex bg-tertiary dark:bg-secondary hover:bg-quaternary dark:hover:bg-tertiary rounded-full w-16 h-16 items-center justify-center"
-          onClick={() => setChatOpen(chatOpen => !chatOpen)}
-        >
-          {!chatOpen && (
-            <FontAwesomeIcon
-              id="chat-send"
-              icon={faChevronLeft}
-              size="lg"
-              // title="Send Message"
-              className={`text-white dark:text-black mr-1`}
-            />
-          )}
-          <FontAwesomeIcon
-            id="chat-send"
-            icon={faCommentAlt}
-            size="lg"
-            // title="Send Message"
-            className={`text-white dark:text-black `}
-          />
-          {chatOpen && (
-            <FontAwesomeIcon
-              id="chat-send"
-              icon={faChevronRight}
-              size="lg"
-              // title="Send Message"
-              className={`text-white dark:text-black ml-1`}
-            />
-          )}
-        </button>
-      </div> */}
     </>
   );
 };

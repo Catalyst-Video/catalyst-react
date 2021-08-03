@@ -351,7 +351,7 @@ const Toolbar = ({
             chatOpen
               ? 'right-48 animate-fade-in-right'
               : 'right-3' //  animate-fade-in-left
-          } z-40 bottom-0 right-3 animate-fade-in-up`}
+          } z-40 bottom-1 right-3 animate-fade-in-up`}
         >
           <button
             className="z-40 focus:outline-none focus:border-0 flex bg-tertiary dark:bg-secondary hover:bg-quaternary dark:hover:bg-tertiary rounded-full w-16 h-16 items-center justify-center"
