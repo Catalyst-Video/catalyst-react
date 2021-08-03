@@ -26,7 +26,7 @@ const GeneralTest = () => {
       //   tertiary: '#4B5563',
       //   quaternary: '#6B7280',
       // }}
-      // theme='light'
+      // theme='hoursLight'
       // name={'bob'}
       // theme={ }
       onLeaveCall={() => console.log('end')}
