@@ -108,7 +108,7 @@ const ToolbarButton = React.memo(({
                 <>
                   <li
                     key={'input-row'}
-                    className="flex items-center text-xs text-white dark:text-black font-semibold p-2 border-white dark:border-black border-b border-opacity-20 whitespace-nowrap "
+                    className="flex items-center text-xs text-quinary  font-semibold p-2 border-white dark:border-black border-b border-opacity-20 whitespace-nowrap "
                   >
                     {type} Output
                   </li>
@@ -120,7 +120,7 @@ const ToolbarButton = React.memo(({
                     return (
                       <li
                         key={i}
-                        className="flex items-center text-xs text-white dark:text-black p-2 cursor-pointer whitespace-nowrap"
+                        className="flex items-center text-xs text-quinary  p-2 cursor-pointer whitespace-nowrap"
                         onClick={() => handleOnOpDeviceClick(id)}
                       >
                         {id.label === selectedOpDevice?.label ? (
@@ -139,7 +139,7 @@ const ToolbarButton = React.memo(({
               )}
               <li
                 key={'input-row'}
-                className="flex items-center text-xs text-white dark:text-black font-semibold p-2 border-white dark:border-black border-b border-opacity-20 whitespace-nowrap"
+                className="flex items-center text-xs text-quinary  font-semibold p-2 border-white dark:border-black border-b border-opacity-20 whitespace-nowrap"
               >
                 {type} Input
               </li>
@@ -151,7 +151,7 @@ const ToolbarButton = React.memo(({
                 return (
                   <li
                     key={i}
-                    className="flex items-center text-xs text-white dark:text-black p-2 whitespace-nowrap cursor-pointer"
+                    className="flex items-center text-xs text-quinary  p-2 whitespace-nowrap cursor-pointer"
                     onClick={() => handleOnIpDeviceClick(id)}
                   >
                     {id.label === selectedIpDevice?.label ? (
@@ -188,7 +188,7 @@ const ToolbarButton = React.memo(({
                 className={
                   iconColor
                     ? iconColor
-                    : 'text-white dark:text-black hover:text-gray-50'
+                    : 'text-quinary  hover:text-gray-50'
                 }
                 size="lg"
                 icon={icon}
@@ -210,7 +210,7 @@ const ToolbarButton = React.memo(({
             <FontAwesomeIcon
               size="xs"
               className={`transition transform hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none  ${
-                iconColor ? 'text-gray-900' : 'text-white dark:text-black'
+                iconColor ? 'text-gray-900' : 'text-quinary '
               }`}
               icon={deviceMenu ? faChevronUp : faChevronDown}
             />

@@ -66,6 +66,7 @@ export interface CatalystTheme {
   secondary?: string;
   tertiary?: string;
   quaternary?: string;
+  quinary?: string;
 }
 
 export interface CatalystDev {

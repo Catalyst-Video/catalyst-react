@@ -15,12 +15,13 @@ module.exports = {
       secondary: 'var(--ctwSecondary)', // background color
       tertiary: 'var(--ctwTertiary)', // button/element color
       quaternary: 'var(--ctwQuaternary)', // hover color for buttons/elements
+      quinary: 'var(--ctwQuinary)', // text color
       transparent: 'transparent',
       current: 'currentColor',
       white: colors.white,
       black: colors.black,
-      gray: colors.coolGray, 
-      red: '#F64F59' // colors.red[500],
+      gray: colors.coolGray,
+      red: '#F64F59', // colors.red[500],
     },
     extend: {
       keyframes: {

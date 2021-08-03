@@ -269,9 +269,9 @@ const VideoChat = ({
               <FontAwesomeIcon
                 icon={faUserFriends}
                 size="lg"
-                className="text-white dark:text-black mr-1"
+                className="text-quinary  mr-1"
               />
-              <span className="text-white dark:text-black">{memberCount}</span>
+              <span className="text-quinary ">{memberCount}</span>
               <button
                 className="cursor-pointer focus:border-0 focus:outline-none"
                 onClick={() => setSpeakerMode(sMode => !sMode)}
@@ -279,7 +279,7 @@ const VideoChat = ({
                 <FontAwesomeIcon
                   icon={speakerMode ? faTh : faThLarge}
                   size="lg"
-                  className="text-white dark:text-black ml-5"
+                  className="text-quinary  ml-5"
                 />
               </button>
               <button
@@ -292,7 +292,7 @@ const VideoChat = ({
                 <FontAwesomeIcon
                   icon={fsHandle.active ? faCompressAlt : faExpandAlt}
                   size="lg"
-                  className="text-white dark:text-black ml-5"
+                  className="text-quinary  ml-5"
                 />
               </button>
             </div>
@@ -341,7 +341,7 @@ const VideoChat = ({
               </div>
             )}
             {roomClosed && (
-              <div className="absolute not-selectable inset-0 w-full h-full flex justify-center items-center text-xl text-white dark:text-black z-40">
+              <div className="absolute not-selectable inset-0 w-full h-full flex justify-center items-center text-xl text-quinary  z-40">
                 <span>🖐️ Call ended</span>
               </div>
             )}

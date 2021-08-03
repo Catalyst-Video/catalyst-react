@@ -92,12 +92,14 @@ export function setThemeColor(theme: CatalystTheme | string): void {
      cssVar.ctwPrimary = THEMES[theme].primary;
      cssVar.ctwSecondary = THEMES[theme].secondary;
      cssVar.ctwTertiary = THEMES[theme].tertiary;
-     cssVar.ctwQuaternary = THEMES[theme].quaternary;
+    cssVar.ctwQuaternary = THEMES[theme].quaternary;
+     cssVar.ctwQuinary = THEMES[theme].quinary;
   } else if (typeof theme === 'object') {
     cssVar.ctwPrimary = theme.primary ?? newTheme.primary!;
     cssVar.ctwSecondary = theme.secondary ?? newTheme.secondary!;
     cssVar.ctwTertiary = theme.tertiary ?? newTheme.tertiary!;
     cssVar.ctwQuaternary = theme.quaternary ?? newTheme.quaternary!;
+    cssVar.ctwQuinary = theme.quinary ?? newTheme.quinary!;
   }
   var style = document.createElement('style');
   document.head.appendChild(style);
@@ -106,6 +108,7 @@ export function setThemeColor(theme: CatalystTheme | string): void {
               -- cssVar.ctwSecondary: ${cssVar.ctwSecondary},
               -- cssVar.ctwTertiary: ${cssVar.ctwTertiary},
                 -- cssVar.ctwQuaternary: ${cssVar.ctwQuaternary},
+                  -- cssVar.ctwQuinary: ${cssVar.ctwQuinary},
       }`
   );
 }

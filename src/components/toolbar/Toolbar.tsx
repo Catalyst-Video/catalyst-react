@@ -361,21 +361,21 @@ const Toolbar = ({
               <FontAwesomeIcon
                 id="chat-open-left"
                 icon={faChevronLeft}
-                className={`text-white dark:text-black mr-1`}
+                className={`text-quinary  mr-1`}
                 size="lg"
               />
             )}
             <FontAwesomeIcon
               id="chat-open"
               icon={faCommentAlt}
-              className={`text-white dark:text-black `}
+              className={`text-quinary  `}
               size="lg"
             />
             {chatOpen && (
               <FontAwesomeIcon
                 id="chat-open-right"
                 icon={faChevronRight}
-                className={`text-white dark:text-black ml-1`}
+                className={`text-quinary  ml-1`}
                 size="lg"
               />
             )}

@@ -237,7 +237,7 @@ const SetupView = ({
       }
     >
       <span id="setuproom-header" className="mx-2 mt-5">
-        <HeaderImg color="text-white dark:text-black" />
+        <HeaderImg color="text-quinary " />
       </span>
 
       <div
@@ -257,7 +257,7 @@ const SetupView = ({
             {!disableNameField && (
               <div className="pt-4 w-full flex justify-center">
                 <input
-                  className="outline-none border-0 bg-gray-300 dark:bg-secondary rounded-2xl px-4 py-1 -mt-8 z-10 text-black dark:text-black text-center"
+                  className="outline-none border-0 bg-gray-300 dark:bg-secondary rounded-2xl px-4 py-1 -mt-8 z-10 text-black  text-center"
                   placeholder={'Display name'}
                   value={userName}
                   onChange={e => setUserName(e.target.value)}
@@ -285,7 +285,7 @@ const SetupView = ({
             </div>
             <button
               id="setuproom-but"
-              className={`rounded-b-xl cursor-pointer block outline-none border-0 font-bold text-md h-14 text-white dark:text-black w-full focus:outline-none focus:border-0 bg-primary`}
+              className={`rounded-b-xl cursor-pointer block outline-none border-0 font-bold text-md h-14 text-quinary  w-full focus:outline-none focus:border-0 bg-primary`}
               onClick={() => setReady(true)}
             >
               Join Call

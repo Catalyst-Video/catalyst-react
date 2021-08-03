@@ -26,35 +26,40 @@ export const DEFAULT_SERVER_ADDRESS = 'https://api.catalyst.chat/';
 export const AUTH_ADDRESS = 'https://staging.catalyst.chat/auth/meeting/token';
 export const DEFAULT_AUTOFADE = 600;
 export const THEMES = {
-  // TODO: Add more themes, complete existing ones
+         // TODO: Add more themes, complete existing ones
          default: {
            primary: '#11c1e8',
            secondary: '#374151',
            tertiary: '#4B5563',
            quaternary: '#6B7280',
+           quinary: '#fff',
          },
          light: {
            primary: '#11c1e8',
            secondary: '#374151',
            tertiary: '#4B5563',
            quaternary: '#6B7280',
+           quinary: '#fff',
          },
          dark: {
            primary: '#11c1e8',
            secondary: '#374151',
            tertiary: '#4B5563',
            quaternary: '#6B7280',
+           quinary: '#fff',
          },
          hoursLight: {
            primary: '#11c1e8',
            secondary: '#374151',
            tertiary: '#4B5563',
            quaternary: '#6B7280',
+           quinary: '#fff',
          },
          hoursDark: {
            primary: '#50c878',
            secondary: '#17171d',
            tertiary: '#252429',
            quaternary: '#50c878',
+           quinary: '#fff',
          },
        };

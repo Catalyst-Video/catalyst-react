@@ -33,7 +33,7 @@ You will need a Catalyst `appId` API key to connect to our servers. This can be 
 
 Our servers are free for your first 30 monthly active users, which means they should not cost you anything in development (and possibly production)!
 
-We recommend a minimum parent container size of 350px X 450px.
+We recommend a minimum parent container size of 400px X 450px.
 
 ## Parameters
 
@@ -46,7 +46,7 @@ We recommend a minimum parent container size of 350px X 450px.
 | `fade` | Milliseconds of no user interaction before fading out controls. Disabled when set to `0`                   |  `number` | `600` | Optional |
 | `audioOnDefault` |Is microphone enabled by default                        |  `boolean` | `true` | Optional |
 | `videoOnDefault` | Is webcam enabled by default               |  `boolean` | `true` | Optional |
-| `theme` | Color scheme. Includes: **primary** _(main color)_, **secondary** _(background color)_, **tertiary** _(button color)_, **quaternary** _(button hover color)_              |  `string` | `{ primary?: string; secondary?: string; tertiary?: string; quaternary?: string; }` | `light` | Optional |
+| `theme` | Color scheme. Includes: **primary** _(main color)_, **secondary** _(background color)_, **tertiary** _(button color)_, **quaternary** _(button hover color)_, **quinary** _(text color)_            |  `string` | `{ primary?: string; secondary?: string; tertiary?: string; quaternary?: string; quinary?: string; }` | `default` | Optional |
 | `simulcast` | Publish multiple levels of quality for video streams              |  `boolean` | `true` | Optional |
 | `disableChat` | Hide text chat functionality              |  `boolean` | `true` | Optional |
 | `disableSetupRoom` | Skip setup view       |  `boolean` | `true` | Optional |
