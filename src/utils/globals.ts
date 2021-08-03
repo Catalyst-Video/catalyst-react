@@ -48,6 +48,13 @@ export const THEMES = {
            quaternary: '#4B5563',
            quinary: '#fff',
          },
+         night: {
+           primary: '#c471ed',
+           secondary: '#000',
+           tertiary: '#1F2937',
+           quaternary: '#374151',
+           quinary: '#fff',
+         },
          hoursLight: {
            primary: '#50c878',
            secondary: '#e1e2ea', //'#e5e7eb',

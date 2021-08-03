@@ -210,7 +210,7 @@ const ToolbarButton = React.memo(({
             <FontAwesomeIcon
               size="xs"
               className={`transition transform hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none  ${
-                iconColor ? 'text-gray-900' : 'text-quinary '
+                iconColor ? 'text-gray-900' : 'text-quinary'
               }`}
               icon={deviceMenu ? faChevronUp : faChevronDown}
             />
