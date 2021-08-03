@@ -34,6 +34,7 @@
     "prebuild": "npm run prebuild:tailwind",
     "start": "tsdx watch",
     "build": "tsdx build",
+    "watch": "tsdx watch",
     "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint",
     "prepare": "npm run prebuild && tsdx build",
