@@ -74,7 +74,7 @@ const RoomWrapper = ({
   const fsHandle = useFullScreenHandle();
 
   const resizeWrapper = () => {
-    let margin = 2;
+    let margin = 4;
     let width = 0;
     let height = 0;
     if (vidRef.current) {
@@ -127,7 +127,7 @@ const RoomWrapper = ({
     else return increment;
   };
 
-  const debouncedResize = debounce(resizeWrapper, 15);
+  // TODO: const debouncedResize = debounce(resizeWrapper, 15);
 
   useEffect(() => {
     window.addEventListener(
@@ -254,7 +254,7 @@ const RoomWrapper = ({
             chatOpen ? 'sm:animate-fade-in-right' : 'sm:animate-fade-in-left' // lg:px-10 xl:px-20
           }`}
         >
-          <div className="speaker-vid flex flex-col p-1 justify-center content-center">
+          <div className="speaker-vid p-1">
             {members.map((m, i) => {
               if (m.sid === mainVid) {
                 return (

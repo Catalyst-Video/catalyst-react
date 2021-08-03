@@ -415,15 +415,15 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
 }
 
 #ctw.catalyst-parent[min-width~="1024px"] .other-vids  {
-  width: 80%;
-  margin: auto;
-  /* height: 100%; */
+  width: 20%;
+  height: 100%;
 }
 
 /* speaker vid  */
 #ctw.catalyst-parent .speaker-vid  {
-  height: 40%;
-  width: auto;
+  width: 85%;
+  max-height: 40%;
+  margin: auto;
 }
 
 #ctw.catalyst-parent[min-width~="640px"] .speaker-vid  {
@@ -433,7 +433,6 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
 #ctw.catalyst-parent[min-width~="1024px"] .speaker-vid  {
   width: 80%;
 }
-
 
 /* name text */
 #ctw.catalyst-parent .text-n  {
