@@ -116,7 +116,7 @@ const VideoChat = ({
             },
           ]);
         } else {
-         if(handleReceiveArbData) handleReceiveArbData(data);
+          if (handleReceiveArbData) handleReceiveArbData(data);
         }
       }
     );
@@ -182,6 +182,8 @@ const VideoChat = ({
     setOutputDevice(device);
     localStorage.setItem('PREFERRED_OUTPUT_DEVICE_ID', device.deviceId);
   };
+
+  roomState.audioTracks.map(track => console.log(track));
 
   // animate toolbar & header fade in/out
   useEffect(() => {
@@ -253,9 +255,9 @@ const VideoChat = ({
   }, []);
 
   return (
-    <div id="video-chat" className="h-full w-full relative" ref={videoChatRef}>
-      <div id="bg-theme" className="h-full w-full bg-secondary ">
-        <FullScreen handle={fsHandle} className="h-full w-full bg-secondary">
+    <div id="video-chat" className="relative w-full h-full" ref={videoChatRef}>
+      <div id="bg-theme" className="w-full h-full bg-secondary ">
+        <FullScreen handle={fsHandle} className="w-full h-full bg-secondary">
           <div
             id="header-wrapper"
             className="animate-fade-in-down"
@@ -263,17 +265,17 @@ const VideoChat = ({
           >
             <HeaderLogo alwaysBanner={false} />
             {/* room count */}
-            <div className="nav-ops absolute flex z-50">
+            <div className="absolute z-50 flex nav-ops">
               <FontAwesomeIcon
                 icon={faUserFriends}
                 size="lg"
-                className="text-quinary  mr-1"
+                className="mr-1 text-quinary"
               />
               <span className="text-quinary ">{memberCount}</span>
               {/* help */}
               <Tippy content="Help" theme="catalyst" placement="bottom">
                 <button
-                  className="cursor-pointer focus:border-0 focus:outline-none ml-5"
+                  className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
                   onClick={() =>
                     window.open(
                       'mailto:support@catalyst.chat?subject=Catalyst%20Inquiry'
@@ -288,38 +290,38 @@ const VideoChat = ({
                 </button>
               </Tippy>
               {/* speaker mode toggle  */}
-               <Tippy content="Toggle View" theme="catalyst" placement="bottom">
+              <Tippy content="Toggle View" theme="catalyst" placement="bottom">
                 <button
-                  className="cursor-pointer focus:border-0 focus:outline-none ml-5"
-                onClick={() => setSpeakerMode(sMode => !sMode)}
-              >
-                <FontAwesomeIcon
-                  icon={speakerMode ? faTh : faThLarge}
-                  size="lg"
-                  className="text-quinary"
-                />
+                  className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
+                  onClick={() => setSpeakerMode(sMode => !sMode)}
+                >
+                  <FontAwesomeIcon
+                    icon={speakerMode ? faTh : faThLarge}
+                    size="lg"
+                    className="text-quinary"
+                  />
                 </button>
-                </Tippy>
+              </Tippy>
               {/* full screen  */}
               <Tippy content="Full Screen" theme="catalyst" placement="bottom">
                 <button
-                  className="cursor-pointer focus:border-0 focus:outline-none ml-5"
-                onClick={() => {
-                  if (fsHandle.active) fsHandle.exit();
-                  else fsHandle.enter();
-                }}
-              >
-                <FontAwesomeIcon
-                  icon={fsHandle.active ? faCompressAlt : faExpandAlt}
-                  size="lg"
-                  className="text-quinary"
-                />
+                  className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
+                  onClick={() => {
+                    if (fsHandle.active) fsHandle.exit();
+                    else fsHandle.enter();
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={fsHandle.active ? faCompressAlt : faExpandAlt}
+                    size="lg"
+                    className="text-quinary"
+                  />
                 </button>
-                </ Tippy>
+              </Tippy>
             </div>
           </div>
 
-          <div id="call-section" className="w-full h-full items-end">
+          <div id="call-section" className="items-end w-full h-full">
             {!roomClosed && (
               <div id="vid-chat-cont" className="absolute inset-0 flex">
                 <RoomWrapper
@@ -335,7 +337,7 @@ const VideoChat = ({
                 {roomState.room && (
                   <div
                     ref={toolbarRef}
-                    className="absolute bottom-0 left-0 right-0 flex items-center justify-center mb-3 z-20"
+                    className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-center mb-3"
                   >
                     <Toolbar
                       room={roomState.room}
@@ -361,7 +363,7 @@ const VideoChat = ({
               </div>
             )}
             {roomClosed && (
-              <div className="absolute not-selectable inset-0 w-full h-full flex justify-center items-center text-xl text-quinary  z-40">
+              <div className="absolute inset-0 z-40 flex items-center justify-center w-full h-full text-xl not-selectable text-quinary">
                 <span>🖐️ Call ended</span>
               </div>
             )}

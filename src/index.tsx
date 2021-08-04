@@ -23,12 +23,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 You can contact us for more details at support@catalyst.chat. */
 
 import React, { useState, useEffect } from 'react';
-import { CatalystChatProps } from "./typings/interfaces";
+import { CatalystChatProps } from './typings/interfaces';
 import './styles/catalyst.css';
 import './styles/tailwind.output.css';
-import { generateUUID, setThemeColor } from "./utils/general";
-import { AUTH_ADDRESS, DEFAULT_AUTOFADE, THEMES } from "./utils/globals";
-import genRandomName from "./utils/name_gen";
+import { generateUUID, setThemeColor } from './utils/general';
+import { AUTH_ADDRESS, DEFAULT_AUTOFADE, THEMES } from './utils/globals';
+import genRandomName from './utils/name_gen';
 import { useCookies } from 'react-cookie';
 // import DetectRTC from 'detectrtc';
 import SetupView from './views/SetupView';
@@ -70,9 +70,10 @@ const CatalystChat = ({
   }, []);
 
   useEffect(() => {
-    if (ready) { 
+    if (ready) {
       // set client ID
-      const uniqueClientIdentifier = cookies.PERSISTENT_CLIENT_ID || generateUUID();
+      const uniqueClientIdentifier =
+        cookies.PERSISTENT_CLIENT_ID || generateUUID();
       if (!cookies.PERSISTENT_CLIENT_ID)
         setCookie('PERSISTENT_CLIENT_ID', uniqueClientIdentifier, {
           expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
@@ -91,7 +92,7 @@ const CatalystChat = ({
         .then(response => {
           if (response.status === 200) {
             response.json().then(json => {
-              // TODO: expose rest of return data 
+              // TODO: expose rest of return data
               setToken(json.token);
             });
           }
@@ -122,9 +123,7 @@ const CatalystChat = ({
         id="catalyst-wrapper"
         className={`h-full w-full m-0 p-0 overflow-hidden max-h-screen max-w-screen box-border`}
       >
-        { 
-          ready
-            ? (
+        {ready ? (
           <VideoChat
             token={token}
             meta={{
@@ -142,8 +141,7 @@ const CatalystChat = ({
             onMemberLeave={onMemberLeave}
             onLeaveCall={onLeaveCall}
           />
-          ) :
-          !disableSetupRoom ? (
+        ) : !disableSetupRoom ? (
           <SetupView
             meta={{
               audioEnabled: audioOn,
