@@ -55,7 +55,6 @@ const AudWrapper = ({
     if (sinkId) {
       // @ts-ignore
       (audioEl.current as HTMLAudioElement)?.setSinkId(sinkId);
-      alert(sinkId);
     }
     // if (sinkId) {
     //    (audioEl.current as HTMLMediaElement)?.setSinkId(audioOutputDevice.deviceId).then(() => {
