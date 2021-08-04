@@ -52,6 +52,7 @@ import { useRoom } from '../hooks/useRoom';
 import { debounce } from 'ts-debounce';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
+import { contact_support } from '../utils/general';
 
 const VideoChat = ({
   token,
@@ -276,11 +277,7 @@ const VideoChat = ({
               <Tippy content="Help" theme="catalyst" placement="bottom">
                 <button
                   className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
-                  onClick={() =>
-                    window.open(
-                      'mailto:support@catalyst.chat?subject=Catalyst%20Inquiry'
-                    )
-                  }
+                  onClick={contact_support}
                 >
                   <FontAwesomeIcon
                     icon={faQuestion}

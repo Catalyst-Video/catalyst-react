@@ -121,7 +121,9 @@ const ToolbarButton = React.memo(({
                 or{' '}
                 <a
                   className="text-primary font-semibold"
-                  href="mailto:support@catalyst.chat?subject=Catalyst%20Inquiry"
+                  target="_blank"
+                  rel="noreferrer"
+                  href="https://catalyst.chat/contact.html"
                 >
                   contact support
                 </a>

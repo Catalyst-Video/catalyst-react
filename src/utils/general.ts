@@ -140,3 +140,8 @@ export function generateUUID() {
   });
   return uuid;
 }
+
+
+export function contact_support() {
+ window.open('https://catalyst.chat/contact.html');
+}
