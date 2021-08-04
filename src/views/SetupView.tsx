@@ -85,12 +85,12 @@ const SetupView = ({
       navigator.mediaDevices.enumerateDevices().then(devices => {
         if (!outputDevice) {
           const outputDevices = devices.filter(
-            id => id.kind === 'audiooutput' && id.deviceId
+            id => id.kind === 'audiooutput' && id?.deviceId
           );
           if (localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')) {
             let outDevice = outputDevices.find(
               d =>
-                d.deviceId ===
+                d?.deviceId ===
                 localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')
             );
             setOutputDevice(outDevice);
@@ -98,51 +98,53 @@ const SetupView = ({
             setOutputDevice(outputDevices[0]);
             localStorage.setItem(
               'PREFERRED_OUTPUT_DEVICE_ID',
-              outputDevices[0].deviceId
+              outputDevices[0]?.deviceId
             );
           }
         }
 
         if (!audioDevice) {
           const audioDevices = devices.filter(
-            id => id.kind === 'audioinput' && id.deviceId
+            id => id.kind === 'audioinput' && id?.deviceId
           );
           if (localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')) {
             let audDevice = audioDevices.find(
               d =>
-                d.deviceId === localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')
+                d?.deviceId ===
+                localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')
             );
             setAudioDevice(audDevice);
           } else {
             setAudioDevice(audioDevices[0]);
             localStorage.setItem(
               'PREFERRED_AUDIO_DEVICE_ID',
-              audioDevices[0].deviceId
+              audioDevices[0]?.deviceId
             );
           }
         }
         if (!videoDevice) {
           const videoDevices = devices.filter(
-            id => id.kind === 'videoinput' && id.deviceId
+            id => id.kind === 'videoinput' && id?.deviceId
           );
           if (localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')) {
             let vidDevice = videoDevices.find(
               d =>
-                d.deviceId === localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')
+                d?.deviceId ===
+                localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')
             );
             setVideoDevice(vidDevice);
           } else {
             let defaultVidDevice = videoDevices.find(
               d =>
-                d.deviceId ===
-                videoTrack?.mediaStreamTrack.getSettings().deviceId
+                d?.deviceId ===
+                videoTrack?.mediaStreamTrack.getSettings()?.deviceId
             );
             if (defaultVidDevice) {
               setVideoDevice(defaultVidDevice);
               if (!localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')) {
                 localStorage.setItem(
                   'PREFERRED_VIDEO_DEVICE_ID',
-                  defaultVidDevice.deviceId
+                  defaultVidDevice?.deviceId
                 );
               }
             }
@@ -159,11 +161,11 @@ const SetupView = ({
 
   useEffect(() => {
     if (audioDevice) {
-      createLocalAudioTrack({ deviceId: audioDevice.deviceId })
+      createLocalAudioTrack({ deviceId: audioDevice?.deviceId })
         .then(track => {
           localStorage.setItem(
             'PREFERRED_AUDIO_DEVICE_ID',
-            audioDevice.deviceId
+            audioDevice?.deviceId
           );
         })
         .catch((err: Error) => {
@@ -174,7 +176,7 @@ const SetupView = ({
 
   useEffect(() => {
     if (videoDevice) {
-      createLocalVideoTrack({ deviceId: videoDevice.deviceId })
+      createLocalVideoTrack({ deviceId: videoDevice?.deviceId })
         .then((track: LocalVideoTrack) => {
           setVideoTrack(track);
         })
@@ -191,12 +193,12 @@ const SetupView = ({
   const selectVideoDevice = (device: MediaDeviceInfo) => {
     if (videoTrack) {
       if (
-        videoTrack.mediaStreamTrack.getSettings().deviceId === device.deviceId
+        videoTrack.mediaStreamTrack.getSettings()?.deviceId === device?.deviceId
       ) {
         return;
       } else {
         setVideoDevice(device);
-        localStorage.setItem('PREFERRED_VIDEO_DEVICE_ID', device.deviceId);
+        localStorage.setItem('PREFERRED_VIDEO_DEVICE_ID', device?.deviceId);
       }
     }
   };
@@ -208,7 +210,7 @@ const SetupView = ({
     } else {
       const options: CreateVideoTrackOptions = {};
       if (videoDevice) {
-        options.deviceId = videoDevice.deviceId;
+        options.deviceId = videoDevice?.deviceId;
       }
       createLocalVideoTrack(options).then(track => {
         setVideoTrack(track);
@@ -218,7 +220,7 @@ const SetupView = ({
 
   const updateOutputDevice = (device: MediaDeviceInfo) => {
     setOutputDevice(device);
-    localStorage.setItem('PREFERRED_OUTPUT_DEVICE_ID', device.deviceId);
+    localStorage.setItem('PREFERRED_OUTPUT_DEVICE_ID', device?.deviceId);
   };
 
   return (
