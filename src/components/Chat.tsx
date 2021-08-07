@@ -98,7 +98,7 @@ const Chat = ({
     <>
       {chatOpen && (
         <div
-          className={`bg-secondary flex h-full absolute right-0 sm:relative z-50 shadow-lg sm:z-20 w-72 sm:w-64 ${
+          className={`bg-secondary flex h-full right-0 relative z-50 shadow-lg sm:z-20 w-72 sm:w-64 ${
             chatOpen ? 'animate-fade-in-right' : 'animate-fade-out-right'
           }`}
         >
@@ -160,7 +160,7 @@ const Chat = ({
             <textarea
               id="chat-compose"
               placeholder="Type your message"
-              className="focus:outline-none focus:border-0 w-full resize-none text-quinary  bg-secondary ml-1"
+              className="focus:outline-none focus:border-0 resize-none text-quinary  bg-secondary ml-1"
               rows={6}
               value={chatBox}
               onKeyUp={e => {
