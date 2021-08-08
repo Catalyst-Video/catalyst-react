@@ -101,9 +101,10 @@ const Chat = ({
     <>
       {chatOpen && (
         <div
-          className={`chat-cont bg-secondary flex h-full right-0 z-50 shadow-2xl sm:z-20 ${
-            chatOpen ? 'animate-fade-in-right' : 'animate-fade-out-right'
-          }`} //shadow-lg shadow-xl w-72 sm:w-64
+          className={`chat-cont bg-secondary flex h-full right-0 z-50 shadow-2xl sm:z-20 `} //shadow-lg shadow-xl w-72 sm:w-64
+        // ${
+        //     chatOpen ? 'animate-fade-in-right' : 'animate-fade-out-right'
+        //   }
         >
           <Tippy content="Close Chat" theme="catalyst" placement="bottom">
             <button

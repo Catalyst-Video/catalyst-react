@@ -252,7 +252,7 @@ const Toolbar = ({
   //  };
 
   return (
-    <div id="toolbar" className={!isMobile ? chatOpen ? 'sm:mr-56' : '' : ''}>
+    <div id="toolbar" className={!isMobile ? (chatOpen ? 'sm:mr-56' : '') : ''}>
       {/* Mute Audio Button */}
       <AudioDeviceBtn
         isMuted={!audio || isMuted}
@@ -271,7 +271,7 @@ const Toolbar = ({
       />
       {/* Screen Share Button */}
       {/* TODO: screen share on mobile  */}
-      {!isMobile ? (
+      {!isMobile && (
         <ToolbarButton
           type="screenshare"
           tooltip={screen?.track ? 'Stop Sharing' : 'Share Screen'}
@@ -315,19 +315,17 @@ const Toolbar = ({
                 }
           }
         />
-      ) : (
-        <ToolbarButton
-          type="chat"
-          tooltip="Toggle Chat"
-          icon={faCommentAlt}
-          bgColor={
-            chatOpen ? `bg-primary` : 'bg-tertiary hover:bg-quaternary  '
-          }
-          onClick={() => {
-            setChatOpen(chatOpen => !chatOpen);
-          }}
-        />
       )}
+      {/* Chat Button */}
+      {!disableChat && <ToolbarButton
+        type="chat"
+        tooltip="Toggle Chat"
+        icon={faCommentAlt}
+        bgColor={chatOpen ? `bg-primary` : 'bg-tertiary hover:bg-quaternary  '}
+        onClick={() => {
+          setChatOpen(chatOpen => !chatOpen);
+        }}
+      />}
       {/* End Call Button */}
       {onLeave && (
         <ToolbarButton
@@ -341,13 +339,14 @@ const Toolbar = ({
           }}
         />
       )}
-      {!disableChat && !isMobile && (
+      {/* TODO: fixed right chat button {!disableChat && !isMobile && (
         <div
           // className={`absolute ${
           //   chatOpen ? 'right-48 animate-fade-in-right' : 'right-3 ' //  animate-fade-in-left
           // } z-40 bottom-1 animate-fade-in-up`}
           className={`absolute ${
-          chatOpen ? 'hidden' : '' } right-3 z-0 bottom-1 animate-fade-in-up`}
+            chatOpen ? 'hidden' : ''
+          } right-3 z-0 bottom-1 animate-fade-in-up`}
         >
           <ToolbarButton
             type="chat"
@@ -361,7 +360,7 @@ const Toolbar = ({
             }}
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 };

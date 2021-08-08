@@ -197,9 +197,10 @@ const RoomWrapper = ({
         <div
           id="remote-vid-wrapper"
           ref={vidRef}
-          className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border ${
-            chatOpen ? 'sm:animate-fade-in-right' : 'sm:animate-fade-in-left'
-          }`}
+          className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border`}
+          // ${
+          //   chatOpen ? 'sm:animate-fade-in-right' : 'sm:animate-fade-in-left'
+          // }`}
         >
           {sharedScreens &&
             sharedScreens.map((s, i) => {
@@ -252,9 +253,10 @@ const RoomWrapper = ({
       )}
       {speakerMode && (
         <div
-          className={`speaker-view flex z-20 w-full justify-center sm:justify-around  ${
-            chatOpen ? 'sm:animate-fade-in-right' : 'sm:animate-fade-in-left' // lg:px-10 xl:px-20
-          }`}
+          className={`speaker-view flex z-20 w-full justify-center sm:justify-around  `}
+          // ${
+          //   chatOpen ? 'sm:animate-fade-in-right' : 'sm:animate-fade-in-left' // lg:px-10 xl:px-20
+          // }`}
         >
           <div className="speaker-vid flex flex-col p-1 justify-center content-center">
             {members.map((m, i) => {
