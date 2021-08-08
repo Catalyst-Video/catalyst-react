@@ -108,7 +108,7 @@ const Chat = ({
         >
           <Tippy content="Close Chat" theme="catalyst" placement="bottom">
             <button
-              className="absolute top-3 left-3 z-50"
+              className="absolute top-2 left-2 z-50"
               onClick={() => setChatOpen(chat => !chat)}
             >
               <FontAwesomeIcon

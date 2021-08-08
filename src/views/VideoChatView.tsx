@@ -54,6 +54,7 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { contact_support } from '../utils/general';
 import { isMobile } from 'react-device-detect';
+import { SUPPORT_EMAIL } from '../utils/globals';
 
 const VideoChat = ({
   token,
@@ -91,6 +92,23 @@ const VideoChat = ({
   const headerRef = useRef<HTMLDivElement>(null);
   const videoChatRef = useRef<HTMLDivElement>(null);
   const decoder = new TextDecoder();
+
+  // catch invalid tokens 
+  if (token === 'INVALID' || !token) {
+    return (
+      <div
+        id="video-chat"
+        className="relative w-full h-full"
+        ref={videoChatRef}
+      >
+        <div id="bg-theme" className="w-full h-full bg-secondary ">
+          <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center text-xl text-quinary ">
+            <span>⚠️ An error occurred generating your user token. Please contact {SUPPORT_EMAIL} for help</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const onConnected = async room => {
     if (onJoinCall) onJoinCall();

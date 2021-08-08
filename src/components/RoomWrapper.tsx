@@ -226,8 +226,6 @@ const RoomWrapper = ({
                 width={vidDims.width}
                 showOverlay={showOverlay}
                 quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
-                onMouseEnter={() => setShowOverlay(true)}
-                onMouseLeave={() => setShowOverlay(false)}
                 onClick={() => {
                   setMainVid(m.sid);
                   setSpeakerMode(sm => !sm);
@@ -270,8 +268,6 @@ const RoomWrapper = ({
                     classes={'aspect-w-16 aspect-h-9'}
                     showOverlay={showOverlay}
                     quality={VideoQuality.HIGH}
-                    onMouseEnter={() => setShowOverlay(true)}
-                    onMouseLeave={() => setShowOverlay(false)}
                     onClick={() => setSpeakerMode(sm => !sm)}
                   />
                 );
@@ -340,8 +336,6 @@ const RoomWrapper = ({
                     classes={'box vid-p w-full h-auto aspect-w-16 aspect-h-9'}
                     showOverlay={showOverlay}
                     quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
-                    onMouseEnter={() => setShowOverlay(true)}
-                    onMouseLeave={() => setShowOverlay(false)}
                     onClick={() => {
                       setMainVid(m.sid);
                       setSpeakerMode(sm => !sm);

@@ -24,7 +24,7 @@ You can contact us for more details at support@catalyst.chat. */
 
 import { CSSGlobalVariables } from 'css-global-variables';
 import { CatalystTheme } from '../typings/interfaces';
-import { THEMES } from './globals';
+import { SUPPORT_URL, THEMES } from './globals';
 
 export function logger(data: string): void {
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -143,5 +143,5 @@ export function generateUUID() {
 
 
 export function contact_support() {
- window.open('https://catalyst.chat/contact.html');
+ window.open(SUPPORT_URL, '_blank');
 }

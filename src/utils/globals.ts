@@ -25,6 +25,8 @@ You can contact us for more details at support@catalyst.chat. */
 export const DEFAULT_SERVER_ADDRESS = 'https://api.catalyst.chat/';
 export const AUTH_ADDRESS = 'https://staging.catalyst.chat/auth/meeting/token';
 export const DEFAULT_AUTOFADE = 600;
+export const SUPPORT_EMAIL = 'support@catalyst.chat';
+export const SUPPORT_URL = 'https://catalyst.chat/contact';
 export const THEMES = {
          // TODO: Add more themes, complete existing ones
          default: {

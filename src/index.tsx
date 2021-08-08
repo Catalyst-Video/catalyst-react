@@ -58,11 +58,11 @@ const CatalystChat = ({
   onLeaveCall,
 }: CatalystChatProps) => {
   const [ready, setReady] = useState(disableSetupRoom ?? false);
-  const [token, setToken] = useState('');
   const [userName, setUserName] = useState(name ?? genRandomName());
   const [cookies, setCookie] = useCookies(['PERSISTENT_CLIENT_ID']);
   const [audioOn, setAudioOn] = useState(audioOnDefault ?? true);
   const [videoOn, setVideoOn] = useState(videoOnDefault ?? true);
+  const [token, setToken] = useState('');
 
   useEffect(() => {
     // set global theme
@@ -99,6 +99,7 @@ const CatalystChat = ({
         })
         .catch(err => {
           console.log(err);
+          setToken('INVALID')
         });
     }
   }, [ready]);

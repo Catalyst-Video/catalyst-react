@@ -47,8 +47,6 @@ const MemberView = React.memo(({
   displayName,
   showOverlay,
   quality,
-  onMouseEnter,
-  onMouseLeave,
   onClick,
 }: {
   member: Participant;
@@ -58,8 +56,6 @@ const MemberView = React.memo(({
   classes?: string;
   showOverlay?: boolean;
   quality?: VideoQuality;
-  onMouseEnter?: () => void;
-  onMouseLeave?: () => void;
   onClick?: () => void;
 }) => {
   const { isLocal, isMuted, subscribedTracks } = useMember(m);
@@ -141,14 +137,12 @@ const MemberView = React.memo(({
       <div
         ref={ref}
         className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-xl ${
-          m.isSpeaking ? `ring-4 ring-primary ring-opacity-50` : ''
+          m.isSpeaking ? `ring-2 ring-primary ring-opacity-50` : ''
         }`}
         style={{
           height: height,
           width: width,
         }}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
         onClick={onClick}
       >
         {videoPub?.track ? (

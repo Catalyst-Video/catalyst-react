@@ -35,6 +35,7 @@ import { CatalystDev } from '../../typings/interfaces';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { useRef } from 'react';
+import { SUPPORT_URL } from '../../utils/globals';
 
 const ToolbarButton = React.memo(({
   type,
@@ -123,7 +124,7 @@ const ToolbarButton = React.memo(({
                   className="text-primary font-semibold"
                   target="_blank"
                   rel="noreferrer"
-                  href="https://catalyst.chat/contact.html"
+                  href={SUPPORT_URL}
                 >
                   contact support
                 </a>
