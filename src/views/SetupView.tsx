@@ -250,7 +250,9 @@ const SetupView = ({
           id="setuproom-comp"
           className="rounded-2xl my-2 mx-1z-10 overflow-hidden" // shadow-md
         >
-          <div className="w-80 sm:w-96 lg:h-full rounded-t-xl bg-secondary rounded-b-none z-1">
+          <div className="w-80 sm:w-96 lg:h-full rounded-t-xl bg-secondary rounded-b-none z-1" style={{
+            maxHeight: '300px'
+          }}>
             {videoTrack && videoOn ? (
               <VidWrapper track={videoTrack} isLocal={true} />
             ) : (
