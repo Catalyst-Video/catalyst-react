@@ -96,6 +96,10 @@ const CatalystChat = ({
               setToken(json.token);
             });
           }
+          if (response.status === 500) {
+            console.log('There is no user record corresponding to the provided identifier');
+            setToken('INVALID');
+          }
         })
         .catch(err => {
           console.log(err);
