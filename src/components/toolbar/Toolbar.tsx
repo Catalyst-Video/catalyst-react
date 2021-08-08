@@ -275,7 +275,7 @@ const Toolbar = ({
         <ToolbarButton
           type="screenshare"
           tooltip={screen?.track ? 'Stop Sharing' : 'Share Screen'}
-          icon={screen?.track ? faStop : faDesktop}
+          icon={faDesktop}
           bgColor={
             screen?.track ? `bg-primary` : 'bg-tertiary hover:bg-quaternary'
           }

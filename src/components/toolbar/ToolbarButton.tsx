@@ -68,21 +68,21 @@ const ToolbarButton = React.memo(({
   selectedIpDevice?: MediaDeviceInfo;
   parentRef?: RefObject<HTMLDivElement>;
 }) => {
-  const [deviceMenu, setDeviceMenu] = useState(false);
+  const [deviceSelectEnabled, setDeviceSelectEnabled] = useState(false);
   const selectRef = useRef<HTMLButtonElement>(null)
 
   const handleOnIpDeviceClick = (id: CatalystDev) => {
     if (onIpDeviceClick) {
       onIpDeviceClick(id);
     }
-    setDeviceMenu(false);
+    setDeviceSelectEnabled(false);
   };
 
   const handleOnOpDeviceClick = (id: CatalystDev) => {
     if (onOpDeviceClick) {
       onOpDeviceClick(id);
     }
-    setDeviceMenu(false);
+    setDeviceSelectEnabled(false);
   };
 
   return (
@@ -91,12 +91,12 @@ const ToolbarButton = React.memo(({
       triggerTarget={selectRef.current}
       className="bg-tertiary font-sans"
       trigger="click"
+      disabled={!inputDevices && !outputDevices}
       onShown={() => {
-        setDeviceMenu(true);
+        setDeviceSelectEnabled(true);
       }}
       onHidden={() => {
-        // setDeviceMenu(deviceMenu => !deviceMenu);
-        setDeviceMenu(false);
+        setDeviceSelectEnabled(false);
       }}
       content={
         outputDevices || inputDevices ? (
@@ -206,11 +206,15 @@ const ToolbarButton = React.memo(({
       }
     >
       <div className="inline-block m-1 relative">
-        <Tippy content={tooltip} theme="catalyst" disabled={deviceMenu}>
+        <Tippy
+          content={tooltip}
+          theme="catalyst"
+          disabled={deviceSelectEnabled}
+        >
           <button
             id={`${type}-btn`}
             disabled={disabled}
-            className={`rounded-full w-16 h-16 flex justify-center items-center ${
+            className={`rounded-full w-14 h-14 flex justify-center items-center ${
               bgColor ? bgColor : 'bg-tertiary hover:bg-quaternary'
             } focus:outline-none focus:border-0 `}
             onClick={onClick}
@@ -233,14 +237,14 @@ const ToolbarButton = React.memo(({
             className={`absolute z-10 -right-1 -bottom-1 ${
               bgColor ? bgColor : 'bg-tertiary hover:bg-quaternary '
             }  rounded-full border-4 border-secondary h-6 w-6 flex justify-center items-center focus:outline-none`}
-            onClick={() => setDeviceMenu(deviceMenu => !deviceMenu)}
+            onClick={() => setDeviceSelectEnabled(deviceMenu => !deviceMenu)}
           >
             <FontAwesomeIcon
               size="xs"
               className={`transition transform hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none  ${
                 iconColor ? 'text-gray-900' : 'text-quinary'
               }`}
-              icon={deviceMenu ? faChevronUp : faChevronDown}
+              icon={deviceSelectEnabled ? faChevronUp : faChevronDown}
             />
           </button>
         )}
