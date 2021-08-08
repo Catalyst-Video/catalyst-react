@@ -40,7 +40,7 @@ const HeaderLogo = React.memo(
           <div className="absolute z-40 hidden sm:block not-selectable top-2 left-2">
             <div
               id="header-img-wrapper"
-              className="inline bg-transparent cursor-pointer header-img focus:border-0 focus:outline-none"
+              className="inline bg-transparent header-img focus:border-0 focus:outline-none" //cursor-pointer
             >
               <HeaderImg />
             </div>

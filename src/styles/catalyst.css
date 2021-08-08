@@ -514,3 +514,13 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
 #ctw.catalyst-parent[min-width~="1024px"] .bg-placeholder {
   min-height: 10rem;
 }
+
+#ctw .chat-cont {
+  position: absolute;
+  width: 18rem;
+}
+
+#ctw.catalyst-parent[min-width~="768px"] .chat-cont {
+  position: relative;
+  width: 16rem;
+}

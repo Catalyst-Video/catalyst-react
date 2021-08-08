@@ -252,7 +252,7 @@ const Toolbar = ({
   //  };
 
   return (
-    <div id="toolbar" className="">
+    <div id="toolbar" className={!isMobile ? chatOpen ? 'sm:mr-56' : '' : ''}>
       {/* Mute Audio Button */}
       <AudioDeviceBtn
         isMuted={!audio || isMuted}
@@ -277,9 +277,7 @@ const Toolbar = ({
           tooltip={screen?.track ? 'Stop Sharing' : 'Share Screen'}
           icon={screen?.track ? faStop : faDesktop}
           bgColor={
-            screen?.track
-              ? `bg-primary`
-              : 'bg-tertiary hover:bg-quaternary'
+            screen?.track ? `bg-primary` : 'bg-tertiary hover:bg-quaternary'
           }
           onClick={
             screen?.track
@@ -323,9 +321,7 @@ const Toolbar = ({
           tooltip="Toggle Chat"
           icon={faCommentAlt}
           bgColor={
-          chatOpen
-              ? `bg-primary`
-              : 'bg-tertiary hover:bg-quaternary  '
+            chatOpen ? `bg-primary` : 'bg-tertiary hover:bg-quaternary  '
           }
           onClick={() => {
             setChatOpen(chatOpen => !chatOpen);
@@ -347,39 +343,23 @@ const Toolbar = ({
       )}
       {!disableChat && !isMobile && (
         <div
+          // className={`absolute ${
+          //   chatOpen ? 'right-48 animate-fade-in-right' : 'right-3 ' //  animate-fade-in-left
+          // } z-40 bottom-1 animate-fade-in-up`}
           className={`absolute ${
-            chatOpen
-              ? 'right-48 animate-fade-in-right'
-              : 'right-3 ' //  animate-fade-in-left
-          } z-40 bottom-1 animate-fade-in-up`}
+          chatOpen ? 'hidden' : '' } right-3 z-0 bottom-1 animate-fade-in-up`}
         >
-          <button
-            className="z-40 focus:outline-none focus:border-0 flex bg-tertiary  hover:bg-quaternary  rounded-full w-16 h-16 items-center justify-center"
-            onClick={() => setChatOpen(chatOpen => !chatOpen)}
-          >
-            {!chatOpen && (
-              <FontAwesomeIcon
-                id="chat-open-left"
-                icon={faChevronLeft}
-                className={`text-quinary  mr-1`}
-                size="lg"
-              />
-            )}
-            <FontAwesomeIcon
-              id="chat-open"
-              icon={faCommentAlt}
-              className={`text-quinary  `}
-              size="lg"
-            />
-            {chatOpen && (
-              <FontAwesomeIcon
-                id="chat-open-right"
-                icon={faChevronRight}
-                className={`text-quinary  ml-1`}
-                size="lg"
-              />
-            )}
-          </button>
+          <ToolbarButton
+            type="chat"
+            tooltip="Toggle Chat"
+            icon={faCommentAlt}
+            bgColor={
+              chatOpen ? `bg-primary` : 'bg-tertiary hover:bg-quaternary  '
+            }
+            onClick={() => {
+              setChatOpen(chatOpen => !chatOpen);
+            }}
+          />
         </div>
       )}
     </div>

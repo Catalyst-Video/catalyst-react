@@ -42,6 +42,7 @@ const RoomWrapper = ({
   speakerMode,
   setSpeakerMode,
   chatOpen,
+  setChatOpen,
   disableChat,
   chatMessages,
   setChatMessages,
@@ -52,6 +53,7 @@ const RoomWrapper = ({
   setSpeakerMode: Function;
   chatOpen: boolean;
   disableChat?: boolean;
+  setChatOpen: Function;
   chatMessages: ChatMessage[];
   setChatMessages: Function;
 }) => {
@@ -290,7 +292,7 @@ const RoomWrapper = ({
           </div>
           <div
             className={
-              'other-vids flex p-1 justify-center content-center no-scrollbar overflow-x-auto top-0 left-0' 
+              'other-vids flex p-1 justify-center content-center no-scrollbar overflow-x-auto top-0 left-0'
             }
             onClick={() => setSpeakerMode(sm => !sm)}
           >
@@ -333,9 +335,7 @@ const RoomWrapper = ({
                     height={'100%'}
                     //height={'fit-content'}
                     width={'100%'}
-                    classes={
-                      'box vid-p w-full h-auto aspect-w-16 aspect-h-9'
-                    }
+                    classes={'box vid-p w-full h-auto aspect-w-16 aspect-h-9'}
                     showOverlay={showOverlay}
                     quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
                     onMouseEnter={() => setShowOverlay(true)}
@@ -354,6 +354,7 @@ const RoomWrapper = ({
       {!disableChat && (
         <Chat
           chatOpen={chatOpen}
+          setChatOpen={setChatOpen}
           localParticipant={localParticipant}
           chatMessages={chatMessages}
           setChatMessages={setChatMessages}

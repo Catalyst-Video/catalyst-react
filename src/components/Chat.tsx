@@ -25,21 +25,24 @@ You can contact us for more details at support@catalyst.chat. */
 import React, { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faPaperPlane,
+  faPaperPlane, faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import { DataPacket_Kind, LocalParticipant } from 'livekit-client';
 import { ChatMessage } from '../typings/interfaces';
+import Tippy from '@tippyjs/react';
 
 const Chat = ({
   chatOpen,
   localParticipant,
   chatMessages,
   setChatMessages,
+  setChatOpen,
 }: {
   chatOpen: boolean;
   localParticipant?: LocalParticipant;
   chatMessages: ChatMessage[];
   setChatMessages: Function;
+  setChatOpen: Function
 }) => {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const [chatBox, setChatBox] = useState('');
@@ -98,10 +101,23 @@ const Chat = ({
     <>
       {chatOpen && (
         <div
-          className={`bg-secondary flex h-full right-0 relative z-50 shadow-lg sm:z-20 w-72 sm:w-64 ${
+          className={`chat-cont bg-secondary flex h-full right-0 z-50 shadow-2xl sm:z-20 ${
             chatOpen ? 'animate-fade-in-right' : 'animate-fade-out-right'
-          }`}
+          }`} //shadow-lg shadow-xl w-72 sm:w-64
         >
+          <Tippy content="Close Chat" theme="catalyst" placement="bottom">
+            <button
+              className="absolute top-3 left-3 z-50"
+              onClick={() => setChatOpen(chat => !chat)}
+            >
+              <FontAwesomeIcon
+                id="chat-close"
+                icon={faTimes}
+                size="lg"
+                className={`text-quinary `}
+              />
+            </button>
+          </Tippy>
           <div
             id="chat-zone"
             className="flex h-full absolute overflow-x-none inset-0 pt-6 sm:pt-16 pb-36"
@@ -117,9 +133,12 @@ const Chat = ({
                       className="sent-message flex flex-col items-start content-end p-1 pr-2 ml-20 fade-in-bottom z-40"
                       key={idx}
                     >
-                      {(idx === 0 || chatMessages[idx-1].sender !== msg.sender) && <span className="text-quinary  font-semibold text-xs ml-auto p-1 not-selectable">
-                        {msg.sender?.identity} (You)
-                      </span>}
+                      {(idx === 0 ||
+                        chatMessages[idx - 1].sender !== msg.sender) && (
+                        <span className="text-quinary  font-semibold text-xs ml-auto p-1 not-selectable">
+                          {msg.sender?.identity} (You)
+                        </span>
+                      )}
                       <div
                         className={`bg-primary text-quinary  rounded-tl-2xl rounded-tr-2xl rounded-br-sm rounded-bl-2xl  ml-auto p-2`}
                       >
@@ -135,9 +154,12 @@ const Chat = ({
                       className="received-message flex flex-col items-start content-end p-1 pl-2 fade-in-bottom"
                       key={idx}
                     >
-                      {(idx === 0 || chatMessages[idx - 1].sender !== msg.sender) && <span className="text-quinary  font-semibold text-xs p-1 not-selectable">
-                        {msg?.sender?.identity}
-                      </span>}
+                      {(idx === 0 ||
+                        chatMessages[idx - 1].sender !== msg.sender) && (
+                        <span className="text-quinary  font-semibold text-xs p-1 not-selectable">
+                          {msg?.sender?.identity}
+                        </span>
+                      )}
                       <div className="bg-gray-100 text-black flex items-center justify-center rounded-tl-2xl rounded-tr-2xl rounded-br-2xl rounded-bl-sm p-2">
                         <div className="message break-all px-2 py-1 text-xs">
                           {autolink(msg.text, false)}

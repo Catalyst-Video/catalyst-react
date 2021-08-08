@@ -6,7 +6,7 @@ module.exports = {
     './src/*.{js,jsx,ts,tsx}',
     './public/index.html',
   ],
-  mode: 'jit',
+  // mode: 'jit', // TODO: enable for production
   // darkMode: 'class', // or 'media'
   important: '#ctw',
   theme: {
@@ -87,10 +87,10 @@ module.exports = {
         },
       },
       animation: {
-        'fade-in-down': 'fade-in-down 0.20s ease-out',
-        'fade-out-down': 'fade-out-down 0.20s ease-out',
-        'fade-in-up': 'fade-in-up 0.20s ease-out',
-        'fade-out-up': 'fade-out-up 0.20s ease-out',
+        'fade-in-down': 'fade-in-down 0.18s ease-out',
+        'fade-out-down': 'fade-out-down 0.18s ease-out',
+        'fade-in-up': 'fade-in-up 0.18s ease-out',
+        'fade-out-up': 'fade-out-up 0.18s ease-out',
         'fade-in-right': 'fade-in-right 0.25s ease-out',
         'fade-in-left': 'fade-in-left 0.25s ease-out',
       },

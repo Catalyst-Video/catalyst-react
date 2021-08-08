@@ -53,6 +53,7 @@ import { debounce } from 'ts-debounce';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { contact_support } from '../utils/general';
+import { isMobile } from 'react-device-detect';
 
 const VideoChat = ({
   token,
@@ -203,7 +204,7 @@ const VideoChat = ({
             tClasses?.remove('animate-fade-out-down');
             tClasses?.add('hidden');
             isHidden = true;
-          }, 190);
+          }, 170)// 190);
           timedelay = 1;
         }
         timedelay += 1;
@@ -266,7 +267,11 @@ const VideoChat = ({
           >
             <HeaderLogo alwaysBanner={false} />
             {/* room count */}
-            <div className="absolute z-50 flex nav-ops">
+            <div
+              className={`${
+                !isMobile ? chatOpen ? 'sm:mr-56' : '' : ''
+              } absolute z-50 flex nav-ops`}
+            >
               <FontAwesomeIcon
                 icon={faUserFriends}
                 size="lg"
@@ -276,7 +281,7 @@ const VideoChat = ({
               {/* help */}
               <Tippy content="Help" theme="catalyst" placement="bottom">
                 <button
-                  className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
+                  className="ml-4 cursor-pointer focus:border-0 focus:outline-none"
                   onClick={contact_support}
                 >
                   <FontAwesomeIcon
@@ -300,21 +305,27 @@ const VideoChat = ({
                 </button>
               </Tippy>
               {/* full screen  */}
-              <Tippy content="Full Screen" theme="catalyst" placement="bottom">
-                <button
-                  className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
-                  onClick={() => {
-                    if (fsHandle.active) fsHandle.exit();
-                    else fsHandle.enter();
-                  }}
+              {!isMobile && (
+                <Tippy
+                  content="Full Screen"
+                  theme="catalyst"
+                  placement="bottom"
                 >
-                  <FontAwesomeIcon
-                    icon={fsHandle.active ? faCompressAlt : faExpandAlt}
-                    size="lg"
-                    className="text-quinary"
-                  />
-                </button>
-              </Tippy>
+                  <button
+                    className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
+                    onClick={() => {
+                      if (fsHandle.active) fsHandle.exit();
+                      else fsHandle.enter();
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={fsHandle.active ? faCompressAlt : faExpandAlt}
+                      size="lg"
+                      className="text-quinary"
+                    />
+                  </button>
+                </Tippy>
+              )}
             </div>
           </div>
 
@@ -324,6 +335,7 @@ const VideoChat = ({
                 <RoomWrapper
                   onLeave={onLeave}
                   chatOpen={chatOpen}
+                  setChatOpen={setChatOpen}
                   roomState={roomState}
                   speakerMode={speakerMode}
                   disableChat={disableChat}
