@@ -49,10 +49,12 @@ const AudioDeviceBtn = ({
   const [opSources, setOpSources] = useState<MediaDeviceInfo[]>([]);
   const [devices, setDevices] = useState<CatalystDev[]>([]);
   const [outputDevices, setOutputDevices] = useState<CatalystDev[]>([]);
+  const mounted = useRef(true);
   // const audBtnRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     navigator.mediaDevices.enumerateDevices().then(devices => {
+       if (!mounted.current) return null;
       const audioDevices = devices.filter(
         id => id.kind === 'audioinput' && id.deviceId
       );
@@ -71,7 +73,11 @@ const AudioDeviceBtn = ({
           return { label: id.label };
         })
       );
+      return devices
     });
+    return () => {
+      mounted.current = false;
+    };
   }, [isMuted]);
 
   const handleIpDeviceClick = (id: CatalystDev) => {

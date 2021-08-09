@@ -40,10 +40,12 @@ const VidDeviceBtn = ({
 }) => {
   const [sources, setSources] = useState<MediaDeviceInfo[]>([]);
   const [devices, setDevices] = useState<CatalystDev[]>([]);
+  const mounted = useRef(true);
   // const vidBtnRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     navigator.mediaDevices.enumerateDevices().then(devices => {
+      if (!mounted.current) return null;
       const videoDevices = devices.filter(
         id => id.kind === 'videoinput' && id.deviceId
       );
@@ -53,7 +55,11 @@ const VidDeviceBtn = ({
           return { label: id.label };
         })
       );
+      return devices
     });
+    return () => {
+      mounted.current = false;
+    };
   }, [isEnabled]);
 
   const handleDevice = (id: CatalystDev) => {

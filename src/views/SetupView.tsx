@@ -63,6 +63,7 @@ const SetupView = ({
   const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
   const [outputDevice, setOutputDevice] = useState<MediaDeviceInfo>();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const mounted = useRef(true);
 
   const [gradient] = useState(
     `linear-gradient(217deg, hsla(356, 90%, 64%, 0.8), hsla(280, 78%, 69%, 0.8), hsla(191, 86%, 49%, 0.8))`
@@ -83,6 +84,7 @@ const SetupView = ({
   useEffect(() => {
     if ((!outputDevice || !audioDevice || !videoDevice) && localStorage) {
       navigator.mediaDevices.enumerateDevices().then(devices => {
+        if (!mounted.current) return null;
         if (!outputDevice) {
           const outputDevices = devices.filter(
             id => id.kind === 'audiooutput' && id?.deviceId
@@ -122,6 +124,7 @@ const SetupView = ({
             );
           }
         }
+        
         if (!videoDevice) {
           const videoDevices = devices.filter(
             id => id.kind === 'videoinput' && id?.deviceId
@@ -150,23 +153,31 @@ const SetupView = ({
             }
           }
         }
+        return outputDevice && audioDevice && videoDevice;
       });
     }
     if (videoOn) {
       createLocalVideoTrack().then(track => {
+        if (!mounted.current) return null;
         setVideoTrack(track);
+        return track
       });
     }
+    return () => {
+      mounted.current = false;
+    };
   }, []);
 
   useEffect(() => {
     if (audioDevice) {
       createLocalAudioTrack({ deviceId: audioDevice?.deviceId })
         .then(track => {
+          if (!mounted.current) return null;
           localStorage.setItem(
             'PREFERRED_AUDIO_DEVICE_ID',
             audioDevice?.deviceId
           );
+          return track
         })
         .catch((err: Error) => {
           console.log(err);
@@ -178,7 +189,9 @@ const SetupView = ({
     if (videoDevice) {
       createLocalVideoTrack({ deviceId: videoDevice?.deviceId })
         .then((track: LocalVideoTrack) => {
+          if (!mounted.current) return null;
           setVideoTrack(track);
+          return track
         })
         .catch((err: Error) => {
           console.log(err);
@@ -213,7 +226,9 @@ const SetupView = ({
         options.deviceId = videoDevice?.deviceId;
       }
       createLocalVideoTrack(options).then(track => {
+        if (!mounted.current) return null;
         setVideoTrack(track);
+        return track
       });
     }
   };
@@ -294,7 +309,10 @@ const SetupView = ({
             <button
               id="setuproom-but"
               className={`rounded-b-xl cursor-pointer block outline-none border-0 font-bold text-md h-14 text-quinary  w-full focus:outline-none focus:border-0 bg-primary`}
-              onClick={() => setReady(true)}
+              onClick={() => {
+                if (mounted.current)
+                  setReady(true)
+              }}
             >
               Join Call
             </button>
