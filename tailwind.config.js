@@ -6,7 +6,7 @@ module.exports = {
     './src/*.{js,jsx,ts,tsx}',
     './public/index.html',
   ],
-  // mode: 'jit', // TODO: enable for production
+  mode: 'jit', // TODO: enable for production
   // darkMode: 'class', // or 'media'
   important: '#ctw',
   theme: {

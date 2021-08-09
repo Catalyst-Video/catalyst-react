@@ -101,7 +101,10 @@ const Chat = ({
     <>
       {chatOpen && (
         <div
-          className={`chat-cont bg-secondary flex h-full right-0 z-50 shadow-2xl sm:z-20 `} //shadow-lg shadow-xl w-72 sm:w-64
+          style={{
+            zIndex: 100
+          }}
+          className={`chat-cont bg-secondary flex h-full right-0 shadow-2xl sm:z-20 z-50`} //shadow-lg shadow-xl w-72 sm:w-64
         // ${
         //     chatOpen ? 'animate-fade-in-right' : 'animate-fade-out-right'
         //   }
@@ -121,7 +124,7 @@ const Chat = ({
           </Tippy>
           <div
             id="chat-zone"
-            className="flex h-full absolute overflow-x-none inset-0 pt-6 sm:pt-16 pb-36"
+            className="flex h-full absolute overflow-x-none inset-0 pt-4 pb-36"
           >
             <div
               id="chat-messages"
@@ -178,7 +181,7 @@ const Chat = ({
           </div>
           <div
             id="chat-compose-wrapper"
-            className="w-full bottom-0 fixed bg-secondary flex z-30 flex-row"
+            className="w-full absolute bottom-0 left-0 bg-secondary flex z-30 flex-row"
           >
             <textarea
               id="chat-compose"

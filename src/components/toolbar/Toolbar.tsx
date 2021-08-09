@@ -23,12 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 You can contact us for more details at support@catalyst.chat. */
 
 import {
-  faChevronLeft,
-  faChevronRight,
   faCommentAlt,
   faDesktop,
   faPhoneSlash,
-  faStop,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   createLocalAudioTrack,
@@ -48,7 +45,6 @@ import { isMobile } from 'react-device-detect';
 import AudioDeviceBtn from './AudioDeviceBtn';
 import ToolbarButton from './ToolbarButton';
 import VidDeviceBtn from './VidDeviceBtn';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Toolbar = ({
   room,
@@ -252,7 +248,7 @@ const Toolbar = ({
   //  };
 
   return (
-    <div id="toolbar" className={!isMobile ? (chatOpen ? 'sm:mr-56' : '') : ''}>
+    <div id="toolbar" className={chatOpen ? 'chat-open-shift' : ''}>
       {/* Mute Audio Button */}
       <AudioDeviceBtn
         isMuted={!audio || isMuted}

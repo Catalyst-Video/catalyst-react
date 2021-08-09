@@ -238,26 +238,30 @@ const SetupView = ({
             }
       }
     >
-      <span id="setuproom-header" className="mx-2 mt-5">
+      <span id="setuproom-header" className="setup-logo mx-2 mt-5">
         <HeaderImg color="text-quinary " />
       </span>
 
       <div
         id="setuproom-cont"
-        className="flex-col flex-1 text-center mx-3 my-3 rounded-md flex justify-center"
+        className=" flex-col flex-1 text-center mx-3 my-3 rounded-md flex justify-center"
       >
         <div
           id="setuproom-comp"
           className="rounded-2xl my-2 mx-1z-10 overflow-hidden" // shadow-md
         >
-          <div className="w-80 sm:w-96 lg:h-full rounded-t-xl bg-secondary rounded-b-none z-1" style={{
-            maxHeight: '300px'
-          }}>
-            {videoTrack && videoOn ? (
-              <VidWrapper track={videoTrack} isLocal={true} />
-            ) : (
-              <div className="min-h-0 min-w-0 rounded-lg h-52 w-full bg-black"></div>
-            )}
+          <div className="w-80 sm:w-96 lg:h-full rounded-t-xl bg-secondary rounded-b-none z-1">
+            <div
+              style={{
+                maxHeight: '300px',
+              }}
+            >
+              {videoTrack && videoOn ? (
+                <VidWrapper track={videoTrack} isLocal={true} />
+              ) : (
+                <div className="min-h-0 min-w-0 rounded-lg h-52 w-full bg-black"></div>
+              )}
+            </div>
             {!disableNameField && (
               <div className="pt-4 w-full flex justify-center">
                 <input

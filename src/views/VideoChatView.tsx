@@ -308,8 +308,7 @@ const VideoChat = ({
                   <HeaderLogo alwaysBanner={false} />
                   {/* room count */}
                   <div
-                    className={`${
-                      !isMobile ? (chatOpen ? 'sm:mr-56' : '') : ''
+                    className={`${chatOpen ? 'chat-open-shift' : ''
                     } absolute z-50 flex nav-ops`}
                   >
                     <FontAwesomeIcon

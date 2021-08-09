@@ -211,6 +211,7 @@ const ToolbarButton = React.memo(({
           content={tooltip}
           theme="catalyst"
           disabled={deviceSelectEnabled}
+          zIndex={40}
         >
           <button
             id={`${type}-btn`}

@@ -7,8 +7,8 @@ import Draggable from 'react-draggable';
 const App = () => {
   return (
     <>
-      <GeneralTest />
-      {/* <HoursTest /> */}
+      {/* <GeneralTest /> */}
+      <HoursTest />
     </>
   );
 };
@@ -80,7 +80,7 @@ const HoursTest = () => {
               room={'testingGround'}
               appId={process.env.REACT_APP_APP_ID ?? 'REAL_APP_ID_HERE'}
               audioOnDefault={false}
-              disableSetupRoom
+              // disableSetupRoom
               disableChat
               theme="hoursDark"
               // theme={{
