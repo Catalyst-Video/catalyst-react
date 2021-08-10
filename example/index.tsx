@@ -7,8 +7,8 @@ import Draggable from 'react-draggable';
 const App = () => {
   return (
     <>
-      {/* <GeneralTest /> */}
-      <HoursTest />
+      <GeneralTest />
+      {/* <HoursTest /> */}
     </>
   );
 };

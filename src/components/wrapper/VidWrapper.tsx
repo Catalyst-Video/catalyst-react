@@ -25,6 +25,7 @@ You can contact us for more details at support@catalyst.chat. */
 import { Track } from 'livekit-client';
 import React, { useEffect, useRef } from 'react';
 import { Property } from 'csstype';
+import { isMobile } from 'react-device-detect';
 
 const VidWrapper = React.memo(
   ({
@@ -57,13 +58,16 @@ const VidWrapper = React.memo(
       <video
         ref={ref}
         className={`min-h-0 min-w-0 rounded-lg h-auto w-full ${
-          isLocal && isFrontFacing ? '' : ''
+          isLocal && isFrontFacing ? 'rm-uncanny-valley' : ''
           // object-center
         } ${objectFit ?? ''}`}
-        // style={{
-        //   transform: isLocal && isFrontFacing ? 'rotateY(180deg)' : '',
-        //   objectFit: objectFit ?? '',
-        // }}
+        style={
+          isMobile
+            ? {
+                maxHeight: '300px',
+              }
+            : {}
+        }
       />
     );
   }

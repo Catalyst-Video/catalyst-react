@@ -267,9 +267,7 @@ const SetupView = ({
         >
           <div className="w-80 sm:w-96 lg:h-full rounded-t-xl bg-secondary rounded-b-none z-1">
             <div
-              style={{
-                maxHeight: '300px',
-              }}
+             
             >
               {videoTrack && videoOn ? (
                 <VidWrapper track={videoTrack} isLocal={true} />

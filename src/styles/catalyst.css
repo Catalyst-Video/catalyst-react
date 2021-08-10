@@ -286,6 +286,12 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
   }
 }
 
+
+#ctw .rm-uncanny-valley  {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
 /* tooltips */
 .tippy-box[data-theme~='catalyst'] {
   background-color: var(--ctwTertiary);
