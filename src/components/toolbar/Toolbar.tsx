@@ -313,15 +313,19 @@ const Toolbar = ({
         />
       )}
       {/* Chat Button */}
-      {!disableChat && <ToolbarButton
-        type="chat"
-        tooltip="Toggle Chat"
-        icon={faCommentAlt}
-        bgColor={chatOpen ? `bg-primary` : 'bg-tertiary hover:bg-quaternary  '}
-        onClick={() => {
-          setChatOpen(chatOpen => !chatOpen);
-        }}
-      />}
+      {!disableChat && (
+        <ToolbarButton
+          type="chat"
+          tooltip="Toggle Chat"
+          icon={faCommentAlt}
+          bgColor={
+            chatOpen ? `bg-primary` : 'bg-tertiary hover:bg-quaternary  '
+          }
+          onClick={() => {
+            setChatOpen(chatOpen => !chatOpen);
+          }}
+        />
+      )}
       {/* End Call Button */}
       {onLeave && (
         <ToolbarButton

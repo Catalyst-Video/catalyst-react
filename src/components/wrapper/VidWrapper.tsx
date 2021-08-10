@@ -59,15 +59,7 @@ const VidWrapper = React.memo(
         ref={ref}
         className={`min-h-0 min-w-0 rounded-lg h-auto w-full ${
           isLocal && isFrontFacing ? 'rm-uncanny-valley' : ''
-          // object-center
-        } ${objectFit ?? ''}`}
-        style={
-          isMobile
-            ? {
-                maxHeight: '300px',
-              }
-            : {}
-        }
+        } ${objectFit ?? ''} contain max-vid-height`} // TODO: switch to adaptive contain vs cover
       />
     );
   }

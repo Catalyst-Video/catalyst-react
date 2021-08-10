@@ -37,221 +37,223 @@ import 'tippy.js/dist/tippy.css';
 import { useRef } from 'react';
 import { SUPPORT_URL } from '../../utils/globals';
 
-const ToolbarButton = React.memo(({
-  type,
-  tooltip,
-  disabled,
-  onClick,
-  icon,
-  inputDevices,
-  outputDevices,
-  onIpDeviceClick,
-  onOpDeviceClick,
-  bgColor,
-  iconColor,
-  selectedOpDevice,
-  selectedIpDevice,
-  parentRef,
-}: {
-  type?: string;
-  tooltip?: string;
-  disabled?: boolean;
-  onClick?: () => void;
-  icon?: IconProp;
-  className?: string;
-  inputDevices?: CatalystDev[];
-  outputDevices?: CatalystDev[];
-  onIpDeviceClick?: (id: CatalystDev) => void;
-  onOpDeviceClick?: (id: CatalystDev) => void;
-  bgColor?: string;
-  iconColor?: string;
-  selectedOpDevice?: MediaDeviceInfo;
-  selectedIpDevice?: MediaDeviceInfo;
-  parentRef?: RefObject<HTMLDivElement>;
-}) => {
-  const [deviceSelectEnabled, setDeviceSelectEnabled] = useState(false);
-  const selectRef = useRef<HTMLButtonElement>(null)
+const ToolbarButton = React.memo(
+  ({
+    type,
+    tooltip,
+    disabled,
+    onClick,
+    icon,
+    inputDevices,
+    outputDevices,
+    onIpDeviceClick,
+    onOpDeviceClick,
+    bgColor,
+    iconColor,
+    selectedOpDevice,
+    selectedIpDevice,
+    chatOpen,
+  }: {
+    type?: string;
+    tooltip?: string;
+    disabled?: boolean;
+    onClick?: () => void;
+    icon?: IconProp;
+    className?: string;
+    inputDevices?: CatalystDev[];
+    outputDevices?: CatalystDev[];
+    onIpDeviceClick?: (id: CatalystDev) => void;
+    onOpDeviceClick?: (id: CatalystDev) => void;
+    bgColor?: string;
+    iconColor?: string;
+    selectedOpDevice?: MediaDeviceInfo;
+    selectedIpDevice?: MediaDeviceInfo;
+    chatOpen?: boolean;
+  }) => {
+    const [deviceSelectEnabled, setDeviceSelectEnabled] = useState(false);
+    const selectRef = useRef<HTMLButtonElement>(null);
 
-  const handleOnIpDeviceClick = (id: CatalystDev) => {
-    if (onIpDeviceClick) {
-      onIpDeviceClick(id);
-    }
-    setDeviceSelectEnabled(false);
-  };
-
-  const handleOnOpDeviceClick = (id: CatalystDev) => {
-    if (onOpDeviceClick) {
-      onOpDeviceClick(id);
-    }
-    setDeviceSelectEnabled(false);
-  };
-
-  return (
-    <Tippy
-      interactive
-      triggerTarget={selectRef.current}
-      className="bg-tertiary font-sans"
-      trigger="click"
-      disabled={!inputDevices && !outputDevices}
-      onShown={() => {
-        setDeviceSelectEnabled(true);
-      }}
-      onHidden={() => {
-        setDeviceSelectEnabled(false);
-      }}
-      content={
-        outputDevices || inputDevices ? (
-          inputDevices?.length === 0 ? (
-            <div className="font-sans flex flex-col justify-center items-center text-center text-quinary text-c">
-              <span className="block mb-1">
-                Catalyst couldn't find any {type?.toLowerCase()} devices.
-              </span>
-              <span className="inline-block mb-1">
-                If you are having trouble,{' '}
-                <a
-                  className="text-primary whitespace-nowrap font-semibold"
-                  href="https://docs.catalyst.chat/docs-permissions"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  read our guide here
-                </a>
-                ,
-              </span>
-              <span className="block mb-1">
-                or{' '}
-                <a
-                  className="text-primary font-semibold"
-                  target="_blank"
-                  rel="noreferrer"
-                  href={SUPPORT_URL}
-                >
-                  contact support
-                </a>
-              </span>
-            </div>
-          ) : (
-            <div>
-              <ul
-                className="font-sans list-none m-0 p-0" //style={popoverStyles}
-              >
-                {outputDevices && outputDevices.length > 0 && (
-                  <>
-                    <li
-                      key={'input-row'}
-                      className="flex items-center text-xs text-quinary  font-semibold p-2 border-white  border-b border-opacity-20 whitespace-nowrap "
-                    >
-                      {type} Output
-                    </li>
-                    {outputDevices?.map((id, i) => {
-                      // TODO: add prop to allow for enabling showing device ids
-                      let idLabel = id.label.includes('(')
-                        ? id.label.substring(0, id.label.indexOf('('))
-                        : id.label;
-                      return (
-                        <li
-                          key={i}
-                          className="flex items-center text-xs text-quinary  p-2 cursor-pointer whitespace-nowrap"
-                          onClick={() => handleOnOpDeviceClick(id)}
-                        >
-                          {id.label === selectedOpDevice?.label ? (
-                            <FontAwesomeIcon
-                              icon={faCheckCircle}
-                              className="mr-1 text-primary "
-                            />
-                          ) : (
-                            <FontAwesomeIcon
-                              icon={faCircle}
-                              className="mr-1 "
-                            />
-                          )}
-                          {idLabel}
-                        </li>
-                      );
-                    })}
-                  </>
-                )}
-                <li
-                  key={'input-row'}
-                  className="flex items-center text-xs text-quinary  font-semibold p-2 border-white  border-b border-opacity-20 whitespace-nowrap"
-                >
-                  {type} Input
-                </li>
-                {inputDevices?.map((id, i) => {
-                  // TODO: add prop to allow for enabling showing device ids
-                  let idLabel = id.label.includes('(')
-                    ? id.label.substring(0, id.label.indexOf('('))
-                    : id.label;
-                  return (
-                    <li
-                      key={i}
-                      className="flex items-center text-xs text-quinary  p-2 whitespace-nowrap cursor-pointer"
-                      onClick={() => handleOnIpDeviceClick(id)}
-                    >
-                      {id.label === selectedIpDevice?.label ? (
-                        <FontAwesomeIcon
-                          icon={faCheckCircle}
-                          className="mr-1 text-primary"
-                        />
-                      ) : (
-                        <FontAwesomeIcon icon={faCircle} className="mr-1 " />
-                      )}
-                      {idLabel}
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          )
-        ) : null
+    const handleOnIpDeviceClick = (id: CatalystDev) => {
+      if (onIpDeviceClick) {
+        onIpDeviceClick(id);
       }
-    >
-      <div className="inline-block m-1 relative">
-        <Tippy
-          content={tooltip}
-          theme="catalyst"
-          disabled={deviceSelectEnabled}
-          zIndex={40}
-        >
-          <button
-            id={`${type}-btn`}
-            disabled={disabled}
-            className={`rounded-full w-14 h-14 flex justify-center items-center ${
-              bgColor ? bgColor : 'bg-tertiary hover:bg-quaternary'
-            } focus:outline-none focus:border-0 `}
-            onClick={onClick}
+      setDeviceSelectEnabled(false);
+    };
+
+    const handleOnOpDeviceClick = (id: CatalystDev) => {
+      if (onOpDeviceClick) {
+        onOpDeviceClick(id);
+      }
+      setDeviceSelectEnabled(false);
+    };
+
+    return (
+      <Tippy
+        interactive
+        triggerTarget={selectRef.current}
+        className="bg-tertiary font-sans"
+        trigger="click"
+        disabled={!inputDevices && !outputDevices}
+        onShown={() => {
+          setDeviceSelectEnabled(true);
+        }}
+        onHidden={() => {
+          setDeviceSelectEnabled(false);
+        }}
+        content={
+          outputDevices || inputDevices ? (
+            inputDevices?.length === 0 ? (
+              <div className="font-sans flex flex-col justify-center items-center text-center text-quinary text-c">
+                <span className="block mb-1">
+                  Catalyst couldn't find any {type?.toLowerCase()} devices.
+                </span>
+                <span className="inline-block mb-1">
+                  If you are having trouble,{' '}
+                  <a
+                    className="text-primary whitespace-nowrap font-semibold"
+                    href="https://docs.catalyst.chat/docs-permissions"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    read our guide here
+                  </a>
+                  ,
+                </span>
+                <span className="block mb-1">
+                  or{' '}
+                  <a
+                    className="text-primary font-semibold"
+                    target="_blank"
+                    rel="noreferrer"
+                    href={SUPPORT_URL}
+                  >
+                    contact support
+                  </a>
+                </span>
+              </div>
+            ) : (
+              <div>
+                <ul
+                  className="font-sans list-none m-0 p-0" //style={popoverStyles}
+                >
+                  {outputDevices && outputDevices.length > 0 && (
+                    <>
+                      <li
+                        key={'input-row'}
+                        className="flex items-center text-xs text-quinary  font-semibold p-2 border-white  border-b border-opacity-20 whitespace-nowrap "
+                      >
+                        {type} Output
+                      </li>
+                      {outputDevices?.map((id, i) => {
+                        // TODO: add prop to allow for enabling showing device ids
+                        let idLabel = id.label.includes('(')
+                          ? id.label.substring(0, id.label.indexOf('('))
+                          : id.label;
+                        return (
+                          <li
+                            key={i}
+                            className="flex items-center text-xs text-quinary  p-2 cursor-pointer whitespace-nowrap"
+                            onClick={() => handleOnOpDeviceClick(id)}
+                          >
+                            {id.label === selectedOpDevice?.label ? (
+                              <FontAwesomeIcon
+                                icon={faCheckCircle}
+                                className="mr-1 text-primary "
+                              />
+                            ) : (
+                              <FontAwesomeIcon
+                                icon={faCircle}
+                                className="mr-1 "
+                              />
+                            )}
+                            {idLabel}
+                          </li>
+                        );
+                      })}
+                    </>
+                  )}
+                  <li
+                    key={'input-row'}
+                    className="flex items-center text-xs text-quinary  font-semibold p-2 border-white  border-b border-opacity-20 whitespace-nowrap"
+                  >
+                    {type} Input
+                  </li>
+                  {inputDevices?.map((id, i) => {
+                    // TODO: add prop to allow for enabling showing device ids
+                    let idLabel = id.label.includes('(')
+                      ? id.label.substring(0, id.label.indexOf('('))
+                      : id.label;
+                    return (
+                      <li
+                        key={i}
+                        className="flex items-center text-xs text-quinary  p-2 whitespace-nowrap cursor-pointer"
+                        onClick={() => handleOnIpDeviceClick(id)}
+                      >
+                        {id.label === selectedIpDevice?.label ? (
+                          <FontAwesomeIcon
+                            icon={faCheckCircle}
+                            className="mr-1 text-primary"
+                          />
+                        ) : (
+                          <FontAwesomeIcon icon={faCircle} className="mr-1 " />
+                        )}
+                        {idLabel}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )
+          ) : null
+        }
+      >
+        <div className="inline-block m-1 relative">
+          <Tippy
+            content={tooltip}
+            theme="catalyst"
+            disabled={deviceSelectEnabled}
+            zIndex={40}
           >
-            {icon && (
+            <button
+              id={`${type}-btn`}
+              disabled={disabled}
+              className={`rounded-full w-14 h-14 flex justify-center items-center ${
+                bgColor ? bgColor : 'bg-tertiary hover:bg-quaternary'
+              } focus:outline-none focus:border-0 `}
+              onClick={onClick}
+            >
+              {icon && (
+                <FontAwesomeIcon
+                  className={
+                    iconColor ? iconColor : 'text-quinary  hover:text-gray-50'
+                  }
+                  size="lg"
+                  icon={icon}
+                />
+              )}
+            </button>
+          </Tippy>
+          {inputDevices && inputDevices.length > 0 && (
+            <button
+              disabled={disabled}
+              ref={selectRef}
+              className={`absolute z-10 -right-1 -bottom-1 ${
+                bgColor ? bgColor : 'bg-tertiary hover:bg-quaternary '
+              }  rounded-full border-4 border-secondary h-6 w-6 flex justify-center items-center focus:outline-none`}
+              onClick={() => setDeviceSelectEnabled(deviceMenu => !deviceMenu)}
+            >
               <FontAwesomeIcon
-                className={
-                  iconColor ? iconColor : 'text-quinary  hover:text-gray-50'
-                }
-                size="lg"
-                icon={icon}
+                size="xs"
+                className={`transition transform hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none  ${
+                  iconColor ? 'text-gray-900' : 'text-quinary'
+                }`}
+                icon={deviceSelectEnabled ? faChevronUp : faChevronDown}
               />
-            )}
-          </button>
-        </Tippy>
-        {inputDevices && inputDevices.length > 0 && (
-          <button
-            disabled={disabled}
-            ref={selectRef}
-            className={`absolute z-10 -right-1 -bottom-1 ${
-              bgColor ? bgColor : 'bg-tertiary hover:bg-quaternary '
-            }  rounded-full border-4 border-secondary h-6 w-6 flex justify-center items-center focus:outline-none`}
-            onClick={() => setDeviceSelectEnabled(deviceMenu => !deviceMenu)}
-          >
-            <FontAwesomeIcon
-              size="xs"
-              className={`transition transform hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none  ${
-                iconColor ? 'text-gray-900' : 'text-quinary'
-              }`}
-              icon={deviceSelectEnabled ? faChevronUp : faChevronDown}
-            />
-          </button>
-        )}
-      </div>
-    </Tippy>
-  );
-})
+            </button>
+          )}
+        </div>
+      </Tippy>
+    );
+  }
+);
 export default ToolbarButton;

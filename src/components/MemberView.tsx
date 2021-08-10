@@ -57,16 +57,15 @@ const MemberView = React.memo(({
   showOverlay?: boolean;
   quality?: VideoQuality;
   onClick?: () => void;
-}) => {
-  const { isLocal, isMuted, subscribedTracks } = useMember(m);
-  const { ref, inView } = useInView();
-  const [videoPub, setVideoPub] = useState<TrackPublication>();
+  }) => {
   const [videoEnabled, setVideoEnabled] = useState(true);
   const [callbackTimeout, setCallbackTimeout] = useState<
     ReturnType<typeof setTimeout>
   >();
+  const { isLocal, isMuted, subscribedTracks } = useMember(m);
+  const { ref, inView } = useInView();
+  const [videoPub, setVideoPub] = useState<TrackPublication>();
 
-  // when video is hidden, disable it to optimize for bandwidth
   useEffect(() => {
     if (!ref) {
       return;
@@ -77,7 +76,6 @@ const MemberView = React.memo(({
     }
   }, [ref, m, inView]);
 
-  // effect to set videoPub
   useEffect(() => {
     let newVideoPub: TrackPublication | undefined;
     subscribedTracks.forEach(pub => {
@@ -93,7 +91,6 @@ const MemberView = React.memo(({
     setVideoPub(newVideoPub);
   }, [subscribedTracks]);
 
-  // debounce adaptive settings, to ensure less twitchy responses
   useEffect(() => {
     if (callbackTimeout) {
       clearTimeout(callbackTimeout);
@@ -102,7 +99,6 @@ const MemberView = React.memo(({
     if (!(videoPub instanceof RemoteTrackPublication)) {
       return;
     }
-    // always enable right away, while disable quality changes are delayed
     if (videoEnabled) {
       videoPub.setEnabled(true);
     }
@@ -123,20 +119,11 @@ const MemberView = React.memo(({
     };
   }, [quality, videoEnabled, videoPub]);
 
-  // when aspect matches, cover instead
-  let objectFit: Property.ObjectFit = 'contain';
-  if (
-    videoPub?.dimensions &&
-    (16 - 9) * (videoPub.dimensions.width - videoPub.dimensions.height) > 0
-  ) {
-    objectFit = 'cover';
-  }
-
   return (
     <div className={`m-1 ${classes} cursor-pointer`}>
       <div
         ref={ref}
-        className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-xl ${
+        className={`relative z-0 inline-block align-middle self-center overflow-hidden text-center bg-gray-800 flex justify-center rounded-xl ${
           m.isSpeaking ? `ring-2 ring-primary ring-opacity-50` : ''
         }`}
         style={{
@@ -149,10 +136,17 @@ const MemberView = React.memo(({
           <VidWrapper
             track={videoPub.track}
             isLocal={isLocal}
-            objectFit={objectFit}
+            // objectFit={
+            //   videoPub?.dimensions &&
+            //   (16 - 9) *
+            //     (videoPub.dimensions.width - videoPub.dimensions.height) >
+            //     0 ? 'cover' : 'contain'
+            // }
           />
         ) : (
-          <div className={`bg-placeholder w-full h-full bg-primary min-h-full`} />
+          <div
+            className={`bg-placeholder w-full h-full bg-primary min-h-full`}
+          />
         )}{' '}
         <div className="absolute bottom-0 left-0 flex text-quinary justify-between p-1 lg:p-2 w-full">
           <div className="h-7 md:h-8 not-selectable flex items-center justify-center px-2 py-1 relative">

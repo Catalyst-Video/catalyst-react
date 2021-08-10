@@ -292,6 +292,8 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
   transform: scaleX(-1);
 }
 
+
+
 /* tooltips */
 .tippy-box[data-theme~='catalyst'] {
   background-color: var(--ctwTertiary);
@@ -341,6 +343,17 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
  	font-size: 1.25rem;
   line-height: 1.75rem;
 }
+
+
+
+#ctw .max-vid-height {
+   max-height: 250px;
+}
+
+#ctw.catalyst-parent[min-width~="640px"] .max-vid-height {
+   max-height: inherit;
+}
+
 
 
 /* nav bar */
