@@ -37,7 +37,7 @@ export interface CatalystChatProps {
   disableSetupRoom?: boolean;
   disableNameField?: boolean;
   cstmSetupBg?: string;
-  cstmWelcomeMsg?: string;
+  cstmWelcomeMsg?: string | HTMLElement;
   cstmSupportUrl?: string;
   arbData?: Uint8Array;
   handleReceiveArbData?: (arbData: Uint8Array) => void;

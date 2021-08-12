@@ -51,6 +51,8 @@ We recommend a minimum parent container size of 400px X 450px.
 | `disableSetupRoom` | Skip setup view       |  `boolean` | `true` | Optional |
 | `disableNameField` | Hide user name input field in setup view     |  `boolean` | `true` | Optional |
 | `cstmSetupBg` | Gradient or hex-code background for setup view      |  `string` | `#fff` | Optional |
+| `cstmWelcomeMsg` | Message displayed when you are the only member in room      |  `string`, `HTMLElement` | `Welcome!` | Optional |
+| `cstmSupportUrl` | Url for all help/support messages. When set to an empty string hides support icon.   |  `string` | `https://catalyst.chat/contact.html` | Optional |
 | `arbData` | Data passed to all other members of room  |  `Uint8Array` | `TextEncoder().encode('str')` | Optional |
 | `handleReceiveArbData` | Function triggered whenever arbitrary data is received    |  `Function` | `(arbData: Uint8Array) => void` | Optional |
 | `onJoinCall` | Function triggered when user joins the call  |  `Function` | `() => void` | Optional |

@@ -74,7 +74,7 @@ const VideoChat = ({
   meta: RoomMetaData;
   fade: number;
   disableChat?: boolean;
-  cstmWelcomeMsg?: string;
+  cstmWelcomeMsg?: string | HTMLElement;
   cstmSupportUrl?: string;
   arbData?: Uint8Array;
   handleReceiveArbData?: (arbData: Uint8Array) => void;
@@ -276,7 +276,11 @@ const VideoChat = ({
               <br />
               Please{' '}
               <a
-                href={cstmSupportUrl && cstmSupportUrl.length > 0 ? cstmSupportUrl : SUPPORT_EMAIL}
+                href={
+                  cstmSupportUrl && cstmSupportUrl.length > 0
+                    ? cstmSupportUrl
+                    : SUPPORT_EMAIL
+                }
                 target="_blank"
                 rel="noreferrer"
               >

@@ -57,7 +57,7 @@ const RoomWrapper = ({
   setChatOpen: Function;
   chatMessages: ChatMessage[];
   setChatMessages: Function;
-  cstmWelcomeMsg?: string;
+  cstmWelcomeMsg?: string | HTMLElement;
 }) => {
   const {
     isConnecting,
