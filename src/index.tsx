@@ -47,7 +47,7 @@ const CatalystChat = ({
   videoOnDefault,
   simulcast,
   disableChat,
-  disableSetupRoom,
+  disableSetupView,
   disableNameField,
   cstmSetupBg,
   cstmWelcomeMsg,
@@ -59,7 +59,7 @@ const CatalystChat = ({
   onMemberLeave,
   onLeaveCall,
 }: CatalystChatProps) => {
-  const [ready, setReady] = useState(disableSetupRoom ?? false);
+  const [ready, setReady] = useState(disableSetupView ?? false);
   const [userName, setUserName] = useState(name ?? genRandomName());
   const [cookies, setCookie] = useCookies(['PERSISTENT_CLIENT_ID']);
   const [audioOn, setAudioOn] = useState(audioOnDefault ?? true);
@@ -96,17 +96,19 @@ const CatalystChat = ({
             response.json().then(json => {
               // TODO: expose rest of return data
               setToken(json.token);
-            console.log(json);
+              console.log(json);
             });
           }
           if (response.status === 500) {
-            console.log('There is no user record corresponding to the provided identifier');
+            console.log(
+              'There is no user record corresponding to the provided identifier'
+            );
             setToken('INVALID');
           }
         })
         .catch(err => {
           console.log(err);
-          setToken('INVALID')
+          setToken('INVALID');
         });
     }
   }, [ready]);
@@ -151,24 +153,24 @@ const CatalystChat = ({
             onMemberLeave={onMemberLeave}
             onLeaveCall={onLeaveCall}
           />
-        ) : !disableSetupRoom ? (
+        ) : !disableSetupView ? (
           <SetupView
-              meta={{
-                audioEnabled: audioOn,
-                videoEnabled: videoOn,
-                simulcast: simulcast ?? true,
-                loglevel: 'trace',
-              }}
-              setAudioOn={setAudioOn}
-              setVideoOn={setVideoOn}
-              audioOn={audioOn}
-              videoOn={videoOn}
-              setReady={setReady}
-              userName={userName}
-              setUserName={setUserName}
-              disableNameField={disableNameField}
-              cstmSetupBg={cstmSetupBg}
-              cstmSupportUrl={cstmSupportUrl}
+            meta={{
+              audioEnabled: audioOn,
+              videoEnabled: videoOn,
+              simulcast: simulcast ?? true,
+              loglevel: 'trace',
+            }}
+            setAudioOn={setAudioOn}
+            setVideoOn={setVideoOn}
+            audioOn={audioOn}
+            videoOn={videoOn}
+            setReady={setReady}
+            userName={userName}
+            setUserName={setUserName}
+            disableNameField={disableNameField}
+            cstmSetupBg={cstmSetupBg}
+            cstmSupportUrl={cstmSupportUrl}
           />
         ) : null}
       </div>

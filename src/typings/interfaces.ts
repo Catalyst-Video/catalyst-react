@@ -34,7 +34,7 @@ export interface CatalystChatProps {
   videoOnDefault?: boolean;
   simulcast?: boolean;
   disableChat?: boolean;
-  disableSetupRoom?: boolean;
+  disableSetupView?: boolean;
   disableNameField?: boolean;
   cstmSetupBg?: string;
   cstmWelcomeMsg?: string | HTMLElement;

@@ -48,7 +48,7 @@ We recommend a minimum parent container size of 400px X 450px.
 | `theme` | Color scheme. Includes: **primary** _(main color)_, **secondary** _(background color)_, **tertiary** _(button color)_, **quaternary** _(button hover color)_, **quinary** _(text color)_            |  `string` | `{ primary?: string; secondary?: string; tertiary?: string; quaternary?: string; quinary?: string; }` | `default` | Optional |
 | `simulcast` | Publish multiple levels of quality for video streams              |  `boolean` | `true` | Optional |
 | `disableChat` | Hide text chat functionality              |  `boolean` | `true` | Optional |
-| `disableSetupRoom` | Skip setup view       |  `boolean` | `true` | Optional |
+| `disableSetupView` | Skip setup view       |  `boolean` | `true` | Optional |
 | `disableNameField` | Hide user name input field in setup view     |  `boolean` | `true` | Optional |
 | `cstmSetupBg` | Gradient or hex-code background for setup view      |  `string` | `#fff` | Optional |
 | `cstmWelcomeMsg` | Message displayed when you are the only member in room      |  `string`, `HTMLElement` | `Welcome!` | Optional |
