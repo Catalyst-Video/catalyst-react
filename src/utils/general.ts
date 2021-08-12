@@ -142,6 +142,6 @@ export function generateUUID() {
 }
 
 
-export function contact_support() {
- window.open(SUPPORT_URL, '_blank');
+export function contactSupport(cstmSupportUrl?: string) {
+  window.open(cstmSupportUrl ?? SUPPORT_URL, '_blank');
 }

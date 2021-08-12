@@ -46,6 +46,7 @@ const RoomWrapper = ({
   disableChat,
   chatMessages,
   setChatMessages,
+  cstmWelcomeMsg,
 }: {
   roomState: RoomState;
   onLeave?: (room: Room) => void;
@@ -56,6 +57,7 @@ const RoomWrapper = ({
   setChatOpen: Function;
   chatMessages: ChatMessage[];
   setChatMessages: Function;
+  cstmWelcomeMsg?: string;
 }) => {
   const {
     isConnecting,
@@ -155,7 +157,7 @@ const RoomWrapper = ({
         {isConnecting && <span>⚡ Connecting...</span>}
         {!room && !isConnecting && !error && <span>🚀 Preparing room...</span>}
         {members.length === 0 && room && !isConnecting && (
-          <span>👋 Waiting for others to join...</span>
+          <span>{cstmWelcomeMsg ?? "👋 Waiting for others to join..."}</span>
         )}
       </div>
     );
@@ -243,7 +245,9 @@ const RoomWrapper = ({
               onClick={() => setSpeakerMode(sm => !sm)}
             >
               <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-c text-quinary ">
-                <span>👋 Waiting for others to join...</span>
+                <span>
+                  {cstmWelcomeMsg ?? '👋 Waiting for others to join...'}
+                </span>
               </div>
             </div>
           )}
@@ -300,7 +304,9 @@ const RoomWrapper = ({
                   className={`box ml-1 mr-1 w-full sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
                 >
                   <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-c text-quinary  text-center px-1 sm:px-2 md:px-3 ">
-                    <span>👋 Waiting for others to join...</span>
+                    <span>
+                      {cstmWelcomeMsg ?? '👋 Waiting for others to join...'}
+                    </span>
                   </div>
                 </div>
               </>

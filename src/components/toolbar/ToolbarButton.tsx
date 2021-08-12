@@ -53,6 +53,7 @@ const ToolbarButton = React.memo(
     selectedOpDevice,
     selectedIpDevice,
     chatOpen,
+    cstmSupportUrl,
   }: {
     type?: string;
     tooltip?: string;
@@ -69,6 +70,7 @@ const ToolbarButton = React.memo(
     selectedOpDevice?: MediaDeviceInfo;
     selectedIpDevice?: MediaDeviceInfo;
     chatOpen?: boolean;
+    cstmSupportUrl?: string;
   }) => {
     const [deviceSelectEnabled, setDeviceSelectEnabled] = useState(false);
     const selectRef = useRef<HTMLButtonElement>(null);
@@ -125,7 +127,7 @@ const ToolbarButton = React.memo(
                     className="text-primary font-semibold"
                     target="_blank"
                     rel="noreferrer"
-                    href={SUPPORT_URL}
+                    href={cstmSupportUrl && cstmSupportUrl?.length > 0 ? cstmSupportUrl : SUPPORT_URL}
                   >
                     contact support
                   </a>

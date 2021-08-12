@@ -32,11 +32,13 @@ const VidDeviceBtn = ({
   onClick,
   onIpSelected,
   videoDevice,
+  cstmSupportUrl
 }: {
   isEnabled: boolean;
   onClick?: () => void;
   onIpSelected?: (device: MediaDeviceInfo) => void;
   videoDevice?: MediaDeviceInfo;
+  cstmSupportUrl?: string;
 }) => {
   const [sources, setSources] = useState<MediaDeviceInfo[]>([]);
   const [devices, setDevices] = useState<CatalystDev[]>([]);
@@ -55,7 +57,7 @@ const VidDeviceBtn = ({
           return { label: id.label };
         })
       );
-      return devices
+      return devices;
     });
     return () => {
       mounted.current = false;
@@ -70,20 +72,21 @@ const VidDeviceBtn = ({
   };
 
   return (
-   // <div ref={vidBtnRef} className="inline">
-      <ToolbarButton
-        type="Video"
-        tooltip={isEnabled ? 'Disable Video' : 'Enable Video'}
-        icon={isEnabled ? faVideo : faVideoSlash}
-        bgColor={isEnabled ? undefined : 'bg-quinary  hover:bg-gray-100'}
-        iconColor={isEnabled ? undefined : 'text-red'}
-        onIpDeviceClick={handleDevice}
+    // <div ref={vidBtnRef} className="inline">
+    <ToolbarButton
+      type="Video"
+      tooltip={isEnabled ? 'Disable Video' : 'Enable Video'}
+      icon={isEnabled ? faVideo : faVideoSlash}
+      bgColor={isEnabled ? undefined : 'bg-quinary  hover:bg-gray-100'}
+      iconColor={isEnabled ? undefined : 'text-red'}
+      onIpDeviceClick={handleDevice}
       //  parentRef={vidBtnRef}
-        onClick={onClick}
-        inputDevices={devices}
-        selectedIpDevice={videoDevice}
-      />
-   // </div>
+      onClick={onClick}
+      inputDevices={devices}
+      selectedIpDevice={videoDevice}
+      cstmSupportUrl={cstmSupportUrl}
+    />
+    // </div>
   );
 };
 

@@ -52,7 +52,7 @@ import { useRoom } from '../hooks/useRoom';
 import { debounce } from 'ts-debounce';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
-import { contact_support } from '../utils/general';
+import { contactSupport } from '../utils/general';
 import { isMobile } from 'react-device-detect';
 import { SUPPORT_EMAIL } from '../utils/globals';
 
@@ -61,6 +61,8 @@ const VideoChat = ({
   meta,
   fade,
   disableChat,
+  cstmWelcomeMsg,
+  cstmSupportUrl,
   arbData,
   handleReceiveArbData,
   onJoinCall,
@@ -72,6 +74,8 @@ const VideoChat = ({
   meta: RoomMetaData;
   fade: number;
   disableChat?: boolean;
+  cstmWelcomeMsg?: string;
+  cstmSupportUrl?: string;
   arbData?: Uint8Array;
   handleReceiveArbData?: (arbData: Uint8Array) => void;
   onJoinCall?: () => void;
@@ -79,350 +83,340 @@ const VideoChat = ({
   onMemberLeave?: () => void;
   onLeaveCall?: () => void;
 }) => {
-        const fsHandle = useFullScreenHandle();
-        const [memberCount, setMemberCount] = useState(0);
-        const [speakerMode, setSpeakerMode] = useState(false);
-        const [roomClosed, setRoomClosed] = useState(false);
-        const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
-        const [chatOpen, setChatOpen] = useState(false);
-        const [outputDevice, setOutputDevice] = useState<MediaDeviceInfo>();
-        const roomState = useRoom();
+  const fsHandle = useFullScreenHandle();
+  const [memberCount, setMemberCount] = useState(0);
+  const [speakerMode, setSpeakerMode] = useState(false);
+  const [roomClosed, setRoomClosed] = useState(false);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [outputDevice, setOutputDevice] = useState<MediaDeviceInfo>();
+  const roomState = useRoom();
 
-        const toolbarRef = useRef<HTMLDivElement>(null);
-        const headerRef = useRef<HTMLDivElement>(null);
-        const videoChatRef = useRef<HTMLDivElement>(null);
-        const decoder = new TextDecoder();
+  const toolbarRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const videoChatRef = useRef<HTMLDivElement>(null);
+  const decoder = new TextDecoder();
 
-        const onConnected = async room => {
-          if (onJoinCall) onJoinCall();
-          room.on(RoomEvent.ParticipantConnected, () => {
-            bumpMemberSize(room);
-            if (onMemberJoin) onMemberJoin();
-          });
-          room.on(RoomEvent.ParticipantDisconnected, () => {
-            bumpMemberSize(room);
-            if (onMemberLeave) onMemberLeave();
-          });
-          room.on(
-            RoomEvent.DataReceived,
-            (data: Uint8Array, member: Participant, kind: DataPacket_Kind) => {
-              const strData = decoder.decode(data);
-              // console.log(strData);
-              const parsedData = JSON.parse(strData);
-              if (JSON.parse(strData)?.type === 'ctw-chat') {
-                // console.log('received chat ', JSON.parse(strData).text);
-                setChatMessages(chatMessages => [
-                  ...chatMessages,
-                  {
-                    text: parsedData.text,
-                    sender: room.participants?.get(parsedData.sender) ?? '',
-                  },
-                ]);
-              } else {
-                if (handleReceiveArbData) handleReceiveArbData(data);
-              }
-            }
-          );
-          bumpMemberSize(room);
-          // console.log(room);
-          const audDId = localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID');
-          const vidDId = localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID');
-          const tracks = await createLocalTracks({
-            audio: meta.audioEnabled
-              ? audDId
-                ? { deviceId: audDId }
-                : true
-              : false,
-            video: meta.videoEnabled
-              ? vidDId
-                ? { deviceId: vidDId }
-                : true
-              : false,
-          });
-          tracks.forEach(track => {
-            room.localParticipant.publishTrack(
-              track,
-              meta.simulcast
-                ? {
-                    simulcast: true,
-                  }
-                : {}
-            );
-          });
-        };
-
-        useEffect(() => {
-          if (arbData)
-            roomState.localParticipant?.publishData(
-              arbData,
-              DataPacket_Kind.RELIABLE
-            );
-        }, [arbData]);
-
-        useEffect(() => {
-          if (token && token.length > 0 && token !== 'INVALID') {
-            roomState
-              .connect('wss://infra.catalyst.chat', token, meta)
-              .then(room => {
-                if (!room) {
-                  return;
-                }
-                if (onConnected) {
-                  onConnected(room);
-                }
-                return () => {
-                  room.disconnect();
-                };
-              })
-              .catch(err => {
-                console.error(err);
-              });
-          }
-        }, [token]);
-
-        const bumpMemberSize = (room: Room) => {
-          setMemberCount(room.participants.size + 1);
-        };
-
-        const onLeave = () => {
-          if (onLeaveCall) onLeaveCall();
-          setRoomClosed(true);
-        };
-
-        const updateOutputDevice = (device: MediaDeviceInfo) => {
-          setOutputDevice(device);
-          localStorage.setItem('PREFERRED_OUTPUT_DEVICE_ID', device.deviceId);
-        };
-
-        roomState.audioTracks.map(track => console.log(track));
-
-        // animate toolbar & header fade in/out
-        useEffect(() => {
-          if (fade > 0) {
-            const delayCheck = () => {
-              const hClasses = headerRef.current?.classList;
-              const tClasses = toolbarRef.current?.classList;
-              if (timedelay === 5 && !isHidden) {
-                hClasses?.remove('animate-fade-in-down');
-                hClasses?.add('animate-fade-out-up');
-                tClasses?.remove('animate-fade-in-up');
-                tClasses?.add('animate-fade-out-down');
-                setTimeout(() => {
-                  hClasses?.remove('animate-fade-out-up');
-                  hClasses?.add('hidden');
-                  tClasses?.remove('animate-fade-out-down');
-                  tClasses?.add('hidden');
-                  isHidden = true;
-                }, 170); // 190);
-                timedelay = 1;
-              }
-              timedelay += 1;
-            };
-
-            const handleMouse = () => {
-              const hClasses = headerRef.current?.classList;
-              const tClasses = toolbarRef.current?.classList;
-              hClasses?.remove('hidden');
-              hClasses?.add('animate-fade-in-down');
-              tClasses?.remove('hidden');
-              tClasses?.add('animate-fade-in-up');
-              isHidden = false;
-              timedelay = 1;
-              clearInterval(_delay);
-              _delay = setInterval(delayCheck, fade);
-            };
-
-            var timedelay = 1;
-            var isHidden = false;
-            const debounceHandleMouse = debounce(handleMouse, 25);
-            videoChatRef.current?.addEventListener(
-              'mousemove',
-              debounceHandleMouse
-            );
-            var _delay = setInterval(delayCheck, fade);
-
-            () => {
-              clearInterval(_delay);
-              videoChatRef.current?.removeEventListener(
-                'mousemove',
-                debounceHandleMouse
-              );
-            };
-          }
-          // set default output device
-          if (!outputDevice) {
-            navigator.mediaDevices.enumerateDevices().then(devices => {
-              const outputDevices = devices.filter(
-                id => id.kind === 'audiooutput' && id.deviceId
-              );
-              if (localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')) {
-                let outDevice = outputDevices.find(
-                  d =>
-                    d.deviceId ===
-                    localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')
-                );
-                setOutputDevice(outDevice);
-              } else {
-                setOutputDevice(outputDevices[0]);
-              }
-            });
-          }
-        }, []);
-
-        // catch invalid tokens
-        if (token === 'INVALID') {
-          return (
-            <div
-              id="video-chat"
-              className="relative w-full h-full"
-              ref={videoChatRef}
-            >
-              <div id="bg-theme" className="w-full h-full bg-secondary ">
-                <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center text-xl text-quinary px-16">
-                  <span className="text-center">
-                    ⚠️ An error occurred generating your user token.
-                    <br />
-                    Please <a href={SUPPORT_EMAIL} target="_blank" rel="noreferrer">contact us</a> for help
-                  </span>
-                </div>
-              </div>
-            </div>
-          );
+  const onConnected = async room => {
+    if (onJoinCall) onJoinCall();
+    room.on(RoomEvent.ParticipantConnected, () => {
+      bumpMemberSize(room);
+      if (onMemberJoin) onMemberJoin();
+    });
+    room.on(RoomEvent.ParticipantDisconnected, () => {
+      bumpMemberSize(room);
+      if (onMemberLeave) onMemberLeave();
+    });
+    room.on(
+      RoomEvent.DataReceived,
+      (data: Uint8Array, member: Participant, kind: DataPacket_Kind) => {
+        const strData = decoder.decode(data);
+        // console.log(strData);
+        const parsedData = JSON.parse(strData);
+        if (JSON.parse(strData)?.type === 'ctw-chat') {
+          // console.log('received chat ', JSON.parse(strData).text);
+          setChatMessages(chatMessages => [
+            ...chatMessages,
+            {
+              text: parsedData.text,
+              sender: room.participants?.get(parsedData.sender) ?? '',
+            },
+          ]);
+        } else {
+          if (handleReceiveArbData) handleReceiveArbData(data);
         }
-        return (
-          <div
-            id="video-chat"
-            className="relative w-full h-full"
-            ref={videoChatRef}
-          >
-            <div id="bg-theme" className="w-full h-full bg-secondary ">
-              <FullScreen
-                handle={fsHandle}
-                className="w-full h-full bg-secondary"
-              >
-                <div
-                  id="header-wrapper"
-                  className="animate-fade-in-down"
-                  ref={headerRef}
-                >
-                  <HeaderLogo alwaysBanner={false} />
-                  {/* room count */}
-                  <div
-                    className={`${chatOpen ? 'chat-open-shift' : ''
-                    } absolute z-50 flex nav-ops`}
-                  >
-                    <FontAwesomeIcon
-                      icon={faUserFriends}
-                      size="lg"
-                      className="mr-1 text-quinary"
-                    />
-                    <span className="text-quinary ">{memberCount}</span>
-                    {/* help */}
-                    <Tippy content="Help" theme="catalyst" placement="bottom">
-                      <button
-                        className="ml-4 cursor-pointer focus:border-0 focus:outline-none"
-                        onClick={contact_support}
-                      >
-                        <FontAwesomeIcon
-                          icon={faQuestion}
-                          size="lg"
-                          className="text-quinary"
-                        />
-                      </button>
-                    </Tippy>
-                    {/* speaker mode toggle  */}
-                    <Tippy
-                      content="Toggle View"
-                      theme="catalyst"
-                      placement="bottom"
-                    >
-                      <button
-                        className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
-                        onClick={() => setSpeakerMode(sMode => !sMode)}
-                      >
-                        <FontAwesomeIcon
-                          icon={speakerMode ? faTh : faThLarge}
-                          size="lg"
-                          className="text-quinary"
-                        />
-                      </button>
-                    </Tippy>
-                    {/* full screen  */}
-                    {!isMobile && (
-                      <Tippy
-                        content="Full Screen"
-                        theme="catalyst"
-                        placement="bottom"
-                      >
-                        <button
-                          className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
-                          onClick={() => {
-                            if (fsHandle.active) fsHandle.exit();
-                            else fsHandle.enter();
-                          }}
-                        >
-                          <FontAwesomeIcon
-                            icon={fsHandle.active ? faCompressAlt : faExpandAlt}
-                            size="lg"
-                            className="text-quinary"
-                          />
-                        </button>
-                      </Tippy>
-                    )}
-                  </div>
-                </div>
+      }
+    );
+    bumpMemberSize(room);
+    // console.log(room);
+    const audDId = localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID');
+    const vidDId = localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID');
+    const tracks = await createLocalTracks({
+      audio: meta.audioEnabled ? (audDId ? { deviceId: audDId } : true) : false,
+      video: meta.videoEnabled ? (vidDId ? { deviceId: vidDId } : true) : false,
+    });
+    tracks.forEach(track => {
+      room.localParticipant.publishTrack(
+        track,
+        meta.simulcast
+          ? {
+              simulcast: true,
+            }
+          : {}
+      );
+    });
+  };
 
-                <div id="call-section" className="items-end w-full h-full">
-                  {!roomClosed && (
-                    <div id="vid-chat-cont" className="absolute inset-0 flex">
-                      <RoomWrapper
-                        onLeave={onLeave}
-                        chatOpen={chatOpen}
-                        setChatOpen={setChatOpen}
-                        roomState={roomState}
-                        speakerMode={speakerMode}
-                        disableChat={disableChat}
-                        chatMessages={chatMessages}
-                        setSpeakerMode={setSpeakerMode}
-                        setChatMessages={setChatMessages}
-                      />
-                      {roomState.room && (
-                        <div
-                          ref={toolbarRef}
-                          className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-center mb-3"
-                        >
-                          <Toolbar
-                            room={roomState.room}
-                            onLeave={onLeave}
-                            setSpeakerMode={setSpeakerMode}
-                            setChatMessages={setChatMessages}
-                            updateOutputDevice={updateOutputDevice}
-                            outputDevice={outputDevice}
-                            chatOpen={chatOpen}
-                            setChatOpen={setChatOpen}
-                            disableChat={disableChat}
-                          />
-                        </div>
-                      )}
-                      {roomState.audioTracks.map(track => (
-                        <AudWrapper
-                          key={track.sid}
-                          track={track}
-                          isLocal={false}
-                          sinkId={outputDevice?.deviceId}
-                        />
-                      ))}
-                    </div>
-                  )}
-                  {roomClosed && (
-                    <div className="absolute inset-0 z-40 flex items-center justify-center w-full h-full text-xl not-selectable text-quinary">
-                      <span>🖐️ Call ended</span>
-                    </div>
-                  )}
-                </div>
-              </FullScreen>
-            </div>
-          </div>
+  useEffect(() => {
+    if (arbData)
+      roomState.localParticipant?.publishData(
+        arbData,
+        DataPacket_Kind.RELIABLE
+      );
+  }, [arbData]);
+
+  useEffect(() => {
+    if (token && token.length > 0 && token !== 'INVALID') {
+      roomState
+        .connect('wss://infra.catalyst.chat', token, meta)
+        .then(room => {
+          if (!room) {
+            return;
+          }
+          if (onConnected) {
+            onConnected(room);
+          }
+          return () => {
+            room.disconnect();
+          };
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    }
+  }, [token]);
+
+  const bumpMemberSize = (room: Room) => {
+    setMemberCount(room.participants.size + 1);
+  };
+
+  const onLeave = () => {
+    if (onLeaveCall) onLeaveCall();
+    setRoomClosed(true);
+  };
+
+  const updateOutputDevice = (device: MediaDeviceInfo) => {
+    setOutputDevice(device);
+    localStorage.setItem('PREFERRED_OUTPUT_DEVICE_ID', device.deviceId);
+  };
+
+  roomState.audioTracks.map(track => console.log(track));
+
+  // animate toolbar & header fade in/out
+  useEffect(() => {
+    if (fade > 0) {
+      const delayCheck = () => {
+        const hClasses = headerRef.current?.classList;
+        const tClasses = toolbarRef.current?.classList;
+        if (timedelay === 5 && !isHidden) {
+          hClasses?.remove('animate-fade-in-down');
+          hClasses?.add('animate-fade-out-up');
+          tClasses?.remove('animate-fade-in-up');
+          tClasses?.add('animate-fade-out-down');
+          setTimeout(() => {
+            hClasses?.remove('animate-fade-out-up');
+            hClasses?.add('hidden');
+            tClasses?.remove('animate-fade-out-down');
+            tClasses?.add('hidden');
+            isHidden = true;
+          }, 170); // 190);
+          timedelay = 1;
+        }
+        timedelay += 1;
+      };
+
+      const handleMouse = () => {
+        const hClasses = headerRef.current?.classList;
+        const tClasses = toolbarRef.current?.classList;
+        hClasses?.remove('hidden');
+        hClasses?.add('animate-fade-in-down');
+        tClasses?.remove('hidden');
+        tClasses?.add('animate-fade-in-up');
+        isHidden = false;
+        timedelay = 1;
+        clearInterval(_delay);
+        _delay = setInterval(delayCheck, fade);
+      };
+
+      var timedelay = 1;
+      var isHidden = false;
+      const debounceHandleMouse = debounce(handleMouse, 25);
+      videoChatRef.current?.addEventListener('mousemove', debounceHandleMouse);
+      var _delay = setInterval(delayCheck, fade);
+
+      () => {
+        clearInterval(_delay);
+        videoChatRef.current?.removeEventListener(
+          'mousemove',
+          debounceHandleMouse
         );
       };
+    }
+    // set default output device
+    if (!outputDevice) {
+      navigator.mediaDevices.enumerateDevices().then(devices => {
+        const outputDevices = devices.filter(
+          id => id.kind === 'audiooutput' && id.deviceId
+        );
+        if (localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')) {
+          let outDevice = outputDevices.find(
+            d =>
+              d.deviceId === localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')
+          );
+          setOutputDevice(outDevice);
+        } else {
+          setOutputDevice(outputDevices[0]);
+        }
+      });
+    }
+  }, []);
+
+  // catch invalid tokens
+  if (token === 'INVALID') {
+    return (
+      <div
+        id="video-chat"
+        className="relative w-full h-full"
+        ref={videoChatRef}
+      >
+        <div id="bg-theme" className="w-full h-full bg-secondary ">
+          <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center text-xl text-quinary px-16">
+            <span className="text-center">
+              ⚠️ An error occurred generating your user token.
+              <br />
+              Please{' '}
+              <a
+                href={cstmSupportUrl && cstmSupportUrl.length > 0 ? cstmSupportUrl : SUPPORT_EMAIL}
+                target="_blank"
+                rel="noreferrer"
+              >
+                contact us
+              </a>{' '}
+              for help
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div id="video-chat" className="relative w-full h-full" ref={videoChatRef}>
+      <div id="bg-theme" className="w-full h-full bg-secondary ">
+        <FullScreen handle={fsHandle} className="w-full h-full bg-secondary">
+          <div
+            id="header-wrapper"
+            className="animate-fade-in-down"
+            ref={headerRef}
+          >
+            <HeaderLogo alwaysBanner={false} />
+            {/* room count */}
+            <div
+              className={`${
+                chatOpen ? 'chat-open-shift' : ''
+              } absolute z-50 flex nav-ops`}
+            >
+              <FontAwesomeIcon
+                icon={faUserFriends}
+                size="lg"
+                className="mr-1 text-quinary"
+              />
+              <span className="text-quinary ">{memberCount}</span>
+              {/* help */}
+              {!(cstmSupportUrl?.length == 0) && (
+                <Tippy content="Help" theme="catalyst" placement="bottom">
+                  <button
+                    className="ml-4 cursor-pointer focus:border-0 focus:outline-none"
+                    onClick={() => contactSupport(cstmSupportUrl)}
+                  >
+                    <FontAwesomeIcon
+                      icon={faQuestion}
+                      size="lg"
+                      className="text-quinary"
+                    />
+                  </button>
+                </Tippy>
+              )}
+              {/* speaker mode toggle  */}
+              <Tippy content="Toggle View" theme="catalyst" placement="bottom">
+                <button
+                  className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
+                  onClick={() => setSpeakerMode(sMode => !sMode)}
+                >
+                  <FontAwesomeIcon
+                    icon={speakerMode ? faTh : faThLarge}
+                    size="lg"
+                    className="text-quinary"
+                  />
+                </button>
+              </Tippy>
+              {/* full screen  */}
+              {!isMobile && (
+                <Tippy
+                  content="Full Screen"
+                  theme="catalyst"
+                  placement="bottom"
+                >
+                  <button
+                    className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
+                    onClick={() => {
+                      if (fsHandle.active) fsHandle.exit();
+                      else fsHandle.enter();
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={fsHandle.active ? faCompressAlt : faExpandAlt}
+                      size="lg"
+                      className="text-quinary"
+                    />
+                  </button>
+                </Tippy>
+              )}
+            </div>
+          </div>
+
+          <div id="call-section" className="items-end w-full h-full">
+            {!roomClosed && (
+              <div id="vid-chat-cont" className="absolute inset-0 flex">
+                <RoomWrapper
+                  onLeave={onLeave}
+                  chatOpen={chatOpen}
+                  setChatOpen={setChatOpen}
+                  roomState={roomState}
+                  speakerMode={speakerMode}
+                  disableChat={disableChat}
+                  chatMessages={chatMessages}
+                  setSpeakerMode={setSpeakerMode}
+                  setChatMessages={setChatMessages}
+                  cstmWelcomeMsg={cstmWelcomeMsg}
+                />
+                {roomState.room && (
+                  <div
+                    ref={toolbarRef}
+                    className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-center mb-3"
+                  >
+                    <Toolbar
+                      room={roomState.room}
+                      onLeave={onLeave}
+                      setSpeakerMode={setSpeakerMode}
+                      setChatMessages={setChatMessages}
+                      updateOutputDevice={updateOutputDevice}
+                      outputDevice={outputDevice}
+                      chatOpen={chatOpen}
+                      setChatOpen={setChatOpen}
+                      disableChat={disableChat}
+                      cstmSupportUrl={cstmSupportUrl}
+                    />
+                  </div>
+                )}
+                {roomState.audioTracks.map(track => (
+                  <AudWrapper
+                    key={track.sid}
+                    track={track}
+                    isLocal={false}
+                    sinkId={outputDevice?.deviceId}
+                  />
+                ))}
+              </div>
+            )}
+            {roomClosed && (
+              <div className="absolute inset-0 z-40 flex items-center justify-center w-full h-full text-xl not-selectable text-quinary">
+                <span>🖐️ Call ended</span>
+              </div>
+            )}
+          </div>
+        </FullScreen>
+      </div>
+    </div>
+  );
+};
 export default VideoChat;

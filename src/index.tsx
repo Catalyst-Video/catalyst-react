@@ -50,6 +50,8 @@ const CatalystChat = ({
   disableSetupRoom,
   disableNameField,
   cstmSetupBg,
+  cstmWelcomeMsg,
+  cstmSupportUrl,
   arbData,
   handleReceiveArbData,
   onJoinCall,
@@ -94,6 +96,7 @@ const CatalystChat = ({
             response.json().then(json => {
               // TODO: expose rest of return data
               setToken(json.token);
+            console.log(json);
             });
           }
           if (response.status === 500) {
@@ -141,6 +144,8 @@ const CatalystChat = ({
             disableChat={disableChat}
             arbData={arbData}
             handleReceiveArbData={handleReceiveArbData}
+            cstmWelcomeMsg={cstmWelcomeMsg}
+            cstmSupportUrl={cstmSupportUrl}
             onJoinCall={onJoinCall}
             onMemberJoin={onMemberJoin}
             onMemberLeave={onMemberLeave}
@@ -148,21 +153,22 @@ const CatalystChat = ({
           />
         ) : !disableSetupRoom ? (
           <SetupView
-            meta={{
-              audioEnabled: audioOn,
-              videoEnabled: videoOn,
-              simulcast: simulcast ?? true,
-              loglevel: 'trace',
-            }}
-            setAudioOn={setAudioOn}
-            setVideoOn={setVideoOn}
-            audioOn={audioOn}
-            videoOn={videoOn}
-            setReady={setReady}
-            userName={userName}
-            setUserName={setUserName}
-            disableNameField={disableNameField}
-            cstmSetupBg={cstmSetupBg}
+              meta={{
+                audioEnabled: audioOn,
+                videoEnabled: videoOn,
+                simulcast: simulcast ?? true,
+                loglevel: 'trace',
+              }}
+              setAudioOn={setAudioOn}
+              setVideoOn={setVideoOn}
+              audioOn={audioOn}
+              videoOn={videoOn}
+              setReady={setReady}
+              userName={userName}
+              setUserName={setUserName}
+              disableNameField={disableNameField}
+              cstmSetupBg={cstmSetupBg}
+              cstmSupportUrl={cstmSupportUrl}
           />
         ) : null}
       </div>

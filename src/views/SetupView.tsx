@@ -46,6 +46,7 @@ const SetupView = ({
   setUserName,
   cstmSetupBg,
   disableNameField,
+  cstmSupportUrl,
 }: {
   meta: RoomMetaData;
   audioOn: boolean;
@@ -57,6 +58,7 @@ const SetupView = ({
   setUserName: Function;
   cstmSetupBg?: string;
   disableNameField?: boolean;
+    cstmSupportUrl?: string;
 }) => {
   const [videoTrack, setVideoTrack] = useState<LocalVideoTrack>();
   const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
@@ -124,7 +126,7 @@ const SetupView = ({
             );
           }
         }
-        
+
         if (!videoDevice) {
           const videoDevices = devices.filter(
             id => id.kind === 'videoinput' && id?.deviceId
@@ -160,7 +162,7 @@ const SetupView = ({
       createLocalVideoTrack().then(track => {
         if (!mounted.current) return null;
         setVideoTrack(track);
-        return track
+        return track;
       });
     }
     return () => {
@@ -177,7 +179,7 @@ const SetupView = ({
             'PREFERRED_AUDIO_DEVICE_ID',
             audioDevice?.deviceId
           );
-          return track
+          return track;
         })
         .catch((err: Error) => {
           console.log(err);
@@ -191,7 +193,7 @@ const SetupView = ({
         .then((track: LocalVideoTrack) => {
           if (!mounted.current) return null;
           setVideoTrack(track);
-          return track
+          return track;
         })
         .catch((err: Error) => {
           console.log(err);
@@ -228,7 +230,7 @@ const SetupView = ({
       createLocalVideoTrack(options).then(track => {
         if (!mounted.current) return null;
         setVideoTrack(track);
-        return track
+        return track;
       });
     }
   };
@@ -266,9 +268,7 @@ const SetupView = ({
           className="rounded-2xl my-2 mx-1z-10 overflow-hidden" // shadow-md
         >
           <div className="w-80 sm:w-96 lg:h-full rounded-t-xl bg-secondary rounded-b-none z-1">
-            <div
-             
-            >
+            <div>
               {videoTrack && videoOn ? (
                 <VidWrapper track={videoTrack} isLocal={true} />
               ) : (
@@ -296,20 +296,21 @@ const SetupView = ({
                 onOpSelected={updateOutputDevice}
                 audioDevice={audioDevice}
                 outputDevice={outputDevice}
+                cstmSupportUrl={cstmSupportUrl}
               />
               <VidDeviceBtn
                 isEnabled={videoTrack !== undefined}
                 onClick={toggleVideo}
                 videoDevice={videoDevice}
                 onIpSelected={selectVideoDevice}
+                cstmSupportUrl={cstmSupportUrl}
               />
             </div>
             <button
               id="setuproom-but"
               className={`rounded-b-xl cursor-pointer block outline-none border-0 font-bold text-md h-14 text-quinary  w-full focus:outline-none focus:border-0 bg-primary`}
               onClick={() => {
-                if (mounted.current)
-                  setReady(true)
+                if (mounted.current) setReady(true);
               }}
             >
               Join Call

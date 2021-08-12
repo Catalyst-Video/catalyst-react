@@ -37,6 +37,7 @@ const AudioDeviceBtn = ({
   onOpSelected,
   audioDevice,
   outputDevice,
+  cstmSupportUrl,
 }: {
   isMuted: boolean;
   onClick?: () => void;
@@ -44,6 +45,7 @@ const AudioDeviceBtn = ({
   onOpSelected?: (device: MediaDeviceInfo) => void;
   audioDevice?: MediaDeviceInfo;
   outputDevice?: MediaDeviceInfo;
+  cstmSupportUrl?: string;
 }) => {
   const [ipSources, setIpSources] = useState<MediaDeviceInfo[]>([]);
   const [opSources, setOpSources] = useState<MediaDeviceInfo[]>([]);
@@ -54,7 +56,7 @@ const AudioDeviceBtn = ({
 
   useEffect(() => {
     navigator.mediaDevices.enumerateDevices().then(devices => {
-       if (!mounted.current) return null;
+      if (!mounted.current) return null;
       const audioDevices = devices.filter(
         id => id.kind === 'audioinput' && id.deviceId
       );
@@ -73,7 +75,7 @@ const AudioDeviceBtn = ({
           return { label: id.label };
         })
       );
-      return devices
+      return devices;
     });
     return () => {
       mounted.current = false;
@@ -95,23 +97,24 @@ const AudioDeviceBtn = ({
   };
 
   return (
-   // <div ref={audBtnRef} className="inline relative">
-      <ToolbarButton
-        type="Audio"
-        tooltip={isMuted ? 'Unmute' : 'Mute'}
-        icon={isMuted ? faMicrophoneSlash : faMicrophone}
-        bgColor={isMuted ? 'bg-quinary  hover:bg-gray-100' : undefined}
-        iconColor={isMuted ? 'text-red' : undefined}
-        onClick={onClick}
-        inputDevices={devices}
-        outputDevices={outputDevices}
-        onIpDeviceClick={handleIpDeviceClick}
-        onOpDeviceClick={handleOpDeviceClick}
-        selectedIpDevice={audioDevice}
-        selectedOpDevice={outputDevice}
-    //    parentRef={audBtnRef}
-      />
- //   </div>
+    // <div ref={audBtnRef} className="inline relative">
+    <ToolbarButton
+      type="Audio"
+      tooltip={isMuted ? 'Unmute' : 'Mute'}
+      icon={isMuted ? faMicrophoneSlash : faMicrophone}
+      bgColor={isMuted ? 'bg-quinary  hover:bg-gray-100' : undefined}
+      iconColor={isMuted ? 'text-red' : undefined}
+      onClick={onClick}
+      inputDevices={devices}
+      outputDevices={outputDevices}
+      onIpDeviceClick={handleIpDeviceClick}
+      onOpDeviceClick={handleOpDeviceClick}
+      selectedIpDevice={audioDevice}
+      selectedOpDevice={outputDevice}
+      cstmSupportUrl={cstmSupportUrl}
+      //    parentRef={audBtnRef}
+    />
+    //   </div>
   );
 };
 export default AudioDeviceBtn;

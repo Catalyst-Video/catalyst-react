@@ -58,7 +58,8 @@ const Toolbar = ({
   outputDevice,
   chatOpen,
   setChatOpen,
-  disableChat
+  disableChat,
+  cstmSupportUrl,
 }: {
   room: Room;
   enableScreenShare?: boolean;
@@ -72,7 +73,7 @@ const Toolbar = ({
   chatOpen: boolean;
   setChatOpen: Function;
   disableChat?: boolean;
-  
+    cstmSupportUrl?: string;
 }) => {
   const { publications, isMuted, unpublishTrack } = useMember(
     room.localParticipant
@@ -257,6 +258,7 @@ const Toolbar = ({
         onClick={toggleAudio}
         audioDevice={audioDevice}
         outputDevice={outputDevice}
+        cstmSupportUrl={cstmSupportUrl}
       />
       {/* Pause Video Button */}
       <VidDeviceBtn
@@ -264,6 +266,7 @@ const Toolbar = ({
         onIpSelected={setVideoDevice}
         onClick={toggleVideo}
         videoDevice={videoDevice}
+        cstmSupportUrl={cstmSupportUrl}
       />
       {/* Screen Share Button */}
       {/* TODO: screen share on mobile  */}
