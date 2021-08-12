@@ -28,3 +28,4 @@ yarn-error.log*
 
 # css
 tailwind.output.css
+old.css

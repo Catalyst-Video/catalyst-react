@@ -25,7 +25,6 @@ You can contact us for more details at support@catalyst.chat. */
 import { Track } from 'livekit-client';
 import React, { useEffect, useRef } from 'react';
 import { Property } from 'csstype';
-import { isMobile } from 'react-device-detect';
 
 const VidWrapper = React.memo(
   ({

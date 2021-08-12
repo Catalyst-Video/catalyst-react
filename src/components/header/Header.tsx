@@ -46,6 +46,7 @@ const HeaderLogo = React.memo(
             </div>
           </div>
         )}
+        <div className="hidden ring-2 ring-primary ring-opacity-50"></div>
       </div>
     );
   }

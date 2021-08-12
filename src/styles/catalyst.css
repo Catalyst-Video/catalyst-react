@@ -350,6 +350,10 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
    max-height: 250px;
 }
 
+#ctw.catalyst-parent[min-width~="400px"] .max-vid-height {
+   max-height: 270px;
+}
+
 #ctw.catalyst-parent[min-width~="640px"] .max-vid-height {
    max-height: inherit;
 }
@@ -456,47 +460,6 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
   width: 80%;
 }
 
-
-/* speaker vid  */
-/* #ctw.catalyst-parent .speaker-vid  {
- margin-left: 25%;
- margin-right: 25%;
-}
-
-#ctw.catalyst-parent[min-width~="400px"] .speaker-vid  {
- margin-left: 15%;
- margin-right: 15%;
-}
-
-#ctw.catalyst-parent[min-width~="640px"] .speaker-vid  {
-  width: 70%;
-}
-
-#ctw.catalyst-parent[min-width~="1024px"] .speaker-vid  {
-  width: 80%;
-} */
-
-/* other vids  */
-/* #ctw.catalyst-parent .other-vids {
-   max-height: 30%;
-   width: 100%;
-   flex-direction: row;
-   overflow-y: hidden; 
-}
-
-#ctw.catalyst-parent[min-width~="640px"] .other-vids  {
-  width: 30%;
-  height: auto;
-  overflow-y: auto;
-  flex-direction: column;
-}
-
-#ctw.catalyst-parent[min-width~="1024px"] .other-vids  {
-  width: 20%;
-  height: 100%;
-} */
-
-
 /* name text */
 #ctw.catalyst-parent .text-n  {
    	font-size: 0.75rem;
@@ -563,44 +526,3 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
 #ctw.catalyst-parent[min-width~="768px"] .setup-logo {
   display: block;
 }
-/* #ctw .setup-cont {
-  width: 100%;
-  height: 100%;
-}
-
-#ctw.catalyst-parent[min-width~="768px"] .setup-cont {
-  flex-direction: column;
-  flex: 1 1 0%;
-  margin-left: 0.75rem;
-  margin-right: 0.75rem;
-  margin-top: 0.75rem;
-  margin-bottom: 0.75rem;
-  border-radius: 0.375rem;
-}
-
-#ctw.catalyst-parent[min-width~="768px"] .setup-comp {
-  margin-top:  0.5rem;
-  margin-bottom:  0.5rem;
-  margin-left: 0.25rem;
-  margin-right: 0.25rem;
-}
-
-#ctw .setup-vid {
-  width: 100%;
-}
-
-#ctw.catalyst-parent[min-width~="768px"] .setup-vid {
-   width: 24rem;
-}
-
-#ctw .setup-btn {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
-#ctw.catalyst-parent[min-width~="768px"] .setup-btn {
-  position: relative;
-} */
-

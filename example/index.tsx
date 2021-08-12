@@ -19,6 +19,7 @@ const GeneralTest = () => {
       room="testingGround"
       appId={process.env.REACT_APP_APP_ID ?? 'REAL_APP_ID_HERE'}
       audioOnDefault={false}
+      disableSetupRoom
       // name={(Math.random() * 1000).toString().slice(0, 4)}
       // theme={{
       //   primary: '#11c1e8',
