@@ -19,7 +19,7 @@ const GeneralTest = () => {
       room="testingGround"
       appId={process.env.REACT_APP_APP_ID ?? 'REAL_APP_ID_HERE'}
       audioOnDefault={false}
-      disableSetupRoom
+      disableSetupView
       name="Bob"
       // cstmWelcomeMsg="Hi"
       // cstmSupportUrl=""
@@ -84,7 +84,7 @@ const HoursTest = () => {
               room={'testingGround'}
               appId={process.env.REACT_APP_APP_ID ?? 'REAL_APP_ID_HERE'}
               audioOnDefault={false}
-              disableSetupRoom
+              disableSetupView
               disableChat
               theme="hoursDark"
               // theme={{

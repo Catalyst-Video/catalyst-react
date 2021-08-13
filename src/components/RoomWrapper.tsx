@@ -199,7 +199,7 @@ const RoomWrapper = ({
         <div
           id="remote-vid-wrapper"
           ref={vidRef}
-          className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border`}
+          className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border animate-fade-in-left`}
           // ${
           //   chatOpen ? 'sm:animate-fade-in-right' : 'sm:animate-fade-in-left'
           // }`}
@@ -255,7 +255,7 @@ const RoomWrapper = ({
       )}
       {speakerMode && (
         <div
-          className={`speaker-view flex z-20 w-full justify-center sm:justify-around  `}
+          className={`speaker-view flex z-20 w-full justify-center sm:justify-around  animate-fade-in-right`}
           // ${
           //   chatOpen ? 'sm:animate-fade-in-right' : 'sm:animate-fade-in-left' // lg:px-10 xl:px-20
           // }`}

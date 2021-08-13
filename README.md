@@ -55,6 +55,7 @@ We recommend a minimum parent container size of 400px X 450px.
 | `cstmSupportUrl` | Url for all help/support messages. When set to an empty string hides support icon.   |  `string` | `https://catalyst.chat/contact.html` | Optional |
 | `arbData` | Data passed to all other members of room  |  `Uint8Array` | `TextEncoder().encode('str')` | Optional |
 | `handleReceiveArbData` | Function triggered whenever arbitrary data is received    |  `Function` | `(arbData: Uint8Array) => void` | Optional |
+| `handleUserData` | Function passed all user metadata after token is generated    |  `Function` | `(userData: CatalystUserData) => void` | Optional |
 | `onJoinCall` | Function triggered when user joins the call  |  `Function` | `() => void` | Optional |
 | `onMemberJoin` | Function triggered when a member joins the call     |  `Function` | `() => void` | Optional |
 | `onMemberLeave` | Function triggered when a member leaves the call       |  `Function` | `() => void` | Optional |

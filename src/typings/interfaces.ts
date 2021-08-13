@@ -41,6 +41,7 @@ export interface CatalystChatProps {
   cstmSupportUrl?: string;
   arbData?: Uint8Array;
   handleReceiveArbData?: (arbData: Uint8Array) => void;
+  handleUserData?: (userData: CatalystUserData) => void;
   onJoinCall?: () => void;
   onMemberJoin?: () => void;
   onMemberLeave?: () => void;
@@ -72,4 +73,25 @@ export interface CatalystTheme {
 
 export interface CatalystDev {
   label: string;
+}
+
+export interface CatalystUserData {
+  token: string;
+  roomName: string;
+  participantName: string;
+  persistedUserResult: {
+    meetingJoins: {
+      roomName: string;
+      joinTime: string;
+    }[];
+    _id: string;
+    appId: string;
+    uniqueClientIdentifier: string;
+    lastActive: string;
+    lastParticipantName: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+  };
+  isNewUser: boolean;
 }

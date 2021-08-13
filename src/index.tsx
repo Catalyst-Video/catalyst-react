@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 You can contact us for more details at support@catalyst.chat. */
 
 import React, { useState, useEffect } from 'react';
-import { CatalystChatProps } from './typings/interfaces';
+import { CatalystChatProps, CatalystUserData } from './typings/interfaces';
 import './styles/catalyst.css';
 import './styles/tailwind.output.css';
 import { generateUUID, setThemeColor } from './utils/general';
@@ -54,6 +54,7 @@ const CatalystChat = ({
   cstmSupportUrl,
   arbData,
   handleReceiveArbData,
+  handleUserData,
   onJoinCall,
   onMemberJoin,
   onMemberLeave,
@@ -93,10 +94,10 @@ const CatalystChat = ({
       )
         .then(response => {
           if (response.status === 200) {
-            response.json().then(json => {
-              // TODO: expose rest of return data
-              setToken(json.token);
-              console.log(json);
+            response.json().then((user: CatalystUserData) => {
+              setToken(user.token);
+              if(handleUserData) handleUserData(user);
+              // console.log(user);
             });
           }
           if (response.status === 500) {
