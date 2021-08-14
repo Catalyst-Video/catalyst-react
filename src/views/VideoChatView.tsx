@@ -248,15 +248,17 @@ const VideoChat = ({
         const outputDevices = devices.filter(
           id => id.kind === 'audiooutput' && id.deviceId
         );
+        let outDevice: MediaDeviceInfo | undefined;
         if (localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')) {
-          let outDevice = outputDevices.find(
+           outDevice = outputDevices.find(
             d =>
               d.deviceId === localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')
           );
-          setOutputDevice(outDevice);
-        } else {
-          setOutputDevice(outputDevices[0]);
         }
+        if (!outDevice) {
+          outDevice = outputDevices[0];
+        }
+        setOutputDevice(outDevice);
       });
     }
   }, []);

@@ -91,69 +91,72 @@ const SetupView = ({
           const outputDevices = devices.filter(
             id => id.kind === 'audiooutput' && id?.deviceId
           );
+          let outDevice: MediaDeviceInfo | undefined
           if (localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')) {
-            let outDevice = outputDevices.find(
+            outDevice = outputDevices.find(
               d =>
                 d?.deviceId ===
                 localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')
             );
-            setOutputDevice(outDevice);
-          } else {
-            setOutputDevice(outputDevices[0]);
+          }
+          if (!outDevice) {
+            outDevice = outputDevices[0];
             localStorage.setItem(
               'PREFERRED_OUTPUT_DEVICE_ID',
-              outputDevices[0]?.deviceId
+              outDevice?.deviceId
             );
           }
+          setOutputDevice(outDevice);
         }
 
         if (!audioDevice) {
           const audioDevices = devices.filter(
             id => id.kind === 'audioinput' && id?.deviceId
           );
+          let audDevice: MediaDeviceInfo | undefined;
           if (localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')) {
-            let audDevice = audioDevices.find(
+            audDevice = audioDevices.find(
               d =>
                 d?.deviceId ===
                 localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')
             );
-            setAudioDevice(audDevice);
-          } else {
-            setAudioDevice(audioDevices[0]);
+          }
+          if (!audDevice) {
+            audDevice = audioDevices[0];
             localStorage.setItem(
               'PREFERRED_AUDIO_DEVICE_ID',
-              audioDevices[0]?.deviceId
+              audDevice?.deviceId
             );
           }
+            setAudioDevice(audDevice);
         }
 
         if (!videoDevice) {
           const videoDevices = devices.filter(
             id => id.kind === 'videoinput' && id?.deviceId
           );
+          let vidDevice: MediaDeviceInfo | undefined;
           if (localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')) {
-            let vidDevice = videoDevices.find(
+            vidDevice = videoDevices.find(
               d =>
                 d?.deviceId ===
                 localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')
             );
-            setVideoDevice(vidDevice);
-          } else {
-            let defaultVidDevice = videoDevices.find(
+          }
+          if (!vidDevice) {
+            vidDevice = videoDevices.find(
               d =>
                 d?.deviceId ===
                 videoTrack?.mediaStreamTrack.getSettings()?.deviceId
             );
-            if (defaultVidDevice) {
-              setVideoDevice(defaultVidDevice);
-              if (!localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')) {
+            if (vidDevice && !localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')) {
                 localStorage.setItem(
                   'PREFERRED_VIDEO_DEVICE_ID',
-                  defaultVidDevice?.deviceId
+                  vidDevice?.deviceId
                 );
-              }
             }
           }
+          setVideoDevice(vidDevice);
         }
         return outputDevice && audioDevice && videoDevice;
       });

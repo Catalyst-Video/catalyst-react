@@ -105,45 +105,46 @@ const Toolbar = ({
           const audioDevices = devices.filter(
             id => id.kind === 'audioinput' && id.deviceId
           );
+          let defaultAudDevice: MediaDeviceInfo | undefined;
           if (localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')) {
-            setAudioDevice(
-              audioDevices.find(
-                d =>
-                  d.deviceId ===
-                  localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')
-              )
-            );
-          } else {
-            let defaultAudDevice =
+             defaultAudDevice = audioDevices.find(
+               d =>
+                 d.deviceId ===
+                 localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')
+             );
+          }
+          if (!defaultAudDevice){
+            defaultAudDevice =
               audioDevices.find(
                 d =>
                   d.deviceId ===
                   audio?.audioTrack?.mediaStreamTrack.getSettings().deviceId
               ) ?? audioDevices[0];
-            setAudioDevice(defaultAudDevice);
           }
+            setAudioDevice(defaultAudDevice);
         }
         if (!videoDevice) {
           const videoDevices = devices.filter(
             id => id.kind === 'videoinput' && id.deviceId
           );
+          let defaultVidDevice: MediaDeviceInfo | undefined;
           if (localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')) {
-            setVideoDevice(
+            defaultVidDevice =
               videoDevices.find(
                 d =>
                   d.deviceId ===
                   localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')
               )
-            );
-          } else {
-            let defaultVidDevice =
+          }
+          if (!defaultVidDevice) {
+             defaultVidDevice =
               videoDevices.find(
                 d =>
                   d.deviceId ===
                   video?.videoTrack?.mediaStreamTrack.getSettings().deviceId
               ) ?? videoDevices[0];
-            setVideoDevice(defaultVidDevice);
           }
+        setVideoDevice(defaultVidDevice);
         }
       });
     }

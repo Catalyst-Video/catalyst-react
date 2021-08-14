@@ -31,7 +31,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import MemberView from './MemberView';
 import ScreenShareWrapper from './wrapper/ScreenShareView';
 import { RoomState } from '../hooks/useRoom';
-import { debounce } from 'ts-debounce';
+// import { debounce } from 'ts-debounce';
 import Chat from './Chat';
 import { ChatMessage } from '../typings/interfaces';
 import { useFullScreenHandle } from 'react-full-screen';
@@ -152,13 +152,27 @@ const RoomWrapper = ({
 
   if (error || isConnecting || !room || members.length === 0) {
     return (
-      <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center text-xl text-quinary ">
-        {error && <span>⚠️ {error.message}</span>}
-        {isConnecting && <span>⚡ Connecting...</span>}
-        {!room && !isConnecting && !error && <span>🚀 Preparing room...</span>}
-        {members.length === 0 && room && !isConnecting && (
-          <span>{cstmWelcomeMsg ?? "👋 Waiting for others to join..."}</span>
-        )}
+      <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center text-xl text-quinary">
+        <div className="flex flex-col items-center justify-between p-2">
+          <svg
+            className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-quinary"
+            viewBox="0 0 24 24"
+          ></svg>
+          <div
+            className="pt-4"
+          >
+            {error && <span>⚠️ {error.message}</span>}
+            {isConnecting && <span>⚡ Connecting...</span>}
+            {!room && !isConnecting && !error && (
+              <span>🚀 Preparing room...</span>
+            )}
+            {members.length === 0 && room && !isConnecting && (
+              <span>
+                {cstmWelcomeMsg ?? '👋 Waiting for others to join...'}
+              </span>
+            )}
+          </div>
+        </div>
       </div>
     );
   }
