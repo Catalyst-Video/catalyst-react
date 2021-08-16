@@ -22,160 +22,26 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 You can contact us for more details at support@catalyst.chat. */
 
-import React, { useState, useEffect } from 'react';
-import { CatalystChatProps, CatalystUserData } from './typings/interfaces';
-import './styles/catalyst.css';
-import './styles/tailwind.output.css';
-import { generateUUID, setThemeColor } from './utils/general';
-import { AUTH_ADDRESS, DEFAULT_AUTOFADE, THEMES } from './utils/globals';
-import genRandomName from './utils/name_gen';
-import { useCookies } from 'react-cookie';
-// import DetectRTC from 'detectrtc';
-import SetupView from './views/SetupView';
-import VideoChat from './views/VideoChatView';
+import React, { useState } from 'react';
+import { CatalystChatWrapperProps } from './typings/interfaces';
 
-import ElementQueries from 'css-element-queries/src/ElementQueries';
-ElementQueries.listen();
+import CatalystChat from './CatalystChat';
 
-const CatalystChat = ({
-  room,
-  appId,
-  name,
-  theme,
-  fade,
-  audioOnDefault,
-  videoOnDefault,
-  simulcast,
-  disableChat,
-  disableSetupView,
-  disableNameField,
-  cstmSetupBg,
-  cstmWelcomeMsg,
-  cstmSupportUrl,
-  arbData,
-  handleReceiveArbData,
-  handleUserData,
-  onJoinCall,
-  onMemberJoin,
-  onMemberLeave,
-  onLeaveCall,
-}: CatalystChatProps) => {
-  const [ready, setReady] = useState(disableSetupView ?? false);
-  const [userName, setUserName] = useState(name ?? genRandomName());
-  const [cookies, setCookie] = useCookies(['PERSISTENT_CLIENT_ID']);
-  const [audioOn, setAudioOn] = useState(audioOnDefault ?? true);
-  const [videoOn, setVideoOn] = useState(videoOnDefault ?? true);
-  const [token, setToken] = useState('');
+const CatalystChatWrapper = (props: CatalystChatWrapperProps) => {
+  const [refreshTriggerKey, setRefreshTriggerKey] = useState(0);
 
-  useEffect(() => {
-    // set global theme
-    setThemeColor(theme ?? THEMES.default);
-  }, []);
-
-  useEffect(() => {
-    if (ready) {
-      // set client ID
-      const uniqueClientIdentifier =
-        cookies.PERSISTENT_CLIENT_ID || generateUUID();
-      if (!cookies.PERSISTENT_CLIENT_ID)
-        setCookie('PERSISTENT_CLIENT_ID', uniqueClientIdentifier, {
-          expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-        });
-      // obtain user token
-      fetch(
-        `${AUTH_ADDRESS}?participantName=${userName}&appId=${appId}&roomName=${room}&uniqueClientIdentifier=${uniqueClientIdentifier}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            mode: 'no-cors',
-          },
-        }
-      )
-        .then(response => {
-          if (response.status === 200) {
-            response.json().then((user: CatalystUserData) => {
-              setToken(user.token);
-              if(handleUserData) handleUserData(user);
-              // console.log(user);
-            });
-          }
-          if (response.status === 500) {
-            console.log(
-              'There is no user record corresponding to the provided identifier'
-            );
-            setToken('INVALID');
-          }
-        })
-        .catch(err => {
-          console.log(err);
-          setToken('INVALID');
-        });
-    }
-  }, [ready]);
+  // Refresh function that will trigger the component to re-mount. The root component also takes in a prop, handleComponentRefresh, that will also be called
+  const handleRefresh = () => {
+    if (props.onComponentRefresh) props.onComponentRefresh();
+    setRefreshTriggerKey(refreshTriggerKey + 1);
+  };
 
   return (
-    <div
-      id="ctw"
-      className="catalyst-parent"
-      ref={ref => {
-        // dynamically make Catalyst size properly if there is no parent component
-        if (ref && ref.parentNode?.parentNode?.nodeName === 'BODY') {
-          ref.style.position = 'fixed';
-          let ss = document.createElement('style');
-          document.head.appendChild(ss);
-          ss?.sheet?.insertRule(
-            'html, body { margin: 0px; padding: 0px; height: 100%; }'
-          );
-        }
-      }}
-    >
-      <div
-        id="catalyst-wrapper"
-        className={`h-full w-full m-0 p-0 overflow-hidden max-h-screen max-w-screen box-border`}
-      >
-        {ready ? (
-          <VideoChat
-            token={token}
-            meta={{
-              audioEnabled: audioOn,
-              videoEnabled: videoOn,
-              simulcast: simulcast ?? true,
-              loglevel: 'trace',
-            }}
-            fade={fade ?? DEFAULT_AUTOFADE}
-            disableChat={disableChat}
-            arbData={arbData}
-            handleReceiveArbData={handleReceiveArbData}
-            cstmWelcomeMsg={cstmWelcomeMsg}
-            cstmSupportUrl={cstmSupportUrl}
-            onJoinCall={onJoinCall}
-            onMemberJoin={onMemberJoin}
-            onMemberLeave={onMemberLeave}
-            onLeaveCall={onLeaveCall}
-          />
-        ) : !disableSetupView ? (
-          <SetupView
-            meta={{
-              audioEnabled: audioOn,
-              videoEnabled: videoOn,
-              simulcast: simulcast ?? true,
-              loglevel: 'trace',
-            }}
-            setAudioOn={setAudioOn}
-            setVideoOn={setVideoOn}
-            audioOn={audioOn}
-            videoOn={videoOn}
-            setReady={setReady}
-            userName={userName}
-            setUserName={setUserName}
-            disableNameField={disableNameField}
-            cstmSetupBg={cstmSetupBg}
-            cstmSupportUrl={cstmSupportUrl}
-          />
-        ) : null}
-      </div>
-    </div>
+    <CatalystChat
+      key={refreshTriggerKey}
+      {...props}
+      handleComponentRefresh={handleRefresh} // Ensure that this prop is after the spread of props (...props) so that the passed in handleComponentRefresh doesn't overwrite the wrapper function that also refreshes the component
+    />
   );
 };
-export default CatalystChat;
+export default CatalystChatWrapper;

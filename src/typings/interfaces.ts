@@ -27,6 +27,7 @@ import { Participant } from 'livekit-client';
 export interface CatalystChatProps {
   room: string;
   appId: string;
+  handleComponentRefresh: () => void;
   name?: string;
   theme?: CatalystTheme | string;
   fade?: number;
@@ -46,6 +47,10 @@ export interface CatalystChatProps {
   onMemberJoin?: () => void;
   onMemberLeave?: () => void;
   onLeaveCall?: () => void;
+}
+
+export interface CatalystChatWrapperProps extends CatalystChatProps {
+  onComponentRefresh?: () => void;
 }
 
 export interface RoomMetaData {

@@ -29,6 +29,7 @@ import {
   faCompressAlt,
   faExpandAlt,
   faQuestion,
+  faSync,
   faTh,
   faThLarge,
   faUserFriends,
@@ -69,6 +70,7 @@ const VideoChat = ({
   onMemberJoin,
   onMemberLeave,
   onLeaveCall,
+  handleComponentRefresh,
 }: {
   token: string;
   meta: RoomMetaData;
@@ -82,6 +84,7 @@ const VideoChat = ({
   onMemberJoin?: () => void;
   onMemberLeave?: () => void;
   onLeaveCall?: () => void;
+  handleComponentRefresh: () => void;
 }) => {
   const fsHandle = useFullScreenHandle();
   const [memberCount, setMemberCount] = useState(0);
@@ -250,7 +253,7 @@ const VideoChat = ({
         );
         let outDevice: MediaDeviceInfo | undefined;
         if (localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')) {
-           outDevice = outputDevices.find(
+          outDevice = outputDevices.find(
             d =>
               d.deviceId === localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')
           );
@@ -272,7 +275,7 @@ const VideoChat = ({
         ref={videoChatRef}
       >
         <div id="bg-theme" className="w-full h-full bg-secondary ">
-          <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center text-xl text-quinary px-16">
+          <div className="absolute top-0 flex items-center justify-center w-full h-full px-16 text-xl not-selectable left-1 text-quinary">
             <span className="text-center">
               ⚠️ An error occurred generating your user token.
               <br />
@@ -317,11 +320,12 @@ const VideoChat = ({
                 className="mr-1 text-quinary"
               />
               <span className="text-quinary ">{memberCount}</span>
+
               {/* help */}
               {!(cstmSupportUrl?.length == 0) && (
                 <Tippy content="Help" theme="catalyst" placement="bottom">
                   <button
-                    className="ml-4 cursor-pointer focus:border-0 focus:outline-none"
+                    className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
                     onClick={() => contactSupport(cstmSupportUrl)}
                   >
                     <FontAwesomeIcon
@@ -332,6 +336,19 @@ const VideoChat = ({
                   </button>
                 </Tippy>
               )}
+              {/* refresh */}
+              <Tippy content="Refresh" theme="catalyst" placement="bottom">
+                <button
+                  className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
+                  onClick={handleComponentRefresh}
+                >
+                  <FontAwesomeIcon
+                    icon={faSync}
+                    size="lg"
+                    className="text-quinary"
+                  />
+                </button>
+              </Tippy>
               {/* speaker mode toggle  */}
               <Tippy content="Toggle View" theme="catalyst" placement="bottom">
                 <button
