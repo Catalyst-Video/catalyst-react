@@ -30,10 +30,9 @@ import { VideoQuality } from 'livekit-client/dist/proto/livekit_rtc';
 import React, { useEffect, useRef, useState } from 'react';
 import MemberView from './MemberView';
 import ScreenShareWrapper from './wrapper/ScreenShareView';
-import { RoomState } from '../hooks/useRoom';
 // import { debounce } from 'ts-debounce';
 import Chat from './Chat';
-import { ChatMessage } from '../typings/interfaces';
+import { ChatMessage, RoomState } from '../typings/interfaces';
 import { useFullScreenHandle } from 'react-full-screen';
 
 const RoomWrapper = ({

@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 You can contact us for more details at support@catalyst.chat. */
 
-import { Participant } from 'livekit-client';
+import { AudioTrack, ConnectOptions, LocalParticipant, Participant, Room } from 'livekit-client';
 
 export interface CatalystChatProps {
   room: string;
@@ -99,4 +99,18 @@ export interface CatalystUserData {
     __v: number;
   };
   isNewUser: boolean;
+}
+
+export interface RoomState {
+  connect: (
+    url: string,
+    token: string,
+    options?: ConnectOptions
+  ) => Promise<Room | undefined>;
+  isConnecting: boolean;
+  room?: Room;
+  members: Participant[];
+  localMember?: LocalParticipant;
+  audioTracks: AudioTrack[];
+  error?: Error;
 }

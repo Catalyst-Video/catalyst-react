@@ -10,23 +10,7 @@ import {
   Track,
 } from 'livekit-client';
 import { useCallback, useState } from 'react';
-
-export interface RoomState {
-  connect: (
-    url: string,
-    token: string,
-    options?: ConnectOptions
-  ) => Promise<Room | undefined>;
-  isConnecting: boolean;
-  room?: Room;
-  /* all members in the room, including the local participant. */
-  members: Participant[];
-  localMember?: LocalParticipant;
-  /* all subscribed audio tracks in the room, not including local participant. */
-  audioTracks: AudioTrack[];
-  error?: Error;
-}
-
+import { RoomState } from '../typings/interfaces';
 
 const useRoom = (options?: {
   sortMembers?: (members: Participant[]) => void;

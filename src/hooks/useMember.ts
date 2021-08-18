@@ -8,7 +8,7 @@ import {
 } from 'livekit-client';
 import { useEffect, useState } from 'react';
 
-export interface MemberState {
+const useMember = (member: Participant): {
   isSpeaking: boolean;
   isLocal: boolean;
   /** @deprecated use isAudioMuted instead */
@@ -19,9 +19,7 @@ export interface MemberState {
   publications: TrackPublication[];
   subscribedTracks: TrackPublication[];
   unpublishTrack: (track: LocalTrack) => void;
-}
-
-export function useMember(member: Participant): MemberState {
+} => {
   const [isAudioMuted, setAudioMuted] = useState(false);
   const [isVideoMuted, setVideoMuted] = useState(false);
   const [isSpeaking, setSpeaking] = useState(false);
@@ -127,3 +125,4 @@ export function useMember(member: Participant): MemberState {
     unpublishTrack,
   };
 }
+export default useMember;
