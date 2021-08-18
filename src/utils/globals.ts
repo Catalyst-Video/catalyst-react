@@ -27,6 +27,7 @@ export const AUTH_ADDRESS = 'https://staging.catalyst.chat/auth/meeting/token';
 export const DEFAULT_AUTOFADE = 600;
 export const SUPPORT_EMAIL = 'support@catalyst.chat';
 export const SUPPORT_URL = 'https://catalyst.chat/contact';
+export const DEFAULT_WELCOME_MESSAGE = '👋 Waiting for others to join...';
 export const THEMES = {
          // TODO: Add more themes, complete existing ones
          default: {

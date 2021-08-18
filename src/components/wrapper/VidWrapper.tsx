@@ -55,7 +55,7 @@ const VidWrapper = React.memo(
     const facesMember =
       track.mediaStreamTrack?.getSettings().facingMode !== 'environment';
     
-    const debouncedLoad = debounce(() => setIsLoading(true), 500, { isImmediate: false})
+    const debouncedLoad = debounce(() => setIsLoading(true), 400, { isImmediate: false})
 
 
     return (

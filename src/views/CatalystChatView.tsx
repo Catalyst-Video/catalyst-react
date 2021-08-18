@@ -242,7 +242,7 @@ const CatalystChatView = ({
           debounceHandleMouse
         );
         mounted.current = false;
-        console.log('disconnecting');
+        // console.log('disconnecting');
         roomState?.room?.disconnect();
       };
     }

@@ -55,28 +55,33 @@ const AudioDeviceBtn = ({
   // const audBtnRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    navigator.mediaDevices.enumerateDevices().then(devices => {
-      if (!mounted.current) return;
-      const audioDevices = devices.filter(
-        id => id.kind === 'audioinput' && id.deviceId
-      );
-      setIpSources(audioDevices);
-      setDevices(
-        audioDevices.map(id => {
-          return { label: id.label };
-        })
-      );
-      const opDevices = devices.filter(
-        id => id.kind === 'audiooutput' && id.deviceId
-      );
-      setOpSources(opDevices);
-      setOutputDevices(
-        opDevices.map(id => {
-          return { label: id.label };
-        })
-      );
-      return devices;
-    });
+    navigator.mediaDevices
+      .enumerateDevices()
+      .then(devices => {
+        if (!mounted.current) return;
+        const audioDevices = devices.filter(
+          id => id.kind === 'audioinput' && id.deviceId
+        );
+        setIpSources(audioDevices);
+        setDevices(
+          audioDevices.map(id => {
+            return { label: id.label };
+          })
+        );
+        const opDevices = devices.filter(
+          id => id.kind === 'audiooutput' && id.deviceId
+        );
+        setOpSources(opDevices);
+        setOutputDevices(
+          opDevices.map(id => {
+            return { label: id.label };
+          })
+        );
+        return devices;
+      })
+      .catch(err => {
+        console.log(err);
+      });
     return () => {
       mounted.current = false;
     };

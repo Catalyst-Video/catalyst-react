@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react';
 const useMember = (member: Participant): {
   isSpeaking: boolean;
   isLocal: boolean;
-  /** @deprecated use isAudioMuted instead */
   isMuted: boolean;
   isAudioMuted: boolean;
   isVideoMuted: boolean;

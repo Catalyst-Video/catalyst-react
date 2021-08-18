@@ -34,6 +34,7 @@ import ScreenShareWrapper from './wrapper/ScreenShareView';
 import Chat from './Chat';
 import { ChatMessage, RoomState } from '../typings/interfaces';
 import { useFullScreenHandle } from 'react-full-screen';
+import { DEFAULT_WELCOME_MESSAGE } from '../utils/globals';
 
 const RoomWrapper = ({
   roomState,
@@ -65,7 +66,6 @@ const RoomWrapper = ({
     members: members,
     room,
   } = roomState;
-  const [showOverlay, setShowOverlay] = useState(false);
   // const [screens, setNumScreens] = useState<number>(0);
   const [screens, setNumScreens] = useState<number>(0);
   const [mainVid, setMainVid] = useState<string>();
@@ -75,8 +75,10 @@ const RoomWrapper = ({
     height: '0px',
   });
   const fsHandle = useFullScreenHandle();
+  const mounted = useRef(true);
 
   const resizeWrapper = () => {
+    if (!mounted.current) return;
     let margin = 4;
     let width = 0;
     let height = 0;
@@ -130,18 +132,32 @@ const RoomWrapper = ({
     else return increment;
   };
 
-  // TODO: const debouncedResize = debounce(resizeWrapper, 15);
+  // const debouncedResize = debounce(() => {
+  //   if (!mounted.current) return;
+  //   resizeWrapper()
+  // }, 10);
 
   useEffect(() => {
     window.addEventListener(
       'load',
       () => {
         resizeWrapper();
-        //  window.onresize = debouncedResize;
+        // window.onresize = debouncedResize;
         window.onresize = resizeWrapper;
       },
       false
     );
+    () => {
+       mounted.current = false;
+       window.removeEventListener(
+         'load',
+         () => {
+           resizeWrapper();
+           window.onresize = resizeWrapper;
+         },
+         false
+       );
+     };
   }, []);
 
   useEffect(() => {
@@ -157,18 +173,14 @@ const RoomWrapper = ({
             className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-quinary"
             viewBox="0 0 24 24"
           ></svg>
-          <div
-            className="pt-4"
-          >
+          <div className="pt-4">
             {error && <span>⚠️ {error.message}</span>}
             {isConnecting && <span>⚡ Connecting...</span>}
             {!room && !isConnecting && !error && (
               <span>🚀 Preparing room...</span>
             )}
             {members.length === 0 && room && !isConnecting && (
-              <span>
-                {cstmWelcomeMsg ?? '👋 Waiting for others to join...'}
-              </span>
+              <span>{cstmWelcomeMsg ?? DEFAULT_WELCOME_MESSAGE}</span>
             )}
           </div>
         </div>
@@ -179,9 +191,6 @@ const RoomWrapper = ({
   let screenTrack: RemoteVideoTrack;
   var sharedScreens = [] as Array<RemoteVideoTrack>;
   members.forEach(m => {
-    //  TODO: don't show local screen share if (p instanceof LocalParticipant) {
-    //    return;
-    //  }
     m.videoTracks.forEach(track => {
       if (track.trackName === 'screen' && track.track) {
         screenTrack = track.track as RemoteVideoTrack;
@@ -213,9 +222,6 @@ const RoomWrapper = ({
           id="remote-vid-wrapper"
           ref={vidRef}
           className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border animate-fade-in-left`}
-          // ${
-          //   chatOpen ? 'sm:animate-fade-in-right' : 'sm:animate-fade-in-left'
-          // }`}
         >
           {sharedScreens &&
             sharedScreens.map((s, i) => {
@@ -257,9 +263,7 @@ const RoomWrapper = ({
               onClick={() => setSpeakerMode(sm => !sm)}
             >
               <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-c text-quinary ">
-                <span>
-                  {cstmWelcomeMsg ?? '👋 Waiting for others to join...'}
-                </span>
+                <span>{cstmWelcomeMsg ?? DEFAULT_WELCOME_MESSAGE}</span>
               </div>
             </div>
           )}
@@ -315,9 +319,7 @@ const RoomWrapper = ({
                   className={`box ml-1 mr-1 w-full sm:mt-1 sm:mb-1 sm:ml-0 sm:mr-0 aspect-w-16 aspect-h-9 bg-gray-800 rounded-xl`}
                 >
                   <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center z-0 text-c text-quinary  text-center px-1 sm:px-2 md:px-3 ">
-                    <span>
-                      {cstmWelcomeMsg ?? '👋 Waiting for others to join...'}
-                    </span>
+                    <span>{cstmWelcomeMsg ?? DEFAULT_WELCOME_MESSAGE}</span>
                   </div>
                 </div>
               </>

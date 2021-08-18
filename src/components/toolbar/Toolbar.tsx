@@ -40,7 +40,7 @@ import {
   VideoPresets,
 } from 'livekit-client';
 import React, { useState, useEffect } from 'react';
-import { useMember } from '../../hooks/useMember';
+import useMember from '../../hooks/useMember';
 import { isMobile } from 'react-device-detect';
 import AudioDeviceBtn from './AudioDeviceBtn';
 import ToolbarButton from './ToolbarButton';
@@ -100,53 +100,57 @@ const Toolbar = ({
 
   useEffect(() => {
     if (!audioDevice || !videoDevice) {
-      navigator.mediaDevices.enumerateDevices().then(devices => {
-        if (!audioDevice) {
-          const audioDevices = devices.filter(
-            id => id.kind === 'audioinput' && id.deviceId
-          );
-          let defaultAudDevice: MediaDeviceInfo | undefined;
-          if (localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')) {
-             defaultAudDevice = audioDevices.find(
-               d =>
-                 d.deviceId ===
-                 localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')
-             );
-          }
-          if (!defaultAudDevice){
-            defaultAudDevice =
-              audioDevices.find(
+      navigator.mediaDevices
+        .enumerateDevices()
+        .then(devices => {
+          if (!audioDevice) {
+            const audioDevices = devices.filter(
+              id => id.kind === 'audioinput' && id.deviceId
+            );
+            let defaultAudDevice: MediaDeviceInfo | undefined;
+            if (localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')) {
+              defaultAudDevice = audioDevices.find(
                 d =>
                   d.deviceId ===
-                  audio?.audioTrack?.mediaStreamTrack.getSettings().deviceId
-              ) ?? audioDevices[0];
-          }
+                  localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')
+              );
+            }
+            if (!defaultAudDevice) {
+              defaultAudDevice =
+                audioDevices.find(
+                  d =>
+                    d.deviceId ===
+                    audio?.audioTrack?.mediaStreamTrack.getSettings().deviceId
+                ) ?? audioDevices[0];
+            }
             setAudioDevice(defaultAudDevice);
-        }
-        if (!videoDevice) {
-          const videoDevices = devices.filter(
-            id => id.kind === 'videoinput' && id.deviceId
-          );
-          let defaultVidDevice: MediaDeviceInfo | undefined;
-          if (localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')) {
-            defaultVidDevice =
-              videoDevices.find(
+          }
+          if (!videoDevice) {
+            const videoDevices = devices.filter(
+              id => id.kind === 'videoinput' && id.deviceId
+            );
+            let defaultVidDevice: MediaDeviceInfo | undefined;
+            if (localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')) {
+              defaultVidDevice = videoDevices.find(
                 d =>
                   d.deviceId ===
                   localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')
-              )
+              );
+            }
+            if (!defaultVidDevice) {
+              defaultVidDevice =
+                videoDevices.find(
+                  d =>
+                    d.deviceId ===
+                    video?.videoTrack?.mediaStreamTrack.getSettings().deviceId
+                ) ?? videoDevices[0];
+            }
+            setVideoDevice(defaultVidDevice);
           }
-          if (!defaultVidDevice) {
-             defaultVidDevice =
-              videoDevices.find(
-                d =>
-                  d.deviceId ===
-                  video?.videoTrack?.mediaStreamTrack.getSettings().deviceId
-              ) ?? videoDevices[0];
-          }
-        setVideoDevice(defaultVidDevice);
-        }
-      });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }, [audio, video]);
 
@@ -194,9 +198,7 @@ const Toolbar = ({
       if (video) unpublishTrack(video.track as LocalVideoTrack);
     } else {
       const options: CreateVideoTrackOptions = {};
-      if (videoDevice) {
-        options.deviceId = videoDevice.deviceId;
-      }
+      if (videoDevice) options.deviceId = videoDevice.deviceId;
       createLocalVideoTrack(options)
         .then((track: LocalVideoTrack) => {
           room.localParticipant.publishTrack(track);
@@ -213,9 +215,8 @@ const Toolbar = ({
         (audio as LocalTrackPublication).unmute();
       } else {
         const options: CreateVideoTrackOptions = {};
-        if (audioDevice) {
-          options.deviceId = audioDevice.deviceId;
-        }
+        if (audioDevice) options.deviceId = audioDevice.deviceId;
+
         createLocalAudioTrack(options)
           .then(track => {
             room.localParticipant.publishTrack(track);

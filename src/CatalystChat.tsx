@@ -104,7 +104,7 @@ const CatalystChat = ({
           }
         )
           .then(response => {
-            if (!mounted.current)return;
+            if (!mounted.current) return;
             if (response.status === 200) {
               response.json().then((user: CatalystUserData) => {
                 if (!mounted.current)return;
