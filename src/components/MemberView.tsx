@@ -123,7 +123,7 @@ const MemberView = React.memo(({
     <div className={`m-1 ${classes} cursor-pointer`}>
       <div
         ref={ref}
-        className={`relative z-0 align-middle self-center overflow-hidden text-center bg-gray-800 flex justify-center rounded-xl ${
+        className={`relative z-0 align-middle self-center overflow-hidden text-center bg-gray-800 flex justify-center items-center rounded-xl ${
           m.isSpeaking ? `ring-2 ring-primary ring-opacity-50 ` : ''
         }`}
         style={{
@@ -132,26 +132,21 @@ const MemberView = React.memo(({
         }}
         onClick={onClick}
       >
-        <svg
-          className="animate-spin rounded-full h-16 w-16 z-50 border-t-2 border-b-2 border-quinary"
-          viewBox="0 0 24 24"
-        ></svg>
         {videoPub?.track ? (
           <VidWrapper
             track={videoPub.track}
             isLocal={isLocal}
-            // objectFit={
-            //   videoPub?.dimensions &&
-            //   (16 - 9) *
-            //     (videoPub.dimensions.width - videoPub.dimensions.height) >
-            //     0 ? 'cover' : 'contain'
-            // }
+          // objectFit={
+          //   videoPub?.dimensions &&
+          //   (16 - 9) *
+          //     (videoPub.dimensions.width - videoPub.dimensions.height) >
+          //     0 ? 'cover' : 'contain'
+          // }
           />
-        ) : (
-          <div
+        ) :
+          !videoEnabled && <div
             className={`bg-placeholder w-full h-full bg-primary min-h-full`}
-          />
-        )}{' '}
+          />}
         <div className="absolute bottom-0 left-0 flex text-quinary justify-between p-1 lg:p-2 w-full">
           <div className="h-7 md:h-8 not-selectable flex items-center justify-center px-2 py-1 relative">
             <span className="absolute top-0 left-0 opacity-50 bg-tertiary rounded-xl w-full h-full"></span>

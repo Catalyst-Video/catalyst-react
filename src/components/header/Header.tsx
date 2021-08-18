@@ -30,7 +30,7 @@ const HeaderLogo = React.memo(
     return (
       <div id="header">
         <div
-          className={`absolute left-0 top-0 block w-full text-center bg-primary p-1 text-quinary  text-sm font-semibold z-40 ${
+          className={`absolute left-0 top-0 block w-full text-center bg-primary p-1 text-quinary text-sm font-semibold z-40 ${
             alwaysBanner ? '' : 'header-bar'
           }`}
         >
@@ -40,7 +40,7 @@ const HeaderLogo = React.memo(
           <div className="absolute z-40 hidden sm:block not-selectable top-2 left-2">
             <div
               id="header-img-wrapper"
-              className="inline bg-transparent header-img focus:border-0 focus:outline-none" //cursor-pointer
+              className="inline bg-transparent header-img focus:border-0 focus:outline-none"
             >
               <HeaderImg />
             </div>

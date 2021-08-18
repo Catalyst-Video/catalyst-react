@@ -47,7 +47,7 @@ const VidDeviceBtn = ({
 
   useEffect(() => {
     navigator.mediaDevices.enumerateDevices().then(devices => {
-      if (!mounted.current) return null;
+      if (!mounted.current) return;
       const videoDevices = devices.filter(
         id => id.kind === 'videoinput' && id.deviceId
       );

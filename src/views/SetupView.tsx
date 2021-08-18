@@ -86,7 +86,7 @@ const SetupView = ({
   useEffect(() => {
     if ((!outputDevice || !audioDevice || !videoDevice) && localStorage) {
       navigator.mediaDevices.enumerateDevices().then(devices => {
-        if (!mounted.current) return null;
+        if (!mounted.current) return;
         if (!outputDevice) {
           const outputDevices = devices.filter(
             id => id.kind === 'audiooutput' && id?.deviceId
@@ -163,7 +163,7 @@ const SetupView = ({
     }
     if (videoOn) {
       createLocalVideoTrack().then(track => {
-        if (!mounted.current) return null;
+        if (!mounted.current) return;
         setVideoTrack(track);
         return track;
       });
@@ -177,7 +177,7 @@ const SetupView = ({
     if (audioDevice) {
       createLocalAudioTrack({ deviceId: audioDevice?.deviceId })
         .then(track => {
-          if (!mounted.current) return null;
+          if (!mounted.current) return;
           localStorage.setItem(
             'PREFERRED_AUDIO_DEVICE_ID',
             audioDevice?.deviceId
@@ -194,7 +194,7 @@ const SetupView = ({
     if (videoDevice) {
       createLocalVideoTrack({ deviceId: videoDevice?.deviceId })
         .then((track: LocalVideoTrack) => {
-          if (!mounted.current) return null;
+          if (!mounted.current) return;
           setVideoTrack(track);
           return track;
         })
@@ -231,7 +231,7 @@ const SetupView = ({
         options.deviceId = videoDevice?.deviceId;
       }
       createLocalVideoTrack(options).then(track => {
-        if (!mounted.current) return null;
+        if (!mounted.current) return;
         setVideoTrack(track);
         return track;
       });

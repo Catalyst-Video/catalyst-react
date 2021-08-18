@@ -23,8 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 You can contact us for more details at support@catalyst.chat. */
 
 import { Track } from 'livekit-client';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Property } from 'csstype';
+import { debounce } from 'ts-debounce';
 
 const VidWrapper = React.memo(
   ({
@@ -37,6 +38,7 @@ const VidWrapper = React.memo(
     objectFit?: Property.ObjectFit;
   }) => {
     const ref = useRef<HTMLVideoElement>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
       const el = ref.current;
@@ -50,16 +52,33 @@ const VidWrapper = React.memo(
       };
     }, [track, ref]);
 
-    const isFrontFacing =
+    const facesMember =
       track.mediaStreamTrack?.getSettings().facingMode !== 'environment';
+    
+    const debouncedLoad = debounce(() => setIsLoading(true), 500, { isImmediate: false})
+
 
     return (
-      <video
-        ref={ref}
-        className={`min-h-0 min-w-0 rounded-lg h-auto w-full ${
-          isLocal && isFrontFacing ? 'rm-uncanny-valley' : ''
-        } ${objectFit ?? ''} contain max-vid-height`} // TODO: switch to adaptive contain vs cover
-      />
+      <>
+        {isLoading && (
+          <svg
+            className="animate-spin absolute rounded-full z-0 h-12 w-12 border-t-2 border-quinary"
+            viewBox="0 0 24 24"
+          ></svg>
+        )}
+        <video
+          ref={ref}
+          onLoadStart={debouncedLoad}
+          onWaiting={debouncedLoad} // debounce(() => setIsLoading(true), 50)}
+          onPlaying={() => {
+            debouncedLoad.cancel();
+            setIsLoading(false)
+          }}
+          className={`min-h-0 min-w-0 rounded-lg z-10 h-auto w-full ${
+            isLocal && facesMember ? 'rm-uncanny-valley' : ''
+          } ${objectFit ?? ''} contain max-vid-height`} // TODO: switch to adaptive contain vs cover
+        />
+      </>
     );
   }
 );

@@ -56,7 +56,7 @@ const AudioDeviceBtn = ({
 
   useEffect(() => {
     navigator.mediaDevices.enumerateDevices().then(devices => {
-      if (!mounted.current) return null;
+      if (!mounted.current) return;
       const audioDevices = devices.filter(
         id => id.kind === 'audioinput' && id.deviceId
       );

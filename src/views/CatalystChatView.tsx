@@ -314,7 +314,9 @@ const CatalystChatView = ({
             className="animate-fade-in-down"
             ref={headerRef}
           >
-            <HeaderLogo alwaysBanner={false} />
+            {roomState.room &&
+              <HeaderLogo alwaysBanner={false} />
+            }
             {/* room count */}
             <div
               className={`${

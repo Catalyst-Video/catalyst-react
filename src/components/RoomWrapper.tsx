@@ -289,7 +289,7 @@ const RoomWrapper = ({
                     onClick={() => setSpeakerMode(sm => !sm)}
                   />
                 );
-              } else return null;
+              } else return;
             })}
             {sharedScreens.map(s => {
               if (s.sid === mainVid) {
@@ -303,7 +303,7 @@ const RoomWrapper = ({
                     onClick={() => setSpeakerMode(sm => !sm)}
                   />
                 );
-              } else return null;
+              } else return;
             })}
           </div>
           <div
@@ -342,7 +342,7 @@ const RoomWrapper = ({
                       }}
                     />
                   );
-                else return null;
+                else return;
               })}
             {members.map((m, i) => {
               if (m.sid !== mainVid)
@@ -362,7 +362,7 @@ const RoomWrapper = ({
                     }}
                   />
                 );
-              else return null;
+              else return;
             })}
           </div>
         </div>
