@@ -62,8 +62,8 @@ const RoomWrapper = ({
   const {
     isConnecting,
     error,
-    localParticipant,
-    participants: members,
+    localMember: localParticipant,
+    members: members,
     room,
   } = roomState;
   const [showOverlay, setShowOverlay] = useState(false);
@@ -240,7 +240,6 @@ const RoomWrapper = ({
                 member={m}
                 height={vidDims.height}
                 width={vidDims.width}
-                showOverlay={showOverlay}
                 quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
                 onClick={() => {
                   setMainVid(m.sid);
@@ -284,7 +283,6 @@ const RoomWrapper = ({
                     height={'100%'}
                     width={'100%'}
                     classes={'aspect-w-16 aspect-h-9'}
-                    showOverlay={showOverlay}
                     quality={VideoQuality.HIGH}
                     onClick={() => setSpeakerMode(sm => !sm)}
                   />
@@ -354,7 +352,6 @@ const RoomWrapper = ({
                     //height={'fit-content'}
                     width={'100%'}
                     classes={'box vid-p w-full h-auto aspect-w-16 aspect-h-9'}
-                    showOverlay={showOverlay}
                     quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
                     onClick={() => {
                       setMainVid(m.sid);

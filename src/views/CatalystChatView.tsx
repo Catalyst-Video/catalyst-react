@@ -49,7 +49,7 @@ import { ChatMessage, RoomMetaData } from '../typings/interfaces';
 import RoomWrapper from '../components/RoomWrapper';
 import HeaderLogo from '../components/header/Header';
 import Toolbar from '../components/toolbar/Toolbar';
-import { useRoom } from '../hooks/useRoom';
+import useRoom from '../hooks/useRoom';
 import { debounce } from 'ts-debounce';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
@@ -153,7 +153,7 @@ const CatalystChatView = ({
 
   useEffect(() => {
     if (arbData)
-      roomState.localParticipant?.publishData(
+      roomState.localMember?.publishData(
         arbData,
         DataPacket_Kind.RELIABLE
       );

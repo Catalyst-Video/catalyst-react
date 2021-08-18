@@ -19,25 +19,26 @@ export interface RoomState {
   ) => Promise<Room | undefined>;
   isConnecting: boolean;
   room?: Room;
-  /* all participants in the room, including the local participant. */
-  participants: Participant[];
+  /* all members in the room, including the local participant. */
+  members: Participant[];
+  localMember?: LocalParticipant;
   /* all subscribed audio tracks in the room, not including local participant. */
   audioTracks: AudioTrack[];
   error?: Error;
 }
 
-export interface RoomOptions {
-  sortMembers?: (participants: Participant[]) => void;
-}
 
-export function useRoom(options?: RoomOptions): RoomState {
+const useRoom = (options?: {
+  sortMembers?: (members: Participant[]) => void;
+}): RoomState => {
   const [room, setRoom] = useState<Room>();
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<Error>();
   const [members, setMembers] = useState<Participant[]>([]);
   const [audioTracks, setAudioTracks] = useState<AudioTrack[]>([]);
+  const [localMember, setLocalMember] = useState<LocalParticipant>();
 
-  const sortFunc = options?.sortMembers ?? sortParticipants;
+  const sortFunc = options?.sortMembers ?? sortMembers;
 
   const connectFn = useCallback(
     async (url: string, token: string, options?: ConnectOptions) => {
@@ -45,6 +46,7 @@ export function useRoom(options?: RoomOptions): RoomState {
       try {
         const newRoom = await connect(url, token, options);
         setRoom(newRoom);
+        setLocalMember(newRoom.localParticipant);
         const onParticipantsChanged = () => {
           const remotes = Array.from(newRoom.participants.values());
           const members: Participant[] = [newRoom.localParticipant];
@@ -103,25 +105,26 @@ export function useRoom(options?: RoomOptions): RoomState {
     isConnecting,
     room,
     error,
-    participants: members,
+    localMember,
+    members,
     audioTracks,
   };
 }
 
 /**
  * TODO: alterative sort function
- * Default sort for participants, it'll order participants by:
+ * Default sort for members, it'll order members by:
  * 1. dominant speaker (speaker with the loudest audio level)
  * 2. local participant
  * 3. other speakers that are recently active
- * 4. participants with video on
+ * 4. members with video on
  * 5. by joinedAt
  */
-export function sortParticipants(
-  participants: Participant[],
-  localParticipant?: LocalParticipant
+export function sortMembers(
+  members: Participant[],
+  localMembers?: LocalParticipant
 ) {
-  participants.sort((a, b) => {
+  members.sort((a, b) => {
     // loudest speaker first
     if (a.isSpeaking && b.isSpeaking) {
       return b.audioLevel - a.audioLevel;
@@ -158,15 +161,16 @@ export function sortParticipants(
     return (a.joinedAt?.getTime() ?? 0) - (b.joinedAt?.getTime() ?? 0);
   });
 
-  if (localParticipant) {
-    const localIdx = participants.indexOf(localParticipant);
+  if (localMembers) {
+    const localIdx = members.indexOf(localMembers);
     if (localIdx >= 0) {
-      participants.splice(localIdx, 1);
-      if (participants.length > 0) {
-        participants.splice(1, 0, localParticipant);
+      members.splice(localIdx, 1);
+      if (members.length > 0) {
+        members.splice(1, 0, localMembers);
       } else {
-        participants.push(localParticipant);
+        members.push(localMembers);
       }
     }
   }
 }
+export default useRoom;
