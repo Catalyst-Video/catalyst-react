@@ -45,7 +45,6 @@ const MemberView = React.memo(({
   height,
   classes,
   displayName,
-  showOverlay,
   quality,
   onClick,
 }: {
@@ -54,27 +53,26 @@ const MemberView = React.memo(({
   width: Property.Width;
   height: Property.Height;
   classes?: string;
-  showOverlay?: boolean;
   quality?: VideoQuality;
   onClick?: () => void;
   }) => {
-  const [videoEnabled, setVideoEnabled] = useState(true);
-  const [callbackTimeout, setCallbackTimeout] = useState<
-    ReturnType<typeof setTimeout>
-  >();
+  const [vidEnabled, setVidEnabled] = useState(true);
   const { isLocal, isMuted, subscribedTracks } = useMember(m);
+  const [vidPub, setVideoPub] = useState<TrackPublication>();
+  const [vidCallback, setVidTimeout] = useState<
+      ReturnType<typeof setTimeout>
+    >()
   const { ref, inView } = useInView();
-  const [videoPub, setVideoPub] = useState<TrackPublication>();
+  const [isInit, setInit] = useState(false);
+  
 
   useEffect(() => {
-    if (!ref) {
-      return;
-    }
+    if (!ref) return;
     let enabled = inView;
-    if (videoEnabled !== enabled) {
-      setVideoEnabled(enabled);
+    if (vidEnabled !== enabled) {
+      setVidEnabled(enabled);
     }
-  }, [ref, m, inView]);
+  }, [ref, inView, m]);
 
   useEffect(() => {
     let newVideoPub: TrackPublication | undefined;
@@ -86,38 +84,32 @@ const MemberView = React.memo(({
         !newVideoPub
       ) {
         newVideoPub = pub;
+        setInit(true)
       }
     });
     setVideoPub(newVideoPub);
   }, [subscribedTracks]);
 
   useEffect(() => {
-    if (callbackTimeout) {
-      clearTimeout(callbackTimeout);
-      setCallbackTimeout(undefined);
+    if (vidCallback) {
+      clearTimeout(vidCallback);
+      setVidTimeout(undefined);
     }
-    if (!(videoPub instanceof RemoteTrackPublication)) {
-      return;
-    }
-    if (videoEnabled) {
-      videoPub.setEnabled(true);
-    }
-
-    setCallbackTimeout(
+    if (!(vidPub instanceof RemoteTrackPublication)) return;
+    if (vidEnabled) vidPub.setEnabled(true);
+    setVidTimeout(
       setTimeout(() => {
-        videoPub.setEnabled(videoEnabled);
-        if (videoEnabled) {
-          videoPub.setVideoQuality(quality ?? VideoQuality.HIGH);
-        }
+        vidPub.setEnabled(vidEnabled);
+        if (vidEnabled) vidPub.setVideoQuality(quality ?? VideoQuality.HIGH);
       }, 3000)
     );
     return () => {
-      if (callbackTimeout) {
-        clearTimeout(callbackTimeout);
-        setCallbackTimeout(undefined);
+      if (vidCallback) {
+        clearTimeout(vidCallback);
+        setVidTimeout(undefined);
       }
     };
-  }, [quality, videoEnabled, videoPub]);
+  }, [quality, vidEnabled, vidPub]);
 
   return (
     <div className={`m-1 ${classes} cursor-pointer`}>
@@ -132,21 +124,13 @@ const MemberView = React.memo(({
         }}
         onClick={onClick}
       >
-        {videoPub?.track ? (
-          <VidWrapper
-            track={videoPub.track}
-            isLocal={isLocal}
-          // objectFit={
-          //   videoPub?.dimensions &&
-          //   (16 - 9) *
-          //     (videoPub.dimensions.width - videoPub.dimensions.height) >
-          //     0 ? 'cover' : 'contain'
-          // }
-          />
-        ) :
-          !videoEnabled && <div
-            className={`bg-placeholder w-full h-full bg-primary min-h-full`}
-          />}
+        {vidPub?.track ? (
+          <VidWrapper track={vidPub.track} isLocal={isLocal} />
+        ) : (
+          isInit && (
+            <div className="bg-placeholder w-full h-full bg-primary min-h-full" />
+          )
+        )}
         <div className="absolute bottom-0 left-0 flex text-quinary justify-between p-1 lg:p-2 w-full">
           <div className="h-7 md:h-8 not-selectable flex items-center justify-center px-2 py-1 relative">
             <span className="absolute top-0 left-0 opacity-50 bg-tertiary rounded-xl w-full h-full"></span>

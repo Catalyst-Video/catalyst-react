@@ -3,29 +3,30 @@ import {
   LocalTrack,
   Participant,
   ParticipantEvent,
-  RemoteVideoTrack,
   Track,
   TrackPublication,
-} from "livekit-client";
-import { useEffect, useState } from "react";
+} from 'livekit-client';
+import { useEffect, useState } from 'react';
 
-export interface ParticipantState {
+export interface MemberState {
   isSpeaking: boolean;
   isLocal: boolean;
+  /** @deprecated use isAudioMuted instead */
   isMuted: boolean;
-  // isSharing: boolean;
+  isAudioMuted: boolean;
+  isVideoMuted: boolean;
   metadata?: string;
   publications: TrackPublication[];
   subscribedTracks: TrackPublication[];
   unpublishTrack: (track: LocalTrack) => void;
 }
 
-export function useMember(member: Participant): ParticipantState {
-  const [isMuted, setMuted] = useState(false);
+export function useMember(member: Participant): MemberState {
+  const [isAudioMuted, setAudioMuted] = useState(false);
+  const [isVideoMuted, setVideoMuted] = useState(false);
   const [isSpeaking, setSpeaking] = useState(false);
   const [metadata, setMetadata] = useState<string>();
   const [publications, setPublications] = useState<TrackPublication[]>([]);
-  // const [isSharing, setSharing] = useState(false);
   const [subscribedTracks, setSubscribedTracks] = useState<TrackPublication[]>(
     []
   );
@@ -33,41 +34,32 @@ export function useMember(member: Participant): ParticipantState {
   const onPublicationsChanged = () => {
     setPublications(Array.from(member.tracks.values()));
     setSubscribedTracks(
-      Array.from(member.tracks.values()).filter((pub) => {
+      Array.from(member.tracks.values()).filter(pub => {
         return pub.track !== undefined;
       })
     );
-    // if (!isSharing) {
-    //   member.tracks.forEach((pub) => {
-    //     if (pub.trackName === 'screen' && pub.track) {
-    //       setSharing(true)
-    //     }
-    //   });
-    // }
   };
-  
   const unpublishTrack = async (track: LocalTrack) => {
     if (!(member instanceof LocalParticipant)) {
-      throw new Error("could not unpublish, not a local member");
+      throw new Error('could not unpublish, not a local member');
     }
-    // if (isSharing) {
-    //   if (track.name === 'screen' && track) {
-    //     setSharing(false);
-    //   }
-    // }
     (member as LocalParticipant).unpublishTrack(track);
-    member.emit("localtrackchanged");
+    member.emit('localtrackchanged');
   };
 
   useEffect(() => {
     const onMuted = (pub: TrackPublication) => {
       if (pub.kind === Track.Kind.Audio) {
-        setMuted(true);
+        setAudioMuted(true);
+      } else if (pub.kind === Track.Kind.Video) {
+        setVideoMuted(true);
       }
     };
     const onUnmuted = (pub: TrackPublication) => {
       if (pub.kind === Track.Kind.Audio) {
-        setMuted(false);
+        setAudioMuted(false);
+      } else if (pub.kind === Track.Kind.Video) {
+        setVideoMuted(false);
       }
     };
     const onMetadataChanged = () => {
@@ -88,7 +80,7 @@ export function useMember(member: Participant): ParticipantState {
     member.on(ParticipantEvent.TrackUnpublished, onPublicationsChanged);
     member.on(ParticipantEvent.TrackSubscribed, onPublicationsChanged);
     member.on(ParticipantEvent.TrackUnsubscribed, onPublicationsChanged);
-    member.on("localtrackchanged", onPublicationsChanged);
+    member.on('localtrackchanged', onPublicationsChanged);
 
     // set initial state
     onMetadataChanged();
@@ -108,26 +100,27 @@ export function useMember(member: Participant): ParticipantState {
         ParticipantEvent.TrackUnsubscribed,
         onPublicationsChanged
       );
-      member.off("localtrackchanged", onPublicationsChanged);
+      member.off('localtrackchanged', onPublicationsChanged);
     };
   }, [member]);
 
   let muted: boolean | undefined;
-  member.audioTracks.forEach((pub) => {
+  member.audioTracks.forEach(pub => {
     muted = pub.isMuted;
   });
   if (muted === undefined) {
     muted = true;
   }
-  if (isMuted !== muted) {
-    setMuted(muted);
+  if (isAudioMuted !== muted) {
+    setAudioMuted(muted);
   }
 
   return {
     isLocal: member instanceof LocalParticipant,
     isSpeaking,
-    isMuted,
-    // isSharing,
+    isMuted: isAudioMuted,
+    isAudioMuted,
+    isVideoMuted,
     publications,
     subscribedTracks,
     metadata,
