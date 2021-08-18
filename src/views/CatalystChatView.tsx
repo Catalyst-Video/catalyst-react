@@ -57,7 +57,7 @@ import { contactSupport } from '../utils/general';
 import { isMobile } from 'react-device-detect';
 import { SUPPORT_EMAIL } from '../utils/globals';
 
-const VideoChat = ({
+const CatalystChatView = ({
   token,
   meta,
   fade,
@@ -99,6 +99,7 @@ const VideoChat = ({
   const headerRef = useRef<HTMLDivElement>(null);
   const videoChatRef = useRef<HTMLDivElement>(null);
   const decoder = new TextDecoder();
+  const mounted = useRef(true);
 
   const onConnected = async room => {
     if (onJoinCall) onJoinCall();
@@ -163,12 +164,9 @@ const VideoChat = ({
       roomState
         .connect('wss://infra.catalyst.chat', token, meta)
         .then(room => {
-          if (!room) {
-            return;
-          }
-          if (onConnected) {
-            onConnected(room);
-          }
+          if (!mounted.current)return;
+          if (!room) return;
+          if (onConnected) onConnected(room);
           return () => {
             room.disconnect();
           };
@@ -243,11 +241,15 @@ const VideoChat = ({
           'mousemove',
           debounceHandleMouse
         );
+        mounted.current = false;
+        console.log('disconnecting');
+        roomState?.room?.disconnect();
       };
     }
     // set default output device
     if (!outputDevice) {
       navigator.mediaDevices.enumerateDevices().then(devices => {
+        if (!mounted.current)return;
         const outputDevices = devices.filter(
           id => id.kind === 'audiooutput' && id.deviceId
         );
@@ -262,6 +264,7 @@ const VideoChat = ({
           outDevice = outputDevices[0];
         }
         setOutputDevice(outDevice);
+        return outDevice;
       });
     }
   }, []);
@@ -299,7 +302,11 @@ const VideoChat = ({
     );
   }
   return (
-    <div id="video-chat" className="relative w-full h-full" ref={videoChatRef}>
+    <div
+      id="video-chat"
+      className="relative w-full h-full"
+      ref={videoChatRef}
+    >
       <div id="bg-theme" className="w-full h-full bg-secondary ">
         <FullScreen handle={fsHandle} className="w-full h-full bg-secondary">
           <div
@@ -340,7 +347,10 @@ const VideoChat = ({
               <Tippy content="Refresh" theme="catalyst" placement="bottom">
                 <button
                   className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
-                  onClick={handleComponentRefresh}
+                  onClick={() => {
+                    roomState?.room?.disconnect();
+                    handleComponentRefresh()
+                  }}
                 >
                   <FontAwesomeIcon
                     icon={faSync}
@@ -442,4 +452,4 @@ const VideoChat = ({
     </div>
   );
 };
-export default VideoChat;
+export default CatalystChatView;

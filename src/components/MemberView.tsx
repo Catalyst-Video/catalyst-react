@@ -124,9 +124,7 @@ const MemberView = React.memo(({
       <div
         ref={ref}
         className={`relative z-0 align-middle self-center overflow-hidden text-center bg-gray-800 flex justify-center rounded-xl ${
-          m.isSpeaking
-            ? `ring-2 ring-primary ring-opacity-50 `
-            : ''
+          m.isSpeaking ? `ring-2 ring-primary ring-opacity-50 ` : ''
         }`}
         style={{
           height: height,
@@ -134,6 +132,10 @@ const MemberView = React.memo(({
         }}
         onClick={onClick}
       >
+        <svg
+          className="animate-spin rounded-full h-16 w-16 z-50 border-t-2 border-b-2 border-quinary"
+          viewBox="0 0 24 24"
+        ></svg>
         {videoPub?.track ? (
           <VidWrapper
             track={videoPub.track}
@@ -148,9 +150,6 @@ const MemberView = React.memo(({
         ) : (
           <div
             className={`bg-placeholder w-full h-full bg-primary min-h-full`}
-            //    ${
-            //   m.isSpeaking ? `bg-red` : 'bg-primary'
-            // }
           />
         )}{' '}
         <div className="absolute bottom-0 left-0 flex text-quinary justify-between p-1 lg:p-2 w-full">

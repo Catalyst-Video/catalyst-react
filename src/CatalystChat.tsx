@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 You can contact us for more details at support@catalyst.chat. */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CatalystChatProps, CatalystUserData } from './typings/interfaces';
 import './styles/catalyst.css';
 import './styles/tailwind.output.css';
@@ -32,7 +32,7 @@ import genRandomName from './utils/name_gen';
 import { useCookies } from 'react-cookie';
 // import DetectRTC from 'detectrtc';
 import SetupView from './views/SetupView';
-import VideoChat from './views/VideoChatView';
+import CatalystChatView from './views/CatalystChatView';
 
 import ElementQueries from 'css-element-queries/src/ElementQueries';
 ElementQueries.listen();
@@ -67,51 +67,65 @@ const CatalystChat = ({
   const [audioOn, setAudioOn] = useState(audioOnDefault ?? true);
   const [videoOn, setVideoOn] = useState(videoOnDefault ?? true);
   const [token, setToken] = useState('');
+  const mounted = useRef(true);
 
   useEffect(() => {
     // set global theme
     setThemeColor(theme ?? THEMES.default);
+    () => {
+      mounted.current = false;
+    };
   }, []);
 
+    // useEffect(() => {
+    //   () => {
+    //     console.log('test');
+    //   };
+    // }, []);
+
   useEffect(() => {
-    if (ready) {
-      // set client ID
-      const uniqueClientIdentifier =
-        cookies.PERSISTENT_CLIENT_ID || generateUUID();
-      if (!cookies.PERSISTENT_CLIENT_ID)
-        setCookie('PERSISTENT_CLIENT_ID', uniqueClientIdentifier, {
-          expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-        });
-      // obtain user token
-      fetch(
-        `${AUTH_ADDRESS}?participantName=${userName}&appId=${appId}&roomName=${room}&uniqueClientIdentifier=${uniqueClientIdentifier}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            mode: 'no-cors',
-          },
-        }
-      )
-        .then(response => {
-          if (response.status === 200) {
-            response.json().then((user: CatalystUserData) => {
-              setToken(user.token);
-              if (handleUserData) handleUserData(user);
-              // console.log(user);
-            });
+    if (ready && token.length < 1) {
+        // set client ID
+        const uniqueClientIdentifier =
+          cookies.PERSISTENT_CLIENT_ID || generateUUID();
+        if (!cookies.PERSISTENT_CLIENT_ID)
+          setCookie('PERSISTENT_CLIENT_ID', uniqueClientIdentifier, {
+            expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+          });
+        // obtain user token
+        fetch(
+          `${AUTH_ADDRESS}?participantName=${userName}&appId=${appId}&roomName=${room}&uniqueClientIdentifier=${uniqueClientIdentifier}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              mode: 'no-cors',
+            },
           }
-          if (response.status === 500) {
-            console.log(
-              'There is no user record corresponding to the provided identifier'
-            );
+        )
+          .then(response => {
+            if (!mounted.current)return;
+            if (response.status === 200) {
+              response.json().then((user: CatalystUserData) => {
+                if (!mounted.current)return;
+                setToken(user.token);
+                if (handleUserData) handleUserData(user);
+                // console.log(user);
+                return user.token
+              });
+            }
+            if (response.status === 500) {
+              console.log(
+                'There is no user record corresponding to the provided identifier'
+              );
+              setToken('INVALID');
+            }
+            return token
+          })
+          .catch(err => {
+            console.log(err);
             setToken('INVALID');
-          }
-        })
-        .catch(err => {
-          console.log(err);
-          setToken('INVALID');
-        });
+          });
     }
   }, [ready]);
 
@@ -136,7 +150,7 @@ const CatalystChat = ({
         className={`h-full w-full m-0 p-0 overflow-hidden max-h-screen max-w-screen box-border`}
       >
         {ready ? (
-          <VideoChat
+          <CatalystChatView
             token={token}
             meta={{
               audioEnabled: audioOn,
