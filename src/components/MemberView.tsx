@@ -115,7 +115,7 @@ const MemberView = React.memo(({
     <div className={`m-1 ${classes} cursor-pointer`}>
       <div
         ref={ref}
-        className={`relative z-0 align-middle self-center overflow-hidden text-center bg-gray-800 flex justify-center items-center rounded-xl ${
+        className={`relative z-0 align-middle self-center overflow-hidden text-center bg-gray-800 flex justify-center  rounded-xl ${
           m.isSpeaking ? `ring-2 ring-primary ring-opacity-50 ` : ''
         }`}
         style={{

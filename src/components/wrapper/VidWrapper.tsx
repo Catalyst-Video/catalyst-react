@@ -24,18 +24,15 @@ You can contact us for more details at support@catalyst.chat. */
 
 import { Track } from 'livekit-client';
 import React, { useEffect, useRef, useState } from 'react';
-import { Property } from 'csstype';
 import { debounce } from 'ts-debounce';
 
 const VidWrapper = React.memo(
   ({
     track,
     isLocal,
-    objectFit,
   }: {
     track: Track;
     isLocal: boolean;
-    objectFit?: Property.ObjectFit;
   }) => {
     const ref = useRef<HTMLVideoElement>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -62,7 +59,7 @@ const VidWrapper = React.memo(
       <>
         {isLoading && (
           <svg
-            className="animate-spin absolute rounded-full z-0 h-12 w-12 border-t-2 border-quinary"
+            className="animate-spin absolute rounded-full z-0 h-12 w-12 border-t-2 border-quinary self-center"
             viewBox="0 0 24 24"
           ></svg>
         )}
@@ -76,7 +73,7 @@ const VidWrapper = React.memo(
           }}
           className={`min-h-0 min-w-0 rounded-lg z-10 h-auto w-full ${
             isLocal && facesMember ? 'rm-uncanny-valley' : ''
-          } ${objectFit ?? ''} contain max-vid-height`} // TODO: switch to adaptive contain vs cover
+          } contain max-vid-height`} // TODO: switch to adaptive contain vs cover
         />
       </>
     );

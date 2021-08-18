@@ -36,6 +36,7 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { useRef } from 'react';
 import { SUPPORT_URL } from '../../utils/globals';
+import { isMobile } from 'react-device-detect';
 
 const ToolbarButton = React.memo(
   ({
@@ -104,7 +105,7 @@ const ToolbarButton = React.memo(
         }}
         content={
           outputDevices || inputDevices ? (
-            inputDevices?.length === 0 ? (
+            inputDevices?.length === 0 && !isMobile ? (
               <div className="font-sans flex flex-col justify-center items-center text-center text-quinary text-c">
                 <span className="block mb-1">
                   Catalyst couldn't find any {type?.toLowerCase()} devices.
@@ -133,7 +134,9 @@ const ToolbarButton = React.memo(
                   </a>
                 </span>
               </div>
-            ) : (
+            ) : 
+              inputDevices?.length !==
+              0  && (
               <div>
                 <ul
                   className="font-sans list-none m-0 p-0" //style={popoverStyles}

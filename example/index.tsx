@@ -19,7 +19,7 @@ const GeneralTest = () => {
       room="testingGround"
       appId={process.env.REACT_APP_APP_ID ?? 'REAL_APP_ID_HERE'}
       audioOnDefault={false}
-      disableSetupView
+      // disableSetupView
       // cstmWelcomeMsg="Hi"
       // cstmSupportUrl=""
       // name={(Math.random() * 1000).toString().slice(0, 4)}
