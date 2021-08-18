@@ -358,6 +358,10 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
    max-height: inherit;
 }
 
+#ctw .catalyst-fullscreen .max-vid-height {
+  max-height: inherit !important;
+}
+
 
 
 /* nav bar */

@@ -308,7 +308,7 @@ const CatalystChatView = ({
       ref={videoChatRef}
     >
       <div id="bg-theme" className="w-full h-full bg-secondary ">
-        <FullScreen handle={fsHandle} className="w-full h-full bg-secondary">
+        <FullScreen handle={fsHandle} className="catalyst-fullscreen w-full h-full bg-secondary">
           <div
             id="header-wrapper"
             className="animate-fade-in-down"

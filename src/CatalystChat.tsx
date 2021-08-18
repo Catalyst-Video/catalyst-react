@@ -77,12 +77,6 @@ const CatalystChat = ({
     };
   }, []);
 
-    // useEffect(() => {
-    //   () => {
-    //     console.log('test');
-    //   };
-    // }, []);
-
   useEffect(() => {
     if (ready && token.length < 1) {
         // set client ID
