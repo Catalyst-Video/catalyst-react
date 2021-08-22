@@ -532,6 +532,84 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
 }
 
 
+#ctw .loader {
+    position: relative;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#ctw .loader-1 .loader-outter {
+    position: absolute;
+    border: 4px solid #fff;;
+    border-left-color: transparent;
+    border-bottom: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    -webkit-animation: loader-1-outter 1s cubic-bezier(.42, .61, .58, .41) infinite;
+    animation: loader-1-outter 1s cubic-bezier(.42, .61, .58, .41) infinite;
+}
+
+#ctw .loader-1 .loader-inner {
+    position: absolute;
+    border: 4px solid #fff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    left: calc(50% - 20px);
+    top: calc(50% - 20px);
+    border-right: 0;
+    border-top-color: transparent;
+    -webkit-animation: loader-1-inner 1s cubic-bezier(.42, .61, .58, .41) infinite;
+    animation: loader-1-inner 1s cubic-bezier(.42, .61, .58, .41) infinite;
+}
+
+    @-webkit-keyframes loader-1-outter {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+    
+    @keyframes loader-1-outter {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+    
+    @-webkit-keyframes loader-1-inner {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+        100% {
+            -webkit-transform: rotate(-360deg);
+            transform: rotate(-360deg);
+        }
+    }
+    
+    @keyframes loader-1-inner {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+        100% {
+            -webkit-transform: rotate(-360deg);
+            transform: rotate(-360deg);
+        }
+    }
+
+
 /* box loader */
 /* #ctw .box-load {
   display: inline-block;
@@ -594,7 +672,7 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
 } */
 
 /* escalade spinner */
-#ctw .escalade svg {
+/* #ctw .escalade svg {
   overflow: visible;
   width: 100px;
   height: 150px;
@@ -641,4 +719,4 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
     stroke-dasharray: 156px 157px;
     stroke-dashoffset: -156px;
   }
-}
+} */
