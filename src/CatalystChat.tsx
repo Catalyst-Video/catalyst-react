@@ -50,6 +50,7 @@ const CatalystChat = ({
   disableSetupView,
   disableNameField,
   cstmSetupBg,
+  disableRefreshBtn,
   cstmWelcomeMsg,
   cstmSupportUrl,
   arbData,
@@ -79,47 +80,47 @@ const CatalystChat = ({
 
   useEffect(() => {
     if (ready && token.length < 1) {
-        // set client ID
-        const uniqueClientIdentifier =
-          cookies.PERSISTENT_CLIENT_ID || generateUUID();
-        if (!cookies.PERSISTENT_CLIENT_ID)
-          setCookie('PERSISTENT_CLIENT_ID', uniqueClientIdentifier, {
-            expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-          });
-        // obtain user token
-        fetch(
-          `${AUTH_ADDRESS}?participantName=${userName}&appId=${appId}&roomName=${room}&uniqueClientIdentifier=${uniqueClientIdentifier}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              mode: 'no-cors',
-            },
+      // set client ID
+      const uniqueClientIdentifier =
+        cookies.PERSISTENT_CLIENT_ID || generateUUID();
+      if (!cookies.PERSISTENT_CLIENT_ID)
+        setCookie('PERSISTENT_CLIENT_ID', uniqueClientIdentifier, {
+          expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+        });
+      // obtain user token
+      fetch(
+        `${AUTH_ADDRESS}?participantName=${userName}&appId=${appId}&roomName=${room}&uniqueClientIdentifier=${uniqueClientIdentifier}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            mode: 'no-cors',
+          },
+        }
+      )
+        .then(response => {
+          if (!mounted.current) return;
+          if (response.status === 200) {
+            response.json().then((user: CatalystUserData) => {
+              if (!mounted.current) return;
+              setToken(user.token);
+              if (handleUserData) handleUserData(user);
+              // console.log(user);
+              return user.token;
+            });
           }
-        )
-          .then(response => {
-            if (!mounted.current) return;
-            if (response.status === 200) {
-              response.json().then((user: CatalystUserData) => {
-                if (!mounted.current)return;
-                setToken(user.token);
-                if (handleUserData) handleUserData(user);
-                // console.log(user);
-                return user.token
-              });
-            }
-            if (response.status === 500) {
-              console.log(
-                'There is no user record corresponding to the provided identifier'
-              );
-              setToken('INVALID');
-            }
-            return token
-          })
-          .catch(err => {
-            console.log(err);
+          if (response.status === 500) {
+            console.log(
+              'There is no user record corresponding to the provided identifier'
+            );
             setToken('INVALID');
-          });
+          }
+          return token;
+        })
+        .catch(err => {
+          console.log(err);
+          setToken('INVALID');
+        });
     }
   }, [ready]);
 
@@ -158,6 +159,7 @@ const CatalystChat = ({
             handleReceiveArbData={handleReceiveArbData}
             cstmWelcomeMsg={cstmWelcomeMsg}
             cstmSupportUrl={cstmSupportUrl}
+            disableRefreshBtn={disableRefreshBtn}
             onJoinCall={onJoinCall}
             onMemberJoin={onMemberJoin}
             onMemberLeave={onMemberLeave}

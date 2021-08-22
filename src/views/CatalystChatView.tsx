@@ -62,6 +62,7 @@ const CatalystChatView = ({
   meta,
   fade,
   disableChat,
+  disableRefreshBtn,
   cstmWelcomeMsg,
   cstmSupportUrl,
   arbData,
@@ -76,6 +77,7 @@ const CatalystChatView = ({
   meta: RoomMetaData;
   fade: number;
   disableChat?: boolean;
+  disableRefreshBtn?: boolean;
   cstmWelcomeMsg?: string | HTMLElement;
   cstmSupportUrl?: string;
   arbData?: Uint8Array;
@@ -139,6 +141,8 @@ const CatalystChatView = ({
       audio: meta.audioEnabled ? (audDId ? { deviceId: audDId } : true) : false,
       video: meta.videoEnabled ? (vidDId ? { deviceId: vidDId } : true) : false,
     });
+    // TODO: apply bg removal
+  
     tracks.forEach(track => {
       room.localParticipant.publishTrack(
         track,
@@ -191,7 +195,7 @@ const CatalystChatView = ({
     localStorage.setItem('PREFERRED_OUTPUT_DEVICE_ID', device.deviceId);
   };
 
-  roomState.audioTracks.map(track => console.log(track));
+  // roomState.audioTracks.map(track => console.log(track));
 
   // animate toolbar & header fade in/out
   useEffect(() => {
@@ -346,7 +350,7 @@ const CatalystChatView = ({
                 </Tippy>
               )}
               {/* refresh */}
-              <Tippy content="Refresh" theme="catalyst" placement="bottom">
+              {!disableRefreshBtn && <Tippy content="Refresh" theme="catalyst" placement="bottom">
                 <button
                   className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
                   onClick={() => {
@@ -360,7 +364,7 @@ const CatalystChatView = ({
                     className="text-quinary"
                   />
                 </button>
-              </Tippy>
+              </Tippy>}
               {/* speaker mode toggle  */}
               <Tippy content="Toggle View" theme="catalyst" placement="bottom">
                 <button

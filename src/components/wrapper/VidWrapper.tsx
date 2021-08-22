@@ -26,6 +26,7 @@ import { Track } from 'livekit-client';
 import React, { useEffect, useRef, useState } from 'react';
 import { debounce } from 'ts-debounce';
 
+
 const VidWrapper = React.memo(
   ({
     track,
@@ -34,49 +35,50 @@ const VidWrapper = React.memo(
     track: Track;
     isLocal: boolean;
   }) => {
-    const ref = useRef<HTMLVideoElement>(null);
-    const [isLoading, setIsLoading] = useState(false);
+          const ref = useRef<HTMLVideoElement>(null);
+          const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-      const el = ref.current;
-      if (!el) {
-        return;
-      }
-      el.muted = true;
-      track.attach(el);
-      return () => {
-        track.detach(el);
-      };
-    }, [track, ref]);
+          useEffect(() => {
+            const el = ref.current;
+            if (!el) {
+              return;
+            }
+            el.muted = true;
+            track.attach(el);
+            return () => {
+              track.detach(el);
+            };
+          }, [track, ref]);
 
-    const facesMember =
-      track.mediaStreamTrack?.getSettings().facingMode !== 'environment';
-    
-    const debouncedLoad = debounce(() => setIsLoading(true), 400, { isImmediate: false})
+          const facesMember =
+            track.mediaStreamTrack?.getSettings().facingMode !== 'environment';
 
+          const debouncedLoad = debounce(() => setIsLoading(true), 400, {
+            isImmediate: false,
+          });
 
-    return (
-      <>
-        {isLoading && (
-          <svg
-            className="animate-spin absolute rounded-full z-0 h-12 w-12 border-t-2 border-quinary self-center"
-            viewBox="0 0 24 24"
-          ></svg>
-        )}
-        <video
-          ref={ref}
-          onLoadStart={debouncedLoad}
-          onWaiting={debouncedLoad} // debounce(() => setIsLoading(true), 50)}
-          onPlaying={() => {
-            debouncedLoad.cancel();
-            setIsLoading(false)
-          }}
-          className={`min-h-0 min-w-0 rounded-lg z-10 h-auto w-full ${
-            isLocal && facesMember ? 'rm-uncanny-valley' : ''
-          } contain max-vid-height`} // TODO: switch to adaptive contain vs cover
-        />
-      </>
-    );
-  }
+          return (
+            <>
+              {isLoading && (
+                <svg
+                  className="animate-spin absolute rounded-full z-0 h-12 w-12 border-t-2 border-quinary self-center"
+                  viewBox="0 0 24 24"
+                ></svg>
+              )}
+              <video
+                ref={ref}
+                onLoadStart={debouncedLoad}
+                onWaiting={debouncedLoad} // debounce(() => setIsLoading(true), 50)}
+                onPlaying={() => {
+                  debouncedLoad.cancel();
+                  setIsLoading(false);
+                }}
+                className={`min-h-0 min-w-0 rounded-lg z-10 h-auto w-full ${
+                  isLocal && facesMember ? 'rm-uncanny-valley' : ''
+                } contain max-vid-height`} // TODO: switch to adaptive contain vs cover
+              />
+            </>
+          );
+        }
 );
 export default VidWrapper;
