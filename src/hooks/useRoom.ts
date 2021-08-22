@@ -14,6 +14,7 @@ import { RoomState } from '../typings/interfaces';
 
 const useRoom = (options?: {
   sortMembers?: (members: Participant[]) => void;
+  onError?: (error: Error) => void;
 }): RoomState => {
   const [room, setRoom] = useState<Room>();
   const [isConnecting, setIsConnecting] = useState(false);

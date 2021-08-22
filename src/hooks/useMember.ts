@@ -38,7 +38,7 @@ const useMember = (member: Participant): {
   };
   const unpublishTrack = async (track: LocalTrack) => {
     if (!(member instanceof LocalParticipant)) {
-      throw new Error('could not unpublish, not a local member');
+      throw new Error('not local member: unable to unpublish');
     }
     (member as LocalParticipant).unpublishTrack(track);
     member.emit('localtrackchanged');

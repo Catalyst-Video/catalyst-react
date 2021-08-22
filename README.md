@@ -51,6 +51,7 @@ We recommend a minimum parent container size of 400px X 450px.
 | `disableSetupView` | Skip setup view       |  `boolean` | `true` | Optional |
 | `disableNameField` | Hide user name input field in setup view     |  `boolean` | `true` | Optional |
 | `cstmSetupBg` | Gradient or hex-code background for setup view      |  `string` | `#fff` | Optional |
+| `disableRefreshBtn` | Hide refresh button in top settings bar |  `boolean` | `true` | Optional |
 | `cstmWelcomeMsg` | Message displayed when you are the only member in room      |  `string`, `HTMLElement` | `Welcome!` | Optional |
 | `cstmSupportUrl` | Url for all help/support messages. When set to an empty string hides support icon.   |  `string` | `https://catalyst.chat/contact.html` | Optional |
 | `arbData` | Data passed to all other members of room  |  `Uint8Array` | `TextEncoder().encode('str')` | Optional |

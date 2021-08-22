@@ -19,7 +19,11 @@ const GeneralTest = () => {
       room="testingGround"
       appId={process.env.REACT_APP_APP_ID ?? 'REAL_APP_ID_HERE'}
       audioOnDefault={false}
-      // disableSetupView
+      disableSetupView
+      onJoinCall={() => console.log('onJoinCall')}
+      onMemberJoin={() => console.log('onmemjoin')}
+      onMemberLeave={() => console.log('onmemleave')}
+      handleUserData={(data) => console.log('handleUserData', data)}
       // cstmWelcomeMsg="Hi"
       // cstmSupportUrl=""
       // name={(Math.random() * 1000).toString().slice(0, 4)}

@@ -165,11 +165,11 @@ const CatalystChatView = ({
 
   useEffect(() => {
     if (token && token.length > 0 && token !== 'INVALID') {
-      roomState
-        .connect('wss://infra.catalyst.chat', token, meta)
+      console.log('attempting to connect');
+      roomState.connect('wss://infra.catalyst.chat', token, meta)
         .then(room => {
-          if (!mounted.current)return;
-          if (!room) return;
+          if (!mounted.current) { console.log('roomState already unmounted'); return; }
+          if (!room) { console.log('room not defined'); return; }
           if (onConnected) onConnected(room);
           return () => {
             room.disconnect();
@@ -306,21 +306,18 @@ const CatalystChatView = ({
     );
   }
   return (
-    <div
-      id="video-chat"
-      className="relative w-full h-full"
-      ref={videoChatRef}
-    >
+    <div id="video-chat" className="relative w-full h-full" ref={videoChatRef}>
       <div id="bg-theme" className="w-full h-full bg-secondary ">
-        <FullScreen handle={fsHandle} className="catalyst-fullscreen w-full h-full bg-secondary">
+        <FullScreen
+          handle={fsHandle}
+          className="catalyst-fullscreen w-full h-full bg-secondary"
+        >
           <div
             id="header-wrapper"
             className="animate-fade-in-down"
             ref={headerRef}
           >
-            {roomState.room &&
-              <HeaderLogo alwaysBanner={false} />
-            }
+            {roomState.room && <HeaderLogo alwaysBanner={false} />}
             {/* room count */}
             <div
               className={`${
@@ -350,21 +347,23 @@ const CatalystChatView = ({
                 </Tippy>
               )}
               {/* refresh */}
-              {!disableRefreshBtn && <Tippy content="Refresh" theme="catalyst" placement="bottom">
-                <button
-                  className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
-                  onClick={() => {
-                    roomState?.room?.disconnect();
-                    handleComponentRefresh()
-                  }}
-                >
-                  <FontAwesomeIcon
-                    icon={faSync}
-                    size="lg"
-                    className="text-quinary"
-                  />
-                </button>
-              </Tippy>}
+              {!disableRefreshBtn && (
+                <Tippy content="Refresh" theme="catalyst" placement="bottom">
+                  <button
+                    className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
+                    onClick={() => {
+                      roomState?.room?.disconnect();
+                      handleComponentRefresh();
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={faSync}
+                      size="lg"
+                      className="text-quinary"
+                    />
+                  </button>
+                </Tippy>
+              )}
               {/* speaker mode toggle  */}
               <Tippy content="Toggle View" theme="catalyst" placement="bottom">
                 <button
@@ -417,6 +416,7 @@ const CatalystChatView = ({
                   setSpeakerMode={setSpeakerMode}
                   setChatMessages={setChatMessages}
                   cstmWelcomeMsg={cstmWelcomeMsg}
+                  handleComponentRefresh={handleComponentRefresh}
                 />
                 {roomState.room && (
                   <div

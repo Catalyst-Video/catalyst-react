@@ -35,6 +35,8 @@ import Chat from './Chat';
 import { ChatMessage, RoomState } from '../typings/interfaces';
 import { useFullScreenHandle } from 'react-full-screen';
 import { DEFAULT_WELCOME_MESSAGE } from '../utils/globals';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSync } from '@fortawesome/free-solid-svg-icons';
 
 const RoomWrapper = ({
   roomState,
@@ -47,6 +49,7 @@ const RoomWrapper = ({
   chatMessages,
   setChatMessages,
   cstmWelcomeMsg,
+  handleComponentRefresh,
 }: {
   roomState: RoomState;
   onLeave?: (room: Room) => void;
@@ -58,9 +61,10 @@ const RoomWrapper = ({
   chatMessages: ChatMessage[];
   setChatMessages: Function;
   cstmWelcomeMsg?: string | HTMLElement;
+  handleComponentRefresh: () => void;
 }) => {
   const {
-    isConnecting,
+    isConnecting: connecting,
     error,
     localMember: localParticipant,
     members: members,
@@ -148,16 +152,16 @@ const RoomWrapper = ({
       false
     );
     () => {
-       mounted.current = false;
-       window.removeEventListener(
-         'load',
-         () => {
-           resizeWrapper();
-           window.onresize = resizeWrapper;
-         },
-         false
-       );
-     };
+      mounted.current = false;
+      window.removeEventListener(
+        'load',
+        () => {
+          resizeWrapper();
+          window.onresize = resizeWrapper;
+        },
+        false
+      );
+    };
   }, []);
 
   useEffect(() => {
@@ -165,41 +169,58 @@ const RoomWrapper = ({
     resizeWrapper();
   }, [members, screens, chatOpen, fsHandle.active, speakerMode]);
 
-  if (error || isConnecting || !room || members.length === 0) {
+  if (members.length === 0 || error || !room || connecting) {
     return (
       <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center text-xl text-quinary">
         <div className="flex flex-col items-center justify-between p-2">
-          <svg
+          {/* <svg
             className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-quinary"
             viewBox="0 0 24 24"
-          ></svg>
+          ></svg> */}
+          <span className="box-load h-16 w-16">
+            <span className="box-load-inner"></span>
+          </span>
           <div className="pt-4">
             {error && <span>⚠️ {error.message}</span>}
-            {isConnecting && <span>⚡ Connecting...</span>}
-            {!room && !isConnecting && !error && (
+            {connecting && <span>⚡ Connecting...</span>}
+            {!room && !connecting && !error && (
               <span>🚀 Preparing room...</span>
             )}
-            {members.length === 0 && room && !isConnecting && (
+            {members.length === 0 && room && !connecting && (
               <span>{cstmWelcomeMsg ?? DEFAULT_WELCOME_MESSAGE}</span>
             )}
           </div>
+          <span className="block py-3">You're having trouble connecting.</span>
+          <button
+            className="block cursor-pointer focus:border-0 focus:outline-none text-center"
+            onClick={() => {
+              room?.disconnect();
+              handleComponentRefresh();
+            }}
+          >
+            <span className="pr-2 text-primary">Try again</span>
+            <FontAwesomeIcon
+              icon={faSync}
+              size="1x"
+              className="inline text-primary"
+            />
+          </button>
         </div>
       </div>
     );
   }
 
-  let screenTrack: RemoteVideoTrack;
+  let sharedScreen: RemoteVideoTrack;
   var sharedScreens = [] as Array<RemoteVideoTrack>;
   members.forEach(m => {
     m.videoTracks.forEach(track => {
       if (track.trackName === 'screen' && track.track) {
-        screenTrack = track.track as RemoteVideoTrack;
+        sharedScreen = track.track as RemoteVideoTrack;
         //  console.log(screenTrack);
-        if (!sharedScreens.includes(screenTrack)) {
-          // screenTrack.addListener('')
-          sharedScreens = [...sharedScreens, screenTrack];
-          if (mainVid !== screenTrack.sid && sharedScreens.length != screens) {
-            setMainVid(screenTrack.sid);
+        if (!sharedScreens.includes(sharedScreen)) {
+          sharedScreens = [...sharedScreens, sharedScreen];
+          if (mainVid !== sharedScreen.sid && sharedScreens.length != screens) {
+            setMainVid(sharedScreen.sid);
             // setSpeakerMode(true);
           }
         }
@@ -215,6 +236,7 @@ const RoomWrapper = ({
       setMainVid(members[0].sid);
     }
   }
+
   return (
     <>
       {!speakerMode && (
