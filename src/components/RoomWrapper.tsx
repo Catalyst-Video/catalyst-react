@@ -72,6 +72,7 @@ const RoomWrapper = ({
   } = roomState;
   // const [screens, setNumScreens] = useState<number>(0);
   const [screens, setNumScreens] = useState<number>(0);
+  const [slowLoading, setSlowLoading] = useState<boolean>(false);
   const [mainVid, setMainVid] = useState<string>();
   const vidRef = useRef<HTMLDivElement>(null);
   const [vidDims, setVidDims] = useState({
@@ -162,6 +163,9 @@ const RoomWrapper = ({
         false
       );
     };
+    setTimeout(() => {
+      setSlowLoading(true);
+    }, 8000);
   }, []);
 
   useEffect(() => {
@@ -170,15 +174,15 @@ const RoomWrapper = ({
   }, [members, screens, chatOpen, fsHandle.active, speakerMode]);
 
   if (members.length === 0 || error || !room || connecting) {
+   
     return (
       <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center text-xl text-quinary">
         <div className="flex flex-col items-center justify-between p-2">
-
-          <div className="loader loader-1 h-16 w-16">
-            <div className="loader-outter"></div>
-            <div className="loader-inner"></div>
+          {/* loading indicator */}
+          <div className="catalyst-ld catalyst-ld-1 h-16 w-16">
+            <div className="catalyst-ld-outer"></div>
+            <div className="catalyst-ld-inner"></div>
           </div>
-
           <div className="pt-4">
             {error && <span>⚠️ {error.message}</span>}
             {connecting && <span>⚡ Connecting...</span>}
@@ -189,22 +193,26 @@ const RoomWrapper = ({
               <span>{cstmWelcomeMsg ?? DEFAULT_WELCOME_MESSAGE}</span>
             )}
           </div>
-          <span className="block py-3">You're having trouble connecting.</span>
+        </div>
+        {slowLoading && <div className="absolute bottom-0 flex flex-col py-2 justify-center w-full animate-fade-in-up">
+          <div className="py-1 text-sm text-center">
+            Having connection issues?
+          </div>
           <button
-            className="block cursor-pointer focus:border-0 focus:outline-none text-center"
+            className="cursor-pointer focus:border-0 focus:outline-none text-center"
             onClick={() => {
               room?.disconnect();
               handleComponentRefresh();
             }}
           >
-            <span className="pr-2 text-primary">Try again</span>
+            <span className="pr-2 text-primary text-base">Refresh</span>
             <FontAwesomeIcon
               icon={faSync}
-              size="1x"
+              size="sm"
               className="inline text-primary"
             />
           </button>
-        </div>
+        </div>}
       </div>
     );
   }

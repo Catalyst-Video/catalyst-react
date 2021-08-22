@@ -168,8 +168,8 @@ const CatalystChatView = ({
       console.log('attempting to connect');
       roomState.connect('wss://infra.catalyst.chat', token, meta)
         .then(room => {
-          if (!mounted.current) { console.log('roomState already unmounted'); return; }
-          if (!room) { console.log('room not defined'); return; }
+          if (!mounted.current) return;
+          if (!room) return; 
           if (onConnected) onConnected(room);
           return () => {
             room.disconnect();
@@ -312,17 +312,16 @@ const CatalystChatView = ({
           handle={fsHandle}
           className="catalyst-fullscreen w-full h-full bg-secondary"
         >
-          <div
+          {roomState.room && <div
             id="header-wrapper"
             className="animate-fade-in-down"
             ref={headerRef}
           >
-            {roomState.room && <HeaderLogo alwaysBanner={false} />}
+            <HeaderLogo alwaysBanner={false} />
             {/* room count */}
             <div
-              className={`${
-                chatOpen ? 'chat-open-shift' : ''
-              } absolute z-50 flex nav-ops`}
+              className={`${chatOpen ? 'chat-open-shift' : ''
+                } absolute z-50 flex nav-ops`}
             >
               <FontAwesomeIcon
                 icon={faUserFriends}
@@ -400,7 +399,7 @@ const CatalystChatView = ({
                 </Tippy>
               )}
             </div>
-          </div>
+          </div>}
 
           <div id="call-section" className="items-end w-full h-full">
             {!roomClosed && (

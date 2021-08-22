@@ -532,14 +532,14 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
 }
 
 
-#ctw .loader {
+#ctw .catalyst-ld {
     position: relative;
     border-radius: 50%;
     display: inline-block;
     vertical-align: middle;
 }
 
-#ctw .loader-1 .loader-outter {
+#ctw .catalyst-ld-1 .catalyst-ld-outer {
     position: absolute;
     border: 4px solid #fff;;
     border-left-color: transparent;
@@ -547,11 +547,11 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    -webkit-animation: loader-1-outter 1s cubic-bezier(.42, .61, .58, .41) infinite;
-    animation: loader-1-outter 1s cubic-bezier(.42, .61, .58, .41) infinite;
+    -webkit-animation: catalyst-ld-1-outer 1s cubic-bezier(.42, .61, .58, .41) infinite;
+    animation: catalyst-ld-1-outer 1s cubic-bezier(.42, .61, .58, .41) infinite;
 }
 
-#ctw .loader-1 .loader-inner {
+#ctw .catalyst-ld-1 .catalyst-ld-inner {
     position: absolute;
     border: 4px solid #fff;
     border-radius: 50%;
@@ -561,11 +561,11 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
     top: calc(50% - 20px);
     border-right: 0;
     border-top-color: transparent;
-    -webkit-animation: loader-1-inner 1s cubic-bezier(.42, .61, .58, .41) infinite;
-    animation: loader-1-inner 1s cubic-bezier(.42, .61, .58, .41) infinite;
+    -webkit-animation: catalyst-ld-1-inner 1s cubic-bezier(.42, .61, .58, .41) infinite;
+    animation: catalyst-ld-1-inner 1s cubic-bezier(.42, .61, .58, .41) infinite;
 }
 
-    @-webkit-keyframes loader-1-outter {
+    @-webkit-keyframes catalyst-ld-1-outer {
         0% {
             -webkit-transform: rotate(0deg);
             transform: rotate(0deg);
@@ -576,7 +576,7 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
         }
     }
     
-    @keyframes loader-1-outter {
+    @keyframes catalyst-ld-1-outer {
         0% {
             -webkit-transform: rotate(0deg);
             transform: rotate(0deg);
@@ -587,7 +587,7 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
         }
     }
     
-    @-webkit-keyframes loader-1-inner {
+    @-webkit-keyframes catalyst-ld-1-inner {
         0% {
             -webkit-transform: rotate(0deg);
             transform: rotate(0deg);
@@ -598,7 +598,7 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
         }
     }
     
-    @keyframes loader-1-inner {
+    @keyframes catalyst-ld-1-inner {
         0% {
             -webkit-transform: rotate(0deg);
             transform: rotate(0deg);
@@ -610,13 +610,13 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
     }
 
 
-/* box loader */
+/* box catalyst-ld */
 /* #ctw .box-load {
   display: inline-block;
   position: relative;
   border: 4px solid #Fff;
   top: 50%;
-  animation: loader 2s infinite ease;
+  animation: catalyst-ld 2s infinite ease;
 }
 
 #ctw .box-load-inner {
@@ -624,10 +624,10 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
   display: inline-block;
   width: 100%;
   background-color: #fff;
-  animation: loader-inner 2s infinite ease-in;
+  animation: catalyst-ld-inner 2s infinite ease-in;
 }
 
-@keyframes loader {
+@keyframes catalyst-ld {
   0% {
     transform: rotate(0deg);
   }
@@ -649,7 +649,7 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
   }
 }
 
-@keyframes loader-inner {
+@keyframes catalyst-ld-inner {
   0% {
     height: 0%;
   }
