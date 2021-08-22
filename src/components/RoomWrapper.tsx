@@ -177,9 +177,34 @@ const RoomWrapper = ({
             className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-quinary"
             viewBox="0 0 24 24"
           ></svg> */}
-          <span className="box-load h-16 w-16">
+          {/* <span className="box-load h-16 w-16">
             <span className="box-load-inner"></span>
-          </span>
+          </span> */}
+          <div className="escalade h-16 w-16">
+            <svg>
+              <g>
+                <path d="M 50,100 A 1,1 0 0 1 50,0" />
+              </g>
+              <g>
+                <path d="M 50,75 A 1,1 0 0 0 50,-25" />
+              </g>
+              <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style={{
+                    stopColor: '#11c1e8',
+                    stopOpacity: 1,
+                  }} />
+                  <stop
+                    offset="100%"
+                    style={{
+                    stopColor: '#11c1e8',
+                    stopOpacity: 1,
+                  }}
+                  />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
           <div className="pt-4">
             {error && <span>⚠️ {error.message}</span>}
             {connecting && <span>⚡ Connecting...</span>}
