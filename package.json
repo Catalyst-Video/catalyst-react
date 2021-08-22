@@ -1,6 +1,6 @@
 {
   "name": "catalyst-vc-react",
-  "version": "3.1.5",
+  "version": "3.1.6",
   "author": "@GoldinGuy <seth@goldin.io> & @JoeSemrai <josephsemrai@gmail.com>",
   "private": false,
   "license": "AGPL-3.0-only",
@@ -53,7 +53,7 @@
     "@types/css-global-variables": "^3.0.1",
     "css-element-queries": "^1.2.3",
     "css-global-variables": "^3.0.2",
-    "livekit-client": "^0.9.7",
+    "livekit-client": "^0.11.1",
     "lodash.debounce": "^4.0.8",
     "react-cookie": "^4.0.3",
     "react-device-detect": "^1.17.0",

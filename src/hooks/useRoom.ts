@@ -30,6 +30,7 @@ const useRoom = (options?: {
       setIsConnecting(true);
       try {
         const newRoom = await connect(url, token, options);
+        // console.log(newRoom);
         setRoom(newRoom);
         setLocalMember(newRoom.localParticipant);
         const onParticipantsChanged = () => {
