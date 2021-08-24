@@ -60,10 +60,9 @@ const VidWrapper = React.memo(
           return (
             <>
               {isLoading && (
-                <svg
-                  className="animate-spin absolute rounded-full z-0 h-12 w-12 border-t-2 border-quinary self-center"
-                  viewBox="0 0 24 24"
-                ></svg>
+                <div className="catalyst-ld-1 h-16 w-16 absolute self-center">
+                  <div className="catalyst-ld-inner"></div>
+                </div>
               )}
               <video
                 ref={ref}

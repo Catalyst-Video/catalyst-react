@@ -203,34 +203,38 @@ const CatalystChatView = ({
       const delayCheck = () => {
         const hClasses = headerRef.current?.classList;
         const tClasses = toolbarRef.current?.classList;
-        if (timedelay === 5 && !isHidden) {
-          hClasses?.remove('animate-fade-in-down');
-          hClasses?.add('animate-fade-out-up');
-          tClasses?.remove('animate-fade-in-up');
-          tClasses?.add('animate-fade-out-down');
-          setTimeout(() => {
-            hClasses?.remove('animate-fade-out-up');
-            hClasses?.add('hidden');
-            tClasses?.remove('animate-fade-out-down');
-            tClasses?.add('hidden');
-            isHidden = true;
-          }, 170); // 190);
-          timedelay = 1;
+        if (hClasses && tClasses) {
+          if (timedelay === 5 && !isHidden) {
+            hClasses?.remove('animate-fade-in-down');
+            hClasses?.add('animate-fade-out-up');
+            tClasses?.remove('animate-fade-in-up');
+            tClasses?.add('animate-fade-out-down');
+            setTimeout(() => {
+              hClasses?.remove('animate-fade-out-up');
+              hClasses?.add('hidden');
+              tClasses?.remove('animate-fade-out-down');
+              tClasses?.add('hidden');
+              isHidden = true;
+            }, 170); // 190);
+            timedelay = 1;
+          }
+          timedelay += 1;
         }
-        timedelay += 1;
       };
 
       const handleMouse = () => {
         const hClasses = headerRef.current?.classList;
         const tClasses = toolbarRef.current?.classList;
-        hClasses?.remove('hidden');
-        hClasses?.add('animate-fade-in-down');
-        tClasses?.remove('hidden');
-        tClasses?.add('animate-fade-in-up');
-        isHidden = false;
-        timedelay = 1;
-        clearInterval(_delay);
-        _delay = setInterval(delayCheck, fade);
+        if (hClasses && tClasses) {
+          hClasses?.remove('hidden');
+          hClasses?.add('animate-fade-in-down');
+          tClasses?.remove('hidden');
+          tClasses?.add('animate-fade-in-up');
+          isHidden = false;
+          timedelay = 1;
+          clearInterval(_delay);
+          _delay = setInterval(delayCheck, fade);
+        }
       };
 
       var timedelay = 1;
@@ -273,15 +277,10 @@ const CatalystChatView = ({
     }
   }, []);
 
-  // catch invalid tokens
-  if (token === 'INVALID') {
-    return (
-      <div
-        id="video-chat"
-        className="relative w-full h-full"
-        ref={videoChatRef}
-      >
-        <div id="bg-theme" className="w-full h-full bg-secondary ">
+  return (
+    <div id="video-chat" className="relative w-full h-full" ref={videoChatRef}>
+      <div id="bg-theme" className="w-full h-full bg-secondary ">
+        {token === 'INVALID' ? (
           <div className="absolute top-0 flex items-center justify-center w-full h-full px-16 text-xl not-selectable left-1 text-quinary">
             <span className="text-center">
               ⚠️ An error occurred generating your user token.
@@ -301,158 +300,164 @@ const CatalystChatView = ({
               for help
             </span>
           </div>
-        </div>
-      </div>
-    );
-  }
-  return (
-    <div id="video-chat" className="relative w-full h-full" ref={videoChatRef}>
-      <div id="bg-theme" className="w-full h-full bg-secondary ">
-        <FullScreen
-          handle={fsHandle}
-          className="catalyst-fullscreen w-full h-full bg-secondary"
-        >
-          {roomState.room && <div
-            id="header-wrapper"
-            className="animate-fade-in-down"
-            ref={headerRef}
+        ) : (
+          <FullScreen
+            handle={fsHandle}
+            className="catalyst-fullscreen w-full h-full bg-secondary"
           >
-            <HeaderLogo alwaysBanner={false} />
-            {/* room count */}
-            <div
-              className={`${chatOpen ? 'chat-open-shift' : ''
-                } absolute z-50 flex nav-ops`}
-            >
-              <FontAwesomeIcon
-                icon={faUserFriends}
-                size="lg"
-                className="mr-1 text-quinary"
-              />
-              <span className="text-quinary ">{memberCount}</span>
-
-              {/* help */}
-              {!(cstmSupportUrl?.length == 0) && (
-                <Tippy content="Help" theme="catalyst" placement="bottom">
-                  <button
-                    className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
-                    onClick={() => contactSupport(cstmSupportUrl)}
-                  >
-                    <FontAwesomeIcon
-                      icon={faQuestion}
-                      size="lg"
-                      className="text-quinary"
-                    />
-                  </button>
-                </Tippy>
-              )}
-              {/* refresh */}
-              {!disableRefreshBtn && (
-                <Tippy content="Refresh" theme="catalyst" placement="bottom">
-                  <button
-                    className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
-                    onClick={() => {
-                      roomState?.room?.disconnect();
-                      handleComponentRefresh();
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      icon={faSync}
-                      size="lg"
-                      className="text-quinary"
-                    />
-                  </button>
-                </Tippy>
-              )}
-              {/* speaker mode toggle  */}
-              <Tippy content="Toggle View" theme="catalyst" placement="bottom">
-                <button
-                  className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
-                  onClick={() => setSpeakerMode(sMode => !sMode)}
+            {roomState.room && (
+              <div
+                id="header-wrapper"
+                className="animate-fade-in-down"
+                ref={headerRef}
+              >
+                <HeaderLogo alwaysBanner={false} />
+                {/* room count */}
+                <div
+                  className={`${
+                    chatOpen ? 'chat-open-shift' : ''
+                  } absolute z-50 flex nav-ops`}
                 >
                   <FontAwesomeIcon
-                    icon={speakerMode ? faTh : faThLarge}
+                    icon={faUserFriends}
                     size="lg"
-                    className="text-quinary"
+                    className="mr-1 text-quinary"
                   />
-                </button>
-              </Tippy>
-              {/* full screen  */}
-              {!isMobile && (
-                <Tippy
-                  content="Full Screen"
-                  theme="catalyst"
-                  placement="bottom"
-                >
-                  <button
-                    className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
-                    onClick={() => {
-                      if (fsHandle.active) fsHandle.exit();
-                      else fsHandle.enter();
-                    }}
+                  <span className="text-quinary ">{memberCount}</span>
+
+                  {/* help */}
+                  {!(cstmSupportUrl?.length == 0) && (
+                    <Tippy content="Help" theme="catalyst" placement="bottom">
+                      <button
+                        className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
+                        onClick={() => contactSupport(cstmSupportUrl)}
+                      >
+                        <FontAwesomeIcon
+                          icon={faQuestion}
+                          size="lg"
+                          className="text-quinary"
+                        />
+                      </button>
+                    </Tippy>
+                  )}
+                  {/* refresh */}
+                  {!disableRefreshBtn && (
+                    <Tippy
+                      content="Refresh"
+                      theme="catalyst"
+                      placement="bottom"
+                    >
+                      <button
+                        className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
+                        onClick={() => {
+                          roomState?.room?.disconnect();
+                          handleComponentRefresh();
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faSync}
+                          size="lg"
+                          className="text-quinary"
+                        />
+                      </button>
+                    </Tippy>
+                  )}
+                  {/* speaker mode toggle  */}
+                  <Tippy
+                    content="Toggle View"
+                    theme="catalyst"
+                    placement="bottom"
                   >
-                    <FontAwesomeIcon
-                      icon={fsHandle.active ? faCompressAlt : faExpandAlt}
-                      size="lg"
-                      className="text-quinary"
+                    <button
+                      className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
+                      onClick={() => setSpeakerMode(sMode => !sMode)}
+                    >
+                      <FontAwesomeIcon
+                        icon={speakerMode ? faTh : faThLarge}
+                        size="lg"
+                        className="text-quinary"
+                      />
+                    </button>
+                  </Tippy>
+                  {/* full screen  */}
+                  {!isMobile && (
+                    <Tippy
+                      content="Full Screen"
+                      theme="catalyst"
+                      placement="bottom"
+                    >
+                      <button
+                        className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
+                        onClick={() => {
+                          if (fsHandle.active) fsHandle.exit();
+                          else fsHandle.enter();
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={fsHandle.active ? faCompressAlt : faExpandAlt}
+                          size="lg"
+                          className="text-quinary"
+                        />
+                      </button>
+                    </Tippy>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <div id="call-section" className="items-end w-full h-full">
+              {!roomClosed && (
+                <div id="vid-chat-cont" className="absolute inset-0 flex">
+                  <RoomWrapper
+                    onLeave={onLeave}
+                    chatOpen={chatOpen}
+                    setChatOpen={setChatOpen}
+                    roomState={roomState}
+                    speakerMode={speakerMode}
+                    disableChat={disableChat}
+                    chatMessages={chatMessages}
+                    setSpeakerMode={setSpeakerMode}
+                    setChatMessages={setChatMessages}
+                    cstmWelcomeMsg={cstmWelcomeMsg}
+                    handleComponentRefresh={handleComponentRefresh}
+                  />
+                  {roomState.room && (
+                    <div
+                      ref={toolbarRef}
+                      className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-center mb-3"
+                    >
+                      <Toolbar
+                        room={roomState.room}
+                        onLeave={onLeave}
+                        setSpeakerMode={setSpeakerMode}
+                        setChatMessages={setChatMessages}
+                        updateOutputDevice={updateOutputDevice}
+                        outputDevice={outputDevice}
+                        chatOpen={chatOpen}
+                        setChatOpen={setChatOpen}
+                        disableChat={disableChat}
+                        cstmSupportUrl={cstmSupportUrl}
+                      />
+                    </div>
+                  )}
+                  {roomState.audioTracks.map(track => (
+                    <AudWrapper
+                      key={track.sid}
+                      track={track}
+                      isLocal={false}
+                      sinkId={outputDevice?.deviceId}
                     />
-                  </button>
-                </Tippy>
+                  ))}
+                </div>
+              )}
+              {roomClosed && (
+                <div className="absolute inset-0 z-40 flex items-center justify-center w-full h-full text-xl not-selectable text-quinary">
+                  <span>🖐️ Call ended</span>
+                </div>
               )}
             </div>
-          </div>}
-
-          <div id="call-section" className="items-end w-full h-full">
-            {!roomClosed && (
-              <div id="vid-chat-cont" className="absolute inset-0 flex">
-                <RoomWrapper
-                  onLeave={onLeave}
-                  chatOpen={chatOpen}
-                  setChatOpen={setChatOpen}
-                  roomState={roomState}
-                  speakerMode={speakerMode}
-                  disableChat={disableChat}
-                  chatMessages={chatMessages}
-                  setSpeakerMode={setSpeakerMode}
-                  setChatMessages={setChatMessages}
-                  cstmWelcomeMsg={cstmWelcomeMsg}
-                  handleComponentRefresh={handleComponentRefresh}
-                />
-                {roomState.room && (
-                  <div
-                    ref={toolbarRef}
-                    className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-center mb-3"
-                  >
-                    <Toolbar
-                      room={roomState.room}
-                      onLeave={onLeave}
-                      setSpeakerMode={setSpeakerMode}
-                      setChatMessages={setChatMessages}
-                      updateOutputDevice={updateOutputDevice}
-                      outputDevice={outputDevice}
-                      chatOpen={chatOpen}
-                      setChatOpen={setChatOpen}
-                      disableChat={disableChat}
-                      cstmSupportUrl={cstmSupportUrl}
-                    />
-                  </div>
-                )}
-                {roomState.audioTracks.map(track => (
-                  <AudWrapper
-                    key={track.sid}
-                    track={track}
-                    isLocal={false}
-                    sinkId={outputDevice?.deviceId}
-                  />
-                ))}
-              </div>
-            )}
-            {roomClosed && (
-              <div className="absolute inset-0 z-40 flex items-center justify-center w-full h-full text-xl not-selectable text-quinary">
-                <span>🖐️ Call ended</span>
-              </div>
-            )}
-          </div>
-        </FullScreen>
+          </FullScreen>
+        )}
       </div>
     </div>
   );

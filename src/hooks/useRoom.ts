@@ -1,3 +1,5 @@
+// All credit to @davidzhao https://github.com/livekit/livekit-react/blob/master/src/useRoom.ts
+
 import {
   AudioTrack,
   connect,

@@ -54,7 +54,7 @@ const ScreenShareWrapper = ({
         <VidWrapper track={track} isLocal={false} />
         <div className="absolute bottom-0 left-0 flex text-quinary  justify-end p-2 w-full">
           <div className="relative h-7 w-7 md:h-8 md:w-8 flex items-center justify-center p-1">
-            <span className="absolute rounded-full top-0 left-0 opacity-50 bg-secondary  w-full h-full"></span>
+            <span className="absolute rounded-full top-0 left-0 opacity-50 z-30 bg-secondary  w-full h-full"></span>
             <FontAwesomeIcon
               icon={faDesktop}
               size="2x"

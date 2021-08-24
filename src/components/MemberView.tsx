@@ -115,7 +115,7 @@ const MemberView = React.memo(({
     <div className={`m-1 ${classes} cursor-pointer`}>
       <div
         ref={ref}
-        className={`relative z-0 align-middle self-center overflow-hidden text-center bg-gray-800 flex justify-center  rounded-xl ${
+        className={`relative z-0 align-middle self-center overflow-hidden text-center bg-gray-800 flex justify-center rounded-xl ${
           m.isSpeaking ? `ring-2 ring-primary ring-opacity-50 ` : ''
         }`}
         style={{
@@ -136,13 +136,13 @@ const MemberView = React.memo(({
             <span
               className="absolute top-0 left-0 opacity-50 rounded-xl w-full h-full" // bg-tertiary
             ></span>
-            <span className="text-n text-quinary  z-30">
+            <span className="text-n text-quinary z-30">
               {displayName ?? isLocal ? `${m.identity} (You)` : m.identity}
             </span>
           </div>
           {isMuted && (
             <div className="relative h-7 w-7 md:h-8 md:w-8 flex items-center justify-center p-1">
-              <span className="absolute rounded-full top-0 left-0 opacity-50 bg-tertiary w-full h-full"></span>
+              <span className="absolute rounded-full top-0 left-0 opacity-50 z-30 bg-tertiary w-full h-full"></span>
               <FontAwesomeIcon
                 icon={faMicrophoneSlash}
                 size="2x"
