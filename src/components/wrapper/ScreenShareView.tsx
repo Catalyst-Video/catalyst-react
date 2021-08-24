@@ -45,7 +45,7 @@ const ScreenShareWrapper = ({
   return (
     <div className={classes} onClick={onClick}>
       <div
-        className="relative z-0 cursor-pointer inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-lg m-1"
+        className="relative z-0 cursor-pointer inline-block align-middle self-center overflow-hidden text-center bg-gray-800 rounded-lg m-1 flex justify-center"
         style={{
           height: height,
           width: width,

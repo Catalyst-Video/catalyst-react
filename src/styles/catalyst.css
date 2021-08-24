@@ -532,6 +532,7 @@ TODO: still buggy on iOS, play/pause button pops up on load for iOS, goes away a
 }
 
 
+/* custom loading indicator */
 #ctw .catalyst-ld {
     position: relative;
     border-radius: 50%;
