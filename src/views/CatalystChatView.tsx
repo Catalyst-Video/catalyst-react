@@ -23,9 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 You can contact us for more details at support@catalyst.chat. */
 
 import {
-  faChevronLeft,
-  faChevronRight,
-  faCommentAlt,
   faCompressAlt,
   faExpandAlt,
   faQuestion,
@@ -116,6 +113,7 @@ const CatalystChatView = ({
     room.on(
       RoomEvent.DataReceived,
       (data: Uint8Array, member: Participant, kind: DataPacket_Kind) => {
+        if (!mounted.current) return;
         const strData = decoder.decode(data);
         // console.log(strData);
         const parsedData = JSON.parse(strData);
@@ -165,9 +163,7 @@ const CatalystChatView = ({
 
   useEffect(() => {
     if (token && token.length > 0 && token !== 'INVALID') {
-      // console.log('attempting to connect');
       roomState.connect('wss://infra.catalyst.chat', token, meta).then(room => {
-          // console.log('connected');
           if (!mounted.current) return;
           if (!room) return; 
           if (onConnected) onConnected(room);
@@ -201,6 +197,7 @@ const CatalystChatView = ({
   useEffect(() => {
     if (fade > 0) {
       const delayCheck = () => {
+        if (!mounted.current) return;
         const hClasses = headerRef.current?.classList;
         const tClasses = toolbarRef.current?.classList;
         if (hClasses && tClasses) {
@@ -223,6 +220,7 @@ const CatalystChatView = ({
       };
 
       const handleMouse = () => {
+        if (!mounted.current) return;
         const hClasses = headerRef.current?.classList;
         const tClasses = toolbarRef.current?.classList;
         if (hClasses && tClasses) {
@@ -239,7 +237,10 @@ const CatalystChatView = ({
 
       var timedelay = 1;
       var isHidden = false;
-      const debounceHandleMouse = debounce(handleMouse, 25);
+      const debounceHandleMouse = debounce(() => {
+        if (!mounted.current) return;
+        handleMouse();
+      }, 25);
       videoChatRef.current?.addEventListener('mousemove', debounceHandleMouse);
       var _delay = setInterval(delayCheck, fade);
 
@@ -257,7 +258,7 @@ const CatalystChatView = ({
     // set default output device
     if (!outputDevice) {
       navigator.mediaDevices.enumerateDevices().then(devices => {
-        if (!mounted.current)return;
+        if (!mounted.current) return;
         const outputDevices = devices.filter(
           id => id.kind === 'audiooutput' && id.deviceId
         );

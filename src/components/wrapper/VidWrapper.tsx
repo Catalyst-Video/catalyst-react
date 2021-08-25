@@ -24,7 +24,7 @@ You can contact us for more details at support@catalyst.chat. */
 
 import { Track } from 'livekit-client';
 import React, { useEffect, useRef, useState } from 'react';
-import { debounce } from 'ts-debounce';
+import useDebounce from '../../hooks/useDebounce';
 
 
 const VidWrapper = React.memo(
@@ -37,8 +37,7 @@ const VidWrapper = React.memo(
   }) => {
           const vidRef = useRef<HTMLVideoElement>(null);
           const [isLoading, setIsLoading] = useState(false);
-          const mounted = useRef(true);
-
+          const debouncedIsLoading = useDebounce<boolean>(isLoading, 250);
 
           useEffect(() => {
             const vidEl = vidRef.current;
@@ -48,35 +47,24 @@ const VidWrapper = React.memo(
             vidEl.muted = true;
             track.attach(vidEl);
             return () => {
-              mounted.current = false;
               track.detach(vidEl);
             };
           }, [track, vidRef]);
 
-          const facesMember =
-            track.mediaStreamTrack?.getSettings().facingMode !== 'environment';
-
-    const debouncedLoad = debounce(() =>
-    {
-      if (mounted.current) return;
-      setIsLoading(true)
-    }, 250, { isImmediate: false, });
-
+          const facesMember = track.mediaStreamTrack?.getSettings().facingMode !== 'environment';
+    
           return (
             <>
-              {isLoading && (
+              {debouncedIsLoading && (
                 <div className="catalyst-ld-1 h-16 w-16 absolute self-center">
                   <div className="catalyst-ld-inner"></div>
                 </div>
               )}
               <video
                 ref={vidRef}
-                onLoadStart={debouncedLoad}
-                onWaiting={debouncedLoad} // debounce(() => setIsLoading(true), 50)}
-                onPlaying={() => {
-                  debouncedLoad.cancel();
-                  setIsLoading(false);
-                }}
+                onLoadStart={() => setIsLoading(true)}
+                onWaiting={() => setIsLoading(true)}
+                onPlaying={() => setIsLoading(false)}
                 className={`min-h-0 min-w-0 rounded-lg z-10 h-auto w-full ${
                   isLocal && facesMember ? 'rm-uncanny-valley' : ''
                 } contain max-vid-height`} // TODO: switch to adaptive contain vs cover

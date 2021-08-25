@@ -164,13 +164,16 @@ const RoomWrapper = ({
       );
     };
     setTimeout(() => {
+      if (!mounted.current) return;
       setSlowLoading(true);
     }, 8000);
   }, []);
 
   useEffect(() => {
-    if (!mainVid) setMainVid(members[0]?.sid);
-    resizeWrapper();
+    if (mounted.current) {
+      if (!mainVid) setMainVid(members[0]?.sid);
+      resizeWrapper();
+    }
   }, [members, screens, chatOpen, fsHandle.active, speakerMode]);
 
   if (members.length === 0 || error || !room || connecting) {
@@ -227,7 +230,8 @@ const RoomWrapper = ({
         if (!sharedScreens.includes(sharedScreen)) {
           sharedScreens = [...sharedScreens, sharedScreen];
           if (mainVid !== sharedScreen.sid && sharedScreens.length != screens) {
-            setMainVid(sharedScreen.sid);
+            if (mounted.current) 
+              setMainVid(sharedScreen.sid);
             // setSpeakerMode(true);
           }
         }
@@ -235,12 +239,14 @@ const RoomWrapper = ({
     });
   });
   if (sharedScreens.length != screens) {
-    setNumScreens(sharedScreens.length);
-    if (
-      !members.find(m => m.sid === mainVid) &&
-      !sharedScreens.find(s => s.sid === mainVid)
-    ) {
-      setMainVid(members[0].sid);
+    if (mounted.current) {
+      setNumScreens(sharedScreens.length);
+      if (
+        !members.find(m => m.sid === mainVid) &&
+        !sharedScreens.find(s => s.sid === mainVid)
+      ) {
+        setMainVid(members[0].sid);
+      }
     }
   }
 
