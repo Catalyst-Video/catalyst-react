@@ -85,6 +85,7 @@
     "postcss-nested": "^5.0.5",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
+    "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-postcss": "^4.0.0",
     "size-limit": "^4.10.1",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2",

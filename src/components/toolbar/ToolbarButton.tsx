@@ -37,6 +37,8 @@ import 'tippy.js/dist/tippy.css';
 import { useRef } from 'react';
 import { SUPPORT_URL } from '../../utils/globals';
 import { isMobile } from 'react-device-detect';
+// import { audioTest } from '../../assets/sounds/audio-test.mp3'
+
 
 const ToolbarButton = React.memo(
   ({
@@ -75,6 +77,7 @@ const ToolbarButton = React.memo(
   }) => {
     const [deviceSelectEnabled, setDeviceSelectEnabled] = useState(false);
     const selectRef = useRef<HTMLButtonElement>(null);
+    const audioTestRef = useRef<HTMLAudioElement>(null);
 
     const handleOnIpDeviceClick = (id: CatalystDev) => {
       if (onIpDeviceClick) {
@@ -128,86 +131,104 @@ const ToolbarButton = React.memo(
                     className="text-primary font-semibold"
                     target="_blank"
                     rel="noreferrer"
-                    href={cstmSupportUrl && cstmSupportUrl?.length > 0 ? cstmSupportUrl : SUPPORT_URL}
+                    href={
+                      cstmSupportUrl && cstmSupportUrl?.length > 0
+                        ? cstmSupportUrl
+                        : SUPPORT_URL
+                    }
                   >
                     contact support
                   </a>
                 </span>
               </div>
-            ) : 
-              inputDevices?.length !==
-              0  && (
-              <div>
-                <ul
-                  className="font-sans list-none m-0 p-0" //style={popoverStyles}
-                >
-                  {outputDevices && outputDevices.length > 0 && (
-                    <>
-                      <li
-                        key={'input-row'}
-                        className="flex items-center text-xs text-quinary  font-semibold p-2 border-white  border-b border-opacity-20 whitespace-nowrap "
-                      >
-                        {type} Output
-                      </li>
-                      {outputDevices?.map((id, i) => {
-                        // TODO: add prop to allow for enabling showing device ids
-                        let idLabel = id.label.includes('(')
-                          ? id.label.substring(0, id.label.indexOf('('))
-                          : id.label;
-                        return (
-                          <li
-                            key={i}
-                            className="flex items-center text-xs text-quinary  p-2 cursor-pointer whitespace-nowrap"
-                            onClick={() => handleOnOpDeviceClick(id)}
-                          >
-                            {id.label === selectedOpDevice?.label ? (
-                              <FontAwesomeIcon
-                                icon={faCheckCircle}
-                                className="mr-1 text-primary "
-                              />
-                            ) : (
-                              <FontAwesomeIcon
-                                icon={faCircle}
-                                className="mr-1 "
-                              />
-                            )}
-                            {idLabel}
-                          </li>
-                        );
-                      })}
-                    </>
-                  )}
-                  <li
-                    key={'input-row'}
-                    className="flex items-center text-xs text-quinary  font-semibold p-2 border-white  border-b border-opacity-20 whitespace-nowrap"
+            ) : (
+              inputDevices?.length !== 0 && (
+                <div>
+                  <ul
+                    className="font-sans list-none m-0 p-0" //style={popoverStyles}
                   >
-                    {type} Input
-                  </li>
-                  {inputDevices?.map((id, i) => {
-                    // TODO: add prop to allow for enabling showing device ids
-                    let idLabel = id.label.includes('(')
-                      ? id.label.substring(0, id.label.indexOf('('))
-                      : id.label;
-                    return (
-                      <li
-                        key={i}
-                        className="flex items-center text-xs text-quinary  p-2 whitespace-nowrap cursor-pointer"
-                        onClick={() => handleOnIpDeviceClick(id)}
-                      >
-                        {id.label === selectedIpDevice?.label ? (
-                          <FontAwesomeIcon
-                            icon={faCheckCircle}
-                            className="mr-1 text-primary"
-                          />
-                        ) : (
-                          <FontAwesomeIcon icon={faCircle} className="mr-1 " />
-                        )}
-                        {idLabel}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
+                    {outputDevices && outputDevices.length > 0 && (
+                      <>
+                        <li
+                          key={'input-row'}
+                          className="flex items-center text-xs text-quinary  font-semibold p-2 border-white  border-b border-opacity-20 whitespace-nowrap "
+                        >
+                          {type} Output
+                        </li>
+                        {outputDevices?.map((id, i) => {
+                          // TODO: add prop to allow for enabling showing device ids
+                          let idLabel = id.label.includes('(')
+                            ? id.label.substring(0, id.label.indexOf('('))
+                            : id.label;
+                          return (
+                            <li
+                              key={i}
+                              className="flex items-center text-xs text-quinary  p-2 cursor-pointer whitespace-nowrap"
+                              onClick={() => handleOnOpDeviceClick(id)}
+                            >
+                              {id.label === selectedOpDevice?.label ? (
+                                <FontAwesomeIcon
+                                  icon={faCheckCircle}
+                                  className="mr-1 text-primary "
+                                />
+                              ) : (
+                                <FontAwesomeIcon
+                                  icon={faCircle}
+                                  className="mr-1 "
+                                />
+                              )}
+                              {idLabel}
+                            </li>
+                          );
+                        })}
+                      </>
+                    )}
+                    <li
+                      key={'input-row'}
+                      className="flex items-center text-xs text-quinary  font-semibold p-2 border-white border-b border-opacity-20 whitespace-nowrap"
+                    >
+                      {type} Input
+                    </li>
+                    {inputDevices?.map((id, i) => {
+                      // TODO: add prop to allow for enabling showing device ids
+                      let idLabel = id.label.includes('(')
+                        ? id.label.substring(0, id.label.indexOf('('))
+                        : id.label;
+                      return (
+                        <li
+                          key={i}
+                          className="flex items-center text-xs text-quinary  p-2 whitespace-nowrap cursor-pointer"
+                          onClick={() => handleOnIpDeviceClick(id)}
+                        >
+                          {id.label === selectedIpDevice?.label ? (
+                            <FontAwesomeIcon
+                              icon={faCheckCircle}
+                              className="mr-1 text-primary"
+                            />
+                          ) : (
+                            <FontAwesomeIcon
+                              icon={faCircle}
+                              className="mr-1 "
+                            />
+                          )}
+                          {idLabel}
+                        </li>
+                      );
+                    })}
+                    {type?.toLowerCase() === 'audio' && (
+                      <button onClick={() => audioTestRef.current?.play()}>
+                        Test Audio Output
+                        <audio
+                          ref={audioTestRef}
+                          //src={audioTest} //{require('../../assets/sounds/audio-test.mp3')}
+                        >
+                            <source src="https://assets.coderrocketfuel.com/pomodoro-times-up.mp3"></source>
+                        </audio>
+                      </button>
+                    )}
+                  </ul>
+                </div>
+              )
             )
           ) : null
         }

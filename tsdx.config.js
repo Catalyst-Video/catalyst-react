@@ -2,7 +2,7 @@ const postcss = require('rollup-plugin-postcss');
 const strip = require('@rollup/plugin-strip');
 // Not transpiled with TypeScript or Babel, so use plain Es6/Node.js
 const replace = require('@rollup/plugin-replace');
-// const url = require('@rollup/plugin-url');
+// const url = require('@ rollup/plugin-url');
 // const copy = require('rollup-plugin-copy');
 
 module.exports = {
@@ -22,9 +22,9 @@ module.exports = {
       }),
       strip({
         labels: ['unittest'],
-      })
+      }),
       // TODO: necessary for audio files
-      //  url({
+      // url({
       //   include: [
       //     '**/*.svg',
       //     '**/*.png',
@@ -34,12 +34,13 @@ module.exports = {
       //     '**/*.mp3',
       //   ],
       //   destDir: 'dist/assets',
+      //   limit: 0,
       // }),
       // copy({
-      //   targets: [{ src: 'src/assets/sound', dest: 'dist/assets' }],
+      //   targets: [{ src: 'src/assets/sounds', dest: 'dist/assets' }],
       //   copyOnce: true,
       //   verbose: true,
-      // }),
+      // })
     );
     config.plugins = config.plugins.map(p =>
       p.name === 'replace'

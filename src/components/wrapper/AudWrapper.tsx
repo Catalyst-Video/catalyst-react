@@ -41,10 +41,7 @@ const AudWrapper = React.memo(
     useEffect(() => {
       // console.log('Track:', track);
       // console.log('Sink Set:', sinkId);
-      if (isLocal) {
-        // don't play own audio
-        return;
-      }
+      if (isLocal) return;
       audioEl.current = track.attach();
       if (track.sid) {
         audioEl.current.setAttribute('data-audio-track-id', track.sid);
