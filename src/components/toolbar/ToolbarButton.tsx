@@ -218,7 +218,7 @@ const ToolbarButton = React.memo(
                     })}
                     {type?.toLowerCase() === 'audio' && (
                       <button
-                        className="flex items-center text-xs text-quinary p-2 mt-1 w-full whitespace-nowrap border-white border-t border-opacity-20 "
+                        className="flex items-center text-xs text-quinary p-2 mt-1 w-full whitespace-nowrap border-white border-t border-opacity-20 focus:outline-none focus:border-0 focus:ring-1 focus:ring-primary"
                         onClick={() => audioTestRef.current?.play()}
                       >
                         <FontAwesomeIcon
