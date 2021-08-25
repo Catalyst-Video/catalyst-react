@@ -27,6 +27,7 @@ import {
   faCheckCircle,
   faChevronDown,
   faChevronUp,
+  faVolumeUp,
 } from '@fortawesome/free-solid-svg-icons';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -37,7 +38,6 @@ import 'tippy.js/dist/tippy.css';
 import { useRef } from 'react';
 import { SUPPORT_URL } from '../../utils/globals';
 import { isMobile } from 'react-device-detect';
-// import { audioTest } from '../../assets/sounds/audio-test.mp3'
 
 
 const ToolbarButton = React.memo(
@@ -77,6 +77,7 @@ const ToolbarButton = React.memo(
   }) => {
     const [deviceSelectEnabled, setDeviceSelectEnabled] = useState(false);
     const selectRef = useRef<HTMLButtonElement>(null);
+    const [audioTestPlaying, setAudioTestPlaying] = useState(false);
     const audioTestRef = useRef<HTMLAudioElement>(null);
 
     const handleOnIpDeviceClick = (id: CatalystDev) => {
@@ -151,7 +152,7 @@ const ToolbarButton = React.memo(
                       <>
                         <li
                           key={'input-row'}
-                          className="flex items-center text-xs text-quinary  font-semibold p-2 border-white  border-b border-opacity-20 whitespace-nowrap "
+                          className="flex items-center text-xs text-quinary font-semibold p-2 border-white border-b border-opacity-20 whitespace-nowrap "
                         >
                           {type} Output
                         </li>
@@ -163,7 +164,7 @@ const ToolbarButton = React.memo(
                           return (
                             <li
                               key={i}
-                              className="flex items-center text-xs text-quinary  p-2 cursor-pointer whitespace-nowrap"
+                              className="flex items-center text-xs text-quinary px-2 py-1 cursor-pointer whitespace-nowrap"
                               onClick={() => handleOnOpDeviceClick(id)}
                             >
                               {id.label === selectedOpDevice?.label ? (
@@ -185,7 +186,7 @@ const ToolbarButton = React.memo(
                     )}
                     <li
                       key={'input-row'}
-                      className="flex items-center text-xs text-quinary  font-semibold p-2 border-white border-b border-opacity-20 whitespace-nowrap"
+                      className="flex items-center text-xs text-quinary font-semibold p-2 border-white border-b border-opacity-20 whitespace-nowrap"
                     >
                       {type} Input
                     </li>
@@ -197,7 +198,7 @@ const ToolbarButton = React.memo(
                       return (
                         <li
                           key={i}
-                          className="flex items-center text-xs text-quinary  p-2 whitespace-nowrap cursor-pointer"
+                          className="flex items-center text-xs text-quinary px-2 py-1 whitespace-nowrap cursor-pointer"
                           onClick={() => handleOnIpDeviceClick(id)}
                         >
                           {id.label === selectedIpDevice?.label ? (
@@ -216,13 +217,28 @@ const ToolbarButton = React.memo(
                       );
                     })}
                     {type?.toLowerCase() === 'audio' && (
-                      <button onClick={() => audioTestRef.current?.play()}>
-                        Test Audio Output
+                      <button
+                        className="flex items-center text-xs text-quinary p-2 mt-1 w-full whitespace-nowrap border-white border-t border-opacity-20 "
+                        onClick={() => audioTestRef.current?.play()}
+                      >
+                        <FontAwesomeIcon
+                          icon={faVolumeUp}
+                          className={`mr-1 ${
+                            audioTestPlaying ? 'text-primary' : 'text-quinary'
+                          }`}
+                        />
+                        {audioTestPlaying ? (
+                          <> Testing {type}...</>
+                        ) : (
+                          <> Test {type} Output</>
+                        )}
                         <audio
+                          onPlay={() => setAudioTestPlaying(true)}
+                          onEnded={() => setAudioTestPlaying(false)}
                           ref={audioTestRef}
                           //src={audioTest} //{require('../../assets/sounds/audio-test.mp3')}
                         >
-                            <source src="https://assets.coderrocketfuel.com/pomodoro-times-up.mp3"></source>
+                          <source src="https://github.com/Catalyst-Video/catalyst-react/blob/master/src/assets/sounds/audio-test.mp3?raw=true"></source>
                         </audio>
                       </button>
                     )}

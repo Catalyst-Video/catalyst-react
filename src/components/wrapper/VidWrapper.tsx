@@ -37,6 +37,8 @@ const VidWrapper = React.memo(
   }) => {
           const vidRef = useRef<HTMLVideoElement>(null);
           const [isLoading, setIsLoading] = useState(false);
+          const mounted = useRef(true);
+
 
           useEffect(() => {
             const vidEl = vidRef.current;
@@ -46,6 +48,7 @@ const VidWrapper = React.memo(
             vidEl.muted = true;
             track.attach(vidEl);
             return () => {
+              mounted.current = false;
               track.detach(vidEl);
             };
           }, [track, vidRef]);
@@ -53,9 +56,11 @@ const VidWrapper = React.memo(
           const facesMember =
             track.mediaStreamTrack?.getSettings().facingMode !== 'environment';
 
-          const debouncedLoad = debounce(() => setIsLoading(true), 250, {
-            isImmediate: false,
-          });
+    const debouncedLoad = debounce(() =>
+    {
+      if (mounted.current) return;
+      setIsLoading(true)
+    }, 250, { isImmediate: false, });
 
           return (
             <>
