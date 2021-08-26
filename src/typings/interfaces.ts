@@ -31,8 +31,8 @@ export interface CatalystChatProps {
   name?: string;
   theme?: CatalystTheme | string;
   fade?: number;
-  audioOnDefault?: boolean;
-  videoOnDefault?: boolean;
+  audioOffDefault?: boolean;
+  videoOffDefault?: boolean;
   simulcast?: boolean;
   disableChat?: boolean;
   disableSetupView?: boolean;

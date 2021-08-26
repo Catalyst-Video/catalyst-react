@@ -43,8 +43,8 @@ const CatalystChat = ({
   name,
   theme,
   fade,
-  audioOnDefault,
-  videoOnDefault,
+  audioOffDefault,
+  videoOffDefault,
   simulcast,
   disableChat,
   disableSetupView,
@@ -65,8 +65,8 @@ const CatalystChat = ({
   const [ready, setReady] = useState(disableSetupView ?? false);
   const [userName, setUserName] = useState(name ?? genRandomName());
   const [cookies, setCookie] = useCookies(['PERSISTENT_CLIENT_ID']);
-  const [audioOn, setAudioOn] = useState(audioOnDefault ?? true);
-  const [videoOn, setVideoOn] = useState(videoOnDefault ?? true);
+  const [audioOn, setAudioOn] = useState(audioOffDefault ? false : true);
+  const [videoOn, setVideoOn] = useState(videoOffDefault ? false : true);
   const [token, setToken] = useState('');
   const mounted = useRef(true);
 

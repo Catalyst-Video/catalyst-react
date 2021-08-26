@@ -18,7 +18,7 @@ const GeneralTest = () => {
     <CatalystChat
       room="testingGround"
       appId={process.env.REACT_APP_APP_ID ?? 'REAL_APP_ID_HERE'}
-      audioOnDefault={false}
+      audioOffDefault
       disableSetupView
       onJoinCall={() => console.log('onJoinCall')}
       onMemberJoin={() => console.log('onmemjoin')}
