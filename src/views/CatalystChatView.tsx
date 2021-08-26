@@ -164,7 +164,7 @@ const CatalystChatView = ({
   useEffect(() => {
     if (token && token.length > 0 && token !== 'INVALID') {
       roomState.connect('wss://infra.catalyst.chat', token, meta).then(room => {
-          console.log('connected to room');
+          // console.log('connected to room');
           if (!mounted.current) return;
           if (!room) return; 
           if (onConnected) onConnected(room);
