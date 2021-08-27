@@ -39,18 +39,21 @@ import {
   TrackPublication,
   VideoPresets,
 } from 'livekit-client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import useMember from '../../hooks/useMember';
 import { isMobile } from 'react-device-detect';
 import AudioDeviceBtn from './AudioDeviceBtn';
 import ToolbarButton from './ToolbarButton';
 import VidDeviceBtn from './VidDeviceBtn';
 import useLocalStorage from '../../hooks/useLocalStorage';
+import { ChatMessage } from '../../typings/interfaces';
+import Tippy from '@tippyjs/react';
 
 const Toolbar = ({
   room,
   onLeave,
   setSpeakerMode,
+  chatMessages,
   setChatMessages,
   updateOutputDevice,
   outputDevice,
@@ -62,13 +65,14 @@ const Toolbar = ({
   room: Room;
   onLeave?: (room: Room) => void;
   setSpeakerMode: Function;
+  chatMessages: ChatMessage[];
   setChatMessages: Function;
   updateOutputDevice: (device: MediaDeviceInfo) => void;
   outputDevice?: MediaDeviceInfo;
   chatOpen: boolean;
   setChatOpen: Function;
   disableChat?: boolean;
-    cstmSupportUrl?: string;
+  cstmSupportUrl?: string;
 }) => {
   const { publications, isMuted, unpublishTrack } = useMember(
     room.localParticipant
@@ -80,6 +84,8 @@ const Toolbar = ({
   const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
   const [audDId, setAudDId] = useLocalStorage('PREFERRED_AUDIO_DEVICE_ID', 'default');
   const [vidDId, setVidDId] = useLocalStorage('PREFERRED_VIDEO_DEVICE_ID', 'default');
+  const [showChatSent, setShowChatSent] = useState<boolean>(false);
+  const chatBtnRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setAudioPub(publications.find(p => p.kind === Track.Kind.Audio));
@@ -94,6 +100,15 @@ const Toolbar = ({
       )
     );
   }, [publications]);
+
+  useEffect(() => {
+    if (chatMessages.length > 0 && chatMessages[chatMessages.length - 1].sender !== room.localParticipant) {
+      setShowChatSent(true);
+      setTimeout(() => {
+        setShowChatSent(false);
+      }, 5000)
+    }
+  }, [chatMessages]);
 
   useEffect(() => {
     if (!audioDevice || !videoDevice) {
@@ -317,17 +332,34 @@ const Toolbar = ({
       )}
       {/* Chat Button */}
       {!disableChat && (
-        <ToolbarButton
-          type="chat"
-          tooltip="Toggle Chat"
-          icon={faCommentAlt}
-          bgColor={
-            chatOpen ? `bg-primary` : 'bg-tertiary hover:bg-quaternary  '
+        <Tippy
+          visible={showChatSent}
+          content={
+            <div className='text-xs'>
+              <strong>
+                {chatMessages[chatMessages.length - 1]?.sender?.identity}:
+              </strong>
+              <br />
+              {chatMessages[chatMessages.length - 1]?.text}
+            </div>
           }
-          onClick={() => {
-            setChatOpen(chatOpen => !chatOpen);
-          }}
-        />
+          theme="catalyst"
+          triggerTarget={chatBtnRef.current}
+        >
+          <div ref={chatBtnRef} className="inline-block relative">
+            <ToolbarButton
+              type="chat"
+              tooltip="Toggle Chat"
+              icon={faCommentAlt}
+              bgColor={
+                chatOpen ? `bg-primary` : 'bg-tertiary hover:bg-quaternary  '
+              }
+              onClick={() => {
+                setChatOpen(chatOpen => !chatOpen);
+              }}
+            />
+          </div>
+        </Tippy>
       )}
       {/* End Call Button */}
       {onLeave && (

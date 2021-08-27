@@ -442,6 +442,7 @@ const CatalystChatView = ({
                         room={roomState.room}
                         onLeave={onLeave}
                         setSpeakerMode={setSpeakerMode}
+                        chatMessages={chatMessages}
                         setChatMessages={setChatMessages}
                         updateOutputDevice={updateOutputDevice}
                         outputDevice={outputDevice}

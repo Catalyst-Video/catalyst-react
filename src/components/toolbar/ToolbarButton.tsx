@@ -42,9 +42,11 @@ import { isMobile } from 'react-device-detect';
 
 const ToolbarButton = React.memo(
   ({
+    ref,
     type,
     tooltip,
     disabled,
+    disabledTooltip,
     onClick,
     icon,
     inputDevices,
@@ -58,9 +60,11 @@ const ToolbarButton = React.memo(
     chatOpen,
     cstmSupportUrl,
   }: {
+    ref?: RefObject<HTMLButtonElement>;
     type?: string;
     tooltip?: string;
     disabled?: boolean;
+    disabledTooltip?: boolean;
     onClick?: () => void;
     icon?: IconProp;
     className?: string;
@@ -253,7 +257,7 @@ const ToolbarButton = React.memo(
           <Tippy
             content={tooltip}
             theme="catalyst"
-            disabled={deviceSelectEnabled}
+            disabled={deviceSelectEnabled || disabledTooltip}
             zIndex={40}
           >
             <button
@@ -278,7 +282,7 @@ const ToolbarButton = React.memo(
           {inputDevices && inputDevices.length > 0 && (
             <button
               disabled={disabled}
-              ref={selectRef}
+              ref={ref ?? selectRef}
               className={`absolute z-10 -right-1 -bottom-1 ${
                 bgColor ? bgColor : 'bg-tertiary hover:bg-quaternary '
               }  rounded-full border-4 border-secondary h-6 w-6 flex justify-center items-center focus:outline-none`}
