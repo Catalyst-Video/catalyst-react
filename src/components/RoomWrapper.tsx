@@ -39,6 +39,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
 import useEventListener from '../hooks/useEventListener';
 import useIsMounted from '../hooks/useIsMounted';
+import useTimeout from '../hooks/useTimeout';
 
 const RoomWrapper = ({
   roomState,
@@ -141,14 +142,10 @@ const RoomWrapper = ({
 
   useEventListener('load', resizeWrapper);
   useEventListener('resize', resizeWrapper);
-
-  useEffect(() => {
-
-    setTimeout(() => {
-      if (!isMounted()) return;
-      setSlowLoading(true);
-    }, 8000);
-  }, []);
+  useTimeout(() => {
+    if (!isMounted()) return;
+    setSlowLoading(true);
+  }, 8000);
 
   useEffect(() => {
     if (isMounted()) {
