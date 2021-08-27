@@ -24,6 +24,7 @@ You can contact us for more details at support@catalyst.chat. */
 
 import { faVideo, faVideoSlash } from '@fortawesome/free-solid-svg-icons';
 import React, { useEffect, useRef, useState } from 'react';
+import useIsMounted from '../../hooks/useIsMounted';
 import { CatalystDev } from '../../typings/interfaces';
 import ToolbarButton from './ToolbarButton';
 
@@ -42,12 +43,12 @@ const VidDeviceBtn = ({
 }) => {
   const [sources, setSources] = useState<MediaDeviceInfo[]>([]);
   const [devices, setDevices] = useState<CatalystDev[]>([]);
-  const mounted = useRef(true);
+  const isMounted = useIsMounted();
   // const vidBtnRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     navigator.mediaDevices.enumerateDevices().then(devices => {
-      if (!mounted.current) return;
+      if (!isMounted()) return;
       const videoDevices = devices.filter(
         id => id.kind === 'videoinput' && id.deviceId
       );
@@ -59,9 +60,6 @@ const VidDeviceBtn = ({
       );
       return devices;
     });
-    return () => {
-      mounted.current = false;
-    };
   }, [isEnabled]);
 
   const handleDevice = (id: CatalystDev) => {

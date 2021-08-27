@@ -53,6 +53,10 @@ import 'tippy.js/dist/tippy.css';
 import { contactSupport } from '../utils/general';
 import { isMobile } from 'react-device-detect';
 import { SUPPORT_EMAIL } from '../utils/globals';
+import useReadLocalStorage from '../hooks/useReadLocalStorage';
+import useLocalStorage from '../hooks/useLocalStorage';
+import useEventListener from '../hooks/useEventListener';
+import useIsMounted from '../hooks/useIsMounted';
 
 const CatalystChatView = ({
   token,
@@ -93,12 +97,15 @@ const CatalystChatView = ({
   const [chatOpen, setChatOpen] = useState(false);
   const [outputDevice, setOutputDevice] = useState<MediaDeviceInfo>();
   const roomState = useRoom();
+  const audDId = useReadLocalStorage('PREFERRED_AUDIO_DEVICE_ID');
+  const vidDId = useReadLocalStorage('PREFERRED_VIDEO_DEVICE_ID');
+  const [outDId, setOutDId] = useLocalStorage('PREFERRED_OUTPUT_DEVICE_ID', 'default');
 
   const toolbarRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const videoChatRef = useRef<HTMLDivElement>(null);
   const decoder = new TextDecoder();
-  const mounted = useRef(true);
+  const isMounted = useIsMounted();
 
   const onConnected = async room => {
     if (onJoinCall) onJoinCall();
@@ -113,7 +120,7 @@ const CatalystChatView = ({
     room.on(
       RoomEvent.DataReceived,
       (data: Uint8Array, member: Participant, kind: DataPacket_Kind) => {
-        if (!mounted.current) return;
+        if (!isMounted()) return;
         const strData = decoder.decode(data);
         // console.log(strData);
         const parsedData = JSON.parse(strData);
@@ -133,8 +140,6 @@ const CatalystChatView = ({
     );
     bumpMemberSize(room);
     // console.log(room);
-    const audDId = localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID');
-    const vidDId = localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID');
     const tracks = await createLocalTracks({
       audio: meta.audioEnabled ? (audDId ? { deviceId: audDId } : true) : false,
       video: meta.videoEnabled ? (vidDId ? { deviceId: vidDId } : true) : false,
@@ -165,7 +170,7 @@ const CatalystChatView = ({
     if (token && token.length > 0 && token !== 'INVALID') {
       roomState.connect('wss://infra.catalyst.chat', token, meta).then(room => {
           // console.log('connected to room');
-          if (!mounted.current) return;
+          if (!isMounted()) return;
           if (!room) return; 
           if (onConnected) onConnected(room);
           return () => {
@@ -189,7 +194,7 @@ const CatalystChatView = ({
 
   const updateOutputDevice = (device: MediaDeviceInfo) => {
     setOutputDevice(device);
-    localStorage.setItem('PREFERRED_OUTPUT_DEVICE_ID', device.deviceId);
+   setOutDId(device.deviceId);
   };
 
   // roomState.audioTracks.map(track => console.log(track));
@@ -198,7 +203,7 @@ const CatalystChatView = ({
   useEffect(() => {
     if (fade > 0) {
       const delayCheck = () => {
-        if (!mounted.current) return;
+        if (!isMounted()) return;
         const hClasses = headerRef.current?.classList;
         const tClasses = toolbarRef.current?.classList;
         if (hClasses && tClasses) {
@@ -221,7 +226,7 @@ const CatalystChatView = ({
       };
 
       const handleMouse = () => {
-        if (!mounted.current) return;
+        if (!isMounted()) return;
         const hClasses = headerRef.current?.classList;
         const tClasses = toolbarRef.current?.classList;
         if (hClasses && tClasses) {
@@ -239,19 +244,14 @@ const CatalystChatView = ({
       var timedelay = 1;
       var isHidden = false;
       const debounceHandleMouse = debounce(() => {
-        if (!mounted.current) return;
+        if (!isMounted()) return;
         handleMouse();
       }, 25);
-      videoChatRef.current?.addEventListener('mousemove', debounceHandleMouse);
+      // useEventListener('mousemove', debounceHandleMouse, videoChatRef);
       var _delay = setInterval(delayCheck, fade);
 
       () => {
         clearInterval(_delay);
-        videoChatRef.current?.removeEventListener(
-          'mousemove',
-          debounceHandleMouse
-        );
-        mounted.current = false;
         // console.log('disconnecting');
         roomState?.room?.disconnect();
       };
@@ -259,22 +259,24 @@ const CatalystChatView = ({
     // set default output device
     if (!outputDevice) {
       navigator.mediaDevices.enumerateDevices().then(devices => {
-        if (!mounted.current) return;
+        if (!isMounted()) return;
         const outputDevices = devices.filter(
           id => id.kind === 'audiooutput' && id.deviceId
         );
         let outDevice: MediaDeviceInfo | undefined;
-        if (localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')) {
+        if (outDId) {
           outDevice = outputDevices.find(
             d =>
-              d.deviceId === localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')
+              d.deviceId === outDId
           );
         }
         if (!outDevice) {
           outDevice = outputDevices[0];
         }
         setOutputDevice(outDevice);
-        return outDevice;
+        if (outDId !== outDevice?.deviceId) {
+          setOutDId(outDevice.deviceId)
+        }
       });
     }
   }, []);

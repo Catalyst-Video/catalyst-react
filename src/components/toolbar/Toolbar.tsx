@@ -45,6 +45,7 @@ import { isMobile } from 'react-device-detect';
 import AudioDeviceBtn from './AudioDeviceBtn';
 import ToolbarButton from './ToolbarButton';
 import VidDeviceBtn from './VidDeviceBtn';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 const Toolbar = ({
   room,
@@ -83,6 +84,8 @@ const Toolbar = ({
   const [screen, setScreenPub] = useState<TrackPublication>();
   const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
   const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
+  const [audDId, setAudDId] = useLocalStorage('PREFERRED_AUDIO_DEVICE_ID', 'default');
+  const [vidDId, setVidDId] = useLocalStorage('PREFERRED_VIDEO_DEVICE_ID', 'default');
 
   useEffect(() => {
     setAudioPub(publications.find(p => p.kind === Track.Kind.Audio));
@@ -108,11 +111,11 @@ const Toolbar = ({
               id => id.kind === 'audioinput' && id.deviceId
             );
             let defaultAudDevice: MediaDeviceInfo | undefined;
-            if (localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')) {
+            if (audDId) {
               defaultAudDevice = audioDevices.find(
                 d =>
                   d.deviceId ===
-                  localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')
+                  audDId
               );
             }
             if (!defaultAudDevice) {
@@ -130,11 +133,11 @@ const Toolbar = ({
               id => id.kind === 'videoinput' && id.deviceId
             );
             let defaultVidDevice: MediaDeviceInfo | undefined;
-            if (localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')) {
+            if (vidDId) {
               defaultVidDevice = videoDevices.find(
                 d =>
                   d.deviceId ===
-                  localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')
+                  vidDId
               );
             }
             if (!defaultVidDevice) {
@@ -159,9 +162,9 @@ const Toolbar = ({
       audioDevice &&
       audioDevice.deviceId !==
         audio?.audioTrack?.mediaStreamTrack.getSettings().deviceId &&
-      audioDevice.deviceId !== localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')
+      audioDevice.deviceId !== audDId
     ) {
-      localStorage.setItem('PREFERRED_AUDIO_DEVICE_ID', audioDevice.deviceId);
+      setAudDId(audioDevice.deviceId);
       createLocalAudioTrack({ deviceId: audioDevice.deviceId })
         .then(track => {
           if (audio) unpublishTrack(audio.track as LocalAudioTrack);
@@ -179,9 +182,9 @@ const Toolbar = ({
       videoDevice.deviceId !==
         video?.videoTrack?.mediaStreamTrack.getSettings() &&
       videoDevice &&
-      videoDevice.deviceId !== localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')
+      videoDevice.deviceId !== vidDId
     ) {
-      localStorage.setItem('PREFERRED_VIDEO_DEVICE_ID', videoDevice.deviceId);
+      setVidDId(videoDevice.deviceId);
       createLocalVideoTrack({ deviceId: videoDevice.deviceId })
         .then((track: LocalVideoTrack) => {
           if (video) unpublishTrack(video.track as LocalVideoTrack);

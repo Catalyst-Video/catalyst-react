@@ -34,6 +34,8 @@ import VidWrapper from '../components/wrapper/VidWrapper';
 import AudioDeviceBtn from '../components/toolbar/AudioDeviceBtn';
 import VidDeviceBtn from '../components/toolbar/VidDeviceBtn';
 import HeaderImg from '../components/header/HeaderImg';
+import useLocalStorage from '../hooks/useLocalStorage';
+import useIsMounted from '../hooks/useIsMounted';
 
 const SetupView = ({
   meta,
@@ -64,8 +66,11 @@ const SetupView = ({
   const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
   const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
   const [outputDevice, setOutputDevice] = useState<MediaDeviceInfo>();
+  const [audDId, setAudDId] = useLocalStorage('PREFERRED_AUDIO_DEVICE_ID', 'default');
+  const [vidDId, setVidDId] = useLocalStorage('PREFERRED_VIDEO_DEVICE_ID', 'default');
+  const [outDId, setOutDId] = useLocalStorage('PREFERRED_OUTPUT_DEVICE_ID', 'default');
   const videoRef = useRef<HTMLVideoElement>(null);
-  const mounted = useRef(true);
+  const isMounted = useIsMounted();
 
   const [gradient] = useState(
     `linear-gradient(217deg, hsla(356, 90%, 64%, 0.8), hsla(280, 78%, 69%, 0.8), hsla(191, 86%, 49%, 0.8))`
@@ -86,23 +91,20 @@ const SetupView = ({
   useEffect(() => {
     if ((!outputDevice || !audioDevice || !videoDevice) && localStorage) {
       navigator.mediaDevices.enumerateDevices().then(devices => {
-        if (!mounted.current) return;
+        if (!isMounted()) return;
         if (!outputDevice) {
           const outputDevices = devices.filter(
             id => id.kind === 'audiooutput' && id?.deviceId
           );
           let outDevice: MediaDeviceInfo | undefined
-          if (localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')) {
+          if (outDId) {
             outDevice = outputDevices.find(
-              d =>
-                d?.deviceId ===
-                localStorage.getItem('PREFERRED_OUTPUT_DEVICE_ID')
+              d => d?.deviceId === outDId
             );
           }
           if (!outDevice) {
             outDevice = outputDevices[0];
-            localStorage.setItem(
-              'PREFERRED_OUTPUT_DEVICE_ID',
+            setOutDId(
               outDevice?.deviceId
             );
           }
@@ -114,17 +116,14 @@ const SetupView = ({
             id => id.kind === 'audioinput' && id?.deviceId
           );
           let audDevice: MediaDeviceInfo | undefined;
-          if (localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')) {
+          if (audDId) {
             audDevice = audioDevices.find(
-              d =>
-                d?.deviceId ===
-                localStorage.getItem('PREFERRED_AUDIO_DEVICE_ID')
+              d => d?.deviceId === audDId
             );
           }
           if (!audDevice) {
             audDevice = audioDevices[0];
-            localStorage.setItem(
-              'PREFERRED_AUDIO_DEVICE_ID',
+            setAudDId(
               audDevice?.deviceId
             );
           }
@@ -136,24 +135,18 @@ const SetupView = ({
             id => id.kind === 'videoinput' && id?.deviceId
           );
           let vidDevice: MediaDeviceInfo | undefined;
-          if (localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')) {
+          if (vidDId) {
             vidDevice = videoDevices.find(
-              d =>
-                d?.deviceId ===
-                localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')
+              d => d?.deviceId === vidDId
             );
           }
           if (!vidDevice) {
             vidDevice = videoDevices.find(
-              d =>
-                d?.deviceId ===
+              d => d?.deviceId ===
                 videoTrack?.mediaStreamTrack.getSettings()?.deviceId
             );
-            if (vidDevice && !localStorage.getItem('PREFERRED_VIDEO_DEVICE_ID')) {
-                localStorage.setItem(
-                  'PREFERRED_VIDEO_DEVICE_ID',
-                  vidDevice?.deviceId
-                );
+            if (vidDevice && !vidDId) {
+                setVidDId( vidDevice?.deviceId);
             }
           }
           setVideoDevice(vidDevice);
@@ -163,23 +156,19 @@ const SetupView = ({
     }
     if (videoOn) {
       createLocalVideoTrack().then(track => {
-        if (!mounted.current) return;
+        if (!isMounted()) return;
         setVideoTrack(track);
         return track;
       });
     }
-    return () => {
-      mounted.current = false;
-    };
   }, []);
 
   useEffect(() => {
     if (audioDevice) {
       createLocalAudioTrack({ deviceId: audioDevice?.deviceId })
         .then(track => {
-          if (!mounted.current) return;
-          localStorage.setItem(
-            'PREFERRED_AUDIO_DEVICE_ID',
+          if (!isMounted()) return;
+          setAudDId(
             audioDevice?.deviceId
           );
           return track;
@@ -194,7 +183,7 @@ const SetupView = ({
     if (videoDevice) {
       createLocalVideoTrack({ deviceId: videoDevice?.deviceId })
         .then((track: LocalVideoTrack) => {
-          if (!mounted.current) return;
+          if (!isMounted()) return;
           setVideoTrack(track);
           return track;
         })
@@ -216,7 +205,7 @@ const SetupView = ({
         return;
       } else {
         setVideoDevice(device);
-        localStorage.setItem('PREFERRED_VIDEO_DEVICE_ID', device?.deviceId);
+        setVidDId(device?.deviceId);
       }
     }
   };
@@ -231,7 +220,7 @@ const SetupView = ({
         options.deviceId = videoDevice?.deviceId;
       }
       createLocalVideoTrack(options).then(track => {
-        if (!mounted.current) return;
+        if (!isMounted()) return;
         setVideoTrack(track);
         return track;
       });
@@ -240,7 +229,7 @@ const SetupView = ({
 
   const updateOutputDevice = (device: MediaDeviceInfo) => {
     setOutputDevice(device);
-    localStorage.setItem('PREFERRED_OUTPUT_DEVICE_ID', device?.deviceId);
+    setOutDId(device?.deviceId);
   };
 
   return (
@@ -313,7 +302,7 @@ const SetupView = ({
               id="setuproom-but"
               className={`rounded-b-xl cursor-pointer block outline-none border-0 font-bold text-md h-14 text-quinary  w-full focus:outline-none focus:border-0 bg-primary`}
               onClick={() => {
-                if (mounted.current) setReady(true);
+                if (isMounted()) setReady(true);
               }}
             >
               Join Call

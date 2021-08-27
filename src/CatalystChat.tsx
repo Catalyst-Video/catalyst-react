@@ -35,6 +35,7 @@ import SetupView from './views/SetupView';
 import CatalystChatView from './views/CatalystChatView';
 
 import ElementQueries from 'css-element-queries/src/ElementQueries';
+import useIsMounted from './hooks/useIsMounted';
 ElementQueries.listen();
 
 const CatalystChat = ({
@@ -68,14 +69,11 @@ const CatalystChat = ({
   const [audioOn, setAudioOn] = useState(audioOffDefault ? false : true);
   const [videoOn, setVideoOn] = useState(videoOffDefault ? false : true);
   const [token, setToken] = useState('');
-  const mounted = useRef(true);
+  const isMounted = useIsMounted();
 
   useEffect(() => {
     // set global theme
     setThemeColor(theme ?? THEMES.default);
-    () => {
-      mounted.current = false;
-    };
   }, []);
 
   useEffect(() => {
@@ -99,10 +97,10 @@ const CatalystChat = ({
         }
       )
         .then(response => {
-          if (!mounted.current) return;
+          if (!isMounted()) return;
           if (response.status === 200) {
             response.json().then((user: CatalystUserData) => {
-              if (!mounted.current) return;
+              if (!isMounted()) return;
               setToken(user.token);
               if (handleUserData) handleUserData(user);
               // console.log(user);

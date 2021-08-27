@@ -27,6 +27,7 @@ import {
   faMicrophoneSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import React, { useEffect, useRef, useState } from 'react';
+import useIsMounted from '../../hooks/useIsMounted';
 import { CatalystDev } from '../../typings/interfaces';
 import ToolbarButton from './ToolbarButton';
 
@@ -51,14 +52,14 @@ const AudioDeviceBtn = ({
   const [opSources, setOpSources] = useState<MediaDeviceInfo[]>([]);
   const [devices, setDevices] = useState<CatalystDev[]>([]);
   const [outputDevices, setOutputDevices] = useState<CatalystDev[]>([]);
-  const mounted = useRef(true);
+  const isMounted = useIsMounted();
   // const audBtnRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     navigator.mediaDevices
       .enumerateDevices()
       .then(devices => {
-        if (!mounted.current) return;
+        if (!isMounted()) return;
         const audioDevices = devices.filter(
           id => id.kind === 'audioinput' && id.deviceId
         );
@@ -82,9 +83,6 @@ const AudioDeviceBtn = ({
       .catch(err => {
         console.log(err);
       });
-    return () => {
-      mounted.current = false;
-    };
   }, [isMuted]);
 
   const handleIpDeviceClick = (id: CatalystDev) => {

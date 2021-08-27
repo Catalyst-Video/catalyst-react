@@ -37,6 +37,8 @@ import { useFullScreenHandle } from 'react-full-screen';
 import { DEFAULT_WELCOME_MESSAGE } from '../utils/globals';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
+import useEventListener from '../hooks/useEventListener';
+import useIsMounted from '../hooks/useIsMounted';
 
 const RoomWrapper = ({
   roomState,
@@ -80,10 +82,10 @@ const RoomWrapper = ({
     height: '0px',
   });
   const fsHandle = useFullScreenHandle();
-  const mounted = useRef(true);
+  const isMounted = useIsMounted();
 
   const resizeWrapper = () => {
-    if (!mounted.current) return;
+    if (!isMounted()) return;
     let margin = 4;
     let width = 0;
     let height = 0;
@@ -137,40 +139,19 @@ const RoomWrapper = ({
     else return increment;
   };
 
-  // const debouncedResize = debounce(() => {
-  //   if (!mounted.current) return;
-  //   resizeWrapper()
-  // }, 10);
+  useEventListener('load', resizeWrapper);
+  useEventListener('resize', resizeWrapper);
 
   useEffect(() => {
-    window.addEventListener(
-      'load',
-      () => {
-        resizeWrapper();
-        // window.onresize = debouncedResize;
-        window.onresize = resizeWrapper;
-      },
-      false
-    );
-    () => {
-      mounted.current = false;
-      window.removeEventListener(
-        'load',
-        () => {
-          resizeWrapper();
-          window.onresize = resizeWrapper;
-        },
-        false
-      );
-    };
+
     setTimeout(() => {
-      if (!mounted.current) return;
+      if (!isMounted()) return;
       setSlowLoading(true);
     }, 8000);
   }, []);
 
   useEffect(() => {
-    if (mounted.current) {
+    if (isMounted()) {
       if (!mainVid) setMainVid(members[0]?.sid);
       resizeWrapper();
     }
@@ -230,7 +211,7 @@ const RoomWrapper = ({
         if (!sharedScreens.includes(sharedScreen)) {
           sharedScreens = [...sharedScreens, sharedScreen];
           if (mainVid !== sharedScreen.sid && sharedScreens.length != screens) {
-            if (mounted.current) 
+            if (isMounted()) 
               setMainVid(sharedScreen.sid);
             // setSpeakerMode(true);
           }
@@ -239,7 +220,7 @@ const RoomWrapper = ({
     });
   });
   if (sharedScreens.length != screens) {
-    if (mounted.current) {
+    if (isMounted()) {
       setNumScreens(sharedScreens.length);
       if (
         !members.find(m => m.sid === mainVid) &&
