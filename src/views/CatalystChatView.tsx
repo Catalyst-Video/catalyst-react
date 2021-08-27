@@ -195,7 +195,7 @@ const CatalystChatView = ({
 
   const updateOutputDevice = (device: MediaDeviceInfo) => {
     setOutputDevice(device);
-   setOutDId(device.deviceId);
+   setOutDId(device?.deviceId);
   };
 
   // roomState.audioTracks.map(track => console.log(track));
@@ -268,21 +268,21 @@ const CatalystChatView = ({
       navigator.mediaDevices.enumerateDevices().then(devices => {
         if (!mounted.current) return;
         const outputDevices = devices.filter(
-          id => id.kind === 'audiooutput' && id.deviceId
+          id => id.kind === 'audiooutput' && id?.deviceId
         );
         let outDevice: MediaDeviceInfo | undefined;
         if (outDId) {
           outDevice = outputDevices.find(
             d =>
-              d.deviceId === outDId
+              d?.deviceId === outDId
           );
         }
         if (!outDevice) {
           outDevice = outputDevices[0];
         }
         setOutputDevice(outDevice);
-        if (outDId !== outDevice?.deviceId) {
-          setOutDId(outDevice.deviceId)
+        if (outDId !== outDevice?.deviceId && outDevice?.deviceId) {
+          setOutDId(outDevice?.deviceId);
         }
       });
     }
