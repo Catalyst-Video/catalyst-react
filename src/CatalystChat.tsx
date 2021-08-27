@@ -70,6 +70,7 @@ const CatalystChat = ({
   const [videoOn, setVideoOn] = useState(videoOffDefault ? false : true);
   const [token, setToken] = useState('');
   const isMounted = useIsMounted();
+  if (!handleComponentRefresh) handleComponentRefresh = () => {};
 
   useEffect(() => {
     // set global theme

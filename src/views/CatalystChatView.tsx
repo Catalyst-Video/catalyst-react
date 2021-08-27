@@ -139,10 +139,12 @@ const CatalystChatView = ({
     );
     bumpMemberSize(room);
     // console.log(room);
-    const tracks = await createLocalTracks({
+    if (meta.audioEnabled || meta.videoEnabled) {
+      const tracks = await createLocalTracks({
       audio: meta.audioEnabled ? (audDId ? { deviceId: audDId } : true) : false,
       video: meta.videoEnabled ? (vidDId ? { deviceId: vidDId } : true) : false,
-    });
+      });
+       
     // TODO: apply bg removal
   
     tracks.forEach(track => {
@@ -155,6 +157,8 @@ const CatalystChatView = ({
           : {}
       );
     });
+    }
+
   };
 
   useEffect(() => {

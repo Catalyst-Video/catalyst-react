@@ -27,7 +27,7 @@ import { AudioTrack, ConnectOptions, LocalParticipant, Participant, Room } from 
 export interface CatalystChatProps {
   room: string;
   appId: string;
-  handleComponentRefresh: () => void;
+  handleComponentRefresh?: () => void;
   name?: string;
   theme?: CatalystTheme | string;
   fade?: number;

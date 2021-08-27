@@ -104,9 +104,7 @@ const SetupView = ({
           }
           if (!outDevice) {
             outDevice = outputDevices[0];
-            setOutDId(
-              outDevice?.deviceId
-            );
+            setOutDId(outDevice?.deviceId);
           }
           setOutputDevice(outDevice);
         }
@@ -213,6 +211,7 @@ const SetupView = ({
   const toggleVideo = () => {
     if (videoTrack) {
       videoTrack.stop();
+      setVideoOn(false)
       setVideoTrack(undefined);
     } else {
       const options: CreateVideoTrackOptions = {};
@@ -222,6 +221,7 @@ const SetupView = ({
       createLocalVideoTrack(options).then(track => {
         if (!isMounted()) return;
         setVideoTrack(track);
+        setVideoOn(true);
         return track;
       });
     }
@@ -291,7 +291,7 @@ const SetupView = ({
                 cstmSupportUrl={cstmSupportUrl}
               />
               <VidDeviceBtn
-                isEnabled={videoTrack !== undefined}
+                isEnabled={videoTrack !== undefined && videoOn}
                 onClick={toggleVideo}
                 videoDevice={videoDevice}
                 onIpSelected={selectVideoDevice}
