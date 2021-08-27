@@ -49,9 +49,6 @@ import useLocalStorage from '../../hooks/useLocalStorage';
 
 const Toolbar = ({
   room,
-  enableScreenShare,
-  enableAudio,
-  enableVideo,
   onLeave,
   setSpeakerMode,
   setChatMessages,
@@ -63,9 +60,6 @@ const Toolbar = ({
   cstmSupportUrl,
 }: {
   room: Room;
-  enableScreenShare?: boolean;
-  enableAudio?: boolean;
-  enableVideo?: boolean;
   onLeave?: (room: Room) => void;
   setSpeakerMode: Function;
   setChatMessages: Function;

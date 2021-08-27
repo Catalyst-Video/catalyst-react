@@ -98,6 +98,8 @@ const MemberView = React.memo(({
     if (vidEnabled) vidPub?.setVideoQuality(quality ?? VideoQuality.HIGH);
   }, 3000);
 
+  console.log(vidPub?.track)
+
   return (
     <div className={`m-1 ${classes} cursor-pointer`}>
       <div
