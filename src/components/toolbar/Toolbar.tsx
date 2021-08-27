@@ -204,7 +204,7 @@ const Toolbar = ({
       setVidDId(videoDevice.deviceId);
       createLocalVideoTrack({ deviceId: videoDevice.deviceId })
         .then((track: LocalVideoTrack) => {
-          if (video) unpublishTrack(video.track as LocalVideoTrack);
+          if (video) unpublishTrack(video.track as LocalVideoTrack);  
           room.localParticipant.publishTrack(track);
         })
         .catch((err: Error) => {

@@ -19,7 +19,7 @@ const GeneralTest = () => {
       room="testingGround"
       appId={process.env.REACT_APP_APP_ID ?? 'REAL_APP_ID_HERE'}
       audioOffDefault
-      videoOffDefault
+      // videoOffDefault
       disableSetupView
       onJoinCall={() => console.log('onJoinCall')}
       onMemberJoin={() => console.log('onmemjoin')}

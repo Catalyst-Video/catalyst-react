@@ -110,6 +110,7 @@ const ToolbarButton = React.memo(
         }}
         onHidden={() => {
           setDeviceSelectEnabled(false);
+          setAudioTestPlaying(false)
         }}
         content={
           outputDevices || inputDevices ? (
