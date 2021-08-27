@@ -56,7 +56,6 @@ import { SUPPORT_EMAIL } from '../utils/globals';
 import useReadLocalStorage from '../hooks/useReadLocalStorage';
 import useLocalStorage from '../hooks/useLocalStorage';
 import useEventListener from '../hooks/useEventListener';
-import useIsMounted from '../hooks/useIsMounted';
 
 const CatalystChatView = ({
   token,
@@ -105,7 +104,7 @@ const CatalystChatView = ({
   const headerRef = useRef<HTMLDivElement>(null);
   const videoChatRef = useRef<HTMLDivElement>(null);
   const decoder = new TextDecoder();
-  const isMounted = useIsMounted();
+  const mounted = useRef(true);
 
   const onConnected = async room => {
     if (onJoinCall) onJoinCall();
@@ -120,7 +119,7 @@ const CatalystChatView = ({
     room.on(
       RoomEvent.DataReceived,
       (data: Uint8Array, member: Participant, kind: DataPacket_Kind) => {
-        if (!isMounted()) return;
+        if (!mounted.current) return;
         const strData = decoder.decode(data);
         // console.log(strData);
         const parsedData = JSON.parse(strData);
@@ -170,7 +169,7 @@ const CatalystChatView = ({
     if (token && token.length > 0 && token !== 'INVALID') {
       roomState.connect('wss://infra.catalyst.chat', token, meta).then(room => {
           // console.log('connected to room');
-          if (!isMounted()) return;
+          if (!mounted.current) return;
           if (!room) return; 
           if (onConnected) onConnected(room);
           return () => {
@@ -203,7 +202,7 @@ const CatalystChatView = ({
   useEffect(() => {
     if (fade > 0) {
       const delayCheck = () => {
-        if (!isMounted()) return;
+        if (!mounted.current) return;
         const hClasses = headerRef.current?.classList;
         const tClasses = toolbarRef.current?.classList;
         if (hClasses && tClasses) {
@@ -226,7 +225,7 @@ const CatalystChatView = ({
       };
 
       const handleMouse = () => {
-        if (!isMounted()) return;
+        if (!mounted.current) return;
         const hClasses = headerRef.current?.classList;
         const tClasses = toolbarRef.current?.classList;
         if (hClasses && tClasses) {
@@ -244,14 +243,20 @@ const CatalystChatView = ({
       var timedelay = 1;
       var isHidden = false;
       const debounceHandleMouse = debounce(() => {
-        if (!isMounted()) return;
+        if (!mounted.current) return;
         handleMouse();
       }, 25);
       // useEventListener('mousemove', debounceHandleMouse, videoChatRef);
+      videoChatRef.current?.addEventListener('mousemove', debounceHandleMouse);
       var _delay = setInterval(delayCheck, fade);
 
       () => {
         clearInterval(_delay);
+        videoChatRef.current?.removeEventListener(
+          'mousemove',
+          debounceHandleMouse
+        );
+        mounted.current = false;
         // console.log('disconnecting');
         roomState?.room?.disconnect();
       };
@@ -259,7 +264,7 @@ const CatalystChatView = ({
     // set default output device
     if (!outputDevice) {
       navigator.mediaDevices.enumerateDevices().then(devices => {
-        if (!isMounted()) return;
+        if (!mounted.current) return;
         const outputDevices = devices.filter(
           id => id.kind === 'audiooutput' && id.deviceId
         );

@@ -38,6 +38,7 @@ import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import VidWrapper from "./wrapper/VidWrapper";
 import useMember from '../hooks/useMember';
+import useTimeout from "../hooks/useTimeout";
 
 const MemberView = React.memo(({
   member: m,
@@ -59,12 +60,8 @@ const MemberView = React.memo(({
   const [vidEnabled, setVidEnabled] = useState(true);
   const { isLocal, isMuted, subscribedTracks } = useMember(m);
   const [vidPub, setVideoPub] = useState<TrackPublication>();
-  const [vidCallback, setVidTimeout] = useState<
-      ReturnType<typeof setTimeout>
-    >()
   const { ref, inView } = useInView();
   const [isInit, setInit] = useState(false);
-  
 
   useEffect(() => {
     if (!ref) return;
@@ -91,25 +88,15 @@ const MemberView = React.memo(({
   }, [subscribedTracks]);
 
   useEffect(() => {
-    if (vidCallback) {
-      clearTimeout(vidCallback);
-      setVidTimeout(undefined);
-    }
     if (!(vidPub instanceof RemoteTrackPublication)) return;
     if (vidEnabled) vidPub.setEnabled(true);
-    setVidTimeout(
-      setTimeout(() => {
-        vidPub.setEnabled(vidEnabled);
-        if (vidEnabled) vidPub.setVideoQuality(quality ?? VideoQuality.HIGH);
-      }, 3000)
-    );
-    return () => {
-      if (vidCallback) {
-        clearTimeout(vidCallback);
-        setVidTimeout(undefined);
-      }
-    };
   }, [quality, vidEnabled, vidPub]);
+
+  useTimeout(() => {
+    if (!(vidPub instanceof RemoteTrackPublication)) return;
+    vidPub?.setEnabled(vidEnabled);
+    if (vidEnabled) vidPub?.setVideoQuality(quality ?? VideoQuality.HIGH);
+  }, 3000);
 
   return (
     <div className={`m-1 ${classes} cursor-pointer`}>
