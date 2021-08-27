@@ -17,7 +17,7 @@ function useLocalStorage(
 
     try {
       const item = window.localStorage.getItem(key);
-      console.log('item', key, item);
+    //   console.log('item', key, item);
 
       return item ?? initialValue;
     } catch (error) {
@@ -44,7 +44,7 @@ function useLocalStorage(
       // Allow value to be a function so we have the same API as useState
       const newValue = value instanceof Function ? value(storedValue) : value;
 
-      console.log('newValue', newValue);
+    //   console.log('newValue', newValue);
 
       // Save to local storage
       window.localStorage.setItem(key, newValue);
