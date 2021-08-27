@@ -55,7 +55,6 @@ import { isMobile } from 'react-device-detect';
 import { SUPPORT_EMAIL } from '../utils/globals';
 import useReadLocalStorage from '../hooks/useReadLocalStorage';
 import useLocalStorage from '../hooks/useLocalStorage';
-import useEventListener from '../hooks/useEventListener';
 
 const CatalystChatView = ({
   token,

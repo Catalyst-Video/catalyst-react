@@ -48,6 +48,7 @@ import VidDeviceBtn from './VidDeviceBtn';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { ChatMessage } from '../../typings/interfaces';
 import Tippy from '@tippyjs/react';
+import useIsMounted from '../../hooks/useIsMounted';
 
 const Toolbar = ({
   room,
@@ -86,6 +87,7 @@ const Toolbar = ({
   const [vidDId, setVidDId] = useLocalStorage('PREFERRED_VIDEO_DEVICE_ID', 'default');
   const [showChatSent, setShowChatSent] = useState<boolean>(false);
   const chatBtnRef = useRef<HTMLDivElement>(null);
+  const isMounted = useIsMounted();
 
   useEffect(() => {
     setAudioPub(publications.find(p => p.kind === Track.Kind.Audio));
@@ -102,11 +104,16 @@ const Toolbar = ({
   }, [publications]);
 
   useEffect(() => {
-    if (chatMessages.length > 0 && chatMessages[chatMessages.length - 1].sender !== room.localParticipant) {
+    if (
+      !disableChat && chatMessages.length > 0 &&
+      chatMessages[chatMessages.length - 1].sender !== room.localParticipant &&
+      !chatOpen
+    ) {
       setShowChatSent(true);
       setTimeout(() => {
+        if (!isMounted()) return;
         setShowChatSent(false);
-      }, 5000)
+      }, 2000);
     }
   }, [chatMessages]);
 
@@ -334,13 +341,15 @@ const Toolbar = ({
       {!disableChat && (
         <Tippy
           visible={showChatSent}
+          arrow={false}
+          onTrigger={() => setChatOpen(true)}
           content={
-            <div className='text-xs'>
+            <div className="text-xs">
               <strong>
                 {chatMessages[chatMessages.length - 1]?.sender?.identity}:
               </strong>
               <br />
-              {chatMessages[chatMessages.length - 1]?.text}
+            {chatMessages[chatMessages.length - 1]?.text.substring(0, (chatMessages[chatMessages.length - 1]?.text.length < 40 ? chatMessages[chatMessages.length - 1]?.text.length : 40)) + ((chatMessages[chatMessages.length - 1]?.text.length > 40 ? '...' : ''))}
             </div>
           }
           theme="catalyst"
@@ -350,6 +359,7 @@ const Toolbar = ({
             <ToolbarButton
               type="chat"
               tooltip="Toggle Chat"
+              disabledTooltip={showChatSent}
               icon={faCommentAlt}
               bgColor={
                 chatOpen ? `bg-primary` : 'bg-tertiary hover:bg-quaternary  '
