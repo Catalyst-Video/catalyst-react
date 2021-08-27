@@ -117,9 +117,7 @@ const MemberView = React.memo(({
         {vidPub?.track ? (
           <VidWrapper track={vidPub.track} isLocal={isLocal} />
         ) : (
-          isInit && (
             <div className="bg-placeholder w-full h-full bg-primary min-h-full" />
-          )
         )}
         <div className="absolute bottom-0 left-0 flex text-quinary justify-between p-1 lg:p-2 w-full">
           <div className="h-7 md:h-8 not-selectable flex items-center justify-center px-2 py-1 relative">

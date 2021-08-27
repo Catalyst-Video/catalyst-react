@@ -170,6 +170,7 @@ const Toolbar = ({
     }
   }, [audioDevice]);
 
+
   useEffect(() => {
     if (
       videoDevice &&

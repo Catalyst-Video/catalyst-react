@@ -146,7 +146,6 @@ const CatalystChatView = ({
       });
        
     // TODO: apply bg removal
-  
     tracks.forEach(track => {
       room.localParticipant.publishTrack(
         track,
@@ -158,8 +157,8 @@ const CatalystChatView = ({
       );
     });
     }
-
   };
+
 
   useEffect(() => {
     if (arbData)
