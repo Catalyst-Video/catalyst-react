@@ -55,6 +55,7 @@ import { isMobile } from 'react-device-detect';
 import { SUPPORT_EMAIL } from '../utils/globals';
 import useReadLocalStorage from '../hooks/useReadLocalStorage';
 import useLocalStorage from '../hooks/useLocalStorage';
+import useTFLite from '../hooks/useTFLite';
 
 const CatalystChatView = ({
   token,
@@ -98,6 +99,12 @@ const CatalystChatView = ({
   const audDId = useReadLocalStorage('PREFERRED_AUDIO_DEVICE_ID');
   const vidDId = useReadLocalStorage('PREFERRED_VIDEO_DEVICE_ID');
   const [outDId, setOutDId] = useLocalStorage('PREFERRED_OUTPUT_DEVICE_ID', 'default');
+  // const { tflite, isSIMDSupported } = useTFLite({
+  //   model: 'meet',
+  //   backend: 'wasm',
+  //   inputResolution: '160x96',
+  //   pipeline: 'webgl2',
+  // });
 
   const toolbarRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);

@@ -24,7 +24,10 @@ You can contact us for more details at support@catalyst.chat. */
 
 import { Track } from 'livekit-client';
 import React, { useEffect, useRef, useState } from 'react';
+import { BackgroundConfig, SegmentationConfig } from '../../features/bg_remove/interfaces';
 import useDebounce from '../../hooks/useDebounce';
+import useRenderingPipeline from '../../hooks/useRenderingPipeline';
+import useTFLite from '../../hooks/useTFLite';
 
 
 const VidWrapper = React.memo(
@@ -35,23 +38,59 @@ const VidWrapper = React.memo(
     track: Track;
     isLocal: boolean;
   }) => {
-          const vidRef = useRef<HTMLVideoElement>(null);
-          const [isLoading, setIsLoading] = useState(false);
-          const debouncedIsLoading = useDebounce<boolean>(isLoading, 250);
+    const vidRef = useRef<HTMLVideoElement>(null);
+    var cvRef = useRef<HTMLCanvasElement>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const debouncedIsLoading = useDebounce<boolean>(isLoading, 250);
+    
+    const backgroundConfig: BackgroundConfig = {
+      type: 'image',
+      url:
+        'https://images.squarespace-cdn.com/content/v1/51f2c709e4b01b79caf00ebf/1585856237577-UHTQOWVOAO1HBVXHKXDG/Zoom-Virtual-Backgrounds-0001.jpg',
+    };
 
-          useEffect(() => {
-            const vidEl = vidRef.current;
-            if (!vidEl) {
-              return;
-            }
-            vidEl.muted = true;
-            track.attach(vidEl);
-            return () => {
-              track.detach(vidEl);
-            };
-          }, [track, vidRef]);
+    const segmentationConfig: SegmentationConfig = {
+      model: 'meet',
+      backend: 'wasm',
+      inputResolution: '160x96',
+      pipeline: 'webgl2',
+    };
 
-          const facesMember = track.mediaStreamTrack?.getSettings().facingMode !== 'environment';
+    const { tflite, isSIMDSupported } = useTFLite(segmentationConfig);
+    if (vidRef.current && tflite) {
+      const sourceEl = {
+      htmlElement: vidRef.current,
+      width: vidRef.current.width,
+      height: vidRef.current.height,
+      }
+      const {
+        pipeline,
+        backgroundImageRef,
+        canvasRef,
+        fps,
+        durations: [resizingDuration, inferenceDuration, postProcessingDuration],
+      } = useRenderingPipeline(
+        sourceEl,
+        backgroundConfig,
+        segmentationConfig,
+        tflite
+        );
+      cvRef = canvasRef;
+    }
+
+        useEffect(() => {
+          const vidEl = vidRef.current;
+          if (!vidEl) {
+            return;
+          }
+          vidEl.muted = true;
+          track.attach(vidEl);
+          return () => {
+            track.detach(vidEl);
+          };
+        }, [track, vidRef]);
+
+        const facesMember = track.mediaStreamTrack?.getSettings().facingMode !== 'environment';
     
           return (
             <>
@@ -60,6 +99,18 @@ const VidWrapper = React.memo(
                   <div className="catalyst-ld-inner"></div>
                 </div>
               )}
+              <canvas
+                key={segmentationConfig.pipeline}
+                ref={cvRef}
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+                width={vidRef.current?.width}
+                height={vidRef.current?.height}
+              />
               <video
                 ref={vidRef}
                 onLoadStart={() => setIsLoading(true)}

@@ -1,4 +1,3 @@
-// Based on https://usehooks-typescript.com/react-hook/use-timeout
 import { useEffect, useRef } from 'react';
 
 function useTimeout(callback: () => void, delay: number | null) {

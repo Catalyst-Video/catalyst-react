@@ -33,6 +33,8 @@
     "prebuild:tailwind": "npx tailwindcss-cli@latest build src/styles/tailwind.css -o src/styles/tailwind.output.css",
     "prestart": "npm run prestart:tailwind",
     "prebuild": "npm run prebuild:tailwind",
+    "build:tflite": "yarn build:tflite:image && docker run --rm -it -v $PWD:/workspace -w /workspace tflite",
+    "build:tflite:image": "docker build -t tflite tflite",
     "start": "tsdx watch",
     "build": "tsdx build",
     "watch": "tsdx watch",
@@ -60,7 +62,8 @@
     "react-full-screen": "^1.0.1",
     "react-intersection-observer": "^8.32.0",
     "react-scripts": "^4.0.3",
-    "ts-debounce": "^3.0.0"
+    "ts-debounce": "^3.0.0",
+    "wasm-check": "^2.0.3"
   },
   "devDependencies": {
     "@babel/helper-member-expression-to-functions": "^7.14.7",
@@ -76,6 +79,7 @@
     "@types/socket.io-client": "^1.4.36",
     "@types/tailwindcss": "^2.0.3",
     "autoprefixer": "^9.8.6",
+    "docker": "^1.0.0",
     "husky": "^5.1.3",
     "identity-obj-proxy": "^3.0.0",
     "jest-environment-jsdom-fifteen": "^1.0.2",

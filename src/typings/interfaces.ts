@@ -115,3 +115,10 @@ export interface RoomState {
   audioTracks: AudioTrack[];
   error?: Error;
 }
+
+export const VirtualBackground = {
+  IMAGE: 'image',
+  DESKTOP_SHARE: 'desktop-share',
+  BLUR: 'blur',
+  NONE: 'none',
+};

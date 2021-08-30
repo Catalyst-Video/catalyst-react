@@ -1,4 +1,3 @@
-// Based on https://usehooks-typescript.com/react-hook/use-local-storage
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 type SetValue<T> = Dispatch<SetStateAction<T>>;
