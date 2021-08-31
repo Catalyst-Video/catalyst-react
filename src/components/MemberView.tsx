@@ -40,108 +40,114 @@ import VidWrapper from "./wrapper/VidWrapper";
 import useMember from '../hooks/useMember';
 import useTimeout from "../hooks/useTimeout";
 
-const MemberView = React.memo(({
-  member: m,
-  width,
-  height,
-  classes,
-  displayName,
-  quality,
-  onClick,
-}: {
-  member: Participant;
-  displayName?: string;
-  width: Property.Width;
-  height: Property.Height;
-  classes?: string;
-  quality?: VideoQuality;
-  onClick?: () => void;
+const MemberView = React.memo(
+  ({
+    member: m,
+    width,
+    height,
+    classes,
+    disableSelfieMode,
+    displayName,
+    quality,
+    onClick,
+  }: {
+    member: Participant;
+    displayName?: string;
+    disableSelfieMode?: boolean;
+    width: Property.Width;
+    height: Property.Height;
+    classes?: string;
+    quality?: VideoQuality;
+    onClick?: () => void;
   }) => {
-  const [vidEnabled, setVidEnabled] = useState(true);
-  const { isLocal, isMuted, subscribedTracks } = useMember(m);
-  const [vidPub, setVideoPub] = useState<TrackPublication>();
-  const { ref, inView } = useInView();
-  const [isInit, setInit] = useState(false);
+    const [vidEnabled, setVidEnabled] = useState(true);
+    const { isLocal, isMuted, subscribedTracks } = useMember(m);
+    const [vidPub, setVideoPub] = useState<TrackPublication>();
+    const { ref, inView } = useInView();
+    const [isInit, setInit] = useState(false);
 
-  useEffect(() => {
-    if (!ref) return;
-    let enabled = inView;
-    if (vidEnabled !== enabled) {
-      setVidEnabled(enabled);
-    }
-  }, [ref, inView, m]);
-
-  // TODO: figure out why blue bg not showing when video disabled by default
-
-  useEffect(() => {
-    let newVideoPub: TrackPublication | undefined;
-    subscribedTracks.forEach(pub => {
-      if (
-        pub.isSubscribed &&
-        pub.kind === Track.Kind.Video &&
-        pub.trackName !== 'screen' &&
-        !newVideoPub
-      ) {
-        newVideoPub = pub;
-        setInit(true)
+    useEffect(() => {
+      if (!ref) return;
+      let enabled = inView;
+      if (vidEnabled !== enabled) {
+        setVidEnabled(enabled);
       }
-    });
-    setVideoPub(newVideoPub);
-  }, [subscribedTracks]);
+    }, [ref, inView, m]);
 
-  useEffect(() => {
-    if (!(vidPub instanceof RemoteTrackPublication)) return;
-    if (vidEnabled) vidPub.setEnabled(true);
-  }, [quality, vidEnabled, vidPub]);
+    // TODO: figure out why blue bg not showing when video disabled by default
 
-  useTimeout(() => {
-    if (!(vidPub instanceof RemoteTrackPublication)) return;
-    vidPub?.setEnabled(vidEnabled);
-    if (vidEnabled) vidPub?.setVideoQuality(quality ?? VideoQuality.HIGH);
-  }, 3000);
+    useEffect(() => {
+      let newVideoPub: TrackPublication | undefined;
+      subscribedTracks.forEach(pub => {
+        if (
+          pub.isSubscribed &&
+          pub.kind === Track.Kind.Video &&
+          pub.trackName !== 'screen' &&
+          !newVideoPub
+        ) {
+          newVideoPub = pub;
+          setInit(true);
+        }
+      });
+      setVideoPub(newVideoPub);
+    }, [subscribedTracks]);
 
+    useEffect(() => {
+      if (!(vidPub instanceof RemoteTrackPublication)) return;
+      if (vidEnabled) vidPub.setEnabled(true);
+    }, [quality, vidEnabled, vidPub]);
 
-  return (
-    <div className={`m-1 ${classes} cursor-pointer`}>
-      <div
-        ref={ref}
-        className={`relative z-0 align-middle self-center overflow-hidden text-center bg-gray-800 flex justify-center rounded-xl ${
-          m.isSpeaking ? `ring-2 ring-primary ring-opacity-50 ` : ''
-        }`}
-        style={{
-          height: height,
-          width: width,
-        }}
-        onClick={onClick}
-      >
-        {vidPub?.track ? (
-          <VidWrapper track={vidPub.track} isLocal={isLocal} />
-        ) : (
+    useTimeout(() => {
+      if (!(vidPub instanceof RemoteTrackPublication)) return;
+      vidPub?.setEnabled(vidEnabled);
+      if (vidEnabled) vidPub?.setVideoQuality(quality ?? VideoQuality.HIGH);
+    }, 3000);
+
+    return (
+      <div className={`m-1 ${classes} cursor-pointer`}>
+        <div
+          ref={ref}
+          className={`relative z-0 align-middle self-center overflow-hidden text-center bg-gray-800 flex justify-center rounded-xl ${
+            m.isSpeaking ? `ring-2 ring-primary ring-opacity-50 ` : ''
+          }`}
+          style={{
+            height: height,
+            width: width,
+          }}
+          onClick={onClick}
+        >
+          {vidPub?.track ? (
+            <VidWrapper
+              track={vidPub.track}
+              isLocal={isLocal}
+              disableSelfieMode={disableSelfieMode} />
+          ) : (
             <div className="bg-placeholder w-full h-full bg-primary min-h-full" />
-        )}
-        <div className="absolute bottom-0 left-0 flex text-quinary justify-between p-1 lg:p-2 w-full">
-          <div className="h-7 md:h-8 not-selectable flex items-center justify-center px-2 py-1 relative">
-            <span
-              className="absolute top-0 left-0 opacity-50 rounded-xl w-full h-full" // bg-tertiary
-            ></span>
-            <span className="text-n text-quinary z-30">
-              {displayName ?? isLocal ? `${m.identity} (You)` : m.identity}
-            </span>
-          </div>
-          {isMuted && (
-            <div className="relative h-7 w-7 md:h-8 md:w-8 flex items-center justify-center p-1">
-              <span className="absolute rounded-full top-0 left-0 opacity-50 z-30 bg-tertiary w-full h-full"></span>
-              <FontAwesomeIcon
-                icon={faMicrophoneSlash}
-                size="2x"
-                className={`text-quinary  not-selectable p-2 z-30`}
-              />
-            </div>
           )}
+          <div className="absolute bottom-0 left-0 flex text-quinary justify-between p-1 lg:p-2 w-full">
+            <div className="h-7 md:h-8 not-selectable flex items-center justify-center px-2 py-1 relative">
+              <span
+                className="absolute top-0 left-0 opacity-50 rounded-xl w-full h-full" // bg-tertiary
+              ></span>
+              <span className="text-n text-quinary z-30">
+                {displayName ?? isLocal ? `${m.identity} (You)` : m.identity}
+              </span>
+            </div>
+            {isMuted && (
+              <div className="relative h-7 w-7 md:h-8 md:w-8 flex items-center justify-center p-1">
+                <span className="absolute rounded-full top-0 left-0 opacity-50 z-30 bg-tertiary w-full h-full"></span>
+                <FontAwesomeIcon
+                  icon={faMicrophoneSlash}
+                  size="2x"
+                  className={`text-quinary  not-selectable p-2 z-30`}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 export default MemberView;
 

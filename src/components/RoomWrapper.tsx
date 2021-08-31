@@ -49,6 +49,7 @@ const RoomWrapper = ({
   chatOpen,
   setChatOpen,
   disableChat,
+  disableSelfieMode,
   chatMessages,
   setChatMessages,
   cstmWelcomeMsg,
@@ -60,6 +61,7 @@ const RoomWrapper = ({
   setSpeakerMode: Function;
   chatOpen: boolean;
   disableChat?: boolean;
+  disableSelfieMode?: boolean;
   setChatOpen: Function;
   chatMessages: ChatMessage[];
   setChatMessages: Function;
@@ -155,7 +157,6 @@ const RoomWrapper = ({
   }, [members, screens, chatOpen, fsHandle.active, speakerMode]);
 
   if (members.length === 0 || error || !room || connecting) {
-   
     return (
       <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center text-xl text-quinary">
         <div className="flex flex-col items-center justify-between p-2">
@@ -175,25 +176,27 @@ const RoomWrapper = ({
             )}
           </div>
         </div>
-        {slowLoading && <div className="absolute bottom-0 flex flex-col py-2 justify-center w-full animate-fade-in-up">
-          <div className="py-1 text-sm text-center">
-            Having connection issues?
+        {slowLoading && (
+          <div className="absolute bottom-0 flex flex-col py-2 justify-center w-full animate-fade-in-up">
+            <div className="py-1 text-sm text-center">
+              Having connection issues?
+            </div>
+            <button
+              className="cursor-pointer focus:border-0 focus:outline-none text-center"
+              onClick={() => {
+                room?.disconnect();
+                handleComponentRefresh();
+              }}
+            >
+              <span className="pr-2 text-primary text-base">Refresh</span>
+              <FontAwesomeIcon
+                icon={faSync}
+                size="sm"
+                className="inline text-primary"
+              />
+            </button>
           </div>
-          <button
-            className="cursor-pointer focus:border-0 focus:outline-none text-center"
-            onClick={() => {
-              room?.disconnect();
-              handleComponentRefresh();
-            }}
-          >
-            <span className="pr-2 text-primary text-base">Refresh</span>
-            <FontAwesomeIcon
-              icon={faSync}
-              size="sm"
-              className="inline text-primary"
-            />
-          </button>
-        </div>}
+        )}
       </div>
     );
   }
@@ -208,8 +211,7 @@ const RoomWrapper = ({
         if (!sharedScreens.includes(sharedScreen)) {
           sharedScreens = [...sharedScreens, sharedScreen];
           if (mainVid !== sharedScreen.sid && sharedScreens.length != screens) {
-            if (isMounted()) 
-              setMainVid(sharedScreen.sid);
+            if (isMounted()) setMainVid(sharedScreen.sid);
             // setSpeakerMode(true);
           }
         }
@@ -258,6 +260,7 @@ const RoomWrapper = ({
                 member={m}
                 height={vidDims.height}
                 width={vidDims.width}
+                disableSelfieMode={disableSelfieMode}
                 quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
                 onClick={() => {
                   setMainVid(m.sid);
@@ -298,6 +301,7 @@ const RoomWrapper = ({
                     member={m ?? members[0]}
                     height={'100%'}
                     width={'100%'}
+                    disableSelfieMode={disableSelfieMode}
                     classes={'aspect-w-16 aspect-h-9'}
                     quality={VideoQuality.HIGH}
                     onClick={() => setSpeakerMode(sm => !sm)}
@@ -365,6 +369,7 @@ const RoomWrapper = ({
                     height={'100%'}
                     //height={'fit-content'}
                     width={'100%'}
+                    disableSelfieMode={disableSelfieMode}
                     classes={'box vid-p w-full h-auto aspect-w-16 aspect-h-9'}
                     quality={i > 4 ? VideoQuality.LOW : VideoQuality.HIGH}
                     onClick={() => {

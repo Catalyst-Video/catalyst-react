@@ -48,6 +48,8 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.3",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "@fortawesome/react-fontawesome": "^0.1.14",
+    "@mediapipe/camera_utils": "^0.3.1620247984",
+    "@mediapipe/selfie_segmentation": "^0.1.1629494320",
     "@tailwindcss/aspect-ratio": "^0.2.1",
     "@tippyjs/react": "^4.2.5",
     "@types/css-global-variables": "^3.0.1",

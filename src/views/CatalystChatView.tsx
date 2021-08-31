@@ -55,12 +55,15 @@ import { isMobile } from 'react-device-detect';
 import { SUPPORT_EMAIL } from '../utils/globals';
 import useReadLocalStorage from '../hooks/useReadLocalStorage';
 import useLocalStorage from '../hooks/useLocalStorage';
+import { SelfieSegmentation } from '@mediapipe/selfie_segmentation';
+import { Camera } from '@mediapipe/camera_utils';
 
 const CatalystChatView = ({
   token,
   meta,
   fade,
   disableChat,
+  disableSelfieMode,
   disableRefreshBtn,
   cstmWelcomeMsg,
   cstmSupportUrl,
@@ -75,6 +78,7 @@ const CatalystChatView = ({
   token: string;
   meta: RoomMetaData;
   fade: number;
+  disableSelfieMode?: boolean;
   disableChat?: boolean;
   disableRefreshBtn?: boolean;
   cstmWelcomeMsg?: string | HTMLElement;
@@ -97,7 +101,10 @@ const CatalystChatView = ({
   const roomState = useRoom();
   const audDId = useReadLocalStorage('PREFERRED_AUDIO_DEVICE_ID');
   const vidDId = useReadLocalStorage('PREFERRED_VIDEO_DEVICE_ID');
-  const [outDId, setOutDId] = useLocalStorage('PREFERRED_OUTPUT_DEVICE_ID', 'default');
+  const [outDId, setOutDId] = useLocalStorage(
+    'PREFERRED_OUTPUT_DEVICE_ID',
+    'default'
+  );
 
   const toolbarRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
@@ -140,39 +147,113 @@ const CatalystChatView = ({
     // console.log(room);
     if (meta.audioEnabled || meta.videoEnabled) {
       const tracks = await createLocalTracks({
-      audio: meta.audioEnabled ? (audDId ? { deviceId: audDId } : true) : false,
-      video: meta.videoEnabled ? (vidDId ? { deviceId: vidDId } : true) : false,
+        audio: meta.audioEnabled
+          ? audDId
+            ? { deviceId: audDId }
+            : true
+          : false,
+        video: meta.videoEnabled
+          ? vidDId
+            ? { deviceId: vidDId }
+            : true
+          : false,
       });
-       
-    // TODO: apply bg removal
-    tracks.forEach(track => {
-      room.localParticipant.publishTrack(
-        track,
-        meta.simulcast
-          ? {
-              simulcast: true,
-            }
-          : {}
-      );
-    });
+
+      // tracks = await applyBgEffect(tracks);
+      // TODO: apply bg removal
+      tracks.forEach(track => {
+        room.localParticipant.publishTrack(
+          track,
+          meta.simulcast
+            ? {
+                simulcast: true,
+              }
+            : {}
+        );
+      });
     }
   };
 
+  // const canvasElement: HTMLCanvasElement = document.createElement('canvas');
+  // const canvasCtx = canvasElement.getContext('2d');
+
+  // const onBgEffectResults = results => {
+  //   if (canvasCtx) {
+  //     // Save the context's blank state
+  //     canvasCtx?.save();
+
+  //     // Draw the raw frame
+  //     canvasCtx?.drawImage(
+  //       results.image,
+  //       0,
+  //       0,
+  //       canvasElement.width,
+  //       canvasElement.height
+  //     );
+
+  //     // Make all pixels not in the segmentation mask transparent
+  //     canvasCtx.globalCompositeOperation = 'destination-atop';
+  //     canvasCtx?.drawImage(
+  //       results.segmentationMask,
+  //       0,
+  //       0,
+  //       canvasElement.width,
+  //       canvasElement.height
+  //     );
+
+  //     // Blur the context for all subsequent draws then set the raw image as the background
+  //     canvasCtx.filter = 'blur(16px)';
+  //     canvasCtx.globalCompositeOperation = 'destination-over';
+  //     canvasCtx.drawImage(
+  //       results.image,
+  //       0,
+  //       0,
+  //       canvasElement.width,
+  //       canvasElement.height
+  //     );
+
+  //     // Restore the context's blank state
+  //     canvasCtx.restore();
+  //     return canvasElement.captureStream();
+  //   }
+  // };
+
+  // const applyBgEffect = async () => {
+  //   // const videoElement = document.getElementsByClassName('input_video')[0];
+
+  //   const selfieSegmentation = new SelfieSegmentation({
+  //     locateFile: file => {
+  //       return `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`;
+  //     },
+  //   });
+  //   selfieSegmentation.setOptions({
+  //     modelSelection: 1,
+  //   });
+  //   selfieSegmentation.onResults(onBgEffectResults);
+
+  //   const camera = new Camera(videoElement, {
+  //     onFrame: async () => {
+  //       await selfieSegmentation.send({ image: videoElement });
+  //     },
+  //     width: 640,
+  //     height: 480,
+  //   });
+  //   camera.start();
+  // };
 
   useEffect(() => {
     if (arbData)
-      roomState.localMember?.publishData(
-        arbData,
-        DataPacket_Kind.RELIABLE
-      );
+      roomState.localMember?.publishData(arbData, DataPacket_Kind.RELIABLE);
   }, [arbData]);
 
   useEffect(() => {
     if (token && token.length > 0 && token !== 'INVALID') {
-      roomState.connect('wss://infra.catalyst.chat', token, meta).then(room => {
+      roomState
+        .connect('wss://infra.catalyst.chat', token, meta)
+        .then(room => {
           // console.log('connected to room');
           if (!mounted.current) return;
-          if (!room) return; 
+          if (!room) return;
           if (onConnected) onConnected(room);
           return () => {
             room.disconnect();
@@ -195,7 +276,7 @@ const CatalystChatView = ({
 
   const updateOutputDevice = (device: MediaDeviceInfo) => {
     setOutputDevice(device);
-   setOutDId(device?.deviceId);
+    setOutDId(device?.deviceId);
   };
 
   // roomState.audioTracks.map(track => console.log(track));
@@ -272,10 +353,7 @@ const CatalystChatView = ({
         );
         let outDevice: MediaDeviceInfo | undefined;
         if (outDId) {
-          outDevice = outputDevices.find(
-            d =>
-              d?.deviceId === outDId
-          );
+          outDevice = outputDevices.find(d => d?.deviceId === outDId);
         }
         if (!outDevice) {
           outDevice = outputDevices[0];
@@ -426,6 +504,7 @@ const CatalystChatView = ({
                     roomState={roomState}
                     speakerMode={speakerMode}
                     disableChat={disableChat}
+                    disableSelfieMode={disableSelfieMode}
                     chatMessages={chatMessages}
                     setSpeakerMode={setSpeakerMode}
                     setChatMessages={setChatMessages}

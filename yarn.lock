@@ -1788,6 +1788,16 @@
     "@types/yargs" "^15.0.0"
     "chalk" "^4.0.0"
 
+"@mediapipe/camera_utils@^0.3.1620247984":
+  "integrity" "sha512-CQEppbvSfgF5BaiA917+x/xHn8ttietc4+co/7RF98AqgjByGQHKLslog1eE7WekgBXYT/qc4z9F1HrOIfy3yQ=="
+  "resolved" "https://registry.npmjs.org/@mediapipe/camera_utils/-/camera_utils-0.3.1620247984.tgz"
+  "version" "0.3.1620247984"
+
+"@mediapipe/selfie_segmentation@^0.1.1629494320":
+  "integrity" "sha512-D3Ap13awSSkP2H+4DQse74H1KwVTN/P2QfdvB0FXL5+9C+uz4YGWB9aRHnBHsbk0ISO9LGJnbDn9iw16WPYTKQ=="
+  "resolved" "https://registry.npmjs.org/@mediapipe/selfie_segmentation/-/selfie_segmentation-0.1.1629494320.tgz"
+  "version" "0.1.1629494320"
+
 "@nodelib/fs.scandir@2.1.4":
   "integrity" "sha512-33g3pMJk3bg5nXbL/+CY6I2eJDzZAni49PfJnL5fghPTggPvBd/pFNSgJsdAgWptuFu7qq/ERvOYFlhvsLTCKA=="
   "resolved" "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.4.tgz"

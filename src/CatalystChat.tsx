@@ -48,6 +48,7 @@ const CatalystChat = ({
   videoOffDefault,
   simulcast,
   disableChat,
+  disableSelfieMode,
   disableSetupView,
   disableNameField,
   cstmSetupBg,
@@ -154,6 +155,7 @@ const CatalystChat = ({
             }}
             fade={fade ?? DEFAULT_AUTOFADE}
             disableChat={disableChat}
+            disableSelfieMode={disableSelfieMode}
             arbData={arbData}
             handleReceiveArbData={handleReceiveArbData}
             cstmWelcomeMsg={cstmWelcomeMsg}

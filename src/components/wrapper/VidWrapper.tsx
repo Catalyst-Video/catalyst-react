@@ -31,46 +31,51 @@ const VidWrapper = React.memo(
   ({
     track,
     isLocal,
+    disableSelfieMode,
   }: {
     track: Track;
     isLocal: boolean;
+    disableSelfieMode?: boolean;
   }) => {
-          const vidRef = useRef<HTMLVideoElement>(null);
-          const [isLoading, setIsLoading] = useState(false);
-          const debouncedIsLoading = useDebounce<boolean>(isLoading, 250);
+    const vidRef = useRef<HTMLVideoElement>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const debouncedIsLoading = useDebounce<boolean>(isLoading, 250);
 
-          useEffect(() => {
-            const vidEl = vidRef.current;
-            if (!vidEl) {
-              return;
-            }
-            vidEl.muted = true;
-            track.attach(vidEl);
-            return () => {
-              track.detach(vidEl);
-            };
-          }, [track, vidRef]);
+    useEffect(() => {
+      const vidEl = vidRef.current;
+      if (!vidEl) {
+        return;
+      }
+      vidEl.muted = true;
+      track.attach(vidEl);
+      return () => {
+        track.detach(vidEl);
+      };
+    }, [track, vidRef]);
 
-          const facesMember = track.mediaStreamTrack?.getSettings().facingMode !== 'environment';
-    
-          return (
-            <>
-              {debouncedIsLoading && (
-                <div className="catalyst-ld-1 h-16 w-16 absolute self-center">
-                  <div className="catalyst-ld-inner"></div>
-                </div>
-              )}
-              <video
-                ref={vidRef}
-                onLoadStart={() => setIsLoading(true)}
-                onWaiting={() => setIsLoading(true)}
-                onPlaying={() => setIsLoading(false)}
-                className={`min-h-0 min-w-0 rounded-lg z-10 h-auto w-full ${
-                  isLocal && facesMember ? 'rm-uncanny-valley' : ''
-                } contain max-vid-height`} // TODO: switch to adaptive contain vs cover
-              />
-            </>
-          );
-        }
+    const facesMember =
+      track.mediaStreamTrack?.getSettings().facingMode !== 'environment';
+
+    return (
+      <>
+        {debouncedIsLoading && (
+          <div className="catalyst-ld-1 h-16 w-16 absolute self-center">
+            <div className="catalyst-ld-inner"></div>
+          </div>
+        )}
+        <video
+          ref={vidRef}
+          onLoadStart={() => setIsLoading(true)}
+          onWaiting={() => setIsLoading(true)}
+          onPlaying={() => setIsLoading(false)}
+          className={`min-h-0 min-w-0 rounded-lg z-10 h-auto w-full ${
+            isLocal && facesMember && !disableSelfieMode
+              ? 'rm-uncanny-valley'
+              : ''
+          } contain max-vid-height`} // TODO: switch to adaptive contain vs cover
+        />
+      </>
+    );
+  }
 );
 export default VidWrapper;
