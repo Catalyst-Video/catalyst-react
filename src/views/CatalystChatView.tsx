@@ -56,10 +56,6 @@ import { isMobile } from 'react-device-detect';
 import { SUPPORT_EMAIL } from '../utils/globals';
 import useReadLocalStorage from '../hooks/useReadLocalStorage';
 import useLocalStorage from '../hooks/useLocalStorage';
-import { applyBgEffect } from '../utils/bg_removal';
-import useInterval from '../hooks/useInterval';
-import useEventListener from '../hooks/useEventListener';
-import useTimeout from '../hooks/useTimeout';
 import { BackgroundFilter } from '@vectorly-io/ai-filters';
 import { segmentBackground, applyBlur, applyImageBackground, createBgFilters } from '../features/bg_removal'
 
