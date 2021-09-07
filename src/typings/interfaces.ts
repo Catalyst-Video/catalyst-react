@@ -116,3 +116,12 @@ export interface RoomState {
   audioTracks: AudioTrack[];
   error?: Error;
 }
+
+// export interface CanvasElement extends HTMLCanvasElement {
+//   captureStream(frameRate?: number): MediaStream;
+// }
+declare global {
+   interface HTMLCanvasElement {
+     captureStream(frameRate?: number): MediaStream;
+  }
+}

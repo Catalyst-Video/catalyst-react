@@ -38,6 +38,7 @@ import {
   Room,
   createLocalTracks,
   DataPacket_Kind,
+  LocalTrack,
 } from 'livekit-client';
 import React, { useEffect, useRef, useState } from 'react';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
@@ -55,8 +56,11 @@ import { isMobile } from 'react-device-detect';
 import { SUPPORT_EMAIL } from '../utils/globals';
 import useReadLocalStorage from '../hooks/useReadLocalStorage';
 import useLocalStorage from '../hooks/useLocalStorage';
-import { SelfieSegmentation } from '@mediapipe/selfie_segmentation';
-import { Camera } from '@mediapipe/camera_utils';
+import { applyBgEffect } from '../utils/bg_removal';
+import { createBgRemovedVideoTrack } from '../features/bg_removal';
+import useInterval from '../hooks/useInterval';
+import useEventListener from '../hooks/useEventListener';
+import useTimeout from '../hooks/useTimeout';
 
 const CatalystChatView = ({
   token,
@@ -92,20 +96,24 @@ const CatalystChatView = ({
   handleComponentRefresh: () => void;
 }) => {
   const fsHandle = useFullScreenHandle();
+  // meta
   const [memberCount, setMemberCount] = useState(0);
   const [speakerMode, setSpeakerMode] = useState(false);
-  const [roomClosed, setRoomClosed] = useState(false);
+  // chat
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [chatOpen, setChatOpen] = useState(false);
-  const [outputDevice, setOutputDevice] = useState<MediaDeviceInfo>();
+  // session room
   const roomState = useRoom();
+  const [roomClosed, setRoomClosed] = useState(false);
+  // devices
+  const [outputDevice, setOutputDevice] = useState<MediaDeviceInfo>();
   const audDId = useReadLocalStorage('PREFERRED_AUDIO_DEVICE_ID');
   const vidDId = useReadLocalStorage('PREFERRED_VIDEO_DEVICE_ID');
   const [outDId, setOutDId] = useLocalStorage(
     'PREFERRED_OUTPUT_DEVICE_ID',
     'default'
   );
-
+  // refs
   const toolbarRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const videoChatRef = useRef<HTMLDivElement>(null);
@@ -146,7 +154,7 @@ const CatalystChatView = ({
     bumpMemberSize(room);
     // console.log(room);
     if (meta.audioEnabled || meta.videoEnabled) {
-      const tracks = await createLocalTracks({
+      var tracks = await createLocalTracks({
         audio: meta.audioEnabled
           ? audDId
             ? { deviceId: audDId }
@@ -159,87 +167,41 @@ const CatalystChatView = ({
           : false,
       });
 
-      // tracks = await applyBgEffect(tracks);
-      // TODO: apply bg removal
-      tracks.forEach(track => {
+    // TODO: const bgRemovalTracks = applyBgRemoval(tracks);
+      // const bgRemovalTrack = applyBgRemoval(tracks);
+      const options = {
+        audio: meta.audioEnabled
+          ? audDId
+            ? { deviceId: audDId }
+            : true
+          : false,
+        video: meta.videoEnabled
+          ? vidDId
+            ? { deviceId: vidDId }
+            : true
+          : false,
+      }
+      const vidtrack = tracks.find(
+        track => track.kind === 'video'
+      );
+      const bgRemovedTrack = await createBgRemovedVideoTrack(vidtrack)
+      console.log('bg', bgRemovedTrack)
+       tracks.forEach(track => {
+        if (track.kind === 'video' && bgRemovedTrack) {
+          track = bgRemovedTrack;
+        }
+      });
+       tracks.forEach(track => {
         room.localParticipant.publishTrack(
           track,
-          meta.simulcast
-            ? {
-                simulcast: true,
-              }
-            : {}
+          meta.simulcast ? { simulcast: true } : {}
         );
       });
     }
   };
 
-  // const canvasElement: HTMLCanvasElement = document.createElement('canvas');
-  // const canvasCtx = canvasElement.getContext('2d');
+  
 
-  // const onBgEffectResults = results => {
-  //   if (canvasCtx) {
-  //     // Save the context's blank state
-  //     canvasCtx?.save();
-
-  //     // Draw the raw frame
-  //     canvasCtx?.drawImage(
-  //       results.image,
-  //       0,
-  //       0,
-  //       canvasElement.width,
-  //       canvasElement.height
-  //     );
-
-  //     // Make all pixels not in the segmentation mask transparent
-  //     canvasCtx.globalCompositeOperation = 'destination-atop';
-  //     canvasCtx?.drawImage(
-  //       results.segmentationMask,
-  //       0,
-  //       0,
-  //       canvasElement.width,
-  //       canvasElement.height
-  //     );
-
-  //     // Blur the context for all subsequent draws then set the raw image as the background
-  //     canvasCtx.filter = 'blur(16px)';
-  //     canvasCtx.globalCompositeOperation = 'destination-over';
-  //     canvasCtx.drawImage(
-  //       results.image,
-  //       0,
-  //       0,
-  //       canvasElement.width,
-  //       canvasElement.height
-  //     );
-
-  //     // Restore the context's blank state
-  //     canvasCtx.restore();
-  //     return canvasElement.captureStream();
-  //   }
-  // };
-
-  // const applyBgEffect = async () => {
-  //   // const videoElement = document.getElementsByClassName('input_video')[0];
-
-  //   const selfieSegmentation = new SelfieSegmentation({
-  //     locateFile: file => {
-  //       return `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`;
-  //     },
-  //   });
-  //   selfieSegmentation.setOptions({
-  //     modelSelection: 1,
-  //   });
-  //   selfieSegmentation.onResults(onBgEffectResults);
-
-  //   const camera = new Camera(videoElement, {
-  //     onFrame: async () => {
-  //       await selfieSegmentation.send({ image: videoElement });
-  //     },
-  //     width: 640,
-  //     height: 480,
-  //   });
-  //   camera.start();
-  // };
 
   useEffect(() => {
     if (arbData)
@@ -279,8 +241,6 @@ const CatalystChatView = ({
     setOutDId(device?.deviceId);
   };
 
-  // roomState.audioTracks.map(track => console.log(track));
-
   // animate toolbar & header fade in/out
   useEffect(() => {
     if (fade > 0) {
@@ -289,7 +249,7 @@ const CatalystChatView = ({
         const hClasses = headerRef.current?.classList;
         const tClasses = toolbarRef.current?.classList;
         if (hClasses && tClasses) {
-          if (timedelay === 5 && !isHidden) {
+          if (fadeDelay === 5 && !faded) {
             hClasses?.remove('animate-fade-in-down');
             hClasses?.add('animate-fade-out-up');
             tClasses?.remove('animate-fade-in-up');
@@ -299,11 +259,11 @@ const CatalystChatView = ({
               hClasses?.add('hidden');
               tClasses?.remove('animate-fade-out-down');
               tClasses?.add('hidden');
-              isHidden = true;
+              faded = true;
             }, 170); // 190);
-            timedelay = 1;
+            fadeDelay = 1;
           }
-          timedelay += 1;
+          fadeDelay += 1;
         }
       };
 
@@ -316,20 +276,19 @@ const CatalystChatView = ({
           hClasses?.add('animate-fade-in-down');
           tClasses?.remove('hidden');
           tClasses?.add('animate-fade-in-up');
-          isHidden = false;
-          timedelay = 1;
+          faded = false;
+          fadeDelay = 1;
           clearInterval(_delay);
           _delay = setInterval(delayCheck, fade);
         }
       };
 
-      var timedelay = 1;
-      var isHidden = false;
+      var fadeDelay = 1;
+      var faded = false;
       const debounceHandleMouse = debounce(() => {
         if (!mounted.current) return;
         handleMouse();
       }, 25);
-      // useEventListener('mousemove', debounceHandleMouse, videoChatRef);
       videoChatRef.current?.addEventListener('mousemove', debounceHandleMouse);
       var _delay = setInterval(delayCheck, fade);
 
@@ -339,9 +298,6 @@ const CatalystChatView = ({
           'mousemove',
           debounceHandleMouse
         );
-        mounted.current = false;
-        // console.log('disconnecting');
-        roomState?.room?.disconnect();
       };
     }
     // set default output device
@@ -364,6 +320,11 @@ const CatalystChatView = ({
         }
       });
     }
+     () => {
+       mounted.current = false;
+       // console.log('disconnecting');
+       roomState?.room?.disconnect();
+     };
   }, []);
 
   return (
@@ -379,7 +340,7 @@ const CatalystChatView = ({
                 href={
                   cstmSupportUrl && cstmSupportUrl.length > 0
                     ? cstmSupportUrl
-                    : SUPPORT_EMAIL
+                    : `mailto:` + SUPPORT_EMAIL
                 }
                 target="_blank"
                 rel="noreferrer"
