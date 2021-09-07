@@ -171,7 +171,12 @@ const CatalystChatView = ({
       });
       const vidtrack = tracks.find(track => track.kind === 'video');
       if (vidtrack?.mediaStreamTrack) {
-      await createBgFilters(new MediaStream([vidtrack?.mediaStreamTrack]));
+        const bgRemovedTrack = createBgFilters(new MediaStream([vidtrack?.mediaStreamTrack]));
+         tracks.forEach(track => {
+        if (track.kind === 'video' && bgRemovedTrack) {
+          track.mediaStreamTrack = bgRemovedTrack;
+        }
+      });
       }
       // const vidtrack = tracks.find(track => track.kind === 'video');
       // if (vidtrack?.mediaStreamTrack) {

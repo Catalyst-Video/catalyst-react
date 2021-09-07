@@ -63,7 +63,8 @@
     "react-full-screen": "^1.0.1",
     "react-intersection-observer": "^8.32.0",
     "react-scripts": "^4.0.3",
-    "ts-debounce": "^3.0.0"
+    "ts-debounce": "^3.0.0",
+    "virtual-bg": "^0.1.1"
   },
   "devDependencies": {
     "@babel/helper-member-expression-to-functions": "^7.14.7",

@@ -1,3 +1,4 @@
+import { Camera } from "@mediapipe/camera_utils";
 import { Results, SelfieSegmentation } from "@mediapipe/selfie_segmentation";
 
 const script = document.createElement('script');
@@ -34,9 +35,9 @@ export async function segmentBackground(
     outputCanvasElement.width;
   foregroundCanvasElement.height = backgroundCanvasElement.height =
     outputCanvasElement.height;
-  if(outputCanvasCtx) outputCanvasCtx = outputCanvasElement.getContext('2d');
+   outputCanvasCtx = outputCanvasElement.getContext('2d');
 
-  let selfieSegmentation = new SelfieSegmentation({
+  const selfieSegmentation = new SelfieSegmentation({
     locateFile: file => {
       return `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`;
     },
@@ -45,6 +46,7 @@ export async function segmentBackground(
     modelSelection: modelSelection,
   });
   selfieSegmentation.onResults(results => {
+    console.log('results1', results)
     mergeForegroundBackground(
       foregroundCanvasElement,
       backgroundCanvasElement,
@@ -52,13 +54,22 @@ export async function segmentBackground(
     );
   });
 
-  inputVideoElement.addEventListener('play', () => {
-    async function step() {
+  const camera = new Camera(inputVideoElement, {
+    onFrame: async () => {
       await selfieSegmentation.send({ image: inputVideoElement });
-      requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
+    },
+    width: inputVideoElement.width,
+    height: inputVideoElement.height,
   });
+  camera.start();
+
+  // inputVideoElement.addEventListener('play', () => {
+  //   async function step() {
+  //     await selfieSegmentation.send({ image: inputVideoElement });
+  //     requestAnimationFrame(step);
+  //   }
+  //   requestAnimationFrame(step);
+  // });
 }
 
 function mergeForegroundBackground(
@@ -66,6 +77,7 @@ function mergeForegroundBackground(
   backgroundCanvasElement: HTMLCanvasElement,
   results: Results
 ) {
+  console.log('merging', results)
   makeCanvasLayer(results, foregroundCanvasElement, 'foreground');
   if (effectType === 'blur')
     makeCanvasLayer(results, backgroundCanvasElement, 'background');
@@ -168,7 +180,7 @@ export function changeForegroundType(type, offset = 0) {
 }
 
 
-export async function createBgFilters(
+export function createBgFilters(
   inputStream: MediaStream,
   bg?: string
 ) {
@@ -176,41 +188,48 @@ export async function createBgFilters(
   const videoEl: HTMLVideoElement = document.createElement('video');
   const canvasEl: HTMLCanvasElement = document.createElement('canvas');
 
-  let myStream = await navigator.mediaDevices.getUserMedia({
-    video: {
-      width: { ideal: 1920 },
-      height: { ideal: 1080 },
-    }
-  });
+  // let myStream = await navigator.mediaDevices.getUserMedia({
+  //   video: {
+  //     width: { ideal: 1920 },
+  //     height: { ideal: 1080 },
+  //   }
+  // });
 
-  videoEl.srcObject = myStream; //inputStream;
+  videoEl.srcObject = inputStream;
   console.log(canvasEl)
 
-    videoEl.srcObject = myStream;
+   const width =
+     window.innerHeight > window.innerWidth
+       ? inputStream.getVideoTracks()[0].getSettings().height
+       : inputStream.getVideoTracks()[0].getSettings().width;
+   const height =
+     window.innerHeight > window.innerWidth
+       ? inputStream.getVideoTracks()[0].getSettings().width
+       : inputStream.getVideoTracks()[0].getSettings().height;
 
-    canvasEl.style.width = videoEl.width + 'px';
-    canvasEl.style.height = videoEl.height + 'px';;
-    // canvasEl.style.aspectRatio = `${videoEl.width}/${videoEl.height}`;
-
-  document.getElementById('root')?.appendChild(videoEl);
-  videoEl.style.zIndex = '99998';
-  videoEl.style.position = 'absolute';
-  videoEl.style.top = '0';
-  videoEl.style.left = '0';
-   canvasEl.style.height = '790px';
-   canvasEl.style.width = '1280px';
+  // document.getElementById('root')?.appendChild(videoEl);
+  // videoEl.style.zIndex = '99998';
+  // videoEl.style.position = 'absolute';
+  // videoEl.style.top = '0';
+  // videoEl.style.left = '0';
+  // console.log(height, width)
+  // canvasEl.style.height = height + 'px';
+  // canvasEl.style.width = width + 'px';
 
 
-  document.getElementById('root')?.appendChild(canvasEl);
-  canvasEl.style.zIndex = '99998';
-  canvasEl.style.position = 'absolute';
-  canvasEl.style.bottom = '0';
-  canvasEl.style.right = '0';
-  canvasEl.style.height = videoEl.height + 'px';
-  canvasEl.style.width = videoEl.width + 'px';
+  // document.getElementById('root')?.appendChild(canvasEl);
+  // canvasEl.style.zIndex = '99998';
+  // canvasEl.style.position = 'absolute';
+  // canvasEl.style.bottom = '0';
+  // canvasEl.style.right = '0';
+  // canvasEl.style.height = height + 'px';
+  // canvasEl.style.width = width + 'px';
 
 
   // segments foreground & background
   segmentBackground(videoEl, canvasEl);
-  applyBlur(7); 
+  applyBlur(5);
+  
+  const bgRemovedStream = canvasEl.captureStream(27)
+  return bgRemovedStream.getVideoTracks()[0]
 }
