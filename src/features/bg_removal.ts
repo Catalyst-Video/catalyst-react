@@ -46,7 +46,7 @@ export async function segmentBackground(
     modelSelection: modelSelection,
   });
   selfieSegmentation.onResults(results => {
-    console.log('results1', results)
+    // console.log('results1', results)
     mergeForegroundBackground(
       foregroundCanvasElement,
       backgroundCanvasElement,
@@ -77,7 +77,7 @@ function mergeForegroundBackground(
   backgroundCanvasElement: HTMLCanvasElement,
   results: Results
 ) {
-  console.log('merging', results)
+  // console.log('merging', results)
   makeCanvasLayer(results, foregroundCanvasElement, 'foreground');
   if (effectType === 'blur')
     makeCanvasLayer(results, backgroundCanvasElement, 'background');

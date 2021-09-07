@@ -173,59 +173,16 @@ const CatalystChatView = ({
       if (vidtrack?.mediaStreamTrack) {
         const bgRemovedTrack = createBgFilters(new MediaStream([vidtrack?.mediaStreamTrack]));
          tracks.forEach(track => {
-        if (track.kind === 'video' && bgRemovedTrack) {
+           if (track.kind === 'video' && bgRemovedTrack) {
+          console.log(track.mediaStreamTrack, bgRemovedTrack);
+        
           track.mediaStreamTrack = bgRemovedTrack;
+          console.log('applied bg removal filters',bgRemovedTrack)
+          console.log((track.mediaStreamTrack === bgRemovedTrack));
         }
       });
       }
-      // const vidtrack = tracks.find(track => track.kind === 'video');
-      // if (vidtrack?.mediaStreamTrack) {
-      //   const filter = new BgFilter(vidtrack.mediaStreamTrack, bgRemoval);
-      //   const outputTrack = await filter.getOutput();
-      //   console.log('bg', outputTrack);
-      //   tracks.forEach(track => {
-      //     if (track.kind === 'video') {
-      //       track.mediaStreamTrack = outputTrack;
-      //     }
-      //   });
 
-        // TODO: const filter = new BackgroundFilter(vidtrack.mediaStreamTrack, {
-        //   token: 'TOKEN_HERE',
-        //   background: bgRemoval
-        //    // 'https://terrigen-cdn-dev.marvel.com/content/prod/1x/333.jpg', //'blur'
-        // });
-        // const outputStream = await filter.getOutput();
-        // console.log('bg', outputStream);
-        // tracks.forEach(track => {
-        //   if (track.kind === 'video') {
-        //     track.mediaStreamTrack = outputStream.getVideoTracks()[0];
-        //   }
-        // });
-      // }
-
-      // TODO:
-      // const options = {
-      //   audio: meta.audioEnabled
-      //     ? audDId
-      //       ? { deviceId: audDId }
-      //       : true
-      //     : false,
-      //   video: meta.videoEnabled
-      //     ? vidDId
-      //       ? { deviceId: vidDId }
-      //       : true
-      //     : false,
-      // }
-      // const vidtrack = tracks.find(
-      //   track => track.kind === 'video'
-      // );
-      // const bgRemovedTrack = await createBgRemovedVideoTrack(vidtrack)
-      // console.log('bg', bgRemovedTrack)
-      //  tracks.forEach(track => {
-      //   if (track.kind === 'video' && bgRemovedTrack) {
-      //     track = bgRemovedTrack;
-      //   }
-      // });
       tracks.forEach(track => {
         room.localParticipant.publishTrack(
           track,

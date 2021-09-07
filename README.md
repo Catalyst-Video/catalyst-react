@@ -76,4 +76,5 @@ Catalyst V3 is based on a custom version of [WebRTC SFU](https://github.com/pion
 
 Distributed under the AGPL-3.0-only license. See [LICENSE](https://github.com/Catalyst-Video/catalyst-react/blob/master/LICENSE) for more information.
 
+Catalyst Scientific is an LLC in the state of Florida. All rights reserved.
 <!-- ngrok http 1234 -host-header=”localhost:1234"  -->
