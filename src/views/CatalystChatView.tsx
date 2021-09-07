@@ -57,11 +57,11 @@ import { SUPPORT_EMAIL } from '../utils/globals';
 import useReadLocalStorage from '../hooks/useReadLocalStorage';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { applyBgEffect } from '../utils/bg_removal';
-import { createBgRemovedVideoTrack } from '../features/bg_removal';
 import useInterval from '../hooks/useInterval';
 import useEventListener from '../hooks/useEventListener';
 import useTimeout from '../hooks/useTimeout';
 import { BackgroundFilter } from '@vectorly-io/ai-filters';
+import { segmentBackground, applyBlur, applyImageBackground, createBgFilters } from '../features/bg_removal'
 
 const CatalystChatView = ({
   token,
@@ -171,19 +171,32 @@ const CatalystChatView = ({
       });
       const vidtrack = tracks.find(track => track.kind === 'video');
       if (vidtrack?.mediaStreamTrack) {
-        const filter = new BackgroundFilter(vidtrack.mediaStreamTrack, {
-          token: 'TOKEN_HERE',
-          background: bgRemoval
-           // 'https://terrigen-cdn-dev.marvel.com/content/prod/1x/333.jpg', //'blur'
-        });
-        const outputStream = await filter.getOutput();
-        console.log('bg', outputStream);
-        tracks.forEach(track => {
-          if (track.kind === 'video') {
-            track.mediaStreamTrack = outputStream.getVideoTracks()[0];
-          }
-        });
+      await createBgFilters(new MediaStream([vidtrack?.mediaStreamTrack]));
       }
+      // const vidtrack = tracks.find(track => track.kind === 'video');
+      // if (vidtrack?.mediaStreamTrack) {
+      //   const filter = new BgFilter(vidtrack.mediaStreamTrack, bgRemoval);
+      //   const outputTrack = await filter.getOutput();
+      //   console.log('bg', outputTrack);
+      //   tracks.forEach(track => {
+      //     if (track.kind === 'video') {
+      //       track.mediaStreamTrack = outputTrack;
+      //     }
+      //   });
+
+        // TODO: const filter = new BackgroundFilter(vidtrack.mediaStreamTrack, {
+        //   token: 'TOKEN_HERE',
+        //   background: bgRemoval
+        //    // 'https://terrigen-cdn-dev.marvel.com/content/prod/1x/333.jpg', //'blur'
+        // });
+        // const outputStream = await filter.getOutput();
+        // console.log('bg', outputStream);
+        // tracks.forEach(track => {
+        //   if (track.kind === 'video') {
+        //     track.mediaStreamTrack = outputStream.getVideoTracks()[0];
+        //   }
+        // });
+      // }
 
       // TODO:
       // const options = {
