@@ -47,6 +47,7 @@ const CatalystChat = ({
   audioOffDefault,
   videoOffDefault,
   simulcast,
+  bgRemoval,
   disableChat,
   disableSelfieMode,
   disableSetupView,
@@ -154,6 +155,7 @@ const CatalystChat = ({
               loglevel: 'trace',
             }}
             fade={fade ?? DEFAULT_AUTOFADE}
+            bgRemoval={bgRemoval}
             disableChat={disableChat}
             disableSelfieMode={disableSelfieMode}
             arbData={arbData}

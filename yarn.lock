@@ -2774,6 +2774,11 @@
     "@typescript-eslint/types" "4.28.4"
     "eslint-visitor-keys" "^2.0.0"
 
+"@vectorly-io/ai-filters@^1.4.1":
+  "integrity" "sha512-A4hqOUxz22Iz5FiB4N+jJWZjWmMkI96VGe61PQ4zY2lU+bvLO2SsT8wvc5j+KGSK2Uh1jZws9OgpuUHL7wCn2Q=="
+  "resolved" "https://registry.npmjs.org/@vectorly-io/ai-filters/-/ai-filters-1.4.1.tgz"
+  "version" "1.4.1"
+
 "@webassemblyjs/ast@1.9.0":
   "integrity" "sha512-C6wW5L+b7ogSDVqymbkkvuW9kruN//YisMED04xzeBBqjHa2FYnmvOlS6Xj68xWQRgWvI9cIglsjFowH/RJyEA=="
   "resolved" "https://registry.npmjs.org/@webassemblyjs/ast/-/ast-1.9.0.tgz"

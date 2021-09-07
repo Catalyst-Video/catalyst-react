@@ -34,6 +34,7 @@ export interface CatalystChatProps {
   audioOffDefault?: boolean;
   videoOffDefault?: boolean;
   simulcast?: boolean;
+  bgRemoval?: 'blur' | string;
   disableChat?: boolean;
   disableSelfieMode?: boolean;
   disableSetupView?: boolean;

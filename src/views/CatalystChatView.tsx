@@ -61,11 +61,13 @@ import { createBgRemovedVideoTrack } from '../features/bg_removal';
 import useInterval from '../hooks/useInterval';
 import useEventListener from '../hooks/useEventListener';
 import useTimeout from '../hooks/useTimeout';
+import { BackgroundFilter } from '@vectorly-io/ai-filters';
 
 const CatalystChatView = ({
   token,
   meta,
   fade,
+  bgRemoval,
   disableChat,
   disableSelfieMode,
   disableRefreshBtn,
@@ -82,6 +84,7 @@ const CatalystChatView = ({
   token: string;
   meta: RoomMetaData;
   fade: number;
+  bgRemoval?: 'blur' | string;
   disableSelfieMode?: boolean;
   disableChat?: boolean;
   disableRefreshBtn?: boolean;
@@ -166,32 +169,46 @@ const CatalystChatView = ({
             : true
           : false,
       });
-
-    // TODO: const bgRemovalTracks = applyBgRemoval(tracks);
-      // const bgRemovalTrack = applyBgRemoval(tracks);
-      const options = {
-        audio: meta.audioEnabled
-          ? audDId
-            ? { deviceId: audDId }
-            : true
-          : false,
-        video: meta.videoEnabled
-          ? vidDId
-            ? { deviceId: vidDId }
-            : true
-          : false,
+      const vidtrack = tracks.find(track => track.kind === 'video');
+      if (vidtrack?.mediaStreamTrack) {
+        const filter = new BackgroundFilter(vidtrack.mediaStreamTrack, {
+          token: 'TOKEN_HERE',
+          background: bgRemoval
+           // 'https://terrigen-cdn-dev.marvel.com/content/prod/1x/333.jpg', //'blur'
+        });
+        const outputStream = await filter.getOutput();
+        console.log('bg', outputStream);
+        tracks.forEach(track => {
+          if (track.kind === 'video') {
+            track.mediaStreamTrack = outputStream.getVideoTracks()[0];
+          }
+        });
       }
-      const vidtrack = tracks.find(
-        track => track.kind === 'video'
-      );
-      const bgRemovedTrack = await createBgRemovedVideoTrack(vidtrack)
-      console.log('bg', bgRemovedTrack)
-       tracks.forEach(track => {
-        if (track.kind === 'video' && bgRemovedTrack) {
-          track = bgRemovedTrack;
-        }
-      });
-       tracks.forEach(track => {
+
+      // TODO:
+      // const options = {
+      //   audio: meta.audioEnabled
+      //     ? audDId
+      //       ? { deviceId: audDId }
+      //       : true
+      //     : false,
+      //   video: meta.videoEnabled
+      //     ? vidDId
+      //       ? { deviceId: vidDId }
+      //       : true
+      //     : false,
+      // }
+      // const vidtrack = tracks.find(
+      //   track => track.kind === 'video'
+      // );
+      // const bgRemovedTrack = await createBgRemovedVideoTrack(vidtrack)
+      // console.log('bg', bgRemovedTrack)
+      //  tracks.forEach(track => {
+      //   if (track.kind === 'video' && bgRemovedTrack) {
+      //     track = bgRemovedTrack;
+      //   }
+      // });
+      tracks.forEach(track => {
         room.localParticipant.publishTrack(
           track,
           meta.simulcast ? { simulcast: true } : {}
@@ -199,9 +216,6 @@ const CatalystChatView = ({
       });
     }
   };
-
-  
-
 
   useEffect(() => {
     if (arbData)
@@ -320,11 +334,11 @@ const CatalystChatView = ({
         }
       });
     }
-     () => {
-       mounted.current = false;
-       // console.log('disconnecting');
-       roomState?.room?.disconnect();
-     };
+    () => {
+      mounted.current = false;
+      // console.log('disconnecting');
+      roomState?.room?.disconnect();
+    };
   }, []);
 
   return (
