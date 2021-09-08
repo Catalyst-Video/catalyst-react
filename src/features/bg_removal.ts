@@ -1,35 +1,47 @@
-import { Camera } from "@mediapipe/camera_utils";
+// import { Camera } from "@mediapipe/camera_utils";
 import { Results, SelfieSegmentation } from "@mediapipe/selfie_segmentation";
 import { LocalVideoTrack } from "livekit-client";
 
+export class BgFilter {
 
-const foregroundCanvasElement: HTMLCanvasElement = document.createElement(
-  'canvas'
-);
-const backgroundCanvasElement: HTMLCanvasElement = document.createElement(
-  'canvas'
-);
-const backgroundCanvasCtx: CanvasRenderingContext2D | null = backgroundCanvasElement.getContext(
-  '2d'
-);
+ foreground: HTMLCanvasElement
+ background: HTMLCanvasElement
+ backgroundCtx: CanvasRenderingContext2D | null
+ outputCtx: CanvasRenderingContext2D | null;
+ effect: string = 'blur'; // blur | video | image
+ bgImage: HTMLImageElement | null;
+ bgVideo: HTMLVideoElement | null;
+  foregroundType: string = 'normal'; // normal | presenter
+  presenterOffset: number = 0;
+  inputVid: HTMLVideoElement;
+  outputCanvas: HTMLCanvasElement;
+  
+  constructor() {
+    this.foreground = document.createElement(
+    'canvas'
+    );
+    this.background = document.createElement(
+    'canvas'
+    );
+    this.backgroundCtx = this.background.getContext(
+    '2d'
+    );
+    this.inputVid = document.createElement('video')
+    this.outputCanvas = document.createElement('canvas')
+    this.outputCtx = null;
+    this.bgImage = null;
+    this.bgVideo = null;
+  }
 
-let outputCanvasCtx: CanvasRenderingContext2D | null;
-let effectType: string = 'blur'; // blur | video | image
-let backgroundImage: HTMLImageElement;
-let backgroundVideo: HTMLVideoElement
-let foregroundType: string = 'normal'; // normal | presenter
-let presenterModeOffset: number = 0;
-
-export async function segmentBackground(
- inputVideoElement: HTMLVideoElement,
-  outputCanvasElement: HTMLCanvasElement,
+ segmentBackground = async (
+//  inputVideoElement: HTMLVideoElement,
+//   outputCanvasElement: HTMLCanvasElement,
   modelSelection: 0 | 1 = 1
-) {
-  foregroundCanvasElement.width = backgroundCanvasElement.width =
-    outputCanvasElement.width;
-  foregroundCanvasElement.height = backgroundCanvasElement.height =
-    outputCanvasElement.height;
-   outputCanvasCtx = outputCanvasElement.getContext('2d');
+) =>{
+  this.foreground.width = this.background.width =
+    this.outputCanvas.width;
+  this.foreground.height = this.background.height = this.outputCanvas.height;
+   this.outputCtx = this.outputCanvas.getContext('2d');
 
   const selfieSegmentation = new SelfieSegmentation({
     locateFile: file => {
@@ -41,71 +53,73 @@ export async function segmentBackground(
   });
   selfieSegmentation.onResults(results => {
     // console.log('results1', results)
-    mergeForegroundBackground(
-      foregroundCanvasElement,
-      backgroundCanvasElement,
+    this.mergeForegroundBackground(
+      this.foreground,
+      this.background,
       results
     );
   });
+   
 
-  const camera = new Camera(inputVideoElement, {
-    onFrame: async () => {
-      await selfieSegmentation.send({ image: inputVideoElement });
-    },
-    width: inputVideoElement.width,
-    height: inputVideoElement.height,
-  });
-  camera.start();
 
-  // inputVideoElement.addEventListener('play', () => {
-  // async function step() {
-  //     console.log('step')
+  // const camera = new Camera(inputVideoElement, {
+  //   onFrame: async () => {
   //     await selfieSegmentation.send({ image: inputVideoElement });
-  //     requestAnimationFrame(step);
-  //   }
-  //   requestAnimationFrame(step);
+  //   },
+  //   width: inputVideoElement.width,
+  //   height: inputVideoElement.height,
   // });
+  // camera.start();
+  let vidEl = this.inputVid;
+  this.inputVid.addEventListener('play', () => {
+    async function step() {
+      // console.log('step');
+      await selfieSegmentation.send({ image: vidEl });
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
 }
 
-function mergeForegroundBackground(
+ mergeForegroundBackground = (
   foregroundCanvasElement: HTMLCanvasElement,
   backgroundCanvasElement: HTMLCanvasElement,
   results: Results
-) {
+) => {
   // console.log('merging', results)
-  makeCanvasLayer(results, foregroundCanvasElement, 'foreground');
-  if (effectType === 'blur')
-    makeCanvasLayer(results, backgroundCanvasElement, 'background');
-  else if (effectType === 'image') {
-    backgroundCanvasCtx?.drawImage(
-      backgroundImage,
-      0,
-      0,
-      backgroundCanvasElement.width,
-      backgroundCanvasElement.height
-    );
-  } else if (effectType === 'video') {
-    backgroundCanvasCtx?.drawImage(
-      backgroundVideo,
-      0,
-      0,
-      backgroundCanvasElement.width,
-      backgroundCanvasElement.height
-    );
-  }
-  outputCanvasCtx?.drawImage(backgroundCanvasElement, 0, 0);
-  if (foregroundType === 'presenter')
-    outputCanvasCtx?.drawImage(
+  this.makeCanvasLayer(results, foregroundCanvasElement, 'foreground');
+  if (this.effect === 'blur')
+    this.makeCanvasLayer(results, backgroundCanvasElement, 'background');
+  else if (this.effect === 'image' && this.bgImage) {
+         this.backgroundCtx?.drawImage(
+           this.bgImage,
+           0,
+           0,
+           backgroundCanvasElement.width,
+           backgroundCanvasElement.height
+         );
+       } else if (this.effect === 'video' && this.bgVideo) {
+                this.backgroundCtx?.drawImage(
+                  this.bgVideo,
+                  0,
+                  0,
+                  backgroundCanvasElement.width,
+                  backgroundCanvasElement.height
+                );
+              }
+  this.outputCtx?.drawImage(backgroundCanvasElement, 0, 0);
+  if (this.foregroundType === 'presenter')
+    this.outputCtx?.drawImage(
       foregroundCanvasElement,
-      foregroundCanvasElement.width * 0.5 - presenterModeOffset,
+      foregroundCanvasElement.width * 0.5 - this.presenterOffset,
       foregroundCanvasElement.height * 0.5,
       foregroundCanvasElement.width * 0.5,
       foregroundCanvasElement.height * 0.5
     );
-  else outputCanvasCtx?.drawImage(foregroundCanvasElement, 0, 0);
+  else this.outputCtx?.drawImage(foregroundCanvasElement, 0, 0);
 }
 
-function makeCanvasLayer(results: Results, canvasElement: HTMLCanvasElement, type: string) {
+ makeCanvasLayer = (results: Results, canvasElement: HTMLCanvasElement, type: string) => {
   const canvasCtx = canvasElement.getContext('2d');
 
   canvasCtx?.save();
@@ -133,69 +147,69 @@ function makeCanvasLayer(results: Results, canvasElement: HTMLCanvasElement, typ
   canvasCtx?.restore();
 }
 
-export function applyBlur(blurIntensity: number = 7) {
-         effectType = 'blur';
-         foregroundType = 'normal';
-         if (backgroundCanvasCtx)
-           backgroundCanvasCtx.filter = `blur(${blurIntensity}px)`;
+ applyBlur = (blurIntensity: number = 7) => {
+         this.effect = 'blur';
+         this.foregroundType = 'normal';
+         if (this.backgroundCtx)
+           this.backgroundCtx.filter = `blur(${blurIntensity}px)`;
        }
 
-export function applyImageBackground(image: HTMLImageElement) {
-         backgroundImage = image;
-         foregroundType = 'normal';
-         effectType = 'image';
+  applyImageBackground = (image: HTMLImageElement) => {
+         this.bgImage = image;
+         this.foregroundType = 'normal';
+         this.effect = 'image';
        }
 
-export function applyVideoBackground(video: HTMLVideoElement) {
-         backgroundVideo = video;
+ applyVideoBackground = (video: HTMLVideoElement) => {
+         this.bgVideo = video;
          video.autoplay = true;
          video.loop = true;
          video.addEventListener('play', () => {
            video.muted = true;
          });
-         effectType = 'video';
+         this.effect = 'video';
        }
 
-export function applyScreenBackground(stream: MediaStream) {
+ applyScreenBackground = (stream: MediaStream) => {
   const videoElement = document.createElement('video');
   videoElement.srcObject = stream;
-  if (backgroundVideo) backgroundVideo = videoElement;
+  if (this.bgVideo) this.bgVideo = videoElement;
 
   videoElement.autoplay = true;
   videoElement.loop = true;
   videoElement.addEventListener('play', () => {
     videoElement.muted = true;
   });
-  effectType = 'video';
+  this.effect = 'video';
 }
 
-export function changeForegroundType(type, offset = 0) {
-  foregroundType = type;
-  presenterModeOffset = offset;
+ changeForegroundType = (type: string, offset: number = 0) => {
+  this.foregroundType = type;
+  this.presenterOffset = offset;
 }
 
 
-export function createBgFilters(
+ init = (
   inputStream: MediaStream,
   bg?: string
-) {
+): MediaStreamTrack => {
     console.log(inputStream);
-    const videoEl: HTMLVideoElement = document.createElement('video');
-    const canvasEl: HTMLCanvasElement = document.createElement('canvas');
 
-    videoEl.srcObject = inputStream;
+
+   this.inputVid.srcObject = inputStream;
+   this.inputVid.play()
     // console.log(canvasEl)
 
-    //  const width =
-    //    window.innerHeight > window.innerWidth
-    //      ? inputStream.getVideoTracks()[0].getSettings().height
-    //      : inputStream.getVideoTracks()[0].getSettings().width;
-    //  const height =
-    //    window.innerHeight > window.innerWidth
-    //      ? inputStream.getVideoTracks()[0].getSettings().width
-    //      : inputStream.getVideoTracks()[0].getSettings().height;
+     const width =
+       window.innerHeight > window.innerWidth
+         ? inputStream.getVideoTracks()[0].getSettings().height
+         : inputStream.getVideoTracks()[0].getSettings().width;
+     const height =
+       window.innerHeight > window.innerWidth
+         ? inputStream.getVideoTracks()[0].getSettings().width
+         : inputStream.getVideoTracks()[0].getSettings().height;
 
-    // document.getElementById('root')?.appendChild(videoEl);
+    // document.getElementById('root')?.appendChild(this.inputVideoElement);
     // videoEl.style.zIndex = '99998';
     // videoEl.style.position = 'absolute';
     // videoEl.style.top = '0';
@@ -204,26 +218,27 @@ export function createBgFilters(
     // canvasEl.style.height = height + 'px';
     // canvasEl.style.width = width + 'px';
 
-    // document.getElementById('root')?.appendChild(canvasEl);
-    // canvasEl.style.zIndex = '99998';
-    // canvasEl.style.position = 'absolute';
-    // canvasEl.style.bottom = '0';
-    // canvasEl.style.right = '0';
-    // canvasEl.style.height = height + 'px';
-    // canvasEl.style.width = width + 'px';
+    document.getElementById('root')?.appendChild(this.outputCanvas);
+    this.outputCanvas.style.zIndex = '99998';
+    this.outputCanvas.style.position = 'absolute';
+    this.outputCanvas.style.bottom = '0';
+    this.outputCanvas.style.right = '0';
+    this.outputCanvas.style.height = height + 'px';
+    this.outputCanvas.style.width = width + 'px';
 
-    // segments foreground & background
-    segmentBackground(videoEl, canvasEl);
-    // applyBlur(7);
-  const image = new Image();
-  image.src = 'https://terrigen-cdn-dev.marvel.com/content/prod/1x/333.jpg';
-  applyImageBackground(image);
-    const bgRemovedStream = canvasEl.captureStream(27);
+    this.segmentBackground();
+    // this.applyBlur(7);
+    const image = new Image();
+    image.src = 'https://terrigen-cdn-dev.marvel.com/content/prod/1x/333.jpg';
+    this.applyImageBackground(image);
+    const bgRemovedStream = this.outputCanvas.captureStream(27);
 
     return bgRemovedStream.getVideoTracks()[0]
     // return new MediaStream(bgRemovedStream).getVideoTracks()[0];
 }
-  
+
+}
+
 export function createLocalVideoTrack(
   mediaStreamTrack: MediaStreamTrack,
   name?: string,
@@ -232,3 +247,4 @@ export function createLocalVideoTrack(
   // return new LocalVideoTrack(mediaStreamTrack);
   return new LocalVideoTrack(mediaStreamTrack, name, constraints);
 }
+
