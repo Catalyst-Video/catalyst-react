@@ -46,6 +46,7 @@ const VidWrapper = React.memo(
       if (!vidEl) {
         return;
       }
+      console.log('in vid', track.sid, track.name)
       vidEl.muted = true;
       track.attach(vidEl);
       return () => {

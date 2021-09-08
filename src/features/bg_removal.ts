@@ -218,13 +218,13 @@ export class BgFilter {
     // canvasEl.style.height = height + 'px';
     // canvasEl.style.width = width + 'px';
 
-    document.getElementById('root')?.appendChild(this.outputCanvas);
-    this.outputCanvas.style.zIndex = '99998';
-    this.outputCanvas.style.position = 'absolute';
-    this.outputCanvas.style.bottom = '0';
-    this.outputCanvas.style.right = '0';
-    this.outputCanvas.style.height = height + 'px';
-    this.outputCanvas.style.width = width + 'px';
+    // document.getElementById('root')?.appendChild(this.outputCanvas);
+    // this.outputCanvas.style.zIndex = '99998';
+    // this.outputCanvas.style.position = 'absolute';
+    // this.outputCanvas.style.bottom = '0';
+    // this.outputCanvas.style.right = '0';
+    // this.outputCanvas.style.height = height + 'px';
+    // this.outputCanvas.style.width = width + 'px';
 
     this.segmentBackground();
     // this.applyBlur(7);
@@ -239,11 +239,11 @@ export class BgFilter {
 
 }
 
-export function createLocalVideoTrack(
+export function convertToLocalVideoTrack(
   mediaStreamTrack: MediaStreamTrack,
   name?: string,
   constraints?: MediaTrackConstraints
-) {
+): LocalVideoTrack {
   // return new LocalVideoTrack(mediaStreamTrack);
   return new LocalVideoTrack(mediaStreamTrack, name, constraints);
 }

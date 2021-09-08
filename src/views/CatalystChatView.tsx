@@ -57,7 +57,7 @@ import { SUPPORT_EMAIL } from '../utils/globals';
 import useReadLocalStorage from '../hooks/useReadLocalStorage';
 import useLocalStorage from '../hooks/useLocalStorage';
 // import { BackgroundFilter } from '@vectorly-io/ai-filters';
-import { BgFilter, createLocalVideoTrack } from '../features/bg_removal'
+import { BgFilter, convertToLocalVideoTrack } from '../features/bg_removal';
 
 const CatalystChatView = ({
   token,
@@ -174,13 +174,8 @@ const CatalystChatView = ({
         );
         tracks.forEach(track => {
           if (track.kind === 'video' && bgRemovedTrack) {
-            track = createLocalVideoTrack(bgRemovedTrack, bgRemovedTrack.label, bgRemovedTrack.getConstraints())
-            console.log('updated tracks')
-            //  console.log(track.mediaStreamTrack, bgRemovedTrack);
-            //  track.mediaStreamTracks
-          // track.mediaStreamTrack = bgRemovedTrack;
-          // console.log('applied bg removal filters',bgRemovedTrack)
-          // console.log((track.mediaStreamTrack === bgRemovedTrack));
+            track = convertToLocalVideoTrack(bgRemovedTrack, bgRemovedTrack.label ?? 'bg-rm-track', bgRemovedTrack.getConstraints())
+            console.log('updated tracks', track.name)
         }
       });
       }

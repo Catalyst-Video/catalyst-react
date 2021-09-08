@@ -49,6 +49,7 @@ import useLocalStorage from '../../hooks/useLocalStorage';
 import { ChatMessage } from '../../typings/interfaces';
 import Tippy from '@tippyjs/react';
 import useIsMounted from '../../hooks/useIsMounted';
+import { BgFilter, convertToLocalVideoTrack } from '../../features/bg_removal';
 
 const Toolbar = ({
   room,
@@ -205,6 +206,15 @@ const Toolbar = ({
       createLocalVideoTrack({ deviceId: videoDevice.deviceId })
         .then((track: LocalVideoTrack) => {
           if (video) unpublishTrack(video.track as LocalVideoTrack);  
+          
+          // TODO: also alter here
+        const filter = new BgFilter();
+        const bgRemovedTrack = filter.init(
+          new MediaStream([track.mediaStreamTrack]),
+          'blur'
+        );
+        track = convertToLocalVideoTrack(bgRemovedTrack, bgRemovedTrack.label, bgRemovedTrack.getConstraints())
+        console.log('altered')
           room.localParticipant.publishTrack(track);
         })
         .catch((err: Error) => {
