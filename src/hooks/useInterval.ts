@@ -1,4 +1,3 @@
-// Based on https://usehooks-typescript.com/react-hook/use-interval
 import { useEffect, useRef } from 'react';
 
 function useInterval(callback: () => void, delay: number | null) {

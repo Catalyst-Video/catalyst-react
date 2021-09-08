@@ -1,4 +1,3 @@
-// Based on https://usehooks-typescript.com/react-hook/use-debounce
 import { useEffect, useState } from 'react';
 
 function useDebounce<T>(value: T, delay?: number): T {

@@ -170,7 +170,8 @@ const CatalystChatView = ({
         const bgRemovedTrack = createBgFilters(new MediaStream([vidtrack?.mediaStreamTrack]));
          tracks.forEach(track => {
            if (track.kind === 'video' && bgRemovedTrack) {
-          console.log(track.mediaStreamTrack, bgRemovedTrack);
+             console.log(track.mediaStreamTrack, bgRemovedTrack);
+            //  track.mediaStreamTracks
         
           track.mediaStreamTrack = bgRemovedTrack;
           console.log('applied bg removal filters',bgRemovedTrack)

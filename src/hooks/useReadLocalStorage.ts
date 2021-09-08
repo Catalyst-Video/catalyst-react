@@ -1,4 +1,3 @@
-// Based on https://usehooks-typescript.com/react-hook/use-read-local-storage
 import { useEffect, useState } from 'react';
 
 type Value<T> = string | null;
