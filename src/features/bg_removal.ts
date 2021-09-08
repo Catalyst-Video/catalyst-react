@@ -1,13 +1,7 @@
 import { Camera } from "@mediapipe/camera_utils";
 import { Results, SelfieSegmentation } from "@mediapipe/selfie_segmentation";
+import { LocalVideoTrack } from "livekit-client";
 
-const script = document.createElement('script');
-script.type = 'text/javascript';
-script.src =
-  'https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1/selfie_segmentation.js';
-script.crossOrigin = 'anonymous';
-
-document.getElementsByTagName('head')[0].appendChild(script);
 
 const foregroundCanvasElement: HTMLCanvasElement = document.createElement(
   'canvas'
@@ -64,7 +58,8 @@ export async function segmentBackground(
   camera.start();
 
   // inputVideoElement.addEventListener('play', () => {
-  //   async function step() {
+  // async function step() {
+  //     console.log('step')
   //     await selfieSegmentation.send({ image: inputVideoElement });
   //     requestAnimationFrame(step);
   //   }
@@ -184,52 +179,56 @@ export function createBgFilters(
   inputStream: MediaStream,
   bg?: string
 ) {
-  console.log(inputStream);
-  const videoEl: HTMLVideoElement = document.createElement('video');
-  const canvasEl: HTMLCanvasElement = document.createElement('canvas');
+    console.log(inputStream);
+    const videoEl: HTMLVideoElement = document.createElement('video');
+    const canvasEl: HTMLCanvasElement = document.createElement('canvas');
 
-  // let myStream = await navigator.mediaDevices.getUserMedia({
-  //   video: {
-  //     width: { ideal: 1920 },
-  //     height: { ideal: 1080 },
-  //   }
-  // });
+    videoEl.srcObject = inputStream;
+    // console.log(canvasEl)
 
-  videoEl.srcObject = inputStream;
-  console.log(canvasEl)
+    //  const width =
+    //    window.innerHeight > window.innerWidth
+    //      ? inputStream.getVideoTracks()[0].getSettings().height
+    //      : inputStream.getVideoTracks()[0].getSettings().width;
+    //  const height =
+    //    window.innerHeight > window.innerWidth
+    //      ? inputStream.getVideoTracks()[0].getSettings().width
+    //      : inputStream.getVideoTracks()[0].getSettings().height;
 
-   const width =
-     window.innerHeight > window.innerWidth
-       ? inputStream.getVideoTracks()[0].getSettings().height
-       : inputStream.getVideoTracks()[0].getSettings().width;
-   const height =
-     window.innerHeight > window.innerWidth
-       ? inputStream.getVideoTracks()[0].getSettings().width
-       : inputStream.getVideoTracks()[0].getSettings().height;
+    // document.getElementById('root')?.appendChild(videoEl);
+    // videoEl.style.zIndex = '99998';
+    // videoEl.style.position = 'absolute';
+    // videoEl.style.top = '0';
+    // videoEl.style.left = '0';
+    // console.log(height, width)
+    // canvasEl.style.height = height + 'px';
+    // canvasEl.style.width = width + 'px';
 
-  // document.getElementById('root')?.appendChild(videoEl);
-  // videoEl.style.zIndex = '99998';
-  // videoEl.style.position = 'absolute';
-  // videoEl.style.top = '0';
-  // videoEl.style.left = '0';
-  // console.log(height, width)
-  // canvasEl.style.height = height + 'px';
-  // canvasEl.style.width = width + 'px';
+    // document.getElementById('root')?.appendChild(canvasEl);
+    // canvasEl.style.zIndex = '99998';
+    // canvasEl.style.position = 'absolute';
+    // canvasEl.style.bottom = '0';
+    // canvasEl.style.right = '0';
+    // canvasEl.style.height = height + 'px';
+    // canvasEl.style.width = width + 'px';
 
+    // segments foreground & background
+    segmentBackground(videoEl, canvasEl);
+    // applyBlur(7);
+  const image = new Image();
+  image.src = 'https://terrigen-cdn-dev.marvel.com/content/prod/1x/333.jpg';
+  applyImageBackground(image);
+    const bgRemovedStream = canvasEl.captureStream(27);
 
-  // document.getElementById('root')?.appendChild(canvasEl);
-  // canvasEl.style.zIndex = '99998';
-  // canvasEl.style.position = 'absolute';
-  // canvasEl.style.bottom = '0';
-  // canvasEl.style.right = '0';
-  // canvasEl.style.height = height + 'px';
-  // canvasEl.style.width = width + 'px';
-
-
-  // segments foreground & background
-  segmentBackground(videoEl, canvasEl);
-  applyBlur(5);
+    return bgRemovedStream.getVideoTracks()[0]
+    // return new MediaStream(bgRemovedStream).getVideoTracks()[0];
+}
   
-  const bgRemovedStream = canvasEl.captureStream(27)
-  return bgRemovedStream.getVideoTracks()[0]
+export function createLocalVideoTrack(
+  mediaStreamTrack: MediaStreamTrack,
+  name?: string,
+  constraints?: MediaTrackConstraints
+) {
+  // return new LocalVideoTrack(mediaStreamTrack);
+  return new LocalVideoTrack(mediaStreamTrack, name, constraints);
 }

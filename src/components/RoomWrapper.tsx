@@ -169,7 +169,7 @@ const RoomWrapper = ({
             {error && <span>⚠️ {error.message}</span>}
             {connecting && <span>⚡ Connecting...</span>}
             {!room && !connecting && !error && (
-              <span>🚀 Preparing room...</span>
+              <span>🚀 Preparing session...</span>
             )}
             {members.length === 0 && room && !connecting && (
               <span>{cstmWelcomeMsg ?? DEFAULT_WELCOME_MESSAGE}</span>
