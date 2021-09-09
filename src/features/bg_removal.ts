@@ -5,7 +5,6 @@ import { LocalVideoTrack } from 'livekit-client';
 export class BgFilter {
   foreground: HTMLCanvasElement;
   background: HTMLCanvasElement;
-  foregroundCtx:  CanvasRenderingContext2D | null;
   backgroundCtx: CanvasRenderingContext2D | null;
   outputCtx: CanvasRenderingContext2D | null;
   effect: string = 'blur'; // blur | video | image
@@ -20,7 +19,6 @@ export class BgFilter {
   constructor() {
     this.foreground = document.createElement('canvas');
     this.background = document.createElement('canvas');
-    this.foregroundCtx = this.background.getContext('2d');
     this.backgroundCtx = this.background.getContext('2d');
     this.inputVid = document.createElement('video');
     this.outputCanvas = document.createElement('canvas');
@@ -49,7 +47,7 @@ export class BgFilter {
     });
     selfieSegmentation.onResults(results => {
       // console.log('results1', results)
-      this.mergeForegroundBackground(results);
+      this.mergeForegroundBackground(this.foreground, this.background, results);
     });
     // IGNORE THIS - alternative method we cannot use anymore for device input reasons
     // const camera = new Camera(inputVideoElement, {
@@ -84,39 +82,41 @@ export class BgFilter {
          4. We create a canvas element that will be used to hold the output layer.
          */
   mergeForegroundBackground = (
+    foregroundCanvasElement: HTMLCanvasElement,
+    backgroundCanvasElement: HTMLCanvasElement,
     results: Results
   ) => {
     // console.log('merging', results)
-    this.makeCanvasLayer(results, this.foreground, 'foreground');
+    this.makeCanvasLayer(results, foregroundCanvasElement, 'foreground');
     if (this.effect === 'blur')
-      this.makeCanvasLayer(results, this.background, 'background');
+      this.makeCanvasLayer(results, backgroundCanvasElement, 'background');
     else if (this.effect === 'image' && this.bgImage) {
       this.backgroundCtx?.drawImage(
         this.bgImage,
         0,
         0,
-        this.background.width,
-        this.background.height
+        backgroundCanvasElement.width,
+        backgroundCanvasElement.height
       );
     } else if (this.effect === 'video' && this.bgVideo) {
       this.backgroundCtx?.drawImage(
         this.bgVideo,
         0,
         0,
-        this.background.width,
-        this.background.height
+        backgroundCanvasElement.width,
+        backgroundCanvasElement.height
       );
     }
-    this.outputCtx?.drawImage(this.background, 0, 0);
+    this.outputCtx?.drawImage(backgroundCanvasElement, 0, 0);
     if (this.foregroundType === 'presenter')
       this.outputCtx?.drawImage(
-        this.foreground,
-        this.foreground.width * 0.5 - this.presenterOffset,
-        this.foreground.height * 0.5,
-        this.foreground.width * 0.5,
-        this.foreground.height * 0.5
+        foregroundCanvasElement,
+        foregroundCanvasElement.width * 0.5 - this.presenterOffset,
+        foregroundCanvasElement.height * 0.5,
+        foregroundCanvasElement.width * 0.5,
+        foregroundCanvasElement.height * 0.5
       );
-    else this.outputCtx?.drawImage(this.foreground, 0, 0);
+    else this.outputCtx?.drawImage(foregroundCanvasElement, 0, 0);
   };
 
   /*
@@ -130,10 +130,7 @@ export class BgFilter {
     canvasElement: HTMLCanvasElement,
     type: string
   ) => {
-    var canvasCtx: CanvasRenderingContext2D | null = this.foregroundCtx;
-    if (canvasElement === this.background) {
-      canvasCtx = this.backgroundCtx;
-    } 
+    const canvasCtx = canvasElement.getContext('2d');
 
     canvasCtx?.save();
 
@@ -237,13 +234,14 @@ export class BgFilter {
     // canvasEl.style.height = height + 'px';
     // canvasEl.style.width = width + 'px';
 
-    document.getElementById('root')?.appendChild(this.outputCanvas);
-    this.outputCanvas.style.zIndex = '99998';
-    this.outputCanvas.style.position = 'absolute';
-    this.outputCanvas.style.bottom = '0';
-    this.outputCanvas.style.right = '0';
-    this.outputCanvas.style.height = height + 'px';
-    this.outputCanvas.style.width = width + 'px';
+    //TODO: uncomment to test
+    // document.getElementById('root')?.appendChild(this.outputCanvas);
+    // this.outputCanvas.style.zIndex = '99998';
+    // this.outputCanvas.style.position = 'absolute';
+    // this.outputCanvas.style.bottom = '0';
+    // this.outputCanvas.style.right = '0';
+    // this.outputCanvas.style.height = height + 'px';
+    // this.outputCanvas.style.width = width + 'px';
 
     this.segmentBackground();
     // this.applyBlur(7);
