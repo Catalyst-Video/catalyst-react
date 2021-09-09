@@ -79,6 +79,16 @@ const CatalystChat = ({
     setThemeColor(theme ?? THEMES.default);
   }, []);
 
+  /*
+  1. It checks if the ready state is true and the token length is less than 1.
+  2. If these conditions are met, it sets the client ID in the cookies.
+  3. It then makes a request to the auth endpoint to obtain the user token.
+  4. If the response status is 200, it sets the token in state.
+  5. If the response status is 500, it sets the token to INVALID.
+  6. If the response status is anything other than 200 or 500, it sets the token to INVALID.
+  7. If the response status is 200, it also sets the user data in state.
+  8. Finally, it returns the token.
+  */
   useEffect(() => {
     if (ready && token.length < 1) {
       // set client ID
