@@ -208,13 +208,11 @@ const Toolbar = ({
           if (video) unpublishTrack(video.track as LocalVideoTrack);  
           
           // TODO: also alter here
-        const filter = new BgFilter();
-        const bgRemovedTrack = filter.init(
-          new MediaStream([track.mediaStreamTrack]),
-          'blur'
-        );
-        track = convertToLocalVideoTrack(bgRemovedTrack, bgRemovedTrack.label, bgRemovedTrack.getConstraints())
-        console.log('altered')
+        //   const filter = new BgFilter();
+        //   filter.init(new MediaStream([track.mediaStreamTrack]), 'blur');
+        //   const bgRemovedTrack = filter.getBgRemovedTrack(); 
+        // track = convertToLocalVideoTrack(bgRemovedTrack, bgRemovedTrack.getConstraints())
+        // console.log('altered')
           room.localParticipant.publishTrack(track);
         })
         .catch((err: Error) => {
