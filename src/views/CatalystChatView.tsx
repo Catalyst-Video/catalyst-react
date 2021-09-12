@@ -165,33 +165,34 @@ const CatalystChatView = ({
             : true
           : false,
       });
-      const vidTrack = tracks.find(track => track.kind === 'video');
-      const filter = new BgFilter();
-      if (vidTrack?.mediaStreamTrack) {
-        filter.init(new MediaStream([vidTrack.mediaStreamTrack]), 'blur');
-      }
-      // const bgRemovedTrack = filter.getBgRemovedTrack(); 
-      //   tracks.forEach(track => {
-      //     if (track.kind === 'video' && bgRemovedTrack) {
-      //       track = convertToLocalVideoTrack(bgRemovedTrack)
-      //         //, bgRemovedTrack.label ?? 'bg-rm-track', bgRemovedTrack.getConstraints())
-      //       console.log('updated tracks', track)
-      //   }
-      // });
-      // }
 
-      tracks.forEach(track => {
-        console.log('track', track);
-        if (track.kind === 'video') {
-          const bgRemovedTrack = filter.getBgRemovedTrack();
-          track = convertToLocalVideoTrack(bgRemovedTrack, track.mediaStreamTrack.getConstraints());
-          console.log('track1 ', bgRemovedTrack, track);
+      if (bgRemoval) {
+        const vidTrack = tracks.find(track => track.kind === 'video');
+        const filter = new BgFilter();
+        if (vidTrack?.mediaStreamTrack) {
+          filter.init(new MediaStream([vidTrack.mediaStreamTrack]), bgRemoval);
         }
-        room.localParticipant.publishTrack(
-          track,
-          meta.simulcast ? { simulcast: true } : {}
-        );
-      });
+
+        tracks.forEach(track => {
+          // console.log('track', track);
+          if (track.kind === 'video') {
+            const bgRemovedTrack = filter.getBgRemovedTrack();
+            track = convertToLocalVideoTrack(bgRemovedTrack, track.mediaStreamTrack.getConstraints());
+            // console.log('track1 ', bgRemovedTrack, track);
+          }
+          room.localParticipant.publishTrack(
+            track,
+            meta.simulcast ? { simulcast: true } : {}
+          );
+        });
+      } else {
+         tracks.forEach(track => {
+           room.localParticipant.publishTrack(
+             track,
+             meta.simulcast ? { simulcast: true } : {}
+           );
+         });
+      }
     }
   };
 

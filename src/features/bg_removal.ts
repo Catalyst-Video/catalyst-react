@@ -222,7 +222,7 @@ export class BgFilter {
 
          // initialize filters by creating an input video element based on mediastream, then apply filters and capture stream from output canvas to return a mediastream track with the filter applied
          init = (inputStream: MediaStream, bg?: string): void => {
-           console.log(inputStream);
+          //  console.log(inputStream);
 
            const width =
              (window.innerHeight > window.innerWidth
@@ -241,7 +241,7 @@ export class BgFilter {
            this.background.width = width;
            this.background.height = height;
            this.outputCanvas.height = height;
-            this.outputCanvas.width = width;
+           this.outputCanvas.width = width;
            this.inputVid.play();
            // console.log(canvasEl)
 
@@ -264,14 +264,22 @@ export class BgFilter {
           //  this.outputCanvas.style.width = width + 'px';
 
            this.segmentBackground();
-           this.applyBlur(15);
+
+           if (bg === 'blur') {
+            this.applyBlur(15);
+           } else {
+             const image = new Image();
+             image.src =
+               'https://terrigen-cdn-dev.marvel.com/content/prod/1x/333.jpg';
+             this.applyImageBackground(image);
+           }
            showFramesPerSecond();
           //  const image = new Image();
           //  image.src =
           //    'https://terrigen-cdn-dev.marvel.com/content/prod/1x/333.jpg';
           //  this.applyImageBackground(image);
            // const bgRemovedStream = this.outputCanvas.captureStream(27);
-
+          //  const bgRemovedStream = this.outputCanvas.captureStream(27);
            // return bgRemovedStream.getVideoTracks()[0];
            // return new MediaStream(bgRemovedStream).getVideoTracks()[0];
          };
