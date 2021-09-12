@@ -22,8 +22,6 @@ export class BgFilter {
            this.backgroundCtx = this.background.getContext('2d');
            this.inputVid = document.createElement('video');
            this.outputCanvas = document.createElement('canvas');
-          //  this.outputCanvas.width = 640;
-          //  this.outputCanvas.height = 480;
            this.outputCtx = null;
            this.bgImage = null;
            this.bgVideo = null;
@@ -257,20 +255,21 @@ export class BgFilter {
            // canvasEl.style.width = width + 'px';
 
            //TODO: uncomment to test
-           // document.getElementById('root')?.appendChild(this.outputCanvas);
-           // this.outputCanvas.style.zIndex = '99998';
-           // this.outputCanvas.style.position = 'absolute';
-           // this.outputCanvas.style.bottom = '0';
-           // this.outputCanvas.style.right = '0';
-           // this.outputCanvas.style.height = height + 'px';
-           // this.outputCanvas.style.width = width + 'px';
+          //  document.getElementById('root')?.appendChild(this.outputCanvas);
+          //  this.outputCanvas.style.zIndex = '99998';
+          //  this.outputCanvas.style.position = 'absolute';
+          //  this.outputCanvas.style.bottom = '0';
+          //  this.outputCanvas.style.right = '0';
+          //  this.outputCanvas.style.height = height + 'px';
+          //  this.outputCanvas.style.width = width + 'px';
 
            this.segmentBackground();
-           // this.applyBlur(7);
-           const image = new Image();
-           image.src =
-             'https://terrigen-cdn-dev.marvel.com/content/prod/1x/333.jpg';
-           this.applyImageBackground(image);
+           this.applyBlur(15);
+           showFramesPerSecond();
+          //  const image = new Image();
+          //  image.src =
+          //    'https://terrigen-cdn-dev.marvel.com/content/prod/1x/333.jpg';
+          //  this.applyImageBackground(image);
            // const bgRemovedStream = this.outputCanvas.captureStream(27);
 
            // return bgRemovedStream.getVideoTracks()[0];
@@ -278,7 +277,7 @@ export class BgFilter {
          };
 
          getBgRemovedTrack = (): MediaStreamTrack => {
-           const bgRemovedStream = this.outputCanvas.captureStream(27);
+           const bgRemovedStream = this.outputCanvas.captureStream(25);
            return bgRemovedStream.getVideoTracks()[0];
          };
        }
@@ -291,4 +290,43 @@ export function convertToLocalVideoTrack(
 ): LocalVideoTrack {
   return new LocalVideoTrack(mediaStreamTrack, mediaStreamTrack.label, constraints ?? mediaStreamTrack.getConstraints());
   // return new LocalVideoTrack(mediaStreamTrack, name, constraints);
+}
+
+
+function showFramesPerSecond() {
+  const fpsEl: HTMLElement = document.createElement('span');
+  document.getElementById('root')?.appendChild(fpsEl);
+  fpsEl.style.zIndex = '99998';
+  fpsEl.style.position = 'absolute';
+  fpsEl.style.bottom = '0';
+  fpsEl.style.right = '0';
+  fpsEl.style.color = 'white';
+  const numDecimals = 2;
+  const updateDelaySeconds = 1;
+
+  const decimalPlaces = Math.pow(10, numDecimals);
+  let time: DOMHighResTimeStamp[] = [];
+
+  let fps = 0;
+  const tick = () => {
+    time.push(performance.now());
+
+    const msPassed =
+      time[time.length - 1] - time[0];
+
+    if (msPassed >= updateDelaySeconds * 1000) {
+      fps =
+        Math.round(
+          (time.length / msPassed) * 1000 * decimalPlaces
+        ) / decimalPlaces;
+      time = [];
+    }
+
+    fpsEl.innerText = `FPS: ${fps}`;
+
+    requestAnimationFrame(() => {
+      tick();
+    });
+  };
+  tick();
 }
