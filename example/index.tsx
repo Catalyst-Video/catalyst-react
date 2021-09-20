@@ -7,8 +7,8 @@ import Draggable from 'react-draggable';
 const App = () => {
   return (
     <>
-      <GeneralTest />
-      {/* <HoursTest /> */}
+      {/* <GeneralTest /> */}
+      <HoursTest />
     </>
   );
 };
@@ -88,10 +88,11 @@ const HoursTest = () => {
             <CatalystChat
               room={'testingGround'}
               appId={process.env.REACT_APP_APP_ID ?? 'REAL_APP_ID_HERE'}
-              audioOnDefault={false}
+              audioOffDefault
               disableSetupView
               disableChat
-              theme="hoursDark"
+              // theme="hoursDark"
+              theme="hoursLight"
               // theme={{
               //   primary: '#50c878',
               //   secondary: '#eee',

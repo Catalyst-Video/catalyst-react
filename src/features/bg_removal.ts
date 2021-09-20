@@ -270,6 +270,7 @@ export class BgFilter {
            } else {
              const image = new Image();
              image.src =
+               bg ??
                'https://terrigen-cdn-dev.marvel.com/content/prod/1x/333.jpg';
              this.applyImageBackground(image);
            }

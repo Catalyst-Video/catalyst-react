@@ -63,6 +63,7 @@ const Toolbar = ({
   setChatOpen,
   disableChat,
   cstmSupportUrl,
+  bgRemoval,
 }: {
   room: Room;
   onLeave?: (room: Room) => void;
@@ -75,6 +76,7 @@ const Toolbar = ({
   setChatOpen: Function;
   disableChat?: boolean;
   cstmSupportUrl?: string;
+  bgRemoval?: 'blur' | string
 }) => {
   const { publications, isMuted, unpublishTrack } = useMember(
     room.localParticipant
@@ -84,8 +86,14 @@ const Toolbar = ({
   const [screen, setScreenPub] = useState<TrackPublication>();
   const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
   const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
-  const [audDId, setAudDId] = useLocalStorage('PREFERRED_AUDIO_DEVICE_ID', 'default');
-  const [vidDId, setVidDId] = useLocalStorage('PREFERRED_VIDEO_DEVICE_ID', 'default');
+  const [audDId, setAudDId] = useLocalStorage(
+    'PREFERRED_AUDIO_DEVICE_ID',
+    'default'
+  );
+  const [vidDId, setVidDId] = useLocalStorage(
+    'PREFERRED_VIDEO_DEVICE_ID',
+    'default'
+  );
   const [showChatSent, setShowChatSent] = useState<boolean>(false);
   const chatBtnRef = useRef<HTMLDivElement>(null);
   const isMounted = useIsMounted();
@@ -106,7 +114,8 @@ const Toolbar = ({
 
   useEffect(() => {
     if (
-      !disableChat && chatMessages.length > 0 &&
+      !disableChat &&
+      chatMessages.length > 0 &&
       chatMessages[chatMessages.length - 1].sender !== room.localParticipant &&
       !chatOpen
     ) {
@@ -129,11 +138,7 @@ const Toolbar = ({
             );
             let defaultAudDevice: MediaDeviceInfo | undefined;
             if (audDId) {
-              defaultAudDevice = audioDevices.find(
-                d =>
-                  d.deviceId ===
-                  audDId
-              );
+              defaultAudDevice = audioDevices.find(d => d.deviceId === audDId);
             }
             if (!defaultAudDevice) {
               defaultAudDevice =
@@ -151,11 +156,7 @@ const Toolbar = ({
             );
             let defaultVidDevice: MediaDeviceInfo | undefined;
             if (vidDId) {
-              defaultVidDevice = videoDevices.find(
-                d =>
-                  d.deviceId ===
-                  vidDId
-              );
+              defaultVidDevice = videoDevices.find(d => d.deviceId === vidDId);
             }
             if (!defaultVidDevice) {
               defaultVidDevice =
@@ -193,7 +194,6 @@ const Toolbar = ({
     }
   }, [audioDevice]);
 
-
   useEffect(() => {
     if (
       videoDevice &&
@@ -205,15 +205,23 @@ const Toolbar = ({
       setVidDId(videoDevice.deviceId);
       createLocalVideoTrack({ deviceId: videoDevice.deviceId })
         .then((track: LocalVideoTrack) => {
-          if (video) unpublishTrack(video.track as LocalVideoTrack);  
-          
-          // TODO: also alter here
-        //   const filter = new BgFilter();
-        //   filter.init(new MediaStream([track.mediaStreamTrack]), 'blur');
-        //   const bgRemovedTrack = filter.getBgRemovedTrack(); 
-        // track = convertToLocalVideoTrack(bgRemovedTrack, bgRemovedTrack.getConstraints())
-        // console.log('altered')
-          room.localParticipant.publishTrack(track);
+          if (video) unpublishTrack(video.track as LocalVideoTrack);
+
+          if (bgRemoval) {
+            const filter = new BgFilter();
+            if (track?.mediaStreamTrack) {
+              filter.init(new MediaStream([track.mediaStreamTrack]), bgRemoval);
+            }
+            const bgRemovedTrack = filter.getBgRemovedTrack();
+            track = convertToLocalVideoTrack(
+              bgRemovedTrack,
+              track.mediaStreamTrack.getConstraints()
+            );
+            room.localParticipant.publishTrack(track);
+          } else {
+            room.localParticipant.publishTrack(track);
+          }
+          // room.localParticipant.publishTrack(track);
         })
         .catch((err: Error) => {
           console.log(err);
@@ -357,7 +365,15 @@ const Toolbar = ({
                 {chatMessages[chatMessages.length - 1]?.sender?.identity}:
               </strong>
               <br />
-            {chatMessages[chatMessages.length - 1]?.text.substring(0, (chatMessages[chatMessages.length - 1]?.text.length < 40 ? chatMessages[chatMessages.length - 1]?.text.length : 40)) + ((chatMessages[chatMessages.length - 1]?.text.length > 40 ? '...' : ''))}
+              {chatMessages[chatMessages.length - 1]?.text.substring(
+                0,
+                chatMessages[chatMessages.length - 1]?.text.length < 40
+                  ? chatMessages[chatMessages.length - 1]?.text.length
+                  : 40
+              ) +
+                (chatMessages[chatMessages.length - 1]?.text.length > 40
+                  ? '...'
+                  : '')}
             </div>
           }
           theme="catalyst"

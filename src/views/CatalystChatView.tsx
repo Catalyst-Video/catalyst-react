@@ -482,6 +482,7 @@ const CatalystChatView = ({
                         setChatOpen={setChatOpen}
                         disableChat={disableChat}
                         cstmSupportUrl={cstmSupportUrl}
+                        bgRemoval={bgRemoval}
                       />
                     </div>
                   )}

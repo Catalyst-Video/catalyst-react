@@ -110,7 +110,7 @@ const ToolbarButton = React.memo(
         }}
         onHidden={() => {
           setDeviceSelectEnabled(false);
-          setAudioTestPlaying(false)
+          setAudioTestPlaying(false);
         }}
         content={
           outputDevices || inputDevices ? (
@@ -222,6 +222,32 @@ const ToolbarButton = React.memo(
                       );
                     })}
                     {type?.toLowerCase() === 'audio' && (
+                      <button
+                        className="flex items-center text-xs text-quinary p-2 mt-1 w-full whitespace-nowrap border-white border-t border-opacity-20 focus:outline-none focus:border-0 focus:ring-1 focus:ring-primary"
+                        onClick={() => audioTestRef.current?.play()}
+                      >
+                        <FontAwesomeIcon
+                          icon={faVolumeUp}
+                          className={`mr-1 ${
+                            audioTestPlaying ? 'text-primary' : 'text-quinary'
+                          }`}
+                        />
+                        {audioTestPlaying ? (
+                          <> Testing {type}...</>
+                        ) : (
+                          <> Test {type} Output</>
+                        )}
+                        <audio
+                          onPlay={() => setAudioTestPlaying(true)}
+                          onEnded={() => setAudioTestPlaying(false)}
+                          ref={audioTestRef}
+                          //src={audioTest} //{require('../../assets/sounds/audio-test.mp3')}
+                        >
+                          <source src="https://github.com/Catalyst-Video/catalyst-react/blob/master/src/assets/sounds/audio-test.mp3?raw=true"></source>
+                        </audio>
+                      </button>
+                    )}
+                    {type?.toLowerCase() === 'video' && (
                       <button
                         className="flex items-center text-xs text-quinary p-2 mt-1 w-full whitespace-nowrap border-white border-t border-opacity-20 focus:outline-none focus:border-0 focus:ring-1 focus:ring-primary"
                         onClick={() => audioTestRef.current?.play()}
