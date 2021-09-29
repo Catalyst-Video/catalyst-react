@@ -21,7 +21,7 @@ const GeneralTest = () => {
       audioOffDefault
       // videoOffDefault
       disableSetupView
-      bgRemoval="https://demo.vectorly.io/virtual-backgrounds/1.jpg"
+      // bgRemoval="https://demo.vectorly.io/virtual-backgrounds/1.jpg"
       onJoinCall={() => console.log('onJoinCall')}
       onMemberJoin={() => console.log('onmemjoin')}
       onMemberLeave={() => console.log('onmemleave')}
