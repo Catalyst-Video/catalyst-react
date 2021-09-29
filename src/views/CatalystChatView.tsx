@@ -174,7 +174,8 @@ const CatalystChatView = ({
           : false,
       });
       // apply bg removal filters
-      if (bgRemoval && bgRemoval !== 'none' && bgRemovalKey.length >0) {
+      console.log('bgRemovalKey', bgRemovalKey);
+      if (bgRemoval && bgRemoval !== 'none' && bgRemovalKey.length > 0) {
         const vidTrack = localTracks.find(track => track.kind === 'video');
         if (vidTrack) {
           const filter = await initBgFilter(bgRemovalKey, vidTrack, bgRemoval);
@@ -198,6 +199,7 @@ const CatalystChatView = ({
       });
     }
   };
+
 
   useEffect(() => {
     if (arbData)

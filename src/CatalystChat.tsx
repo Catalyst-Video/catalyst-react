@@ -115,11 +115,13 @@ const CatalystChat = ({
                                  .json()
                                  .then((user: CatalystUserData) => {
                                    if (!isMounted()) return;
-                                   setToken(user.token);
                                    if (user.vectorlyToken.length > 0) {
                                      setBgRemovalKey(user.vectorlyToken);
                                    } 
-                                   if (handleUserData) handleUserData(user);
+                                   if (handleUserData) {
+                                     handleUserData(user);
+                                   }
+                                   setToken(user.token);
                                    // console.log(user);
                                    return user.token;
                                  });

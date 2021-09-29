@@ -34,6 +34,7 @@ const VidDeviceBtn = ({
   onIpSelected,
   videoDevice,
   cstmSupportUrl,
+   bgRemovalKey,
   bgRemovalEffect,
   setBgRemovalEffect,
 }: {
@@ -41,7 +42,8 @@ const VidDeviceBtn = ({
   onClick?: () => void;
   onIpSelected?: (device: MediaDeviceInfo) => void;
   videoDevice?: MediaDeviceInfo;
-  cstmSupportUrl?: string;
+    cstmSupportUrl?: string;
+  bgRemovalKey: string;
   bgRemovalEffect?: string;
   setBgRemovalEffect?: Function;
 }) => {
@@ -84,6 +86,7 @@ const VidDeviceBtn = ({
       onIpDeviceClick={handleDevice}
       //  parentRef={vidBtnRef}
       onClick={onClick}
+      bgRemovalKey={bgRemovalKey}
       inputDevices={devices}
       selectedIpDevice={videoDevice}
       cstmSupportUrl={cstmSupportUrl}

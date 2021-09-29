@@ -383,6 +383,7 @@ const Toolbar = ({
         onIpSelected={setVideoDevice}
         onClick={toggleVideo}
         videoDevice={videoDevice}
+        bgRemovalKey={bgRemovalKey}
         cstmSupportUrl={cstmSupportUrl}
         bgRemovalEffect={bgRemovalEffect}
         setBgRemovalEffect={setBgRemovalEffect}
