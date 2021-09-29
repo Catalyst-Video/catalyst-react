@@ -81,47 +81,59 @@ const CatalystChat = ({
 
   useEffect(() => {
     if (ready && token.length < 1) {
-      // set client ID
-      const uniqueClientIdentifier =
-        cookies.PERSISTENT_CLIENT_ID || generateUUID();
-      if (!cookies.PERSISTENT_CLIENT_ID)
-        setCookie('PERSISTENT_CLIENT_ID', uniqueClientIdentifier, {
-          expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-        });
-      // obtain user token
-      fetch(
-        `${AUTH_ADDRESS}?participantName=${userName}&appId=${appId}&roomName=${room}&uniqueClientIdentifier=${uniqueClientIdentifier}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            mode: 'no-cors',
-          },
-        }
-      )
-        .then(response => {
-          if (!isMounted()) return;
-          if (response.status === 200) {
-            response.json().then((user: CatalystUserData) => {
-              if (!isMounted()) return;
-              setToken(user.token);
-              if (handleUserData) handleUserData(user);
-              // console.log(user);
-              return user.token;
-            });
-          }
-          if (response.status === 500) {
-            console.log(
-              'There is no user record corresponding to the provided identifier'
-            );
-            setToken('INVALID');
-          }
-          return token;
-        })
-        .catch(err => {
-          console.log(err);
-          setToken('INVALID');
-        });
+      setTimeout(() => {
+         if (!isMounted()) return;
+                         // set client ID
+                         const uniqueClientIdentifier =
+                           cookies.PERSISTENT_CLIENT_ID || generateUUID();
+                         if (!cookies.PERSISTENT_CLIENT_ID)
+                           setCookie(
+                             'PERSISTENT_CLIENT_ID',
+                             uniqueClientIdentifier,
+                             {
+                               expires: new Date(
+                                 Date.now() + 1000 * 60 * 60 * 24 * 365
+                               ),
+                             }
+                           );
+                         // obtain user token
+                         fetch(
+                           `${AUTH_ADDRESS}?participantName=${userName}&appId=${appId}&roomName=${room}&uniqueClientIdentifier=${uniqueClientIdentifier}`,
+                           {
+                             method: 'GET',
+                             headers: {
+                               'Content-Type': 'application/json',
+                               mode: 'no-cors',
+                             },
+                           }
+                         )
+                           .then(response => {
+                             if (!isMounted()) return;
+                             if (response.status === 200) {
+                               response
+                                 .json()
+                                 .then((user: CatalystUserData) => {
+                                   if (!isMounted()) return;
+                                   setToken(user.token);
+                                   if (handleUserData) handleUserData(user);
+                                   // console.log(user);
+                                   return user.token;
+                                 });
+                             }
+                             if (response.status === 500) {
+                               console.log(
+                                 'There is no user record corresponding to the provided identifier'
+                               );
+                               setToken('INVALID');
+                             }
+                             return token;
+                           })
+                           .catch(err => {
+                             console.log(err);
+                             setToken('INVALID');
+                           });
+                       }, 500)
+   
     }
   }, [ready]);
 

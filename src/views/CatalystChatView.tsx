@@ -61,7 +61,7 @@ import { isMobile } from 'react-device-detect';
 import { SUPPORT_EMAIL } from '../utils/globals';
 import useReadLocalStorage from '../hooks/useReadLocalStorage';
 import useLocalStorage from '../hooks/useLocalStorage';
-import { applyBgEffectToTracks, applyBgFilterEffect, applyBgFilterToTracks, initBgFilter } from '../utils/bg_removal';
+import { applyBgFilterToTracks, initBgFilter } from '../utils/bg_removal';
 import { BackgroundFilter } from '@vectorly-io/ai-filters';
 
 const CatalystChatView = ({
@@ -116,14 +116,14 @@ const CatalystChatView = ({
     'PREFERRED_OUTPUT_DEVICE_ID',
     'default'
   );
-
   const toolbarRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const videoChatRef = useRef<HTMLDivElement>(null);
   const decoder = new TextDecoder();
-  const mounted = useRef(true);
+  // const mounted = useRef(true);
 
   const onConnected = async room => {
+    if (!isMounted()) return;
     if (onJoinCall) onJoinCall();
     room.on(RoomEvent.ParticipantConnected, () => {
       if (!isMounted()) return;
@@ -197,55 +197,6 @@ const CatalystChatView = ({
     }
   };
 
-  // useEffect(() => {
-  //     console.log(bgRemovalEffect);
-  //     if (!bgFilter) {
-  //       createLocalVideoTrack({
-  //         video: vidDId ? { deviceId: vidDId } : true,
-  //       } as CreateVideoTrackOptions)
-  //         .then(async (track: LocalVideoTrack) => {
-  //           initBgFilter(track, bgRemovalEffect).then(filt => {
-  //             if (filt) {
-  //               setBgFilter(filt);
-  //               roomState.room?.localParticipant.publishTrack(track);
-  //             }
-  //           });
-  //         })
-  //         .catch((err: Error) => {
-  //           console.log(err);
-  //         });
-  //     } else {
-  //       // applyBgFilterEffect(bgRemovalEffect, bgFilter).then(filt => setBgFilter(filt));
-  //       if (bgRemovalEffect === 'none') {
-  //         const toggleBg = async () => {
-  //              console.log('disable')
-  //              let normalTracks = await bgFilter.disable();
-  //           console.log('normalTracks', normalTracks);
-  //               roomState.room?.localParticipant.tracks.forEach(
-  //                 track => {
-  //                   if (
-  //                     track.kind === 'video' &&
-  //                     track.track?.mediaStreamTrack &&
-  //                     normalTracks
-  //                   ) {
-  //                     track.track.mediaStreamTrack = normalTracks.getVideoTracks()[0];
-  //                     roomState.room?.localParticipant.publishTrack(
-  //                       track.track
-  //                     );
-  //                   }
-  //                 }
-  //           );
-  //              console.log('disabled');
-  //            };
-
-  //           toggleBg();
-      
-  //       }
-  //     }
-    
-  // }, [bgRemovalEffect]);
-
-
   useEffect(() => {
     if (arbData)
       roomState.localMember?.publishData(arbData, DataPacket_Kind.RELIABLE);
@@ -256,9 +207,7 @@ const CatalystChatView = ({
       roomState
         .connectAll('wss://infra.catalyst.chat', token, meta)
         .then(room => {
-          // console.log('connected to room');
-          if (!isMounted()) return;
-          if (!room) return;
+          if (!isMounted() || !room) return;
           if (onConnected) onConnected(room);
           return () => {
             // console.log(room, 'disconnecting');
@@ -272,6 +221,25 @@ const CatalystChatView = ({
   }, [token]);
 
   useEffect(() => {
+      if (!outputDevice) {
+        navigator.mediaDevices.enumerateDevices().then(devices => {
+          if (!isMounted()) return;
+          const outputDevices = devices.filter(
+            id => id.kind === 'audiooutput' && id?.deviceId
+          );
+          let outDevice: MediaDeviceInfo | undefined;
+          if (outDId) {
+            outDevice = outputDevices.find(d => d?.deviceId === outDId);
+          }
+          if (!outDevice) {
+            outDevice = outputDevices[0];
+          }
+          setOutputDevice(outDevice);
+          if (outDId !== outDevice?.deviceId && outDevice?.deviceId) {
+            setOutDId(outDevice?.deviceId);
+          }
+        });
+      }
     // disconnect on unmount
     return () => {
       roomState.disconnectAll();
@@ -293,10 +261,10 @@ const CatalystChatView = ({
   };
 
   // roomState.audioTracks.map(track => console.log(track));
+    if (fade > 0) {
 
   // animate toolbar & header fade in/out
   useEffect(() => {
-    if (fade > 0) {
       const delayCheck = () => {
         if (!isMounted()) return;
         const hClasses = headerRef.current?.classList;
@@ -346,41 +314,16 @@ const CatalystChatView = ({
       videoChatRef.current?.addEventListener('mousemove', debounceHandleMouse);
       var _delay = setInterval(delayCheck, fade);
 
-      //  return () => {
-      //     clearInterval(_delay);
-      //     videoChatRef.current?.removeEventListener(
-      //       'mousemove',
-      //       debounceHandleMouse
-      //     );
-      //   };
-    }
-    // set default output device
-    if (!outputDevice) {
-      navigator.mediaDevices.enumerateDevices().then(devices => {
-        if (!isMounted()) return;
-        const outputDevices = devices.filter(
-          id => id.kind === 'audiooutput' && id?.deviceId
-        );
-        let outDevice: MediaDeviceInfo | undefined;
-        if (outDId) {
-          outDevice = outputDevices.find(d => d?.deviceId === outDId);
-        }
-        if (!outDevice) {
-          outDevice = outputDevices[0];
-        }
-        setOutputDevice(outDevice);
-        if (outDId !== outDevice?.deviceId && outDevice?.deviceId) {
-          setOutDId(outDevice?.deviceId);
-        }
-      });
-    }
-    return () => {
-      if (fade > 0) {
-        clearInterval(_delay);
-      }
-      mounted.current = false;
-    };
+       return () => {
+          clearInterval(_delay);
+          videoChatRef.current?.removeEventListener(
+            'mousemove',
+            debounceHandleMouse
+          );
+        };
   }, []);
+    }
+      
 
   return (
     <div id="video-chat" className="relative w-full h-full" ref={videoChatRef}>

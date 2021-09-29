@@ -50,7 +50,6 @@ import { ChatMessage } from '../../typings/interfaces';
 import Tippy from '@tippyjs/react';
 import useIsMounted from '../../hooks/useIsMounted';
 import {
-  applyBgEffectToTrack,
   initBgFilter,
   applyBgFilterToTrack,
 } from '../../utils/bg_removal';
@@ -225,10 +224,12 @@ const Toolbar = ({
           if (video) {
             unpublishTrack(video.track as LocalVideoTrack);
           }
+          let newTrack: LocalVideoTrack | MediaStreamTrack = track;
           if (bgRemovalEffect && bgFilter) {
-            await applyBgFilterToTrack(track, bgFilter);
+            await applyBgFilterToTrack(track.mediaStreamTrack, bgFilter);
+            newTrack = await bgFilter.getOutputTrack();
           }
-          room.localParticipant.publishTrack(track);
+          room.localParticipant.publishTrack(newTrack);
         })
         .catch((err: Error) => {
           console.log(err);
@@ -259,13 +260,12 @@ const Toolbar = ({
         });
       // console.log('init filter');
     } else if (filter) {
-     
       if (bgRemovalEffect === 'none') {
         const filterDisabledStream = await filter.disable();
         if (filterDisabledStream) {
           track = filterDisabledStream.getVideoTracks()[0];
           if (track) {
-            console.log(track);
+            // console.log(track);
             if (video) {
               unpublishTrack(video.track as LocalVideoTrack);
             }
@@ -276,12 +276,12 @@ const Toolbar = ({
       } else {
         if (!filterEnabled) {
           const filterEnabledStream = await filter.enable();
-          console.log('filterEnabledStream', filterEnabledStream);
+          // console.log('filterEnabledStream', filterEnabledStream);
            if (filterEnabledStream) {
             //  track = filterEnabledStream.getVideoTracks()[0];
              track = await filter.getOutputTrack();
              if (track) {
-               console.log(track);
+              //  console.log(track);
                if (video) {
                  unpublishTrack(video.track as LocalVideoTrack);
                }
@@ -292,15 +292,8 @@ const Toolbar = ({
         }
         if (bgRemovalEffect === 'blur' && filter.background !== 'blur') {
           await filter.changeBackground('blur');
-          // await filter.changeBlurRadius(7);
-        } else if (
-          filter.background !==
-          'https://demo.vectorly.io/virtual-backgrounds/1.jpg'
-        ) {
-          await filter.changeBackground(
-            'https://demo.vectorly.io/virtual-backgrounds/1.jpg'
-          );
-          //  await filter.changeBlurRadius(0);
+        } else if (filter.background !== bgRemovalEffect) {
+            await filter.changeBackground(bgRemovalEffect);
         }
       }
     }
@@ -308,7 +301,7 @@ const Toolbar = ({
   };
 
   useEffect(() => {
-    console.log(bgRemovalEffect);
+    // console.log(bgRemovalEffect);
     handleBgEffect();
   }, [bgRemovalEffect]);
 
@@ -321,10 +314,12 @@ const Toolbar = ({
       if (videoDevice) options.deviceId = videoDevice?.deviceId;
       createLocalVideoTrack(options)
         .then(async (track: LocalVideoTrack) => {
+          let newTrack: LocalVideoTrack | MediaStreamTrack = track;
           if (bgRemovalEffect && bgFilter) {
-            await applyBgFilterToTrack(track, bgFilter);
+           await applyBgFilterToTrack(track.mediaStreamTrack, bgFilter);
+           newTrack = await bgFilter.getOutputTrack();
           }
-          room.localParticipant.publishTrack(track);
+          room.localParticipant.publishTrack(newTrack);
         })
         .catch((err: Error) => {
           console.log(err);
@@ -395,8 +390,8 @@ const Toolbar = ({
         bgRemovalEffect={bgRemovalEffect}
         setBgRemovalEffect={setBgRemovalEffect}
       />
-      {/* Screen Share Button */}
-      {/* TODO: screen share on mobile  */}
+      {/* Screen Share Button 
+       TODO: screen share on mobile  */}
       {!isMobile && (
         <ToolbarButton
           type="screenshare"

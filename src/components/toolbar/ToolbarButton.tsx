@@ -95,11 +95,9 @@ const ToolbarButton = React.memo(
       !bgRemovalEffect ||
       bgRemovalEffect === 'none' ||
       bgRemovalEffect === 'blur'
-        ? BUILT_IN_BACKGROUNDS[0]
+        ? BUILT_IN_BACKGROUNDS[Math.floor(Math.random() * BUILT_IN_BACKGROUNDS.length)]
         : bgRemovalEffect,
     ]);
-
-    // const [showBgRemovalOps, setShowBgRemovalOps] = useState(false);
 
     const handleOnIpDeviceClick = (id: CatalystDev) => {
       if (onIpDeviceClick) {
