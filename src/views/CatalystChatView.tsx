@@ -276,6 +276,7 @@ const CatalystChatView = ({
             tClasses?.remove('animate-fade-in-up');
             tClasses?.add('animate-fade-out-down');
             setTimeout(() => {
+              if (!isMounted()) return;
               hClasses?.remove('animate-fade-out-up');
               hClasses?.add('hidden');
               tClasses?.remove('animate-fade-out-down');

@@ -7,12 +7,11 @@ export const initBgFilter = async (
        ): Promise<BackgroundFilter | null> => {
          if (effectType && effectType.length > 0 && effectType !== 'none') {
            if (vidTrack?.mediaStreamTrack) {
-             const filter = new BackgroundFilter(vidTrack.mediaStreamTrack, {
+             return new BackgroundFilter(vidTrack.mediaStreamTrack, {
                token: 'BG_REMOVAL_TOKEN',
                background: effectType,
                blurRadius: 6
              });
-             return filter;
              //   console.log('bg', bgRemovedTrack);
            }
   }
