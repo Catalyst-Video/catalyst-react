@@ -70,6 +70,7 @@ const CatalystChat = ({
   const [cookies, setCookie] = useCookies(['PERSISTENT_CLIENT_ID']);
   const [audioOn, setAudioOn] = useState(audioOffDefault ? false : true);
   const [videoOn, setVideoOn] = useState(videoOffDefault ? false : true);
+  const [bgRemovalKey, setBgRemovalKey] = useState('');
   const [token, setToken] = useState('');
   const isMounted = useIsMounted();
   if (!handleComponentRefresh) handleComponentRefresh = () => {};
@@ -115,6 +116,9 @@ const CatalystChat = ({
                                  .then((user: CatalystUserData) => {
                                    if (!isMounted()) return;
                                    setToken(user.token);
+                                   if (user.vectorlyToken.length > 0) {
+                                     setBgRemovalKey(user.vectorlyToken);
+                                   } 
                                    if (handleUserData) handleUserData(user);
                                    // console.log(user);
                                    return user.token;
@@ -170,6 +174,7 @@ const CatalystChat = ({
             disableChat={disableChat}
             disableSelfieMode={disableSelfieMode}
             arbData={arbData}
+            bgRemovalKey={bgRemovalKey}
             bgRemoval={bgRemoval}
             handleReceiveArbData={handleReceiveArbData}
             cstmWelcomeMsg={cstmWelcomeMsg}

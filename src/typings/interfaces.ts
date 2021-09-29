@@ -104,6 +104,7 @@ export interface CatalystUserData {
     __v: number;
   };
   isNewUser: boolean;
+  vectorlyToken: string;
 }
 
 export interface RoomData {

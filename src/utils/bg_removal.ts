@@ -2,19 +2,25 @@ import { BackgroundFilter } from "@vectorly-io/ai-filters";
 import { LocalTrack, LocalVideoTrack } from "livekit-client";
 
 export const initBgFilter = async (
+        bgRemovalKey: string,
          vidTrack: LocalTrack ,
          effectType?: string
        ): Promise<BackgroundFilter | null> => {
-         if (effectType && effectType.length > 0 && effectType !== 'none') {
+         if (
+           effectType &&
+           effectType.length > 0 &&
+           effectType !== 'none' &&
+           bgRemovalKey.length > 0
+         ) {
            if (vidTrack?.mediaStreamTrack) {
              return new BackgroundFilter(vidTrack.mediaStreamTrack, {
-               token: 'BG_REMOVAL_TOKEN',
+               token: bgRemovalKey ?? 'BG_REMOVAL_TOKEN',
                background: effectType,
-               blurRadius: 6
+               blurRadius: 6,
              });
              //   console.log('bg', bgRemovedTrack);
            }
-  }
+         }
          return null;
 };
 

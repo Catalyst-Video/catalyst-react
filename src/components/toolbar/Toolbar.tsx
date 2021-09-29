@@ -65,10 +65,9 @@ const Toolbar = ({
   outputDevice,
   chatOpen,
   bgRemoval,
+  bgRemovalKey,
   bgFilter,
   setBgFilter,
-  // bgRemovalEffect,
-  // setBgRemovalEffect,
   setChatOpen,
   disableChat,
   cstmSupportUrl,
@@ -82,10 +81,9 @@ const Toolbar = ({
   outputDevice?: MediaDeviceInfo;
   chatOpen: boolean;
   bgRemoval?: 'blur' | string;
+  bgRemovalKey: string;
   bgFilter?: BackgroundFilter;
   setBgFilter: Function;
-  // bgRemovalEffect?: 'blur' | string;
-  // setBgRemovalEffect: Function;
   setChatOpen: Function;
   disableChat?: boolean;
   cstmSupportUrl?: string;
@@ -238,15 +236,16 @@ const Toolbar = ({
   }, [videoDevice]);
 
   const handleBgEffect = async () => {
-    var track: LocalVideoTrack | MediaStreamTrack | undefined;
     var filter: BackgroundFilter | undefined | null = bgFilter;
-    if (!filter && video) {
+    if (!filter && video && bgRemovalKey.length > 0) {
+      var track: LocalVideoTrack | MediaStreamTrack | undefined;
       createLocalVideoTrack({ deviceId: videoDevice?.deviceId })
         .then(async (track: LocalVideoTrack | MediaStreamTrack) => {
           if (video) {
             unpublishTrack(video.track as LocalVideoTrack);
           }
           filter = await initBgFilter(
+            bgRemovalKey,
             video.track as LocalVideoTrack,
             bgRemovalEffect
           );
@@ -277,34 +276,32 @@ const Toolbar = ({
         if (!filterEnabled) {
           const filterEnabledStream = await filter.enable();
           // console.log('filterEnabledStream', filterEnabledStream);
-           if (filterEnabledStream) {
+          if (filterEnabledStream) {
             //  track = filterEnabledStream.getVideoTracks()[0];
-             track = await filter.getOutputTrack();
-             if (track) {
+            track = await filter.getOutputTrack();
+            if (track) {
               //  console.log(track);
-               if (video) {
-                 unpublishTrack(video.track as LocalVideoTrack);
-               }
-               room.localParticipant.publishTrack(track);
-               setFilterEnabled(true);
-             }
-           } 
+              if (video) {
+                unpublishTrack(video.track as LocalVideoTrack);
+              }
+              room.localParticipant.publishTrack(track);
+              setFilterEnabled(true);
+            }
+          }
         }
         if (bgRemovalEffect === 'blur' && filter.background !== 'blur') {
           await filter.changeBackground('blur');
         } else if (filter.background !== bgRemovalEffect) {
-            await filter.changeBackground(bgRemovalEffect);
+          await filter.changeBackground(bgRemovalEffect);
         }
       }
     }
-      
   };
 
   useEffect(() => {
     // console.log(bgRemovalEffect);
     handleBgEffect();
   }, [bgRemovalEffect]);
-
 
   const toggleVideo = () => {
     if (video?.track) {
@@ -316,8 +313,8 @@ const Toolbar = ({
         .then(async (track: LocalVideoTrack) => {
           let newTrack: LocalVideoTrack | MediaStreamTrack = track;
           if (bgRemovalEffect && bgFilter) {
-           await applyBgFilterToTrack(track.mediaStreamTrack, bgFilter);
-           newTrack = await bgFilter.getOutputTrack();
+            await applyBgFilterToTrack(track.mediaStreamTrack, bgFilter);
+            newTrack = await bgFilter.getOutputTrack();
           }
           room.localParticipant.publishTrack(newTrack);
         })
@@ -492,28 +489,6 @@ const Toolbar = ({
           }}
         />
       )}
-      {/* TODO: fixed right chat button {!disableChat && !isMobile && (
-        <div
-          // className={`absolute ${
-          //   chatOpen ? 'right-48 animate-fade-in-right' : 'right-3 ' //  animate-fade-in-left
-          // } z-40 bottom-1 animate-fade-in-up`}
-          className={`absolute ${
-            chatOpen ? 'hidden' : ''
-          } right-3 z-0 bottom-1 animate-fade-in-up`}
-        >
-          <ToolbarButton
-            type="chat"
-            tooltip="Toggle Chat"
-            icon={faCommentAlt}
-            bgColor={
-              chatOpen ? `bg-primary` : 'bg-tertiary hover:bg-quaternary  '
-            }
-            onClick={() => {
-              setChatOpen(chatOpen => !chatOpen);
-            }}
-          />
-        </div>
-      )} */}
     </div>
   );
 };

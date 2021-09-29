@@ -75,6 +75,7 @@ const CatalystChatView = ({
   cstmSupportUrl,
   arbData,
   bgRemoval,
+  bgRemovalKey,
   handleReceiveArbData,
   onJoinCall,
   onMemberJoin,
@@ -92,6 +93,7 @@ const CatalystChatView = ({
   cstmSupportUrl?: string;
   arbData?: Uint8Array;
   bgRemoval?: 'blur' | string;
+  bgRemovalKey: string;
   handleReceiveArbData?: (arbData: Uint8Array) => void;
   onJoinCall?: () => void;
   onMemberJoin?: () => void;
@@ -107,7 +109,7 @@ const CatalystChatView = ({
   const [chatOpen, setChatOpen] = useState(false);
   const [outputDevice, setOutputDevice] = useState<MediaDeviceInfo>();
   // const [bgRemovalEffect, setBgRemovalEffect] = useState(bgRemoval ?? 'none');
-  const [bgFilter, setBgFilter] = useState <BackgroundFilter>();
+  const [bgFilter, setBgFilter] = useState<BackgroundFilter>();
   const roomState = useRoom();
   const isMounted = useIsMounted();
   const audDId = useReadLocalStorage('PREFERRED_AUDIO_DEVICE_ID');
@@ -172,17 +174,17 @@ const CatalystChatView = ({
           : false,
       });
       // apply bg removal filters
-      if (bgRemoval && bgRemoval !== 'none') {
+      if (bgRemoval && bgRemoval !== 'none' && bgRemovalKey.length >0) {
         const vidTrack = localTracks.find(track => track.kind === 'video');
         if (vidTrack) {
-          const filter = await initBgFilter(vidTrack, bgRemoval);
+          const filter = await initBgFilter(bgRemovalKey, vidTrack, bgRemoval);
           if (filter) {
             setBgFilter(filter);
             localTracks = await applyBgFilterToTracks(localTracks, filter);
           }
         }
       }
-      
+
       localTracks.forEach(track => {
         if (!isMounted()) return;
         room.localParticipant.publishTrack(
@@ -221,25 +223,25 @@ const CatalystChatView = ({
   }, [token]);
 
   useEffect(() => {
-      if (!outputDevice) {
-        navigator.mediaDevices.enumerateDevices().then(devices => {
-          if (!isMounted()) return;
-          const outputDevices = devices.filter(
-            id => id.kind === 'audiooutput' && id?.deviceId
-          );
-          let outDevice: MediaDeviceInfo | undefined;
-          if (outDId) {
-            outDevice = outputDevices.find(d => d?.deviceId === outDId);
-          }
-          if (!outDevice) {
-            outDevice = outputDevices[0];
-          }
-          setOutputDevice(outDevice);
-          if (outDId !== outDevice?.deviceId && outDevice?.deviceId) {
-            setOutDId(outDevice?.deviceId);
-          }
-        });
-      }
+    if (!outputDevice) {
+      navigator.mediaDevices.enumerateDevices().then(devices => {
+        if (!isMounted()) return;
+        const outputDevices = devices.filter(
+          id => id.kind === 'audiooutput' && id?.deviceId
+        );
+        let outDevice: MediaDeviceInfo | undefined;
+        if (outDId) {
+          outDevice = outputDevices.find(d => d?.deviceId === outDId);
+        }
+        if (!outDevice) {
+          outDevice = outputDevices[0];
+        }
+        setOutputDevice(outDevice);
+        if (outDId !== outDevice?.deviceId && outDevice?.deviceId) {
+          setOutDId(outDevice?.deviceId);
+        }
+      });
+    }
     // disconnect on unmount
     return () => {
       roomState.disconnectAll();
@@ -261,10 +263,9 @@ const CatalystChatView = ({
   };
 
   // roomState.audioTracks.map(track => console.log(track));
-    if (fade > 0) {
-
-  // animate toolbar & header fade in/out
-  useEffect(() => {
+  if (fade > 0) {
+    // animate toolbar & header fade in/out
+    useEffect(() => {
       const delayCheck = () => {
         if (!isMounted()) return;
         const hClasses = headerRef.current?.classList;
@@ -315,16 +316,15 @@ const CatalystChatView = ({
       videoChatRef.current?.addEventListener('mousemove', debounceHandleMouse);
       var _delay = setInterval(delayCheck, fade);
 
-       return () => {
-          clearInterval(_delay);
-          videoChatRef.current?.removeEventListener(
-            'mousemove',
-            debounceHandleMouse
-          );
-        };
-  }, []);
-    }
-      
+      return () => {
+        clearInterval(_delay);
+        videoChatRef.current?.removeEventListener(
+          'mousemove',
+          debounceHandleMouse
+        );
+      };
+    }, []);
+  }
 
   return (
     <div id="video-chat" className="relative w-full h-full" ref={videoChatRef}>
@@ -485,10 +485,9 @@ const CatalystChatView = ({
                         updateOutputDevice={updateOutputDevice}
                         outputDevice={outputDevice}
                         bgFilter={bgFilter}
-                          setBgFilter={setBgFilter}
-                          bgRemoval={bgRemoval}
-                        // bgRemovalEffect={bgRemovalEffect}
-                        // setBgRemovalEffect={setBgRemovalEffect}
+                        setBgFilter={setBgFilter}
+                        bgRemoval={bgRemoval}
+                          bgRemovalKey={bgRemovalKey}
                         chatOpen={chatOpen}
                         setChatOpen={setChatOpen}
                         disableChat={disableChat}
