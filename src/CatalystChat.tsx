@@ -47,6 +47,7 @@ const CatalystChat = ({
   audioOffDefault,
   videoOffDefault,
   simulcast,
+  bgRemoval,
   disableChat,
   disableSelfieMode,
   disableSetupView,
@@ -157,6 +158,7 @@ const CatalystChat = ({
             disableChat={disableChat}
             disableSelfieMode={disableSelfieMode}
             arbData={arbData}
+            bgRemoval={bgRemoval}
             handleReceiveArbData={handleReceiveArbData}
             cstmWelcomeMsg={cstmWelcomeMsg}
             cstmSupportUrl={cstmSupportUrl}

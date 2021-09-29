@@ -32,7 +32,7 @@ import MemberView from './MemberView';
 import ScreenShareWrapper from './wrapper/ScreenShareView';
 // import { debounce } from 'ts-debounce';
 import Chat from './Chat';
-import { ChatMessage, RoomState } from '../typings/interfaces';
+import { ChatMessage, RoomData } from '../typings/interfaces';
 import { useFullScreenHandle } from 'react-full-screen';
 import { DEFAULT_WELCOME_MESSAGE } from '../utils/globals';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -55,7 +55,7 @@ const RoomWrapper = ({
   cstmWelcomeMsg,
   handleComponentRefresh,
 }: {
-  roomState: RoomState;
+  roomState: RoomData;
   onLeave?: (room: Room) => void;
   speakerMode: boolean;
   setSpeakerMode: Function;

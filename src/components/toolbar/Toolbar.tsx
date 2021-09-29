@@ -49,6 +49,12 @@ import useLocalStorage from '../../hooks/useLocalStorage';
 import { ChatMessage } from '../../typings/interfaces';
 import Tippy from '@tippyjs/react';
 import useIsMounted from '../../hooks/useIsMounted';
+import {
+  applyBgEffectToTrack,
+  initBgFilter,
+  applyBgFilterToTrack,
+} from '../../utils/bg_removal';
+import { BackgroundFilter } from '@vectorly-io/ai-filters';
 
 const Toolbar = ({
   room,
@@ -59,6 +65,11 @@ const Toolbar = ({
   updateOutputDevice,
   outputDevice,
   chatOpen,
+  bgRemoval,
+  bgFilter,
+  setBgFilter,
+  // bgRemovalEffect,
+  // setBgRemovalEffect,
   setChatOpen,
   disableChat,
   cstmSupportUrl,
@@ -71,6 +82,11 @@ const Toolbar = ({
   updateOutputDevice: (device: MediaDeviceInfo) => void;
   outputDevice?: MediaDeviceInfo;
   chatOpen: boolean;
+  bgRemoval?: 'blur' | string;
+  bgFilter?: BackgroundFilter;
+  setBgFilter: Function;
+  // bgRemovalEffect?: 'blur' | string;
+  // setBgRemovalEffect: Function;
   setChatOpen: Function;
   disableChat?: boolean;
   cstmSupportUrl?: string;
@@ -83,9 +99,19 @@ const Toolbar = ({
   const [screen, setScreenPub] = useState<TrackPublication>();
   const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
   const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
-  const [audDId, setAudDId] = useLocalStorage('PREFERRED_AUDIO_DEVICE_ID', 'default');
-  const [vidDId, setVidDId] = useLocalStorage('PREFERRED_VIDEO_DEVICE_ID', 'default');
+  const [audDId, setAudDId] = useLocalStorage(
+    'PREFERRED_AUDIO_DEVICE_ID',
+    'default'
+  );
+  const [vidDId, setVidDId] = useLocalStorage(
+    'PREFERRED_VIDEO_DEVICE_ID',
+    'default'
+  );
   const [showChatSent, setShowChatSent] = useState<boolean>(false);
+  const [filterEnabled, setFilterEnabled] = useState<boolean>(
+    bgRemoval && bgRemoval !== 'none' ? true : false
+  );
+  const [bgRemovalEffect, setBgRemovalEffect] = useState(bgRemoval ?? 'none');
   const chatBtnRef = useRef<HTMLDivElement>(null);
   const isMounted = useIsMounted();
 
@@ -105,7 +131,8 @@ const Toolbar = ({
 
   useEffect(() => {
     if (
-      !disableChat && chatMessages.length > 0 &&
+      !disableChat &&
+      chatMessages.length > 0 &&
       chatMessages[chatMessages.length - 1].sender !== room.localParticipant &&
       !chatOpen
     ) {
@@ -128,11 +155,7 @@ const Toolbar = ({
             );
             let defaultAudDevice: MediaDeviceInfo | undefined;
             if (audDId) {
-              defaultAudDevice = audioDevices.find(
-                d =>
-                  d.deviceId ===
-                  audDId
-              );
+              defaultAudDevice = audioDevices.find(d => d.deviceId === audDId);
             }
             if (!defaultAudDevice) {
               defaultAudDevice =
@@ -150,11 +173,7 @@ const Toolbar = ({
             );
             let defaultVidDevice: MediaDeviceInfo | undefined;
             if (vidDId) {
-              defaultVidDevice = videoDevices.find(
-                d =>
-                  d.deviceId ===
-                  vidDId
-              );
+              defaultVidDevice = videoDevices.find(d => d.deviceId === vidDId);
             }
             if (!defaultVidDevice) {
               defaultVidDevice =
@@ -176,12 +195,12 @@ const Toolbar = ({
   useEffect(() => {
     if (
       audioDevice &&
-      audioDevice.deviceId !==
+      audioDevice?.deviceId !==
         audio?.audioTrack?.mediaStreamTrack.getSettings().deviceId &&
-      audioDevice.deviceId !== audDId
+      audioDevice?.deviceId !== audDId
     ) {
-      setAudDId(audioDevice.deviceId);
-      createLocalAudioTrack({ deviceId: audioDevice.deviceId })
+      setAudDId(audioDevice?.deviceId);
+      createLocalAudioTrack({ deviceId: audioDevice?.deviceId })
         .then(track => {
           if (audio) unpublishTrack(audio.track as LocalAudioTrack);
           room.localParticipant.publishTrack(track);
@@ -192,19 +211,23 @@ const Toolbar = ({
     }
   }, [audioDevice]);
 
-
   useEffect(() => {
     if (
       videoDevice &&
-      videoDevice.deviceId !==
+      videoDevice?.deviceId !==
         video?.videoTrack?.mediaStreamTrack.getSettings() &&
       videoDevice &&
-      videoDevice.deviceId !== vidDId
+      videoDevice?.deviceId !== vidDId
     ) {
-      setVidDId(videoDevice.deviceId);
-      createLocalVideoTrack({ deviceId: videoDevice.deviceId })
-        .then((track: LocalVideoTrack) => {
-          if (video) unpublishTrack(video.track as LocalVideoTrack);  
+      setVidDId(videoDevice?.deviceId);
+      createLocalVideoTrack({ deviceId: videoDevice?.deviceId })
+        .then(async (track: LocalVideoTrack) => {
+          if (video) {
+            unpublishTrack(video.track as LocalVideoTrack);
+          }
+          if (bgRemovalEffect && bgFilter) {
+            await applyBgFilterToTrack(track, bgFilter);
+          }
           room.localParticipant.publishTrack(track);
         })
         .catch((err: Error) => {
@@ -213,14 +236,94 @@ const Toolbar = ({
     }
   }, [videoDevice]);
 
+  const handleBgEffect = async () => {
+    var track: LocalVideoTrack | MediaStreamTrack | undefined;
+    var filter: BackgroundFilter | undefined | null = bgFilter;
+    if (!filter && video) {
+      createLocalVideoTrack({ deviceId: videoDevice?.deviceId })
+        .then(async (track: LocalVideoTrack | MediaStreamTrack) => {
+          if (video) {
+            unpublishTrack(video.track as LocalVideoTrack);
+          }
+          filter = await initBgFilter(
+            video.track as LocalVideoTrack,
+            bgRemovalEffect
+          );
+          setBgFilter(filter);
+          setFilterEnabled(true);
+          if (filter) track = await filter.getOutputTrack();
+          room.localParticipant.publishTrack(track);
+        })
+        .catch((err: Error) => {
+          console.log(err);
+        });
+      // console.log('init filter');
+    } else if (filter) {
+     
+      if (bgRemovalEffect === 'none') {
+        const filterDisabledStream = await filter.disable();
+        if (filterDisabledStream) {
+          track = filterDisabledStream.getVideoTracks()[0];
+          if (track) {
+            console.log(track);
+            if (video) {
+              unpublishTrack(video.track as LocalVideoTrack);
+            }
+            room.localParticipant.publishTrack(track);
+            setFilterEnabled(false);
+          }
+        }
+      } else {
+        if (!filterEnabled) {
+          const filterEnabledStream = await filter.enable();
+          console.log('filterEnabledStream', filterEnabledStream);
+           if (filterEnabledStream) {
+            //  track = filterEnabledStream.getVideoTracks()[0];
+             track = await filter.getOutputTrack();
+             if (track) {
+               console.log(track);
+               if (video) {
+                 unpublishTrack(video.track as LocalVideoTrack);
+               }
+               room.localParticipant.publishTrack(track);
+               setFilterEnabled(true);
+             }
+           } 
+        }
+        if (bgRemovalEffect === 'blur' && filter.background !== 'blur') {
+          await filter.changeBackground('blur');
+          // await filter.changeBlurRadius(7);
+        } else if (
+          filter.background !==
+          'https://demo.vectorly.io/virtual-backgrounds/1.jpg'
+        ) {
+          await filter.changeBackground(
+            'https://demo.vectorly.io/virtual-backgrounds/1.jpg'
+          );
+          //  await filter.changeBlurRadius(0);
+        }
+      }
+    }
+      
+  };
+
+  useEffect(() => {
+    console.log(bgRemovalEffect);
+    handleBgEffect();
+  }, [bgRemovalEffect]);
+
+
   const toggleVideo = () => {
     if (video?.track) {
       if (video) unpublishTrack(video.track as LocalVideoTrack);
     } else {
       const options: CreateVideoTrackOptions = {};
-      if (videoDevice) options.deviceId = videoDevice.deviceId;
+      if (videoDevice) options.deviceId = videoDevice?.deviceId;
       createLocalVideoTrack(options)
-        .then((track: LocalVideoTrack) => {
+        .then(async (track: LocalVideoTrack) => {
+          if (bgRemovalEffect && bgFilter) {
+            await applyBgFilterToTrack(track, bgFilter);
+          }
           room.localParticipant.publishTrack(track);
         })
         .catch((err: Error) => {
@@ -235,7 +338,7 @@ const Toolbar = ({
         (audio as LocalTrackPublication).unmute();
       } else {
         const options: CreateVideoTrackOptions = {};
-        if (audioDevice) options.deviceId = audioDevice.deviceId;
+        if (audioDevice) options.deviceId = audioDevice?.deviceId;
 
         createLocalAudioTrack(options)
           .then(track => {
@@ -289,6 +392,8 @@ const Toolbar = ({
         onClick={toggleVideo}
         videoDevice={videoDevice}
         cstmSupportUrl={cstmSupportUrl}
+        bgRemovalEffect={bgRemovalEffect}
+        setBgRemovalEffect={setBgRemovalEffect}
       />
       {/* Screen Share Button */}
       {/* TODO: screen share on mobile  */}
@@ -349,7 +454,15 @@ const Toolbar = ({
                 {chatMessages[chatMessages.length - 1]?.sender?.identity}:
               </strong>
               <br />
-            {chatMessages[chatMessages.length - 1]?.text.substring(0, (chatMessages[chatMessages.length - 1]?.text.length < 40 ? chatMessages[chatMessages.length - 1]?.text.length : 40)) + ((chatMessages[chatMessages.length - 1]?.text.length > 40 ? '...' : ''))}
+              {chatMessages[chatMessages.length - 1]?.text.substring(
+                0,
+                chatMessages[chatMessages.length - 1]?.text.length < 40
+                  ? chatMessages[chatMessages.length - 1]?.text.length
+                  : 40
+              ) +
+                (chatMessages[chatMessages.length - 1]?.text.length > 40
+                  ? '...'
+                  : '')}
             </div>
           }
           theme="catalyst"

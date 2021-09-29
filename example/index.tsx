@@ -21,10 +21,11 @@ const GeneralTest = () => {
       audioOffDefault
       // videoOffDefault
       disableSetupView
+      // bgRemoval="https://demo.vectorly.io/virtual-backgrounds/1.jpg"
       onJoinCall={() => console.log('onJoinCall')}
       onMemberJoin={() => console.log('onmemjoin')}
       onMemberLeave={() => console.log('onmemleave')}
-      handleUserData={(data) => console.log('handleUserData', data)}
+      handleUserData={data => console.log('handleUserData', data)}
       // cstmWelcomeMsg="Hi"
       // cstmSupportUrl=""
       // name={(Math.random() * 1000).toString().slice(0, 4)}
@@ -87,7 +88,7 @@ const HoursTest = () => {
             <CatalystChat
               room={'testingGround'}
               appId={process.env.REACT_APP_APP_ID ?? 'REAL_APP_ID_HERE'}
-              audioOnDefault={false}
+              audioOffDefault
               disableSetupView
               disableChat
               theme="hoursDark"

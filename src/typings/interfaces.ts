@@ -34,6 +34,7 @@ export interface CatalystChatProps {
   audioOffDefault?: boolean;
   videoOffDefault?: boolean;
   simulcast?: boolean;
+  bgRemoval?: 'blur' | string;
   disableChat?: boolean;
   disableSelfieMode?: boolean;
   disableSetupView?: boolean;
@@ -82,6 +83,8 @@ export interface CatalystDev {
   label: string;
 }
 
+export type BgRemovalOps = string[];
+
 export interface CatalystUserData {
   token: string;
   roomName: string;
@@ -103,12 +106,13 @@ export interface CatalystUserData {
   isNewUser: boolean;
 }
 
-export interface RoomState {
-  connect: (
+export interface RoomData {
+  connectAll: (
     url: string,
     token: string,
     options?: ConnectOptions
   ) => Promise<Room | undefined>;
+  disconnectAll: () => void;
   isConnecting: boolean;
   room?: Room;
   members: Participant[];

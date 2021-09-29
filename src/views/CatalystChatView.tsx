@@ -38,14 +38,20 @@ import {
   Room,
   createLocalTracks,
   DataPacket_Kind,
+  RoomState,
+  LocalTrack,
+  createLocalVideoTrack,
+  LocalVideoTrack,
+  CreateVideoTrackOptions,
 } from 'livekit-client';
 import React, { useEffect, useRef, useState } from 'react';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import AudWrapper from '../components/wrapper/AudWrapper';
-import { ChatMessage, RoomMetaData } from '../typings/interfaces';
+import { BgRemovalOps, ChatMessage, RoomMetaData } from '../typings/interfaces';
 import RoomWrapper from '../components/RoomWrapper';
 import HeaderLogo from '../components/header/Header';
 import Toolbar from '../components/toolbar/Toolbar';
+import useIsMounted from '../hooks/useIsMounted';
 import useRoom from '../hooks/useRoom';
 import { debounce } from 'ts-debounce';
 import Tippy from '@tippyjs/react';
@@ -55,8 +61,8 @@ import { isMobile } from 'react-device-detect';
 import { SUPPORT_EMAIL } from '../utils/globals';
 import useReadLocalStorage from '../hooks/useReadLocalStorage';
 import useLocalStorage from '../hooks/useLocalStorage';
-import { SelfieSegmentation } from '@mediapipe/selfie_segmentation';
-import { Camera } from '@mediapipe/camera_utils';
+import { applyBgEffectToTracks, applyBgFilterEffect, applyBgFilterToTracks, initBgFilter } from '../utils/bg_removal';
+import { BackgroundFilter } from '@vectorly-io/ai-filters';
 
 const CatalystChatView = ({
   token,
@@ -68,6 +74,7 @@ const CatalystChatView = ({
   cstmWelcomeMsg,
   cstmSupportUrl,
   arbData,
+  bgRemoval,
   handleReceiveArbData,
   onJoinCall,
   onMemberJoin,
@@ -84,6 +91,7 @@ const CatalystChatView = ({
   cstmWelcomeMsg?: string | HTMLElement;
   cstmSupportUrl?: string;
   arbData?: Uint8Array;
+  bgRemoval?: 'blur' | string;
   handleReceiveArbData?: (arbData: Uint8Array) => void;
   onJoinCall?: () => void;
   onMemberJoin?: () => void;
@@ -98,7 +106,10 @@ const CatalystChatView = ({
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [chatOpen, setChatOpen] = useState(false);
   const [outputDevice, setOutputDevice] = useState<MediaDeviceInfo>();
+  // const [bgRemovalEffect, setBgRemovalEffect] = useState(bgRemoval ?? 'none');
+  const [bgFilter, setBgFilter] = useState <BackgroundFilter>();
   const roomState = useRoom();
+  const isMounted = useIsMounted();
   const audDId = useReadLocalStorage('PREFERRED_AUDIO_DEVICE_ID');
   const vidDId = useReadLocalStorage('PREFERRED_VIDEO_DEVICE_ID');
   const [outDId, setOutDId] = useLocalStorage(
@@ -115,17 +126,19 @@ const CatalystChatView = ({
   const onConnected = async room => {
     if (onJoinCall) onJoinCall();
     room.on(RoomEvent.ParticipantConnected, () => {
+      if (!isMounted()) return;
       bumpMemberSize(room);
       if (onMemberJoin) onMemberJoin();
     });
     room.on(RoomEvent.ParticipantDisconnected, () => {
+      if (!isMounted()) return;
       bumpMemberSize(room);
       if (onMemberLeave) onMemberLeave();
     });
     room.on(
       RoomEvent.DataReceived,
       (data: Uint8Array, member: Participant, kind: DataPacket_Kind) => {
-        if (!mounted.current) return;
+        if (!isMounted()) return;
         const strData = decoder.decode(data);
         // console.log(strData);
         const parsedData = JSON.parse(strData);
@@ -146,7 +159,7 @@ const CatalystChatView = ({
     bumpMemberSize(room);
     // console.log(room);
     if (meta.audioEnabled || meta.videoEnabled) {
-      const tracks = await createLocalTracks({
+      let localTracks = await createLocalTracks({
         audio: meta.audioEnabled
           ? audDId
             ? { deviceId: audDId }
@@ -158,10 +171,20 @@ const CatalystChatView = ({
             : true
           : false,
       });
-
-      // tracks = await applyBgEffect(tracks);
-      // TODO: apply bg removal
-      tracks.forEach(track => {
+      // apply bg removal filters
+      if (bgRemoval && bgRemoval !== 'none') {
+        const vidTrack = localTracks.find(track => track.kind === 'video');
+        if (vidTrack) {
+          const filter = await initBgFilter(vidTrack, bgRemoval);
+          if (filter) {
+            setBgFilter(filter);
+            localTracks = await applyBgFilterToTracks(localTracks, filter);
+          }
+        }
+      }
+      
+      localTracks.forEach(track => {
+        if (!isMounted()) return;
         room.localParticipant.publishTrack(
           track,
           meta.simulcast
@@ -174,72 +197,54 @@ const CatalystChatView = ({
     }
   };
 
-  // const canvasElement: HTMLCanvasElement = document.createElement('canvas');
-  // const canvasCtx = canvasElement.getContext('2d');
+  // useEffect(() => {
+  //     console.log(bgRemovalEffect);
+  //     if (!bgFilter) {
+  //       createLocalVideoTrack({
+  //         video: vidDId ? { deviceId: vidDId } : true,
+  //       } as CreateVideoTrackOptions)
+  //         .then(async (track: LocalVideoTrack) => {
+  //           initBgFilter(track, bgRemovalEffect).then(filt => {
+  //             if (filt) {
+  //               setBgFilter(filt);
+  //               roomState.room?.localParticipant.publishTrack(track);
+  //             }
+  //           });
+  //         })
+  //         .catch((err: Error) => {
+  //           console.log(err);
+  //         });
+  //     } else {
+  //       // applyBgFilterEffect(bgRemovalEffect, bgFilter).then(filt => setBgFilter(filt));
+  //       if (bgRemovalEffect === 'none') {
+  //         const toggleBg = async () => {
+  //              console.log('disable')
+  //              let normalTracks = await bgFilter.disable();
+  //           console.log('normalTracks', normalTracks);
+  //               roomState.room?.localParticipant.tracks.forEach(
+  //                 track => {
+  //                   if (
+  //                     track.kind === 'video' &&
+  //                     track.track?.mediaStreamTrack &&
+  //                     normalTracks
+  //                   ) {
+  //                     track.track.mediaStreamTrack = normalTracks.getVideoTracks()[0];
+  //                     roomState.room?.localParticipant.publishTrack(
+  //                       track.track
+  //                     );
+  //                   }
+  //                 }
+  //           );
+  //              console.log('disabled');
+  //            };
 
-  // const onBgEffectResults = results => {
-  //   if (canvasCtx) {
-  //     // Save the context's blank state
-  //     canvasCtx?.save();
+  //           toggleBg();
+      
+  //       }
+  //     }
+    
+  // }, [bgRemovalEffect]);
 
-  //     // Draw the raw frame
-  //     canvasCtx?.drawImage(
-  //       results.image,
-  //       0,
-  //       0,
-  //       canvasElement.width,
-  //       canvasElement.height
-  //     );
-
-  //     // Make all pixels not in the segmentation mask transparent
-  //     canvasCtx.globalCompositeOperation = 'destination-atop';
-  //     canvasCtx?.drawImage(
-  //       results.segmentationMask,
-  //       0,
-  //       0,
-  //       canvasElement.width,
-  //       canvasElement.height
-  //     );
-
-  //     // Blur the context for all subsequent draws then set the raw image as the background
-  //     canvasCtx.filter = 'blur(16px)';
-  //     canvasCtx.globalCompositeOperation = 'destination-over';
-  //     canvasCtx.drawImage(
-  //       results.image,
-  //       0,
-  //       0,
-  //       canvasElement.width,
-  //       canvasElement.height
-  //     );
-
-  //     // Restore the context's blank state
-  //     canvasCtx.restore();
-  //     return canvasElement.captureStream();
-  //   }
-  // };
-
-  // const applyBgEffect = async () => {
-  //   // const videoElement = document.getElementsByClassName('input_video')[0];
-
-  //   const selfieSegmentation = new SelfieSegmentation({
-  //     locateFile: file => {
-  //       return `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`;
-  //     },
-  //   });
-  //   selfieSegmentation.setOptions({
-  //     modelSelection: 1,
-  //   });
-  //   selfieSegmentation.onResults(onBgEffectResults);
-
-  //   const camera = new Camera(videoElement, {
-  //     onFrame: async () => {
-  //       await selfieSegmentation.send({ image: videoElement });
-  //     },
-  //     width: 640,
-  //     height: 480,
-  //   });
-  //   camera.start();
-  // };
 
   useEffect(() => {
     if (arbData)
@@ -249,13 +254,14 @@ const CatalystChatView = ({
   useEffect(() => {
     if (token && token.length > 0 && token !== 'INVALID') {
       roomState
-        .connect('wss://infra.catalyst.chat', token, meta)
+        .connectAll('wss://infra.catalyst.chat', token, meta)
         .then(room => {
           // console.log('connected to room');
-          if (!mounted.current) return;
+          if (!isMounted()) return;
           if (!room) return;
           if (onConnected) onConnected(room);
           return () => {
+            // console.log(room, 'disconnecting');
             room.disconnect();
           };
         })
@@ -264,6 +270,13 @@ const CatalystChatView = ({
         });
     }
   }, [token]);
+
+  useEffect(() => {
+    // disconnect on unmount
+    return () => {
+      roomState.disconnectAll();
+    };
+  }, [roomState.room]);
 
   const bumpMemberSize = (room: Room) => {
     setMemberCount(room.participants.size + 1);
@@ -285,7 +298,7 @@ const CatalystChatView = ({
   useEffect(() => {
     if (fade > 0) {
       const delayCheck = () => {
-        if (!mounted.current) return;
+        if (!isMounted()) return;
         const hClasses = headerRef.current?.classList;
         const tClasses = toolbarRef.current?.classList;
         if (hClasses && tClasses) {
@@ -308,7 +321,7 @@ const CatalystChatView = ({
       };
 
       const handleMouse = () => {
-        if (!mounted.current) return;
+        if (!isMounted()) return;
         const hClasses = headerRef.current?.classList;
         const tClasses = toolbarRef.current?.classList;
         if (hClasses && tClasses) {
@@ -326,28 +339,25 @@ const CatalystChatView = ({
       var timedelay = 1;
       var isHidden = false;
       const debounceHandleMouse = debounce(() => {
-        if (!mounted.current) return;
+        if (!isMounted()) return;
         handleMouse();
       }, 25);
       // useEventListener('mousemove', debounceHandleMouse, videoChatRef);
       videoChatRef.current?.addEventListener('mousemove', debounceHandleMouse);
       var _delay = setInterval(delayCheck, fade);
 
-      () => {
-        clearInterval(_delay);
-        videoChatRef.current?.removeEventListener(
-          'mousemove',
-          debounceHandleMouse
-        );
-        mounted.current = false;
-        // console.log('disconnecting');
-        roomState?.room?.disconnect();
-      };
+      //  return () => {
+      //     clearInterval(_delay);
+      //     videoChatRef.current?.removeEventListener(
+      //       'mousemove',
+      //       debounceHandleMouse
+      //     );
+      //   };
     }
     // set default output device
     if (!outputDevice) {
       navigator.mediaDevices.enumerateDevices().then(devices => {
-        if (!mounted.current) return;
+        if (!isMounted()) return;
         const outputDevices = devices.filter(
           id => id.kind === 'audiooutput' && id?.deviceId
         );
@@ -364,6 +374,12 @@ const CatalystChatView = ({
         }
       });
     }
+    return () => {
+      if (fade > 0) {
+        clearInterval(_delay);
+      }
+      mounted.current = false;
+    };
   }, []);
 
   return (
@@ -392,7 +408,7 @@ const CatalystChatView = ({
         ) : (
           <FullScreen
             handle={fsHandle}
-            className="catalyst-fullscreen w-full h-full bg-secondary"
+            className="catalyst-fullscreen w-full h-full bg-secondary overflow-hidden"
           >
             {roomState.room && (
               <div
@@ -524,6 +540,11 @@ const CatalystChatView = ({
                         setChatMessages={setChatMessages}
                         updateOutputDevice={updateOutputDevice}
                         outputDevice={outputDevice}
+                        bgFilter={bgFilter}
+                          setBgFilter={setBgFilter}
+                          bgRemoval={bgRemoval}
+                        // bgRemovalEffect={bgRemovalEffect}
+                        // setBgRemovalEffect={setBgRemovalEffect}
                         chatOpen={chatOpen}
                         setChatOpen={setChatOpen}
                         disableChat={disableChat}

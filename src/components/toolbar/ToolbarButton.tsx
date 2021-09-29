@@ -27,16 +27,18 @@ import {
   faCheckCircle,
   faChevronDown,
   faChevronUp,
+  faGlasses,
+  faPhotoVideo,
   faVolumeUp,
 } from '@fortawesome/free-solid-svg-icons';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { RefObject, useState } from 'react';
-import { CatalystDev } from '../../typings/interfaces';
+import { BgRemovalOps, CatalystDev } from '../../typings/interfaces';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { useRef } from 'react';
-import { SUPPORT_URL } from '../../utils/globals';
+import { BUILT_IN_BACKGROUNDS, SUPPORT_URL } from '../../utils/globals';
 import { isMobile } from 'react-device-detect';
 
 
@@ -59,6 +61,8 @@ const ToolbarButton = React.memo(
     selectedIpDevice,
     chatOpen,
     cstmSupportUrl,
+    bgRemovalEffect,
+    setBgRemovalEffect,
   }: {
     ref?: RefObject<HTMLButtonElement>;
     type?: string;
@@ -78,11 +82,24 @@ const ToolbarButton = React.memo(
     selectedIpDevice?: MediaDeviceInfo;
     chatOpen?: boolean;
     cstmSupportUrl?: string;
+    bgRemovalEffect?: string;
+    setBgRemovalEffect?: Function;
   }) => {
     const [deviceSelectEnabled, setDeviceSelectEnabled] = useState(false);
     const selectRef = useRef<HTMLButtonElement>(null);
     const [audioTestPlaying, setAudioTestPlaying] = useState(false);
     const audioTestRef = useRef<HTMLAudioElement>(null);
+    const [bgRemovalOps] = useState<BgRemovalOps>([
+      'none',
+      'blur',
+      !bgRemovalEffect ||
+      bgRemovalEffect === 'none' ||
+      bgRemovalEffect === 'blur'
+        ? BUILT_IN_BACKGROUNDS[0]
+        : bgRemovalEffect,
+    ]);
+
+    // const [showBgRemovalOps, setShowBgRemovalOps] = useState(false);
 
     const handleOnIpDeviceClick = (id: CatalystDev) => {
       if (onIpDeviceClick) {
@@ -110,9 +127,12 @@ const ToolbarButton = React.memo(
         }}
         onHidden={() => {
           setDeviceSelectEnabled(false);
-          setAudioTestPlaying(false)
+          if (audioTestPlaying) setAudioTestPlaying(false);
+          // if (showBgRemovalOps) setShowBgRemovalOps(false);
         }}
         content={
+          // !showBgRemovalOps ?
+          //   (
           outputDevices || inputDevices ? (
             inputDevices?.length === 0 && !isMobile ? (
               <div className="font-sans flex flex-col justify-center items-center text-center text-quinary text-c">
@@ -157,7 +177,7 @@ const ToolbarButton = React.memo(
                       <>
                         <li
                           key={'input-row'}
-                          className="flex items-center text-xs text-quinary font-semibold p-2 border-white border-b border-opacity-20 whitespace-nowrap "
+                          className="flex items-center text-xs text-quinary font-semibold p-1 border-white border-b border-opacity-20 whitespace-nowrap "
                         >
                           {type} Output
                         </li>
@@ -169,7 +189,7 @@ const ToolbarButton = React.memo(
                           return (
                             <li
                               key={i}
-                              className="flex items-center text-xs text-quinary px-2 py-1 cursor-pointer whitespace-nowrap"
+                              className="flex items-center text-xs text-quinary p-1 cursor-pointer whitespace-nowrap"
                               onClick={() => handleOnOpDeviceClick(id)}
                             >
                               {id.label === selectedOpDevice?.label ? (
@@ -191,7 +211,7 @@ const ToolbarButton = React.memo(
                     )}
                     <li
                       key={'input-row'}
-                      className="flex items-center text-xs text-quinary font-semibold p-2 border-white border-b border-opacity-20 whitespace-nowrap"
+                      className="flex items-center text-xs text-quinary font-semibold p-1 border-white border-b border-opacity-20 whitespace-nowrap"
                     >
                       {type} Input
                     </li>
@@ -203,7 +223,7 @@ const ToolbarButton = React.memo(
                       return (
                         <li
                           key={i}
-                          className="flex items-center text-xs text-quinary px-2 py-1 whitespace-nowrap cursor-pointer"
+                          className="flex items-center text-xs text-quinary p-1 whitespace-nowrap cursor-pointer"
                           onClick={() => handleOnIpDeviceClick(id)}
                         >
                           {id.label === selectedIpDevice?.label ? (
@@ -223,7 +243,7 @@ const ToolbarButton = React.memo(
                     })}
                     {type?.toLowerCase() === 'audio' && (
                       <button
-                        className="flex items-center text-xs text-quinary p-2 mt-1 w-full whitespace-nowrap border-white border-t border-opacity-20 focus:outline-none focus:border-0 focus:ring-1 focus:ring-primary"
+                        className="flex items-center text-xs text-quinary p-1 mt-1 w-full whitespace-nowrap border-white border-t border-opacity-20 focus:outline-none focus:border-0 focus:ring-1 focus:ring-primary"
                         onClick={() => audioTestRef.current?.play()}
                       >
                         <FontAwesomeIcon
@@ -246,12 +266,77 @@ const ToolbarButton = React.memo(
                           <source src="https://github.com/Catalyst-Video/catalyst-react/blob/master/src/assets/sounds/audio-test.mp3?raw=true"></source>
                         </audio>
                       </button>
+                    )}{' '}
+                    {type?.toLowerCase() === 'video' && (
+                      <div>
+                        <li
+                          key={'input-row'}
+                          className="flex items-center text-xs text-quinary font-semibold p-2 whitespace-nowrap border-white border-b border-opacity-20"
+                        >
+                          Background Filters
+                        </li>
+                        {bgRemovalOps.map((op: string, i) => {
+                          return (
+                            <button
+                              key={'bg-rm' + i}
+                              className={`flex items-center text-xs text-quinary p-1 w-full whitespace-nowrap focus:outline-none focus:border-0 focus:ring-1 focus:ring-primary capitalize`}
+                              onClick={() => {
+                                if (setBgRemovalEffect) setBgRemovalEffect(op);
+                                // console.log(op, bgRemoval);
+                              }}
+                            >
+                              <FontAwesomeIcon
+                                icon={
+                                  op === bgRemovalEffect
+                                    ? faCheckCircle
+                                    : faCircle
+                                }
+                                className={`mr-1 ${
+                                  op === bgRemovalEffect
+                                    ? 'text-primary'
+                                    : 'text-quinary'
+                                }`}
+                              />
+                              <span className="capitalize">
+                                {op === 'blur'
+                                  ? 'Blur'
+                                  : op === 'none'
+                                  ? 'None'
+                                  : 'Image'}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
                     )}
                   </ul>
                 </div>
               )
             )
           ) : null
+          // ) : (
+          //   <div>
+          //     <li
+          //       key={'input-row'}
+          //       className="flex items-center text-xs text-quinary font-semibold p-2 border-white border-b border-opacity-20 whitespace-nowrap flex-row flex-wrap "
+          //     >
+          //       Background Removal
+          //     </li>
+          //     {BUILT_IN_BACKGROUNDS.map((bg, i) => (
+          //       <button
+          //         className={`items-center text-xs text-quinary p-2 mt-1 w-full whitespace-nowrap focus:outline-none focus:border-0 focus:ring-1 focus:ring-primary`}
+          //         onClick={() => setShowBgRemovalOps(true)}
+          //       >
+          //         <img
+          //           src={bg}
+          //           alt="builtin-bg"
+          //           className="w-20"
+          //           key={bg + i}
+          //         />
+          //       </button>
+          //     ))}
+          //   </div>
+          // )
         }
       >
         <div className="inline-block m-1 relative">
@@ -260,6 +345,9 @@ const ToolbarButton = React.memo(
             theme="catalyst"
             disabled={deviceSelectEnabled || disabledTooltip}
             zIndex={40}
+            // onHidden={() => {
+            //   setDeviceSelectEnabled(false);
+            // }}
           >
             <button
               id={`${type}-btn`}

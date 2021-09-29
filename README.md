@@ -43,8 +43,8 @@ We recommend a minimum parent container size of 400px X 450px.
 | `appId` | Unique project identifier, obtained from the *API keys* tab of our [management portal](https://manage.catalyst.chat/)                                                   |  `string` | `YOUR_CATALYST_PROJECT_ID` |  Required  |
 | `name` | Display name of member joining the call |  `string` | `MEMBER_NAME` |  Optional |
 | `fade` | Milliseconds of no user interaction before fading out controls. Disabled when set to `0`                   |  `number` | `600` | Optional |
-| `audioOnDefault` |Is microphone enabled by default                        |  `boolean` | `true` | Optional |
-| `videoOnDefault` | Is webcam enabled by default               |  `boolean` | `true` | Optional |
+| `audioOffDefault` |Is microphone disabled by default                        |  `boolean` | `true` | Optional |
+| `videoOffDefault` | Is webcam disabled by default               |  `boolean` | `true` | Optional |
 | `theme` | Color scheme. Includes: **primary** _(main color)_, **secondary** _(background color)_, **tertiary** _(button color)_, **quaternary** _(button hover color)_, **quinary** _(text color)_            |  `string` | `{ primary?: string; secondary?: string; tertiary?: string; quaternary?: string; quinary?: string; }` | `default` | Optional |
 | `simulcast` | Publish multiple levels of quality for video streams              |  `boolean` | `true` | Optional |
 | `disableChat` | Hide text chat functionality              |  `boolean` | `true` | Optional |

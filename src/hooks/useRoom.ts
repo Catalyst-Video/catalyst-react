@@ -9,25 +9,21 @@ import {
   RemoteTrack,
   Room,
   RoomEvent,
+  RoomState,
   Track,
 } from 'livekit-client';
-import { useCallback, useState } from 'react';
-import { RoomState } from '../typings/interfaces';
+import { useCallback, useEffect, useState } from 'react';
+import { RoomData } from '../typings/interfaces';
 
-const useRoom = (options?: {
-  sortMembers?: (members: Participant[]) => void;
-  onError?: (error: Error) => void;
-}): RoomState => {
+const useRoom = (options?: { onError?: (error: Error) => void }): RoomData => {
   const [room, setRoom] = useState<Room>();
   const [isConnecting, setIsConnecting] = useState(false);
-  const [error, setError] = useState<Error>();
+  const [error, setError] = useState<Error | unknown>();
   const [members, setMembers] = useState<Participant[]>([]);
   const [audioTracks, setAudioTracks] = useState<AudioTrack[]>([]);
   const [localMember, setLocalMember] = useState<LocalParticipant>();
 
-  const sortFunc = options?.sortMembers ?? sortMembers;
-
-  const connectFn = useCallback(
+  const connectAll = useCallback(
     async (url: string, token: string, options?: ConnectOptions) => {
       setIsConnecting(true);
       try {
@@ -39,7 +35,7 @@ const useRoom = (options?: {
           const remotes = Array.from(newRoom.participants.values());
           const members: Participant[] = [newRoom.localParticipant];
           members.push(...remotes);
-          sortFunc(members, newRoom.localParticipant);
+          sortMembers(members, newRoom.localParticipant);
           setMembers(members);
         };
         const onSubscribedTrackChanged = (track?: RemoteTrack) => {
@@ -81,32 +77,37 @@ const useRoom = (options?: {
       } catch (error) {
         setIsConnecting(false);
         setError(error);
-
         return undefined;
       }
     },
     []
   );
 
+  const disconnectAll = () => {
+    if (room?.state == RoomState.Disconnected) return;
+    room?.disconnect();
+  };
+
   return {
-    connect: connectFn,
+    connectAll,
+    disconnectAll,
     isConnecting,
     room,
+    // @ts-ignore
     error,
     localMember,
     members,
     audioTracks,
   };
-}
+};
 
 /**
- * TODO: alterative sort function
- * Default sort for members, it'll order members by:
- * 1. dominant speaker (speaker with the loudest audio level)
- * 2. local participant
- * 3. other speakers that are recently active
- * 4. members with video on
- * 5. by joinedAt
+Default member sort order:
+1) current speaker
+2) local participant
+3) other speakers that are recently active
+4) members with video on
+5) time joined
  */
 export function sortMembers(
   members: Participant[],

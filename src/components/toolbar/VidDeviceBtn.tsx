@@ -33,13 +33,17 @@ const VidDeviceBtn = ({
   onClick,
   onIpSelected,
   videoDevice,
-  cstmSupportUrl
+  cstmSupportUrl,
+  bgRemovalEffect,
+  setBgRemovalEffect,
 }: {
   isEnabled: boolean;
   onClick?: () => void;
   onIpSelected?: (device: MediaDeviceInfo) => void;
   videoDevice?: MediaDeviceInfo;
   cstmSupportUrl?: string;
+  bgRemovalEffect?: string;
+  setBgRemovalEffect?: Function;
 }) => {
   const [sources, setSources] = useState<MediaDeviceInfo[]>([]);
   const [devices, setDevices] = useState<CatalystDev[]>([]);
@@ -83,6 +87,8 @@ const VidDeviceBtn = ({
       inputDevices={devices}
       selectedIpDevice={videoDevice}
       cstmSupportUrl={cstmSupportUrl}
+      bgRemovalEffect={bgRemovalEffect}
+      setBgRemovalEffect={setBgRemovalEffect}
     />
     // </div>
   );
