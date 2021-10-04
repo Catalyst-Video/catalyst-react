@@ -1,5 +1,5 @@
 import { BackgroundFilter } from "@vectorly-io/ai-filters";
-import { LocalTrack, LocalVideoTrack } from "livekit-client";
+import { LocalTrack } from "livekit-client";
 
 export const initBgFilter = async (
         bgRemovalKey: string,

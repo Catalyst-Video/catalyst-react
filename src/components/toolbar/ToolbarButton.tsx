@@ -63,7 +63,7 @@ const ToolbarButton = React.memo(
     cstmSupportUrl,
     bgRemovalEffect,
     setBgRemovalEffect,
-    bgRemovalKey,
+    bgRemovalEnabled,
   }: {
     ref?: RefObject<HTMLButtonElement>;
     type?: string;
@@ -85,7 +85,7 @@ const ToolbarButton = React.memo(
     cstmSupportUrl?: string;
     bgRemovalEffect?: string;
     setBgRemovalEffect?: Function;
-    bgRemovalKey?: string;
+    bgRemovalEnabled?: boolean;
   }) => {
     const [deviceSelectEnabled, setDeviceSelectEnabled] = useState(false);
     const selectRef = useRef<HTMLButtonElement>(null);
@@ -269,50 +269,48 @@ const ToolbarButton = React.memo(
                         </audio>
                       </button>
                     )}{' '}
-                    {type?.toLowerCase() === 'video' &&
-                      bgRemovalKey && bgRemovalKey.length > 0 && (
-                        <div>
-                          <li
-                            key={'input-row'}
-                            className="flex items-center text-xs text-quinary font-semibold p-2 whitespace-nowrap border-white border-b border-opacity-20"
-                          >
-                            Background Filters
-                          </li>
-                          {bgRemovalOps.map((op: string, i) => {
-                            return (
-                              <button
-                                key={'bg-rm' + i}
-                                className={`flex items-center text-xs text-quinary p-1 w-full whitespace-nowrap focus:outline-none focus:border-0 focus:ring-1 focus:ring-primary capitalize`}
-                                onClick={() => {
-                                  if (setBgRemovalEffect)
-                                    setBgRemovalEffect(op);
-                                  // console.log(op, bgRemoval);
-                                }}
-                              >
-                                <FontAwesomeIcon
-                                  icon={
-                                    op === bgRemovalEffect
-                                      ? faCheckCircle
-                                      : faCircle
-                                  }
-                                  className={`mr-1 ${
-                                    op === bgRemovalEffect
-                                      ? 'text-primary'
-                                      : 'text-quinary'
-                                  }`}
-                                />
-                                <span className="capitalize">
-                                  {op === 'blur'
-                                    ? 'Blur'
-                                    : op === 'none'
-                                    ? 'None'
-                                    : 'Image'}
-                                </span>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      )}
+                    {type?.toLowerCase() === 'video' && bgRemovalEnabled && (
+                      <div>
+                        <li
+                          key={'input-row'}
+                          className="flex items-center text-xs text-quinary font-semibold p-2 whitespace-nowrap border-white border-b border-opacity-20"
+                        >
+                          Background Filters
+                        </li>
+                        {bgRemovalOps.map((op: string, i) => {
+                          return (
+                            <button
+                              key={'bg-rm' + i}
+                              className={`flex items-center text-xs text-quinary p-1 w-full whitespace-nowrap focus:outline-none focus:border-0 focus:ring-1 focus:ring-primary capitalize`}
+                              onClick={() => {
+                                if (setBgRemovalEffect) setBgRemovalEffect(op);
+                                // console.log(op, bgRemoval);
+                              }}
+                            >
+                              <FontAwesomeIcon
+                                icon={
+                                  op === bgRemovalEffect
+                                    ? faCheckCircle
+                                    : faCircle
+                                }
+                                className={`mr-1 ${
+                                  op === bgRemovalEffect
+                                    ? 'text-primary'
+                                    : 'text-quinary'
+                                }`}
+                              />
+                              <span className="capitalize">
+                                {op === 'blur'
+                                  ? 'Blur'
+                                  : op === 'none'
+                                  ? 'None'
+                                  : 'Image'}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
                   </ul>
                 </div>
               )

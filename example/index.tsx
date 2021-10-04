@@ -20,7 +20,7 @@ const GeneralTest = () => {
       appId={process.env.REACT_APP_APP_ID ?? 'REAL_APP_ID_HERE'}
       audioOffDefault
       // videoOffDefault
-      disableSetupView
+      // disableSetupView
       // bgRemoval="https://demo.vectorly.io/virtual-backgrounds/1.jpg"
       onJoinCall={() => console.log('onJoinCall')}
       onMemberJoin={() => console.log('onmemjoin')}

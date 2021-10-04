@@ -38,16 +38,11 @@ import {
   Room,
   createLocalTracks,
   DataPacket_Kind,
-  RoomState,
-  LocalTrack,
-  createLocalVideoTrack,
-  LocalVideoTrack,
-  CreateVideoTrackOptions,
 } from 'livekit-client';
 import React, { useEffect, useRef, useState } from 'react';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import AudWrapper from '../components/wrapper/AudWrapper';
-import { BgRemovalOps, ChatMessage, RoomMetaData } from '../typings/interfaces';
+import { ChatMessage, RoomMetaData } from '../typings/interfaces';
 import RoomWrapper from '../components/RoomWrapper';
 import HeaderLogo from '../components/header/Header';
 import Toolbar from '../components/toolbar/Toolbar';
@@ -108,7 +103,6 @@ const CatalystChatView = ({
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [chatOpen, setChatOpen] = useState(false);
   const [outputDevice, setOutputDevice] = useState<MediaDeviceInfo>();
-  // const [bgRemovalEffect, setBgRemovalEffect] = useState(bgRemoval ?? 'none');
   const [bgFilter, setBgFilter] = useState<BackgroundFilter>();
   const roomState = useRoom();
   const isMounted = useIsMounted();
@@ -174,8 +168,8 @@ const CatalystChatView = ({
           : false,
       });
       // apply bg removal filters
-      console.log('bgRemovalKey', bgRemovalKey);
-      if (bgRemoval && bgRemoval !== 'none' && bgRemovalKey.length > 0) {
+      // console.log('bgRemovalKey', bgRemovalKey);
+      if (bgRemoval && bgRemoval !== 'none' && bgRemovalKey.length > 0 && !isMobile) {
         const vidTrack = localTracks.find(track => track.kind === 'video');
         if (vidTrack) {
           const filter = await initBgFilter(bgRemovalKey, vidTrack, bgRemoval);
@@ -199,7 +193,6 @@ const CatalystChatView = ({
       });
     }
   };
-
 
   useEffect(() => {
     if (arbData)
@@ -489,7 +482,7 @@ const CatalystChatView = ({
                         bgFilter={bgFilter}
                         setBgFilter={setBgFilter}
                         bgRemoval={bgRemoval}
-                          bgRemovalKey={bgRemovalKey}
+                        bgRemovalKey={bgRemovalKey}
                         chatOpen={chatOpen}
                         setChatOpen={setChatOpen}
                         disableChat={disableChat}

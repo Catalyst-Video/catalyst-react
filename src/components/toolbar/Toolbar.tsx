@@ -223,7 +223,7 @@ const Toolbar = ({
             unpublishTrack(video.track as LocalVideoTrack);
           }
           let newTrack: LocalVideoTrack | MediaStreamTrack = track;
-          if (bgRemovalEffect && bgFilter) {
+          if (bgRemovalEffect && bgFilter && !isMobile) {
             await applyBgFilterToTrack(track.mediaStreamTrack, bgFilter);
             newTrack = await bgFilter.getOutputTrack();
           }
@@ -237,7 +237,7 @@ const Toolbar = ({
 
   const handleBgEffect = async () => {
     var filter: BackgroundFilter | undefined | null = bgFilter;
-    if (!filter && video && bgRemovalKey.length > 0) {
+    if (!filter && video && bgRemovalKey.length > 0 && !isMobile) {
       var track: LocalVideoTrack | MediaStreamTrack | undefined;
       createLocalVideoTrack({ deviceId: videoDevice?.deviceId })
         .then(async (track: LocalVideoTrack | MediaStreamTrack) => {
@@ -312,7 +312,7 @@ const Toolbar = ({
       createLocalVideoTrack(options)
         .then(async (track: LocalVideoTrack) => {
           let newTrack: LocalVideoTrack | MediaStreamTrack = track;
-          if (bgRemovalEffect && bgFilter) {
+          if (bgRemovalEffect && bgFilter && !isMobile) {
             await applyBgFilterToTrack(track.mediaStreamTrack, bgFilter);
             newTrack = await bgFilter.getOutputTrack();
           }
@@ -383,7 +383,7 @@ const Toolbar = ({
         onIpSelected={setVideoDevice}
         onClick={toggleVideo}
         videoDevice={videoDevice}
-        bgRemovalKey={bgRemovalKey}
+        bgRemovalEnabled={(bgRemovalKey.length > 0 && !isMobile)}
         cstmSupportUrl={cstmSupportUrl}
         bgRemovalEffect={bgRemovalEffect}
         setBgRemovalEffect={setBgRemovalEffect}

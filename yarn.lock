@@ -9393,15 +9393,16 @@
     "simple-git" "^1.96.0"
     "write-yaml" "^1.0.0"
 
-"livekit-client@^0.11.1":
-  "integrity" "sha512-2dHU0iNKlXgvtXb1pDBsUYD5ZCSF7CSqWjvqPlcp8WyN5mRzMwIpSzWV1pyCq/PkoKsNn9s0f4vZFtqqOuR5TA=="
-  "resolved" "https://registry.npmjs.org/livekit-client/-/livekit-client-0.11.1.tgz"
-  "version" "0.11.1"
+"livekit-client@^0.12.2":
+  "integrity" "sha512-QyPtaGz6c8X0BfmdVyRrL5kSgZtnulT9IIYBZRekrCmE5RVN8p7O+UKU9uFutOUMPLia4qLHHFVBVbiQeNolSQ=="
+  "resolved" "https://registry.npmjs.org/livekit-client/-/livekit-client-0.12.2.tgz"
+  "version" "0.12.2"
   dependencies:
     "@types/ws" "^7.4.0"
     "events" "^3.3.0"
     "loglevel" "^1.7.1"
     "protobufjs" "^6.10.2"
+    "ts-debounce" "^3.0.0"
     "webrtc-adapter" "^7.7.1"
 
 "load-json-file@^2.0.0":
