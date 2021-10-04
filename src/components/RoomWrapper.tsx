@@ -87,6 +87,7 @@ const RoomWrapper = ({
   const fsHandle = useFullScreenHandle();
   const isMounted = useIsMounted();
 
+  
   const resizeWrapper = () => {
     if (!isMounted()) return;
     let margin = 4;

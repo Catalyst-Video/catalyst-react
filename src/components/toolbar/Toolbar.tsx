@@ -54,6 +54,7 @@ import {
   applyBgFilterToTrack,
 } from '../../utils/bg_removal';
 import { BackgroundFilter } from '@vectorly-io/ai-filters';
+import { initAudioVideoDevices, reInitAudioDevice, reInitVideoDevice, startScreenShare } from '../../utils/devices';
 
 const Toolbar = ({
   room,
@@ -87,51 +88,53 @@ const Toolbar = ({
   setChatOpen: Function;
   disableChat?: boolean;
   cstmSupportUrl?: string;
-}) => {
-  const { publications, isMuted, unpublishTrack } = useMember(
-    room.localParticipant
-  );
+  }) => {
+  // user data
+  const isMounted = useIsMounted();
+  const { publications, isMuted, unpublishTrack } = useMember(room.localParticipant);
   const [audio, setAudioPub] = useState<TrackPublication>();
   const [video, setVideoPub] = useState<TrackPublication>();
   const [screen, setScreenPub] = useState<TrackPublication>();
+  // devices
   const [audioDevice, setAudioDevice] = useState<MediaDeviceInfo>();
   const [videoDevice, setVideoDevice] = useState<MediaDeviceInfo>();
-  const [audDId, setAudDId] = useLocalStorage(
-    'PREFERRED_AUDIO_DEVICE_ID',
-    'default'
-  );
-  const [vidDId, setVidDId] = useLocalStorage(
-    'PREFERRED_VIDEO_DEVICE_ID',
-    'default'
-  );
+  const [audDId, setAudDId] = useLocalStorage('PREFERRED_AUDIO_DEVICE_ID','default');
+  const [vidDId, setVidDId] = useLocalStorage('PREFERRED_VIDEO_DEVICE_ID', 'default');
+  // chat
   const [showChatSent, setShowChatSent] = useState<boolean>(false);
-  const [filterEnabled, setFilterEnabled] = useState<boolean>(
-    bgRemoval && bgRemoval !== 'none' ? true : false
-  );
-  const [bgRemovalEffect, setBgRemovalEffect] = useState(bgRemoval ?? 'none');
   const chatBtnRef = useRef<HTMLDivElement>(null);
-  const isMounted = useIsMounted();
+  // bg removal
+  const [filterEnabled, setFilterEnabled] = useState<boolean>(bgRemoval && bgRemoval !== 'none' ? true : false);
+  const [bgRemovalEffect, setBgRemovalEffect] = useState(bgRemoval ?? 'none');
 
   useEffect(() => {
     setAudioPub(publications.find(p => p.kind === Track.Kind.Audio));
-    setVideoPub(
-      publications.find(
-        p => p.kind === Track.Kind.Video && p.trackName !== 'screen'
-      )
-    );
-    setScreenPub(
-      publications.find(
-        p => p.kind === Track.Kind.Video && p.trackName === 'screen'
-      )
-    );
+    setVideoPub(publications.find(p => p.kind === Track.Kind.Video && p.trackName !== 'screen'));
+    setScreenPub(publications.find(p => p.kind === Track.Kind.Video && p.trackName === 'screen'));
   }, [publications]);
+
+  useEffect(() => {
+    initAudioVideoDevices(setAudioDevice, setVideoDevice, audio, video, audioDevice, videoDevice, audDId, vidDId);
+  }, [audio, video]);
+
+  useEffect(() => {
+    reInitAudioDevice(room, setAudDId, audio, audioDevice, audDId);
+  }, [audioDevice]);
+
+  useEffect(() => {
+    reInitVideoDevice(room, setVidDId, video, videoDevice, vidDId, bgRemovalEffect, bgFilter);
+  }, [videoDevice]);
+
+  useEffect(() => {
+    handleBgEffect();
+  }, [bgRemovalEffect]);
 
   useEffect(() => {
     if (
       !disableChat &&
+      !chatOpen &&
       chatMessages.length > 0 &&
-      chatMessages[chatMessages.length - 1].sender !== room.localParticipant &&
-      !chatOpen
+      getLastChat().sender !== room.localParticipant
     ) {
       setShowChatSent(true);
       setTimeout(() => {
@@ -141,233 +144,92 @@ const Toolbar = ({
     }
   }, [chatMessages]);
 
-  useEffect(() => {
-    if (!audioDevice || !videoDevice) {
-      navigator.mediaDevices
-        .enumerateDevices()
-        .then(devices => {
-          if (!audioDevice) {
-            const audioDevices = devices.filter(
-              id => id.kind === 'audioinput' && id.deviceId
-            );
-            let defaultAudDevice: MediaDeviceInfo | undefined;
-            if (audDId) {
-              defaultAudDevice = audioDevices.find(d => d.deviceId === audDId);
-            }
-            if (!defaultAudDevice) {
-              defaultAudDevice =
-                audioDevices.find(
-                  d =>
-                    d.deviceId ===
-                    audio?.audioTrack?.mediaStreamTrack.getSettings().deviceId
-                ) ?? audioDevices[0];
-            }
-            setAudioDevice(defaultAudDevice);
-          }
-          if (!videoDevice) {
-            const videoDevices = devices.filter(
-              id => id.kind === 'videoinput' && id.deviceId
-            );
-            let defaultVidDevice: MediaDeviceInfo | undefined;
-            if (vidDId) {
-              defaultVidDevice = videoDevices.find(d => d.deviceId === vidDId);
-            }
-            if (!defaultVidDevice) {
-              defaultVidDevice =
-                videoDevices.find(
-                  d =>
-                    d.deviceId ===
-                    video?.videoTrack?.mediaStreamTrack.getSettings().deviceId
-                ) ?? videoDevices[0];
-            }
-            setVideoDevice(defaultVidDevice);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
-  }, [audio, video]);
 
-  useEffect(() => {
-    if (
-      audioDevice &&
-      audioDevice?.deviceId !==
-        audio?.audioTrack?.mediaStreamTrack.getSettings().deviceId &&
-      audioDevice?.deviceId !== audDId
-    ) {
-      setAudDId(audioDevice?.deviceId);
-      createLocalAudioTrack({ deviceId: audioDevice?.deviceId })
-        .then(track => {
-          if (audio) unpublishTrack(audio.track as LocalAudioTrack);
-          room.localParticipant.publishTrack(track);
-        })
-        .catch((err: Error) => {
-          console.log(err);
-        });
-    }
-  }, [audioDevice]);
-
-  useEffect(() => {
-    if (
-      videoDevice &&
-      videoDevice?.deviceId !==
-        video?.videoTrack?.mediaStreamTrack.getSettings() &&
-      videoDevice &&
-      videoDevice?.deviceId !== vidDId
-    ) {
-      setVidDId(videoDevice?.deviceId);
-      createLocalVideoTrack({ deviceId: videoDevice?.deviceId })
-        .then(async (track: LocalVideoTrack) => {
-          if (video) {
-            unpublishTrack(video.track as LocalVideoTrack);
-          }
-          let newTrack: LocalVideoTrack | MediaStreamTrack = track;
-          if (bgRemovalEffect && bgFilter && !isMobile) {
-            await applyBgFilterToTrack(track.mediaStreamTrack, bgFilter);
-            newTrack = await bgFilter.getOutputTrack();
-          }
-          room.localParticipant.publishTrack(newTrack);
-        })
-        .catch((err: Error) => {
-          console.log(err);
-        });
-    }
-  }, [videoDevice]);
-
-  const handleBgEffect = async () => {
-    var filter: BackgroundFilter | undefined | null = bgFilter;
-    if (!filter && video && bgRemovalKey.length > 0 && !isMobile) {
-      var track: LocalVideoTrack | MediaStreamTrack | undefined;
-      createLocalVideoTrack({ deviceId: videoDevice?.deviceId })
-        .then(async (track: LocalVideoTrack | MediaStreamTrack) => {
-          if (video) {
-            unpublishTrack(video.track as LocalVideoTrack);
-          }
-          filter = await initBgFilter(
-            bgRemovalKey,
-            video.track as LocalVideoTrack,
-            bgRemovalEffect
-          );
-          setBgFilter(filter);
-          setFilterEnabled(true);
-          if (filter) track = await filter.getOutputTrack();
-          room.localParticipant.publishTrack(track);
-        })
-        .catch((err: Error) => {
-          console.log(err);
-        });
-      // console.log('init filter');
-    } else if (filter) {
-      if (bgRemovalEffect === 'none') {
-        const filterDisabledStream = await filter.disable();
-        if (filterDisabledStream) {
-          track = filterDisabledStream.getVideoTracks()[0];
-          if (track) {
-            // console.log(track);
-            if (video) {
-              unpublishTrack(video.track as LocalVideoTrack);
-            }
-            room.localParticipant.publishTrack(track);
-            setFilterEnabled(false);
-          }
+    const toggleAudio = async () => {
+      if (!audio || isMuted) {
+        if (audio) {
+          (audio as LocalTrackPublication).unmute();
+        } else {
+          const track = await createLocalAudioTrack({
+            deviceId: audioDevice?.deviceId,
+          });
+          if (track) room.localParticipant.publishTrack(track);
         }
       } else {
-        if (!filterEnabled) {
-          const filterEnabledStream = await filter.enable();
-          // console.log('filterEnabledStream', filterEnabledStream);
-          if (filterEnabledStream) {
-            //  track = filterEnabledStream.getVideoTracks()[0];
-            track = await filter.getOutputTrack();
-            if (track) {
-              //  console.log(track);
-              if (video) {
-                unpublishTrack(video.track as LocalVideoTrack);
-              }
-              room.localParticipant.publishTrack(track);
-              setFilterEnabled(true);
-            }
-          }
-        }
-        if (bgRemovalEffect === 'blur' && filter.background !== 'blur') {
-          await filter.changeBackground('blur');
-        } else if (filter.background !== bgRemovalEffect) {
-          await filter.changeBackground(bgRemovalEffect);
-        }
+        (audio as LocalTrackPublication).mute();
       }
-    }
-  };
+    };
 
-  useEffect(() => {
-    // console.log(bgRemovalEffect);
-    handleBgEffect();
-  }, [bgRemovalEffect]);
-
-  const toggleVideo = () => {
+  const toggleVideo = async () => {
     if (video?.track) {
       if (video) unpublishTrack(video.track as LocalVideoTrack);
     } else {
-      const options: CreateVideoTrackOptions = {};
-      if (videoDevice) options.deviceId = videoDevice?.deviceId;
-      createLocalVideoTrack(options)
-        .then(async (track: LocalVideoTrack) => {
-          let newTrack: LocalVideoTrack | MediaStreamTrack = track;
-          if (bgRemovalEffect && bgFilter && !isMobile) {
-            await applyBgFilterToTrack(track.mediaStreamTrack, bgFilter);
-            newTrack = await bgFilter.getOutputTrack();
-          }
-          room.localParticipant.publishTrack(newTrack);
-        })
-        .catch((err: Error) => {
-          console.log(err);
-        });
-    }
-  };
-
-  const toggleAudio = () => {
-    if (!audio || isMuted) {
-      if (audio) {
-        (audio as LocalTrackPublication).unmute();
-      } else {
-        const options: CreateVideoTrackOptions = {};
-        if (audioDevice) options.deviceId = audioDevice?.deviceId;
-
-        createLocalAudioTrack(options)
-          .then(track => {
-            room.localParticipant.publishTrack(track);
-          })
-          .catch((err: Error) => {
-            console.log(err);
-          });
+      let newTrack: LocalVideoTrack | MediaStreamTrack;
+      newTrack = await createLocalVideoTrack({ deviceId: videoDevice?.deviceId })
+      if (bgRemovalEffect && bgFilter && !isMobile) {
+        await applyBgFilterToTrack(newTrack.mediaStreamTrack, bgFilter);
+        newTrack = await bgFilter.getOutputTrack();
       }
-    } else {
-      (audio as LocalTrackPublication).mute();
+      if (newTrack) room.localParticipant.publishTrack(newTrack);
     }
   };
 
-  //  const sendMsg = (msg: string) => {
-  //    const encoder = new TextEncoder();
-  //    if (room.localParticipant) {
-  //      let chat = {
-  //        type: 'ctw-chat',
-  //        text: msg,
-  //        sender: room.localParticipant.sid,
-  //      };
-  //      const data = encoder.encode(JSON.stringify(chat));
-  //      room.localParticipant.publishData(data, DataPacket_Kind.RELIABLE);
-  //      setChatMessages(chatMessages => [
-  //        ...chatMessages,
-  //        {
-  //          text: msg,
-  //          sender: room.localParticipant,
-  //        },
-  //      ]);
-  //    }
-  //  };
+    const handleBgEffect = async () => {
+      let filter: BackgroundFilter | undefined | null = bgFilter;
+      let track: LocalVideoTrack | MediaStreamTrack | undefined;
+      if (!filter && video && bgRemovalKey.length > 0 && !isMobile) {
+        track = await createLocalVideoTrack({
+          deviceId: videoDevice?.deviceId,
+        });
+        if (video) unpublishTrack(video.track as LocalVideoTrack);
+        filter = await initBgFilter(
+          bgRemovalKey,
+          video.track as LocalVideoTrack,
+          bgRemovalEffect
+        );
+        setBgFilter(filter);
+        setFilterEnabled(true);
+        if (filter) track = await filter.getOutputTrack();
+        room.localParticipant.publishTrack(track);
+      } else if (filter) {
+        if (bgRemovalEffect === 'none') {
+          const filterDisabledStream = await filter.disable();
+          if (filterDisabledStream) {
+            track = filterDisabledStream.getVideoTracks()[0];
+            if (track) {
+              if (video) unpublishTrack(video.track as LocalVideoTrack);
+              room.localParticipant.publishTrack(track);
+              setFilterEnabled(false);
+            }
+          }
+        } else {
+          if (!filterEnabled) {
+            const filterEnabledStream = await filter.enable();
+            if (filterEnabledStream) {
+              track = await filter.getOutputTrack();
+              if (track) {
+                if (video) unpublishTrack(video.track as LocalVideoTrack);
+                room.localParticipant.publishTrack(track);
+                setFilterEnabled(true);
+              }
+            }
+          }
+          if (bgRemovalEffect === 'blur' && filter.background !== 'blur') {
+            await filter.changeBackground('blur');
+          } else if (filter.background !== bgRemovalEffect) {
+            await filter.changeBackground(bgRemovalEffect);
+          }
+        }
+      }
+    };
+
+  const getLastChat = () => {
+    return chatMessages[chatMessages.length - 1];
+  }
 
   return (
     <div id="toolbar" className={chatOpen ? 'chat-open-shift' : ''}>
-      {/* Mute Audio Button */}
+      {/* Toggle Audio */}
       <AudioDeviceBtn
         isMuted={!audio || isMuted}
         onIpSelected={setAudioDevice}
@@ -377,65 +239,34 @@ const Toolbar = ({
         outputDevice={outputDevice}
         cstmSupportUrl={cstmSupportUrl}
       />
-      {/* Pause Video Button */}
+      {/* Toggle Video */}
       <VidDeviceBtn
         isEnabled={video?.track ? true : false}
         onIpSelected={setVideoDevice}
         onClick={toggleVideo}
         videoDevice={videoDevice}
-        bgRemovalEnabled={(bgRemovalKey.length > 0 && !isMobile)}
+        bgRemovalEnabled={bgRemovalKey.length > 0 && !isMobile}
         cstmSupportUrl={cstmSupportUrl}
         bgRemovalEffect={bgRemovalEffect}
         setBgRemovalEffect={setBgRemovalEffect}
       />
-      {/* Screen Share Button 
-       TODO: screen share on mobile  */}
+      {/* Screen Share */}
       {!isMobile && (
         <ToolbarButton
           type="screenshare"
-          tooltip={screen?.track ? 'Stop Sharing' : 'Share Screen'}
           icon={faDesktop}
+          tooltip={screen?.track ? 'Stop Sharing' : 'Share Screen'}
           bgColor={
             screen?.track ? `bg-primary` : 'bg-tertiary hover:bg-quaternary'
           }
           onClick={
             screen?.track
-              ? () => {
-                  unpublishTrack(screen.track as LocalVideoTrack);
-                  //  sendMsg('I finished screen sharing!');
-                }
-              : () => {
-                  navigator.mediaDevices
-                    // @ts-ignore
-                    .getDisplayMedia({
-                      video: {
-                        width: VideoPresets.fhd.resolution.width,
-                        height: VideoPresets.fhd.resolution.height,
-                      },
-                      audio: true, // TODO: get working properly
-                    })
-                    .then((captureStream: MediaStream) => {
-                      room.localParticipant
-                        .publishTrack(captureStream.getTracks()[0], {
-                          name: 'screen',
-                          videoEncoding: {
-                            maxBitrate: 3000000,
-                            maxFramerate: 30,
-                          },
-                        })
-                        .then(track => {
-                          setSpeakerMode(true);
-                          //  sendMsg('I started screen sharing!');
-                        });
-                    })
-                    .catch(err => {
-                      console.log('Error sharing screen: ' + err);
-                    });
-                }
+              ? () => unpublishTrack(screen.track as LocalVideoTrack)
+              : () => startScreenShare(room, startScreenShare)
           }
         />
       )}
-      {/* Chat Button */}
+      {/* Chat */}
       {!disableChat && (
         <Tippy
           visible={showChatSent}
@@ -443,19 +274,14 @@ const Toolbar = ({
           onTrigger={() => setChatOpen(true)}
           content={
             <div className="text-xs">
-              <strong>
-                {chatMessages[chatMessages.length - 1]?.sender?.identity}:
-              </strong>
+              <strong>{getLastChat()?.sender?.identity}:</strong>
               <br />
-              {chatMessages[chatMessages.length - 1]?.text.substring(
+              {getLastChat()?.text.substring(
                 0,
-                chatMessages[chatMessages.length - 1]?.text.length < 40
-                  ? chatMessages[chatMessages.length - 1]?.text.length
+                getLastChat()?.text.length < 40
+                  ? getLastChat()?.text.length
                   : 40
-              ) +
-                (chatMessages[chatMessages.length - 1]?.text.length > 40
-                  ? '...'
-                  : '')}
+              ) + (getLastChat()?.text.length > 40 ? '...' : '')}
             </div>
           }
           theme="catalyst"
@@ -468,16 +294,14 @@ const Toolbar = ({
               disabledTooltip={showChatSent}
               icon={faCommentAlt}
               bgColor={
-                chatOpen ? `bg-primary` : 'bg-tertiary hover:bg-quaternary  '
+                chatOpen ? `bg-primary` : 'bg-tertiary hover:bg-quaternary'
               }
-              onClick={() => {
-                setChatOpen(chatOpen => !chatOpen);
-              }}
+              onClick={() => setChatOpen(chatOpen => !chatOpen)}
             />
           </div>
         </Tippy>
       )}
-      {/* End Call Button */}
+      {/* End Call */}
       {onLeave && (
         <ToolbarButton
           type="endcall"
