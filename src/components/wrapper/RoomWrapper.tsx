@@ -114,13 +114,13 @@ const RoomWrapper = ({
               <EqualVideoLayout
                 vidRef={vidRef}
                 members={members}
-              setMainVideoId={setMainVid}
-              chatOpen={chatOpen}
-              speakerMode={speakerMode}
-              setSpeakerMode={setSpeakerMode}
-              currentSharedScreens={currentSharedScreens}
-              cstmWelcomeMsg={cstmWelcomeMsg}
-              disableSelfieMode={disableSelfieMode}
+                setMainVideoId={setMainVid}
+                chatOpen={chatOpen}
+                speakerMode={speakerMode}
+                setSpeakerMode={setSpeakerMode}
+                currentSharedScreens={currentSharedScreens}
+                cstmWelcomeMsg={cstmWelcomeMsg}
+                disableSelfieMode={disableSelfieMode}
             />}
             {speakerMode && (
               <SpeakerLayout
