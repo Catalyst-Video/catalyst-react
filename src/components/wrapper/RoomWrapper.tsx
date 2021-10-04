@@ -90,18 +90,11 @@ const RoomWrapper = ({
 
     if (members.length === 0 || error || !room || connecting) {
       return (
-        <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center text-xl text-quinary">
-          <div className="flex flex-col items-center justify-between p-2">
+        <div id="room-wrapper-info" className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center text-xl text-quinary">
+          <div id="info-wrapper" className="flex flex-col items-center justify-between p-2">
             <LoadingIndicator />
-            <div className="pt-4">
-              {error && <span>⚠️ {error.message}</span>}
-              {connecting && <span>⚡ Connecting...</span>}
-              {!room && !connecting && !error && (
-                <span>🚀 Preparing room...</span>
-              )}
-              {members.length === 0 && room && !connecting && (
-                <span>{cstmWelcomeMsg ?? DEFAULT_WELCOME_MESSAGE}</span>
-              )}
+            <div id="info-message" className="pt-4">
+              {error ? <span>⚠️ {error.message}</span> : connecting ? <span>⚡ Connecting...</span> : (!room && !connecting && !error) ? (<span>🚀 Preparing room...</span>) : members.length === 0 && room && !connecting && (<span>{cstmWelcomeMsg ?? DEFAULT_WELCOME_MESSAGE}</span>)}
             </div>
           </div>
           {slowLoading && (

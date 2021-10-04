@@ -47,8 +47,8 @@ const SpeakerLayout = ({
 }) => {
   return (
     <div
-      id="room-wrapper"
-      className={`speaker-view flex z-20 w-full justify-center sm:justify-around animate-fade-in-right`}
+      id="room-wrapper-speaker"
+      className={`speaker-layout flex z-20 w-full justify-center sm:justify-around animate-fade-in-right`}
     >
       <div className="speaker-vid flex flex-col p-1 justify-center content-center">
         {members.map((m, i) => {

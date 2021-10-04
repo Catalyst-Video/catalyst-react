@@ -81,9 +81,9 @@ const EqualVideoLayout = ({
 
   return (
     <div
-      id="room-wrapper"
+      id="room-wrapper-equal"
       ref={vidRef}
-      className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border animate-fade-in-left`}
+      className={`equal-layout selection:flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border animate-fade-in-left`}
     >
       {currentSharedScreens &&
         currentSharedScreens.map((s, i) => {
