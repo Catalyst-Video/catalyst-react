@@ -35,11 +35,12 @@ import Chat from './Chat';
 import { ChatMessage, RoomData } from '../typings/interfaces';
 import { useFullScreenHandle } from 'react-full-screen';
 import { DEFAULT_WELCOME_MESSAGE } from '../utils/globals';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSync } from '@fortawesome/free-solid-svg-icons';
 import useEventListener from '../hooks/useEventListener';
 import useIsMounted from '../hooks/useIsMounted';
 import useTimeout from '../hooks/useTimeout';
+import SlowLoadingMessage from './messages/SlowLoadingMessage';
+import LoadingIndicator from './LoadingIndicator';
+import { syncCurrentSharedScreens, resizeWrapper } from '../utils/ui';
 
 const RoomWrapper = ({
   roomState,
@@ -67,105 +68,45 @@ const RoomWrapper = ({
   setChatMessages: Function;
   cstmWelcomeMsg?: string | HTMLElement;
   handleComponentRefresh: () => void;
-}) => {
-  const {
-    isConnecting: connecting,
-    error,
-    localMember: localParticipant,
-    members: members,
-    room,
-  } = roomState;
-  // const [screens, setNumScreens] = useState<number>(0);
-  const [screens, setNumScreens] = useState<number>(0);
-  const [slowLoading, setSlowLoading] = useState<boolean>(false);
-  const [mainVid, setMainVid] = useState<string>();
-  const vidRef = useRef<HTMLDivElement>(null);
-  const [vidDims, setVidDims] = useState({
-    width: '0px',
-    height: '0px',
-  });
-  const fsHandle = useFullScreenHandle();
+  }) => {
+  // user data
+  const { isConnecting: connecting, error, localMember: localParticipant, members, room } = roomState;
+  const [sharedScreens, setNumShared] = useState<number>(0);
+  // ux
   const isMounted = useIsMounted();
+  const [slowLoading, setSlowLoading] = useState<boolean>(false);
+  // ui
+  const fsHandle = useFullScreenHandle();
+  const [mainVid, setMainVid] = useState<string>();
+  const [vidDims, setVidDims] = useState({ width: '0px',  height: '0px' });
+  const vidRef = useRef<HTMLDivElement>(null);
 
-  
-  const resizeWrapper = () => {
+  useEffect(() => {
+    if (isMounted()) {
+      if (!mainVid) setMainVid(members[0]?.sid);
+      resizeWrapper(vidRef, members, sharedScreens, setVidDims);
+    }
+  }, [members, sharedScreens, chatOpen, fsHandle.active, speakerMode]);
+
+  useEventListener('load', () => {
     if (!isMounted()) return;
-    let margin = 4;
-    let width = 0;
-    let height = 0;
-    if (vidRef.current) {
-      width = vidRef.current.offsetWidth - margin * 2;
-      height = vidRef.current.offsetHeight - margin * 2;
-    }
-    // console.log(width, height)
-    let max = 0;
-    //  TODO: loop needs to be optimized
-    let i = 1;
-    let l =
-      (members.length < 1 ? 1 : members.length) +
-      screens +
-      (members.length < 2 ? 1 : 0);
-    // console.log(l)
-    while (i < 5000) {
-      let w = area(i, l, width, height, margin);
-      if (w === false) {
-        max = i - 1;
-        break;
-      }
-      i++;
-    }
-    max = max - margin * 2;
-    setVidDims({
-      width: max + 'px',
-      height: max * 0.5625 + 'px', // 0.5625 enforce 16:9 (vs 0.75 for 4:3)
-    });
-  };
+    resizeWrapper(vidRef, members, sharedScreens, setVidDims);
+  });
+  useEventListener('resize', () => {
+    if (!isMounted()) return;
+    resizeWrapper(vidRef, members, sharedScreens, setVidDims);
+  });
 
-  const area = (
-    increment: number,
-    count: number,
-    width: number,
-    height: number,
-    margin: number = 10
-  ) => {
-    let i = 0;
-    let w = 0;
-    let h = increment * 0.75 + margin * 2;
-    while (i < count) {
-      if (w + increment > width) {
-        w = 0;
-        h = h + increment * 0.75 + margin * 2;
-      }
-      w = w + increment + margin * 2;
-      i++;
-    }
-    if (h > height) return false;
-    else return increment;
-  };
-
-  useEventListener('load', resizeWrapper);
-  useEventListener('resize', resizeWrapper);
   useTimeout(() => {
     if (!isMounted()) return;
     setSlowLoading(true);
   }, 8000);
 
-  useEffect(() => {
-    if (isMounted()) {
-      if (!mainVid) setMainVid(members[0]?.sid);
-      resizeWrapper();
-    }
-  }, [members, screens, chatOpen, fsHandle.active, speakerMode]);
-
   if (members.length === 0 || error || !room || connecting) {
     return (
       <div className="absolute not-selectable top-0 left-1 w-full h-full flex justify-center items-center text-xl text-quinary">
         <div className="flex flex-col items-center justify-between p-2">
-          {/* loading indicator */}
-          <div className="catalyst-ld catalyst-ld-1 h-16 w-16">
-            <div className="catalyst-ld-outer"></div>
-            <div className="catalyst-ld-inner"></div>
-          </div>
+          <LoadingIndicator />         
           <div className="pt-4">
             {error && <span>⚠️ {error.message}</span>}
             {connecting && <span>⚡ Connecting...</span>}
@@ -178,58 +119,16 @@ const RoomWrapper = ({
           </div>
         </div>
         {slowLoading && (
-          <div className="absolute bottom-0 flex flex-col py-2 justify-center w-full animate-fade-in-up">
-            <div className="py-1 text-sm text-center">
-              Having connection issues?
-            </div>
-            <button
-              className="cursor-pointer focus:border-0 focus:outline-none text-center"
-              onClick={() => {
-                room?.disconnect();
-                handleComponentRefresh();
-              }}
-            >
-              <span className="pr-2 text-primary text-base">Refresh</span>
-              <FontAwesomeIcon
-                icon={faSync}
-                size="sm"
-                className="inline text-primary"
-              />
-            </button>
-          </div>
+          <SlowLoadingMessage onRefresh={() => {
+              room?.disconnect();
+              handleComponentRefresh();
+         }} />
         )}
       </div>
     );
   }
 
-  let sharedScreen: RemoteVideoTrack;
-  var sharedScreens = [] as Array<RemoteVideoTrack>;
-  members.forEach(m => {
-    m.videoTracks.forEach(track => {
-      if (track.trackName === 'screen' && track.track) {
-        sharedScreen = track.track as RemoteVideoTrack;
-        //  console.log(screenTrack);
-        if (!sharedScreens.includes(sharedScreen)) {
-          sharedScreens = [...sharedScreens, sharedScreen];
-          if (mainVid !== sharedScreen.sid && sharedScreens.length != screens) {
-            if (isMounted()) setMainVid(sharedScreen.sid);
-            // setSpeakerMode(true);
-          }
-        }
-      }
-    });
-  });
-  if (sharedScreens.length != screens) {
-    if (isMounted()) {
-      setNumScreens(sharedScreens.length);
-      if (
-        !members.find(m => m.sid === mainVid) &&
-        !sharedScreens.find(s => s.sid === mainVid)
-      ) {
-        setMainVid(members[0].sid);
-      }
-    }
-  }
+  let currentSharedScreens = syncCurrentSharedScreens(setNumShared, sharedScreens, members, setMainVid, mainVid);
 
   return (
     <>
@@ -239,8 +138,8 @@ const RoomWrapper = ({
           ref={vidRef}
           className={`flex justify-center content-center items-center flex-wrap align-middle z-2 w-full h-full max-h-screen max-w-screen box-border animate-fade-in-left`}
         >
-          {sharedScreens &&
-            sharedScreens.map((s, i) => {
+          {currentSharedScreens &&
+            currentSharedScreens.map((s, i) => {
               return (
                 <ScreenShareWrapper
                   track={s}
@@ -310,7 +209,7 @@ const RoomWrapper = ({
                 );
               } else return;
             })}
-            {sharedScreens.map(s => {
+            {currentSharedScreens.map(s => {
               if (s.sid === mainVid) {
                 return (
                   <ScreenShareWrapper
@@ -343,7 +242,7 @@ const RoomWrapper = ({
               </>
             )}
             {sharedScreens &&
-              sharedScreens.map((s, i) => {
+              currentSharedScreens.map((s, i) => {
                 if (s.sid !== mainVid)
                   return (
                     <ScreenShareWrapper

@@ -1,4 +1,5 @@
 import { CSSGlobalVariables } from 'css-global-variables';
+import { LocalParticipant, Participant, RemoteVideoTrack } from 'livekit-client';
 import { RefObject } from 'react';
 import { debounce } from 'ts-debounce';
 import { CatalystTheme } from '../typings/interfaces';
@@ -103,3 +104,100 @@ export function fadeOutSettings(
     }
     return () => {}
 }
+
+  export function resizeWrapper (
+    vidRef: RefObject<HTMLDivElement>,
+    members: Participant[],
+    screens: number,
+    setVidDims: Function
+  ) {
+    let margin = 4;
+    let width = 0;
+    let height = 0;
+    if (vidRef.current) {
+      width = vidRef.current.offsetWidth - margin * 2;
+      height = vidRef.current.offsetHeight - margin * 2;
+    }
+    // console.log(width, height)
+    let max = 0;
+    //  TODO: loop needs to be optimized
+    let i = 1;
+    let l =
+      (members.length < 1 ? 1 : members.length) +
+      screens +
+      (members.length < 2 ? 1 : 0);
+    // console.log(l)
+    while (i < 5000) {
+      let w = area(i, l, width, height, margin);
+      if (w === false) {
+        max = i - 1;
+        break;
+      }
+      i++;
+    }
+    max = max - margin * 2;
+    setVidDims({
+      width: max + 'px',
+      height: max * 0.5625 + 'px', // 0.5625 enforce 16:9 (vs 0.75 for 4:3)
+    });
+  };
+
+  function area (
+    increment: number,
+    count: number,
+    width: number,
+    height: number,
+    margin: number = 10
+  ) {
+    let i = 0;
+    let w = 0;
+    let h = increment * 0.75 + margin * 2;
+    while (i < count) {
+      if (w + increment > width) {
+        w = 0;
+        h = h + increment * 0.75 + margin * 2;
+      }
+      w = w + increment + margin * 2;
+      i++;
+    }
+    if (h > height) return false;
+    else return increment;
+};
+  
+
+export function syncCurrentSharedScreens(
+         setNumShared: Function,
+         numSharedScreens: number,
+         members: Participant[],
+         setMainVideoId: Function,
+         mainVideoId?: string
+       ): RemoteVideoTrack[] {
+         let sharedScreen: RemoteVideoTrack;
+         let currentSharedScreens = [] as Array<RemoteVideoTrack>;
+         members.forEach(m => {
+           m.videoTracks.forEach(track => {
+             if (track.trackName === 'screen' && track.track) {
+               sharedScreen = track.track as RemoteVideoTrack;
+               if (!currentSharedScreens.includes(sharedScreen)) {
+                 currentSharedScreens = [...currentSharedScreens, sharedScreen];
+                 if (
+                   mainVideoId !== sharedScreen.sid &&
+                   currentSharedScreens.length != numSharedScreens
+                 ) {
+                   setMainVideoId(sharedScreen.sid);
+                 }
+               }
+             }
+           });
+         });
+         if (currentSharedScreens.length != numSharedScreens) {
+           setNumShared(currentSharedScreens.length);
+           if (
+             !members.find(m => m.sid === mainVideoId) &&
+             !currentSharedScreens.find(s => s.sid === mainVideoId)
+           ) {
+             setMainVideoId(members[0].sid);
+           }
+         }
+         return currentSharedScreens;
+       }

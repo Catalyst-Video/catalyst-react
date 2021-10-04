@@ -142,7 +142,7 @@ export async function startScreenShare(room: Room, setSpeakerMode: Function) {
                width: VideoPresets.fhd.resolution.width,
                height: VideoPresets.fhd.resolution.height,
              },
-             audio: true, // TODO: get working properly
+             audio: true, // TODO: get screen-share w/ audio working properly
            })
            .then((captureStream: MediaStream) => {
              room.localParticipant

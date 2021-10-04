@@ -262,7 +262,7 @@ const Toolbar = ({
           onClick={
             screen?.track
               ? () => unpublishTrack(screen.track as LocalVideoTrack)
-              : () => startScreenShare(room, startScreenShare)
+              : () => startScreenShare(room, setSpeakerMode)
           }
         />
       )}
