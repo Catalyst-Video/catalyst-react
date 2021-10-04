@@ -22,21 +22,26 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 You can contact us for more details at support@catalyst.chat. */
 
-import React, { useState, useEffect, useRef } from 'react';
-import { CatalystChatProps, CatalystUserData } from './typings/interfaces';
-import './styles/catalyst.css';
-import './styles/tailwind.output.css';
-import { generateUUID, setThemeColor } from './utils/general';
-import { AUTH_ADDRESS, DEFAULT_AUTOFADE, THEMES } from './utils/globals';
-import genRandomName from './utils/name_gen';
-import { useCookies } from 'react-cookie';
-// import DetectRTC from 'detectrtc';
+// ui
+import React, { useState, useEffect } from 'react';
 import SetupView from './views/SetupView';
 import CatalystChatView from './views/CatalystChatView';
-
-import ElementQueries from 'css-element-queries/src/ElementQueries';
+//hooks
 import useIsMounted from './hooks/useIsMounted';
+import { useCookies } from 'react-cookie';
+// types
+import { CatalystChatProps, CatalystUserData } from './typings/interfaces';
+// utils
+import { setThemeColor } from './utils/ui';
+import { generateUUID } from './utils/general';
+import { AUTH_ADDRESS, DEFAULT_AUTOFADE, THEMES } from './utils/globals';
+import genRandomName from './utils/name_gen';
+// import DetectRTC from 'detectrtc';
+// styles & elements
+import ElementQueries from 'css-element-queries/src/ElementQueries';
 ElementQueries.listen();
+import './styles/tailwind.output.css';
+import './styles/catalyst.css';
 
 const CatalystChat = ({
   room,
@@ -65,18 +70,20 @@ const CatalystChat = ({
   onLeaveCall,
   handleComponentRefresh,
 }: CatalystChatProps) => {
-  const [ready, setReady] = useState(disableSetupView ?? false);
-  const [userName, setUserName] = useState(name ?? genRandomName());
+  // tokens
   const [cookies, setCookie] = useCookies(['PERSISTENT_CLIENT_ID']);
-  const [audioOn, setAudioOn] = useState(audioOffDefault ? false : true);
-  const [videoOn, setVideoOn] = useState(videoOffDefault ? false : true);
   const [bgRemovalKey, setBgRemovalKey] = useState('');
   const [token, setToken] = useState('');
+  // session 
   const isMounted = useIsMounted();
   if (!handleComponentRefresh) handleComponentRefresh = () => {};
+  const [ready, setReady] = useState(disableSetupView ?? false);
+  // user data
+  const [userName, setUserName] = useState(name ?? genRandomName());
+  const [audioOn, setAudioOn] = useState(audioOffDefault ? false : true);
+  const [videoOn, setVideoOn] = useState(videoOffDefault ? false : true);
 
   useEffect(() => {
-    // set global theme
     setThemeColor(theme ?? THEMES.default);
   }, []);
 
@@ -84,61 +91,61 @@ const CatalystChat = ({
     if (ready && token.length < 1) {
       setTimeout(() => {
          if (!isMounted()) return;
-                         // set client ID
-                         const uniqueClientIdentifier =
-                           cookies.PERSISTENT_CLIENT_ID || generateUUID();
-                         if (!cookies.PERSISTENT_CLIENT_ID)
-                           setCookie(
-                             'PERSISTENT_CLIENT_ID',
-                             uniqueClientIdentifier,
-                             {
-                               expires: new Date(
-                                 Date.now() + 1000 * 60 * 60 * 24 * 365
-                               ),
-                             }
-                           );
-                         // obtain user token
-                         fetch(
-                           `${AUTH_ADDRESS}?participantName=${userName}&appId=${appId}&roomName=${room}&uniqueClientIdentifier=${uniqueClientIdentifier}`,
-                           {
-                             method: 'GET',
-                             headers: {
-                               'Content-Type': 'application/json',
-                               mode: 'no-cors',
-                             },
-                           }
-                         )
-                           .then(response => {
-                             if (!isMounted()) return;
-                             if (response.status === 200) {
-                               response
-                                 .json()
-                                 .then((user: CatalystUserData) => {
-                                   if (!isMounted()) return;
-                                   if (user.vectorlyToken.length > 0) {
-                                     setBgRemovalKey(user.vectorlyToken);
-                                   } 
-                                   if (handleUserData) {
-                                     handleUserData(user);
-                                   }
-                                   setToken(user.token);
-                                   // console.log(user);
-                                   return user.token;
-                                 });
-                             }
-                             if (response.status === 500) {
-                               console.log(
-                                 'There is no user record corresponding to the provided identifier'
-                               );
-                               setToken('INVALID');
-                             }
-                             return token;
-                           })
-                           .catch(err => {
-                             console.log(err);
-                             setToken('INVALID');
-                           });
-                       }, 500)
+          // set client ID
+          const uniqueClientIdentifier =
+            cookies.PERSISTENT_CLIENT_ID || generateUUID();
+          if (!cookies.PERSISTENT_CLIENT_ID)
+            setCookie(
+              'PERSISTENT_CLIENT_ID',
+              uniqueClientIdentifier,
+              {
+                expires: new Date(
+                  Date.now() + 1000 * 60 * 60 * 24 * 365
+                ),
+              }
+            );
+          // obtain user token
+          fetch(
+            `${AUTH_ADDRESS}?participantName=${userName}&appId=${appId}&roomName=${room}&uniqueClientIdentifier=${uniqueClientIdentifier}`,
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                mode: 'no-cors',
+              },
+            }
+          )
+            .then(response => {
+              if (!isMounted()) return;
+              if (response.status === 200) {
+                response
+                  .json()
+                  .then((user: CatalystUserData) => {
+                    if (!isMounted()) return;
+                    if (user.vectorlyToken.length > 0) {
+                      setBgRemovalKey(user.vectorlyToken);
+                    } 
+                    if (handleUserData) {
+                      handleUserData(user);
+                    }
+                    setToken(user.token);
+                    // console.log(user);
+                    return user.token;
+                  });
+              }
+              if (response.status === 500) {
+                console.log(
+                  'There is no user record corresponding to the provided identifier'
+                );
+                setToken('INVALID');
+              }
+              return token;
+            })
+            .catch(err => {
+              console.log(err);
+              setToken('INVALID');
+            });
+        }, 500)
    
     }
   }, [ready]);

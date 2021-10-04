@@ -22,42 +22,28 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 You can contact us for more details at support@catalyst.chat. */
 
-import {
-  faCompressAlt,
-  faExpandAlt,
-  faQuestion,
-  faSync,
-  faTh,
-  faThLarge,
-  faUserFriends,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  RoomEvent,
-  Participant,
-  Room,
-  createLocalTracks,
-  DataPacket_Kind,
-} from 'livekit-client';
+// ui
 import React, { useEffect, useRef, useState } from 'react';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
+import RoomClosedMessage from '../components/messages/RoomClosedMessage';
+import TokenErrorMessage from '../components/messages/TokenErrorMessage';
 import AudWrapper from '../components/wrapper/AudWrapper';
-import { ChatMessage, RoomMetaData } from '../typings/interfaces';
 import RoomWrapper from '../components/RoomWrapper';
-import HeaderLogo from '../components/header/Header';
 import Toolbar from '../components/toolbar/Toolbar';
+import NavBar from '../components/NavBar';
+// types
+import { ChatMessage, RoomMetaData } from '../typings/interfaces';
+import { BackgroundFilter } from '@vectorly-io/ai-filters';
+// hooks
 import useIsMounted from '../hooks/useIsMounted';
-import useRoom from '../hooks/useRoom';
-import { debounce } from 'ts-debounce';
-import Tippy from '@tippyjs/react';
-import 'tippy.js/dist/tippy.css';
-import { contactSupport } from '../utils/general';
-import { isMobile } from 'react-device-detect';
-import { SUPPORT_EMAIL } from '../utils/globals';
 import useReadLocalStorage from '../hooks/useReadLocalStorage';
 import useLocalStorage from '../hooks/useLocalStorage';
-import { applyBgFilterToTracks, initBgFilter } from '../utils/bg_removal';
-import { BackgroundFilter } from '@vectorly-io/ai-filters';
+import useRoom from '../hooks/useRoom';
+// utils
+import { fadeOutSettings } from '../utils/ui';
+import { initOutputDevice } from '../utils/devices';
+import { sendArbitraryData } from '../utils/data';
+import { initRoom } from '../utils/rooms';
 
 const CatalystChatView = ({
   token,
@@ -96,156 +82,56 @@ const CatalystChatView = ({
   onLeaveCall?: () => void;
   handleComponentRefresh: () => void;
 }) => {
-  const fsHandle = useFullScreenHandle();
-  const [memberCount, setMemberCount] = useState(0);
-  const [speakerMode, setSpeakerMode] = useState(false);
-  const [roomClosed, setRoomClosed] = useState(false);
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
-  const [chatOpen, setChatOpen] = useState(false);
-  const [outputDevice, setOutputDevice] = useState<MediaDeviceInfo>();
-  const [bgFilter, setBgFilter] = useState<BackgroundFilter>();
+  // room ux
   const roomState = useRoom();
   const isMounted = useIsMounted();
-  const audDId = useReadLocalStorage('PREFERRED_AUDIO_DEVICE_ID');
-  const vidDId = useReadLocalStorage('PREFERRED_VIDEO_DEVICE_ID');
-  const [outDId, setOutDId] = useLocalStorage(
-    'PREFERRED_OUTPUT_DEVICE_ID',
-    'default'
-  );
+  const [roomClosed, setRoomClosed] = useState(false);
+  const [memberCount, setMemberCount] = useState(0);
+  // room ui
+  const [speakerMode, setSpeakerMode] = useState(false);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [bgFilter, setBgFilter] = useState<BackgroundFilter>();
+  // devices
+  const audDId = useReadLocalStorage('PREFERRED_AUDIO_DEVICE_ID') as string;
+  const vidDId = useReadLocalStorage('PREFERRED_VIDEO_DEVICE_ID') as string;
+  const [outDId, setOutDId] = useLocalStorage('PREFERRED_OUTPUT_DEVICE_ID', 'default');
+  const [outputDevice, setOutputDevice] = useState<MediaDeviceInfo>();
+  // refs
+  const fsHandle = useFullScreenHandle();
   const toolbarRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const videoChatRef = useRef<HTMLDivElement>(null);
-  const decoder = new TextDecoder();
-  // const mounted = useRef(true);
-
-  const onConnected = async room => {
-    if (!isMounted()) return;
-    if (onJoinCall) onJoinCall();
-    room.on(RoomEvent.ParticipantConnected, () => {
-      if (!isMounted()) return;
-      bumpMemberSize(room);
-      if (onMemberJoin) onMemberJoin();
-    });
-    room.on(RoomEvent.ParticipantDisconnected, () => {
-      if (!isMounted()) return;
-      bumpMemberSize(room);
-      if (onMemberLeave) onMemberLeave();
-    });
-    room.on(
-      RoomEvent.DataReceived,
-      (data: Uint8Array, member: Participant, kind: DataPacket_Kind) => {
-        if (!isMounted()) return;
-        const strData = decoder.decode(data);
-        // console.log(strData);
-        const parsedData = JSON.parse(strData);
-        if (JSON.parse(strData)?.type === 'ctw-chat') {
-          // console.log('received chat ', JSON.parse(strData).text);
-          setChatMessages(chatMessages => [
-            ...chatMessages,
-            {
-              text: parsedData.text,
-              sender: room.participants?.get(parsedData.sender) ?? '',
-            },
-          ]);
-        } else {
-          if (handleReceiveArbData) handleReceiveArbData(data);
-        }
-      }
-    );
-    bumpMemberSize(room);
-    // console.log(room);
-    if (meta.audioEnabled || meta.videoEnabled) {
-      let localTracks = await createLocalTracks({
-        audio: meta.audioEnabled
-          ? audDId
-            ? { deviceId: audDId }
-            : true
-          : false,
-        video: meta.videoEnabled
-          ? vidDId
-            ? { deviceId: vidDId }
-            : true
-          : false,
-      });
-      // apply bg removal filters
-      // console.log('bgRemovalKey', bgRemovalKey);
-      if (bgRemoval && bgRemoval !== 'none' && bgRemovalKey.length > 0 && !isMobile) {
-        const vidTrack = localTracks.find(track => track.kind === 'video');
-        if (vidTrack) {
-          const filter = await initBgFilter(bgRemovalKey, vidTrack, bgRemoval);
-          if (filter) {
-            setBgFilter(filter);
-            localTracks = await applyBgFilterToTracks(localTracks, filter);
-          }
-        }
-      }
-
-      localTracks.forEach(track => {
-        if (!isMounted()) return;
-        room.localParticipant.publishTrack(
-          track,
-          meta.simulcast
-            ? {
-                simulcast: true,
-              }
-            : {}
-        );
-      });
-    }
-  };
 
   useEffect(() => {
-    if (arbData)
-      roomState.localMember?.publishData(arbData, DataPacket_Kind.RELIABLE);
-  }, [arbData]);
-
-  useEffect(() => {
-    if (token && token.length > 0 && token !== 'INVALID') {
-      roomState
-        .connectAll('wss://infra.catalyst.chat', token, meta)
-        .then(room => {
-          if (!isMounted() || !room) return;
-          if (onConnected) onConnected(room);
-          return () => {
-            // console.log(room, 'disconnecting');
-            room.disconnect();
-          };
-        })
-        .catch(err => {
-          console.error(err);
-        });
-    }
+    initRoom(
+      token,
+      roomState,
+      meta,
+      audDId,
+      vidDId,
+      bgRemovalKey,
+      setChatMessages,
+      setMemberCount,
+      setBgFilter,
+      bgRemoval,
+      onJoinCall,
+      onMemberJoin,
+      onMemberLeave,
+      handleReceiveArbData
+    ).then(closeRoom => {
+      return closeRoom;
+    });
   }, [token]);
 
   useEffect(() => {
-    if (!outputDevice) {
-      navigator.mediaDevices.enumerateDevices().then(devices => {
-        if (!isMounted()) return;
-        const outputDevices = devices.filter(
-          id => id.kind === 'audiooutput' && id?.deviceId
-        );
-        let outDevice: MediaDeviceInfo | undefined;
-        if (outDId) {
-          outDevice = outputDevices.find(d => d?.deviceId === outDId);
-        }
-        if (!outDevice) {
-          outDevice = outputDevices[0];
-        }
-        setOutputDevice(outDevice);
-        if (outDId !== outDevice?.deviceId && outDevice?.deviceId) {
-          setOutDId(outDevice?.deviceId);
-        }
-      });
-    }
-    // disconnect on unmount
-    return () => {
-      roomState.disconnectAll();
-    };
-  }, [roomState.room]);
+    if (arbData && roomState.localMember) sendArbitraryData(arbData, roomState.localMember);
+  }, [arbData]);
 
-  const bumpMemberSize = (room: Room) => {
-    setMemberCount(room.participants.size + 1);
-  };
+  useEffect(() => {
+    if (!outputDevice) initOutputDevice(outDId, setOutputDevice, setOutDId);
+    return () => roomState.disconnectAll();
+  }, [roomState.room]);
 
   const onLeave = () => {
     if (onLeaveCall) onLeaveCall();
@@ -257,198 +143,37 @@ const CatalystChatView = ({
     setOutDId(device?.deviceId);
   };
 
-  // roomState.audioTracks.map(track => console.log(track));
-  if (fade > 0) {
-    // animate toolbar & header fade in/out
-    useEffect(() => {
-      const delayCheck = () => {
-        if (!isMounted()) return;
-        const hClasses = headerRef.current?.classList;
-        const tClasses = toolbarRef.current?.classList;
-        if (hClasses && tClasses) {
-          if (timedelay === 5 && !isHidden) {
-            hClasses?.remove('animate-fade-in-down');
-            hClasses?.add('animate-fade-out-up');
-            tClasses?.remove('animate-fade-in-up');
-            tClasses?.add('animate-fade-out-down');
-            setTimeout(() => {
-              if (!isMounted()) return;
-              hClasses?.remove('animate-fade-out-up');
-              hClasses?.add('hidden');
-              tClasses?.remove('animate-fade-out-down');
-              tClasses?.add('hidden');
-              isHidden = true;
-            }, 170); // 190);
-            timedelay = 1;
-          }
-          timedelay += 1;
-        }
-      };
-
-      const handleMouse = () => {
-        if (!isMounted()) return;
-        const hClasses = headerRef.current?.classList;
-        const tClasses = toolbarRef.current?.classList;
-        if (hClasses && tClasses) {
-          hClasses?.remove('hidden');
-          hClasses?.add('animate-fade-in-down');
-          tClasses?.remove('hidden');
-          tClasses?.add('animate-fade-in-up');
-          isHidden = false;
-          timedelay = 1;
-          clearInterval(_delay);
-          _delay = setInterval(delayCheck, fade);
-        }
-      };
-
-      var timedelay = 1;
-      var isHidden = false;
-      const debounceHandleMouse = debounce(() => {
-        if (!isMounted()) return;
-        handleMouse();
-      }, 25);
-      // useEventListener('mousemove', debounceHandleMouse, videoChatRef);
-      videoChatRef.current?.addEventListener('mousemove', debounceHandleMouse);
-      var _delay = setInterval(delayCheck, fade);
-
-      return () => {
-        clearInterval(_delay);
-        videoChatRef.current?.removeEventListener(
-          'mousemove',
-          debounceHandleMouse
-        );
-      };
-    }, []);
+  const refreshResetRoom = () => {
+    roomState.disconnectAll();
+    handleComponentRefresh()
   }
 
+    useEffect(() => {
+     fadeOutSettings(fade, isMounted(), headerRef, toolbarRef, videoChatRef);
+    }, [fade]);
+  
   return (
     <div id="video-chat" className="relative w-full h-full" ref={videoChatRef}>
       <div id="bg-theme" className="w-full h-full bg-secondary ">
         {token === 'INVALID' ? (
-          <div className="absolute top-0 flex items-center justify-center w-full h-full px-16 text-xl not-selectable left-1 text-quinary">
-            <span className="text-center">
-              ⚠️ An error occurred generating your user token.
-              <br />
-              Please{' '}
-              <a
-                href={
-                  cstmSupportUrl && cstmSupportUrl.length > 0
-                    ? cstmSupportUrl
-                    : SUPPORT_EMAIL
-                }
-                target="_blank"
-                rel="noreferrer"
-              >
-                contact us
-              </a>{' '}
-              for help
-            </span>
-          </div>
+         <TokenErrorMessage cstmSupportUrl={cstmSupportUrl} />
         ) : (
           <FullScreen
             handle={fsHandle}
             className="catalyst-fullscreen w-full h-full bg-secondary overflow-hidden"
           >
             {roomState.room && (
-              <div
-                id="header-wrapper"
-                className="animate-fade-in-down"
-                ref={headerRef}
-              >
-                <HeaderLogo alwaysBanner={false} />
-                {/* room count */}
-                <div
-                  className={`${
-                    chatOpen ? 'chat-open-shift' : ''
-                  } absolute z-50 flex nav-ops`}
-                >
-                  <FontAwesomeIcon
-                    icon={faUserFriends}
-                    size="lg"
-                    className="mr-1 text-quinary"
-                  />
-                  <span className="text-quinary ">{memberCount}</span>
-
-                  {/* help */}
-                  {!(cstmSupportUrl?.length == 0) && (
-                    <Tippy content="Help" theme="catalyst" placement="bottom">
-                      <button
-                        className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
-                        onClick={() => contactSupport(cstmSupportUrl)}
-                      >
-                        <FontAwesomeIcon
-                          icon={faQuestion}
-                          size="lg"
-                          className="text-quinary"
-                        />
-                      </button>
-                    </Tippy>
-                  )}
-                  {/* refresh */}
-                  {!disableRefreshBtn && (
-                    <Tippy
-                      content="Refresh"
-                      theme="catalyst"
-                      placement="bottom"
-                    >
-                      <button
-                        className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
-                        onClick={() => {
-                          roomState?.room?.disconnect();
-                          handleComponentRefresh();
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          icon={faSync}
-                          size="lg"
-                          className="text-quinary"
-                        />
-                      </button>
-                    </Tippy>
-                  )}
-                  {/* speaker mode toggle  */}
-                  <Tippy
-                    content="Toggle View"
-                    theme="catalyst"
-                    placement="bottom"
-                  >
-                    <button
-                      className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
-                      onClick={() => setSpeakerMode(sMode => !sMode)}
-                    >
-                      <FontAwesomeIcon
-                        icon={speakerMode ? faTh : faThLarge}
-                        size="lg"
-                        className="text-quinary"
-                      />
-                    </button>
-                  </Tippy>
-                  {/* full screen  */}
-                  {!isMobile && (
-                    <Tippy
-                      content="Full Screen"
-                      theme="catalyst"
-                      placement="bottom"
-                    >
-                      <button
-                        className="ml-5 cursor-pointer focus:border-0 focus:outline-none"
-                        onClick={() => {
-                          if (fsHandle.active) fsHandle.exit();
-                          else fsHandle.enter();
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          icon={fsHandle.active ? faCompressAlt : faExpandAlt}
-                          size="lg"
-                          className="text-quinary"
-                        />
-                      </button>
-                    </Tippy>
-                  )}
-                </div>
-              </div>
+                <NavBar fsHandle={fsHandle}
+                  headerRef={headerRef}
+                  chatOpen={chatOpen}
+                  memberCount={memberCount}
+                  cstmSupportUrl={cstmSupportUrl}
+                  disableRefreshBtn={disableRefreshBtn}
+                  handleComponentRefresh={refreshResetRoom}
+                  speakerMode={speakerMode}
+                  setSpeakerMode={setSpeakerMode}
+                />
             )}
-
             <div id="call-section" className="items-end w-full h-full">
               {!roomClosed && (
                 <div id="vid-chat-cont" className="absolute inset-0 flex">
@@ -501,9 +226,7 @@ const CatalystChatView = ({
                 </div>
               )}
               {roomClosed && (
-                <div className="absolute inset-0 z-40 flex items-center justify-center w-full h-full text-xl not-selectable text-quinary">
-                  <span>🖐️ Call ended</span>
-                </div>
+               <RoomClosedMessage/>
               )}
             </div>
           </FullScreen>

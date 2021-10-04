@@ -22,9 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 You can contact us for more details at support@catalyst.chat. */
 
-import { CSSGlobalVariables } from 'css-global-variables';
-import { CatalystTheme } from '../typings/interfaces';
-import { SUPPORT_URL, THEMES } from './globals';
+import { SUPPORT_URL } from "./globals";
+
+
 
 export function logger(data: string): void {
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -85,33 +85,6 @@ export function millisecondsToTime(duration: number): string {
   return hourString + ':' + minuteString + ':' + secondString;
 }
 
-export function setThemeColor(theme: CatalystTheme | string): void {
-  let cssVar = new CSSGlobalVariables();
-  let newTheme = THEMES.default;
-  if (typeof theme === 'string' && theme in THEMES) {
-     cssVar.ctwPrimary = THEMES[theme].primary;
-     cssVar.ctwSecondary = THEMES[theme].secondary;
-     cssVar.ctwTertiary = THEMES[theme].tertiary;
-    cssVar.ctwQuaternary = THEMES[theme].quaternary;
-     cssVar.ctwQuinary = THEMES[theme].quinary;
-  } else if (typeof theme === 'object') {
-    cssVar.ctwPrimary = theme.primary ?? newTheme.primary!;
-    cssVar.ctwSecondary = theme.secondary ?? newTheme.secondary!;
-    cssVar.ctwTertiary = theme.tertiary ?? newTheme.tertiary!;
-    cssVar.ctwQuaternary = theme.quaternary ?? newTheme.quaternary!;
-    cssVar.ctwQuinary = theme.quinary ?? newTheme.quinary!;
-  }
-  var style = document.createElement('style');
-  document.head.appendChild(style);
-  style.sheet?.insertRule(
-    `:root { -- cssVar.ctwPrimary: ${cssVar.ctwPrimary},
-              -- cssVar.ctwSecondary: ${cssVar.ctwSecondary},
-              -- cssVar.ctwTertiary: ${cssVar.ctwTertiary},
-                -- cssVar.ctwQuaternary: ${cssVar.ctwQuaternary},
-                  -- cssVar.ctwQuinary: ${cssVar.ctwQuinary},
-      }`
-  );
-}
 
 function merge(a1, a2) {
   const merged = Array(a1.length + a2.length);
