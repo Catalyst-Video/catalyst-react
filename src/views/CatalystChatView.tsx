@@ -133,6 +133,10 @@ const CatalystChatView = ({
     return () => roomState.disconnectAll();
   }, [roomState.room]);
 
+  useEffect(() => {
+    return fadeOutSettings(fade, isMounted(), headerRef, toolbarRef, videoChatRef);
+  }, [fade]);
+  
   const onLeave = () => {
     if (onLeaveCall) onLeaveCall();
     setRoomClosed(true);
@@ -148,10 +152,6 @@ const CatalystChatView = ({
     handleComponentRefresh()
   }
 
-    useEffect(() => {
-     fadeOutSettings(fade, isMounted(), headerRef, toolbarRef, videoChatRef);
-    }, [fade]);
-  
   return (
     <div id="video-chat" className="relative w-full h-full" ref={videoChatRef}>
       <div id="bg-theme" className="w-full h-full bg-secondary ">
