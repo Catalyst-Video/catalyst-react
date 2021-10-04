@@ -36,9 +36,9 @@ import {
 import { VideoQuality } from "livekit-client/dist/proto/livekit_rtc";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import VidWrapper from "./wrapper/VidWrapper";
-import useMember from '../hooks/useMember';
-import useTimeout from "../hooks/useTimeout";
+import VidWrapper from "../wrapper/VidWrapper";
+import useMember from '../../hooks/useMember';
+import useTimeout from "../../hooks/useTimeout";
 
 const MemberView = React.memo(
   ({

@@ -28,9 +28,9 @@ import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import RoomClosedMessage from '../components/messages/RoomClosedMessage';
 import TokenErrorMessage from '../components/messages/TokenErrorMessage';
 import AudWrapper from '../components/wrapper/AudWrapper';
-import RoomWrapper from '../components/RoomWrapper';
+import RoomWrapper from '../components/wrapper/RoomWrapper';
 import Toolbar from '../components/toolbar/Toolbar';
-import NavBar from '../components/NavBar';
+import NavBar from '../components/header/NavBar';
 // types
 import { ChatMessage, RoomMetaData } from '../typings/interfaces';
 import { BackgroundFilter } from '@vectorly-io/ai-filters';

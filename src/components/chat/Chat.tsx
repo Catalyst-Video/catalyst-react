@@ -28,7 +28,7 @@ import {
   faPaperPlane, faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import { DataPacket_Kind, LocalParticipant } from 'livekit-client';
-import { ChatMessage } from '../typings/interfaces';
+import { ChatMessage } from '../../typings/interfaces';
 import Tippy from '@tippyjs/react';
 
 const Chat = ({

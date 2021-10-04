@@ -1,11 +1,43 @@
-import { faUserFriends, faQuestion, faSync, faTh, faThLarge, faCompressAlt, faExpandAlt } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Tippy from "@tippyjs/react";
-import React, { RefObject } from "react";
-import { isMobile } from "react-device-detect";
-import { FullScreenHandle } from "react-full-screen";
-import { contactSupport } from "../utils/general";
-import HeaderLogo from "./header/Header";
+/*  Catalyst Scientific Video Chat Component File
+Copyright (C) 2021 Catalyst Scientific LLC, Seth Goldin & Joseph Semrai
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version. 
+
+While this code is open-source, you may not use your own version of this
+program commerically for free (whether as a business or attempting to sell a variation
+of Catalyst for a profit). If you are interested in using Catalyst in an 
+enterprise setting, please either visit our website at https://catalyst.chat 
+or contact us for more information.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+You can contact us for more details at support@catalyst.chat. */
+
+import {
+  faUserFriends,
+  faQuestion,
+  faSync,
+  faTh,
+  faThLarge,
+  faCompressAlt,
+  faExpandAlt,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Tippy from '@tippyjs/react';
+import React, { RefObject } from 'react';
+import { isMobile } from 'react-device-detect';
+import { FullScreenHandle } from 'react-full-screen';
+import { contactSupport } from '../../utils/general';
+import HeaderLogo from './Header';
 import 'tippy.js/dist/tippy.css';
 
 const NavBar = ({
