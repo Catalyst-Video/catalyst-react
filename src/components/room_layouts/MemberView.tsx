@@ -34,11 +34,11 @@ import {
   TrackPublication,
 } from "catalyst-lk-client";
 import { VideoQuality } from "catalyst-lk-client";
-import React, { useEffect, useState } from "react";
-import { useInView } from "react-intersection-observer";
+import React, { useEffect, useRef, useState } from "react";
 import VidWrapper from "../wrapper/VidWrapper";
 import useMember from '../../hooks/useMember';
 import useTimeout from "../../hooks/useTimeout";
+import useIntersectionObserver from '../../hooks/useIntersectionObserver';
 
 const MemberView = React.memo(
   ({
@@ -63,16 +63,16 @@ const MemberView = React.memo(
     const [vidEnabled, setVidEnabled] = useState(true);
     const { isLocal, isMuted, subscribedTracks } = useMember(m);
     const [vidPub, setVideoPub] = useState<TrackPublication>();
-    const { ref, inView } = useInView();
-    const [isInit, setInit] = useState(false);
+    const ref = useRef<HTMLDivElement | null>(null);
+    const entry = useIntersectionObserver(ref, {});
+    const isVisible = !!entry?.isIntersecting;
 
     useEffect(() => {
       if (!ref) return;
-      let enabled = inView;
-      if (vidEnabled !== enabled) {
-        setVidEnabled(enabled);
+      if (vidEnabled !== isVisible) {
+        setVidEnabled(isVisible);
       }
-    }, [ref, inView, m]);
+    }, [ref, isVisible, m]);
 
     // TODO: figure out why blue bg not showing when video disabled by default
 
@@ -86,7 +86,6 @@ const MemberView = React.memo(
           !newVideoPub
         ) {
           newVideoPub = pub;
-          setInit(true);
         }
       });
       setVideoPub(newVideoPub);
