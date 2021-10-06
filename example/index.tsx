@@ -92,12 +92,6 @@ const HoursTest = () => {
               disableSetupView
               disableChat
               theme="hoursDark"
-              // theme={{
-              //   primary: '#50c878',
-              //   secondary: '#eee',
-              //   tertiary: 'rgba(0,0,0,.5)',
-              //   quaternary: '#fff',
-              // }}
               onLeaveCall={() => setShowVideoCall(false)}
             />
           </div>
