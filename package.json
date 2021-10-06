@@ -57,7 +57,6 @@
     "catalyst-lk-client": "github:Catalyst-Video/catalyst-lk-client",
     "css-element-queries": "^1.2.3",
     "css-global-variables": "^3.0.2",
-    "livekit-client": "^0.12.2",
     "lodash.debounce": "^4.0.8",
     "react-cookie": "^4.0.3",
     "react-device-detect": "^1.17.0",

@@ -27,7 +27,7 @@ import {
   createLocalVideoTrack,
   CreateVideoTrackOptions,
   LocalVideoTrack,
-} from 'livekit-client';
+} from 'catalyst-lk-client';
 import React, { useRef, useEffect, useState } from 'react';
 import { RoomMetaData } from '../typings/interfaces';
 import VidWrapper from '../components/wrapper/VidWrapper';

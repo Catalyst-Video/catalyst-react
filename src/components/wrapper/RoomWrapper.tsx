@@ -31,7 +31,7 @@ import SpeakerLayout from '../room_layouts/SpeakerLayout';
 import Chat from '../chat/Chat';
 // typings
 import { ChatMessage, RoomData } from '../../typings/interfaces';
-import { Room } from 'livekit-client';
+import { Room } from 'catalyst-lk-client';
 // hooks
 import useIsMounted from '../../hooks/useIsMounted';
 import useTimeout from '../../hooks/useTimeout';

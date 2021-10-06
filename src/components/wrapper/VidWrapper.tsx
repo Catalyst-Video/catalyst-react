@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 You can contact us for more details at support@catalyst.chat. */
 
-import { Track } from 'livekit-client';
+import { Track } from 'catalyst-lk-client';
 import React, { useEffect, useRef, useState } from 'react';
 import useDebounce from '../../hooks/useDebounce';
 

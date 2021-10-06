@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 You can contact us for more details at support@catalyst.chat. */
 
-import { Participant, RemoteVideoTrack, VideoQuality } from "livekit-client";
+import { Participant, RemoteVideoTrack, VideoQuality } from "catalyst-lk-client";
 import React from "react";
 import { DEFAULT_WELCOME_MESSAGE } from "../../utils/globals";
 import ScreenShareWrapper from "../wrapper/ScreenShareView";

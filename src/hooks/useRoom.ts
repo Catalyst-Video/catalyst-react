@@ -11,7 +11,7 @@ import {
   RoomEvent,
   RoomState,
   Track,
-} from 'livekit-client';
+} from 'catalyst-lk-client';
 import { useCallback, useEffect, useState } from 'react';
 import { RoomData } from '../typings/interfaces';
 

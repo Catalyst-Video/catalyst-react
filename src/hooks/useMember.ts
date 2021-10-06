@@ -5,7 +5,7 @@ import {
   ParticipantEvent,
   Track,
   TrackPublication,
-} from 'livekit-client';
+} from 'catalyst-lk-client';
 import { useEffect, useState } from 'react';
 
 const useMember = (member: Participant): {

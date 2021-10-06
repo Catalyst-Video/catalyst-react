@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 You can contact us for more details at support@catalyst.chat. */
 
 import { CSSGlobalVariables } from 'css-global-variables';
-import { Participant, RemoteVideoTrack } from 'livekit-client';
+import { Participant, RemoteVideoTrack } from 'catalyst-lk-client';
 import { RefObject } from 'react';
 import { debounce } from 'ts-debounce';
 import { CatalystTheme } from '../typings/interfaces';

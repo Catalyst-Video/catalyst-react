@@ -27,7 +27,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPaperPlane, faTimes,
 } from '@fortawesome/free-solid-svg-icons';
-import { DataPacket_Kind, LocalParticipant } from 'livekit-client';
+import { DataPacket_Kind, LocalParticipant } from 'catalyst-lk-client';
 import { ChatMessage } from '../../typings/interfaces';
 import Tippy from '@tippyjs/react';
 

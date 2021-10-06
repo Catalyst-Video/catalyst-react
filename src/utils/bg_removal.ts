@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 You can contact us for more details at support@catalyst.chat. */
 
 import { BackgroundFilter } from '@vectorly-io/ai-filters';
-import { LocalTrack } from 'livekit-client';
+import { LocalTrack } from 'catalyst-lk-client';
 
 export const initBgFilter = async (
   bgRemovalKey: string,

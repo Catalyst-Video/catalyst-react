@@ -29,7 +29,7 @@ import {
   Participant,
   Room,
   RoomEvent,
-} from 'livekit-client';
+} from 'catalyst-lk-client';
 import { isMobile } from 'react-device-detect';
 import { RoomData, RoomMetaData } from '../typings/interfaces';
 import { applyBgFilterToTracks, initBgFilter } from './bg_removal';

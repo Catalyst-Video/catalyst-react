@@ -31,7 +31,7 @@ import {
   Room,
   TrackPublication,
   VideoPresets,
-} from 'livekit-client';
+} from 'catalyst-lk-client';
 import { isMobile } from 'react-device-detect';
 import { applyBgFilterToTrack } from './bg_removal';
 

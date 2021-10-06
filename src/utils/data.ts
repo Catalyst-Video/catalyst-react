@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 You can contact us for more details at support@catalyst.chat. */
 
-import { DataPacket_Kind, LocalParticipant } from 'livekit-client';
+import { DataPacket_Kind, LocalParticipant } from 'catalyst-lk-client';
 
 export function sendArbitraryData(
   arbData: Uint8Array,

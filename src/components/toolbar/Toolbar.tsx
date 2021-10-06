@@ -38,7 +38,7 @@ import {
   Track,
   TrackPublication,
   VideoPresets,
-} from 'livekit-client';
+} from 'catalyst-lk-client';
 import React, { useState, useEffect, useRef } from 'react';
 import useMember from '../../hooks/useMember';
 import { isMobile } from 'react-device-detect';

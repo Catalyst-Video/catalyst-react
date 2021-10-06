@@ -32,8 +32,8 @@ import {
   RemoteTrackPublication,
   Track,
   TrackPublication,
-} from "livekit-client";
-import { VideoQuality } from "livekit-client/dist/proto/livekit_rtc";
+} from "catalyst-lk-client";
+import { VideoQuality } from "catalyst-lk-client";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import VidWrapper from "../wrapper/VidWrapper";

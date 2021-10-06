@@ -25,7 +25,7 @@ You can contact us for more details at support@catalyst.chat. */
 import { faDesktop } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Property } from 'csstype';
-import { Track } from 'livekit-client';
+import { Track } from 'catalyst-lk-client';
 import React from 'react';
 import VidWrapper from './VidWrapper';
 

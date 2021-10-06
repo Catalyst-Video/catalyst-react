@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 You can contact us for more details at support@catalyst.chat. */
 
 
-import { Participant, RemoteVideoTrack, VideoQuality } from "livekit-client";
+import { Participant, RemoteVideoTrack, VideoQuality } from "catalyst-lk-client";
 import React, { RefObject, useEffect, useState } from "react";
 import { useFullScreenHandle } from "react-full-screen";
 import useEventListener from "../../hooks/useEventListener";
