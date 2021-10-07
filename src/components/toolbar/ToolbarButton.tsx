@@ -273,9 +273,9 @@ const ToolbarButton = React.memo(
                       <div>
                         <li
                           key={'input-row'}
-                          className="flex items-center text-xs text-quinary font-semibold p-2 whitespace-nowrap border-white border-b border-opacity-20"
+                          className="flex items-center text-xs text-quinary font-semibold p-1 whitespace-nowrap border-white border-b border-opacity-20"
                         >
-                          Background Filters
+                          Background Filter
                         </li>
                         {bgRemovalOps.map((op: string, i) => {
                           return (
