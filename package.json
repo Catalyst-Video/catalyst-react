@@ -43,7 +43,6 @@
     "analyze": "size-limit --why"
   },
   "dependencies": {
-    "@accessible/popover": "^3.5.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
     "@fortawesome/free-regular-svg-icons": "^5.15.3",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
@@ -51,14 +50,13 @@
     "@tippyjs/react": "^4.2.5",
     "@types/css-global-variables": "^3.0.1",
     "@vectorly-io/ai-filters": "^1.4.6",
-    "catalyst-lk-client": "github:Catalyst-Video/catalyst-lk-client",
+    "catalyst-lk-client": "github:Catalyst-Video/catalyst-lk-client#prod",
     "css-element-queries": "^1.2.3",
     "css-global-variables": "^3.0.2",
-    "react-cookie": "^4.0.3",
     "react-device-detect": "^1.17.0",
     "react-full-screen": "^1.0.1",
     "react-scripts": "^4.0.3",
-    "ts-debounce": "^3.0.0"
+    "react-cookie": "^4.0.3"
   },
   "devDependencies": {
     "@babel/helper-member-expression-to-functions": "^7.14.7",
@@ -66,6 +64,7 @@
     "@rollup/plugin-url": "^6.0.0",
     "@size-limit/preset-big-lib": "^4.5.5",
     "@size-limit/preset-small-lib": "^4.5.5",
+    "@tailwindcss/aspect-ratio": "^0.2.1",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@types/autoprefixer": "^10.2.0",
@@ -86,7 +85,6 @@
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-postcss": "^4.0.0",
     "size-limit": "^4.10.1",
-    "@tailwindcss/aspect-ratio": "^0.2.1",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2",
     "tsdx": "^0.14.1",
     "tslib": "^2.3.0",

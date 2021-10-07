@@ -25,9 +25,9 @@ You can contact us for more details at support@catalyst.chat. */
 import { CSSGlobalVariables } from 'css-global-variables';
 import { Participant, RemoteVideoTrack } from 'catalyst-lk-client';
 import { RefObject } from 'react';
-import { debounce } from 'ts-debounce';
 import { CatalystTheme } from '../typings/interfaces';
 import { THEMES } from './globals';
+import { debounce } from './general';
 
 export function setThemeColor(theme: CatalystTheme | string): void {
   let cssVar = new CSSGlobalVariables();
@@ -106,6 +106,7 @@ export function fadeOutSettings(
     };
     var timedelay = 1;
     var isHidden = false;
+    
     const debounceHandleMouse = debounce(() => {
       if (!mounted) return;
       handleMouse();

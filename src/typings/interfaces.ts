@@ -121,3 +121,16 @@ export interface RoomData {
   audioTracks: AudioTrack[];
   error?: Error;
 }
+
+export type Procedure = (...args: any[]) => any;
+
+export type Options<TT> = {
+  isImmediate?: boolean;
+  maxWait?: number;
+  callback?: (data: TT) => void;
+};
+
+export interface DebouncedFunction<F extends Procedure> {
+  (this: ThisParameterType<F>, ...args: Parameters<F>): Promise<ReturnType<F>>;
+  cancel: (reason?: any) => void;
+}

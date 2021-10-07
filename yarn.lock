@@ -2,60 +2,6 @@
 # yarn lockfile v1
 
 
-"@accessible/button@^2.0.2":
-  "integrity" "sha512-CXkkEpjUh1nG2yZ13uq2hR+g4IuStIKnNZG9R2lso0rlEpsAUa34V/JXmYLNVitn/dN03/KHfzkX9aJi837l3Q=="
-  "resolved" "https://registry.npmjs.org/@accessible/button/-/button-2.0.2.tgz"
-  "version" "2.0.2"
-  dependencies:
-    "@accessible/use-key" "^1.0.2"
-    "@react-hook/event" "^1.2.2"
-    "@react-hook/merged-ref" "^1.3.0"
-
-"@accessible/popover@^3.5.1":
-  "integrity" "sha512-lMjI9WiZ/6Q9CxtMdJFJzxOe4hn35rNShaXUfNOOm2O8zcVIhPUn4GHDNIBjuLMX0AST47mmLoehmyB3tQCBEA=="
-  "resolved" "https://registry.npmjs.org/@accessible/popover/-/popover-3.5.1.tgz"
-  "version" "3.5.1"
-  dependencies:
-    "@accessible/button" "^2.0.2"
-    "@accessible/use-conditional-focus" "^3.0.0"
-    "@accessible/use-id" "^1.1.1"
-    "@accessible/use-key" "^1.0.2"
-    "@react-hook/merged-ref" "^1.3.0"
-    "@react-hook/passive-layout-effect" "^1.2.1"
-    "@react-hook/switch" "^1.3.0"
-    "@react-hook/throttle" "^2.1.4"
-    "@react-hook/window-scroll" "^1.3.0"
-    "@react-hook/window-size" "^3.0.7"
-    "clsx" "^1.1.0"
-    "react-portalize" "^2.1.0"
-
-"@accessible/tabbable@^1.1.2":
-  "integrity" "sha512-FJCKCtewk0x2dAr+KYv+SZOgFoclmsBd7wH3i8oVIr09dCRrliHixMqC2g52lasqk1VNfxPjNue1ebEjlP5S+g=="
-  "resolved" "https://registry.npmjs.org/@accessible/tabbable/-/tabbable-1.1.2.tgz"
-  "version" "1.1.2"
-
-"@accessible/use-conditional-focus@^3.0.0":
-  "integrity" "sha512-Vo0gdnHiLfnnATzcarqU45KYp9mkadccjL27TpfHHetT1s0NNEuyc5qirYWxDBBJDk+GaiGzNjJ4/eddkPhKVQ=="
-  "resolved" "https://registry.npmjs.org/@accessible/use-conditional-focus/-/use-conditional-focus-3.0.1.tgz"
-  "version" "3.0.1"
-  dependencies:
-    "@accessible/tabbable" "^1.1.2"
-    "@react-hook/event" "^1.2.2"
-
-"@accessible/use-id@^1.1.1":
-  "integrity" "sha512-0JcdE3a9WuR0hf8EfvoDDcKROOYEklSh9HN8nEQuAuyRQ7FrVYKDOz966nUiknzT4wy7MD4IkbdhkC4LqLhwHA=="
-  "resolved" "https://registry.npmjs.org/@accessible/use-id/-/use-id-1.1.2.tgz"
-  "version" "1.1.2"
-  dependencies:
-    "@react-hook/passive-layout-effect" "^1.2.0"
-
-"@accessible/use-key@^1.0.2":
-  "integrity" "sha512-vB4VsgUXBJRPTu9CbB2YJADL2DJzzoNzXtPBrV00/oIbEiCKZGHcDpdlRVqU4W/LT/q4hY2hEBf3LvQiCMg85w=="
-  "resolved" "https://registry.npmjs.org/@accessible/use-key/-/use-key-1.0.2.tgz"
-  "version" "1.0.2"
-  dependencies:
-    "@react-hook/event" "^1.2.2"
-
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.14.5", "@babel/code-frame@^7.5.5":
   "integrity" "sha512-9pzDqyc6OLDaqe+zbACgFkb6fKMNG6CObKpnYXChRsvYGyEdc7CA2BaqeOM+vOtCS5ndmJicPJhKAwYRI6UfFw=="
   "resolved" "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.14.5.tgz"
@@ -1793,16 +1739,6 @@
     "@types/yargs" "^15.0.0"
     "chalk" "^4.0.0"
 
-"@mediapipe/camera_utils@^0.3.1620247984":
-  "integrity" "sha512-CQEppbvSfgF5BaiA917+x/xHn8ttietc4+co/7RF98AqgjByGQHKLslog1eE7WekgBXYT/qc4z9F1HrOIfy3yQ=="
-  "resolved" "https://registry.npmjs.org/@mediapipe/camera_utils/-/camera_utils-0.3.1620247984.tgz"
-  "version" "0.3.1620247984"
-
-"@mediapipe/selfie_segmentation@^0.1.1629494320":
-  "integrity" "sha512-D3Ap13awSSkP2H+4DQse74H1KwVTN/P2QfdvB0FXL5+9C+uz4YGWB9aRHnBHsbk0ISO9LGJnbDn9iw16WPYTKQ=="
-  "resolved" "https://registry.npmjs.org/@mediapipe/selfie_segmentation/-/selfie_segmentation-0.1.1629494320.tgz"
-  "version" "0.1.1629494320"
-
 "@nodelib/fs.scandir@2.1.4":
   "integrity" "sha512-33g3pMJk3bg5nXbL/+CY6I2eJDzZAni49PfJnL5fghPTggPvBd/pFNSgJsdAgWptuFu7qq/ERvOYFlhvsLTCKA=="
   "resolved" "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.4.tgz"
@@ -1906,66 +1842,6 @@
   "integrity" "sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA="
   "resolved" "https://registry.npmjs.org/@protobufjs/utf8/-/utf8-1.1.0.tgz"
   "version" "1.1.0"
-
-"@react-hook/debounce@^3.0.0":
-  "integrity" "sha512-ir/kPrSfAzY12Gre0sOHkZ2rkEmM4fS5M5zFxCi4BnCeXh2nvx9Ujd+U4IGpKCuPA+EQD0pg1eK2NGLvfWejag=="
-  "resolved" "https://registry.npmjs.org/@react-hook/debounce/-/debounce-3.0.0.tgz"
-  "version" "3.0.0"
-  dependencies:
-    "@react-hook/latest" "^1.0.2"
-
-"@react-hook/event@^1.2.1", "@react-hook/event@^1.2.2":
-  "integrity" "sha512-WMBwLnYY2rubLeecsi4skl1imfx0oiXTgazV/1ByPT6WkmLvxUao3hC+mxps5D/+JK4Fq3uG9OWU/dn5jMtXyg=="
-  "resolved" "https://registry.npmjs.org/@react-hook/event/-/event-1.2.3.tgz"
-  "version" "1.2.3"
-  dependencies:
-    "@react-hook/passive-layout-effect" "^1.2.0"
-
-"@react-hook/latest@^1.0.2", "@react-hook/latest@^1.0.3":
-  "integrity" "sha512-dy6duzl+JnAZcDbNTfmaP3xHiKtbXYOaz3G51MGVljh548Y8MWzTr+PHLOfvpypEVW9zwvl+VyKjbWKEVbV1Rg=="
-  "resolved" "https://registry.npmjs.org/@react-hook/latest/-/latest-1.0.3.tgz"
-  "version" "1.0.3"
-
-"@react-hook/merged-ref@^1.3.0":
-  "integrity" "sha512-9p7fbPZ37n1Cbw37f3EtrcR9TwVjMkoTKwYbG7URO2HDlnOzuNTjsd/VK0/4i52SwKmOa6lBwz6Pr9g0pIyaCg=="
-  "resolved" "https://registry.npmjs.org/@react-hook/merged-ref/-/merged-ref-1.3.0.tgz"
-  "version" "1.3.0"
-
-"@react-hook/passive-layout-effect@^1.2.0", "@react-hook/passive-layout-effect@^1.2.1":
-  "integrity" "sha512-IwEphTD75liO8g+6taS+4oqz+nnroocNfWVHWz7j+N+ZO2vYrc6PV1q7GQhuahL0IOR7JccFTsFKQ/mb6iZWAg=="
-  "resolved" "https://registry.npmjs.org/@react-hook/passive-layout-effect/-/passive-layout-effect-1.2.1.tgz"
-  "version" "1.2.1"
-
-"@react-hook/switch@^1.3.0":
-  "integrity" "sha512-EISeNU8yXCQwMBqmR+O0f5RljRcRDCVRc2L0uLjeD6hHKHUUuMLG6OFPi1nd8D19yRScn4GWNPqB0Z49rLo8eQ=="
-  "resolved" "https://registry.npmjs.org/@react-hook/switch/-/switch-1.3.3.tgz"
-  "version" "1.3.3"
-  dependencies:
-    "@react-hook/latest" "^1.0.3"
-
-"@react-hook/throttle@^2.1.4", "@react-hook/throttle@^2.2.0":
-  "integrity" "sha512-LJ5eg+yMV8lXtqK3lR+OtOZ2WH/EfWvuiEEu0M3bhR7dZRfTyEJKxH1oK9uyBxiXPtWXiQggWbZirMCXam51tg=="
-  "resolved" "https://registry.npmjs.org/@react-hook/throttle/-/throttle-2.2.0.tgz"
-  "version" "2.2.0"
-  dependencies:
-    "@react-hook/latest" "^1.0.2"
-
-"@react-hook/window-scroll@^1.3.0":
-  "integrity" "sha512-LdYnCL22pFI+LTs85Fi2OQHSKWkzIuHFgv8lA+wwuaPxLOEhWR5bzJ21iygUH9X4meeLVRZKEbfpYi3OWWD4GQ=="
-  "resolved" "https://registry.npmjs.org/@react-hook/window-scroll/-/window-scroll-1.3.0.tgz"
-  "version" "1.3.0"
-  dependencies:
-    "@react-hook/event" "^1.2.1"
-    "@react-hook/throttle" "^2.2.0"
-
-"@react-hook/window-size@^3.0.7":
-  "integrity" "sha512-bK5ed/jN+cxy0s1jt2CelCnUt7jZRseUvPQ22ZJkUl/QDOsD+7CA/6wcqC3c0QweM/fPBRP6uI56TJ48SnlVww=="
-  "resolved" "https://registry.npmjs.org/@react-hook/window-size/-/window-size-3.0.7.tgz"
-  "version" "3.0.7"
-  dependencies:
-    "@react-hook/debounce" "^3.0.0"
-    "@react-hook/event" "^1.2.1"
-    "@react-hook/throttle" "^2.2.0"
 
 "@rollup/plugin-babel@^5.1.0":
   "integrity" "sha512-9uIC8HZOnVLrLHxayq/PTzw+uS25E14KPUBh5ktF+18Mjo5yK0ToMMx6epY0uEgkjwJw0aBW4x2horYXh8juWw=="
@@ -2337,13 +2213,6 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/cheerio@^0.22.18":
-  "integrity" "sha512-t7ZVArWZlq3dFa9Yt33qFBQIK4CQd1Q3UJp0V+UhP6vgLWLM6Qug7vZuRSGXg45zXeB1Fm5X2vmBkEX58LV2Tw=="
-  "resolved" "https://registry.npmjs.org/@types/cheerio/-/cheerio-0.22.30.tgz"
-  "version" "0.22.30"
-  dependencies:
-    "@types/node" "*"
-
 "@types/cookie@^0.3.3":
   "integrity" "sha512-LKVP3cgXBT9RYj+t+9FDKwS5tdI+rPBXaNSkma7hvqy35lc7mAokC2zsqWJH0LaqIt3B962nuYI77hsJoT1gow=="
   "resolved" "https://registry.npmjs.org/@types/cookie/-/cookie-0.3.3.tgz"
@@ -2626,13 +2495,6 @@
     "@types/webpack-sources" "*"
     "anymatch" "^3.0.0"
     "source-map" "^0.6.0"
-
-"@types/ws@^7.4.0":
-  "integrity" "sha512-JQbbmxZTZehdc2iszGKs5oC3NFnjeay7mtAWrdt7qNtAVK0g19muApzAy4bm9byz79xa2ZnO/BOBC2R8RC5Lww=="
-  "resolved" "https://registry.npmjs.org/@types/ws/-/ws-7.4.7.tgz"
-  "version" "7.4.7"
-  dependencies:
-    "@types/node" "*"
 
 "@types/yargs-parser@*":
   "integrity" "sha512-37RSHht+gzzgYeobbG+KWryeAW8J33Nhr69cjTqSYymXVZEN9NbRYWoYlRtDhHKPVT1FyNKwaTPC1NynKZpzRA=="
@@ -4391,8 +4253,8 @@
   "resolved" "https://registry.npmjs.org/caseless/-/caseless-0.12.0.tgz"
   "version" "0.12.0"
 
-"catalyst-lk-client@github:Catalyst-Video/catalyst-lk-client":
-  "resolved" "git+ssh://git@github.com/Catalyst-Video/catalyst-lk-client.git#d07a296ead0a807773e2e2bf270c365630d3197c"
+"catalyst-lk-client@github:Catalyst-Video/catalyst-lk-client#prod":
+  "resolved" "git+ssh://git@github.com/Catalyst-Video/catalyst-lk-client.git#5da047079d19919edfe33e7a68f7c18480072226"
   "version" "1.0.0"
   dependencies:
     "accepts" "^1.3.7"
@@ -4935,30 +4797,6 @@
   "resolved" "https://registry.npmjs.org/check-types/-/check-types-11.1.2.tgz"
   "version" "11.1.2"
 
-"cheerio-select@^1.5.0":
-  "integrity" "sha512-qocaHPv5ypefh6YNxvnbABM07KMxExbtbfuJoIie3iZXX1ERwYmJcIiRrr9H05ucQP1k28dav8rpdDgjQd8drg=="
-  "resolved" "https://registry.npmjs.org/cheerio-select/-/cheerio-select-1.5.0.tgz"
-  "version" "1.5.0"
-  dependencies:
-    "css-select" "^4.1.3"
-    "css-what" "^5.0.1"
-    "domelementtype" "^2.2.0"
-    "domhandler" "^4.2.0"
-    "domutils" "^2.7.0"
-
-"cheerio@^1.0.0-rc.3":
-  "integrity" "sha512-g0J0q/O6mW8z5zxQ3A8E8J1hUgp4SMOvEoW/x84OwyHKe/Zccz83PVT4y5Crcr530FV6NgmKI1qvGTKVl9XXVw=="
-  "resolved" "https://registry.npmjs.org/cheerio/-/cheerio-1.0.0-rc.10.tgz"
-  "version" "1.0.0-rc.10"
-  dependencies:
-    "cheerio-select" "^1.5.0"
-    "dom-serializer" "^1.3.2"
-    "domhandler" "^4.2.0"
-    "htmlparser2" "^6.1.0"
-    "parse5" "^6.0.1"
-    "parse5-htmlparser2-tree-adapter" "^6.0.1"
-    "tslib" "^2.2.0"
-
 "chokidar@^2.1.8":
   "integrity" "sha512-ZmZUazfOzf0Nve7duiCKD23PFSCs4JPoYyccjUFF3aQkQadqBhfzhjkwBH2mNOG9cTBwhamM37EIsIkZw3nRgg=="
   "resolved" "https://registry.npmjs.org/chokidar/-/chokidar-2.1.8.tgz"
@@ -5134,11 +4972,6 @@
   "integrity" "sha1-2jCcwmPfFZlMaIypAheco8fNfH4="
   "resolved" "https://registry.npmjs.org/clone/-/clone-1.0.4.tgz"
   "version" "1.0.4"
-
-"clsx@^1.1.0":
-  "integrity" "sha512-6/bPho624p3S2pMyvP5kKBPXnI3ufHLObBFCfgx+LkeR5lg2XYy2hqZqUf45ypD8COn2bhgGJSUE+l5dhNBieA=="
-  "resolved" "https://registry.npmjs.org/clsx/-/clsx-1.1.1.tgz"
-  "version" "1.1.1"
 
 "co@^4.6.0":
   "integrity" "sha1-bqa989hTrlTMuOR7+gvz+QMfsYQ="
@@ -5724,7 +5557,7 @@
   "resolved" "https://registry.npmjs.org/css-what/-/css-what-3.4.2.tgz"
   "version" "3.4.2"
 
-"css-what@^5.0.0", "css-what@^5.0.1":
+"css-what@^5.0.0":
   "integrity" "sha512-FYDTSHb/7KXsWICVsxdmiExPjCfRC4qRFBdVwv7Ax9hMnvMmEjP9RfxTEZ3qPZGmADDn2vAKSo9UcN1jKVYscg=="
   "resolved" "https://registry.npmjs.org/css-what/-/css-what-5.0.1.tgz"
   "version" "5.0.1"
@@ -6299,7 +6132,7 @@
   dependencies:
     "utila" "~0.4"
 
-"dom-serializer@^1.0.1", "dom-serializer@^1.3.2":
+"dom-serializer@^1.0.1":
   "integrity" "sha512-5c54Bk5Dw4qAxNOI1pFEizPSjVsx5+bpJKmL2kPn8JhBUq2q09tTCa3mjijun2NfK78NMouDYNMBkOrPZiS+ig=="
   "resolved" "https://registry.npmjs.org/dom-serializer/-/dom-serializer-1.3.2.tgz"
   "version" "1.3.2"
@@ -6360,7 +6193,7 @@
     "dom-serializer" "0"
     "domelementtype" "1"
 
-"domutils@^2.5.2", "domutils@^2.6.0", "domutils@^2.7.0":
+"domutils@^2.5.2", "domutils@^2.6.0":
   "integrity" "sha512-8eaHa17IwJUPAiB+SoTYBo5mCdeMgdcAoXJ59m6DT1vw+5iLS3gNoqYaRowaBKtGVrOF1Jz4yDTgYKLK2kvfJg=="
   "resolved" "https://registry.npmjs.org/domutils/-/domutils-2.7.0.tgz"
   "version" "2.7.0"
@@ -10382,18 +10215,6 @@
     "simple-git" "^1.96.0"
     "write-yaml" "^1.0.0"
 
-"livekit-client@^0.12.2":
-  "integrity" "sha512-QyPtaGz6c8X0BfmdVyRrL5kSgZtnulT9IIYBZRekrCmE5RVN8p7O+UKU9uFutOUMPLia4qLHHFVBVbiQeNolSQ=="
-  "resolved" "https://registry.npmjs.org/livekit-client/-/livekit-client-0.12.2.tgz"
-  "version" "0.12.2"
-  dependencies:
-    "@types/ws" "^7.4.0"
-    "events" "^3.3.0"
-    "loglevel" "^1.7.1"
-    "protobufjs" "^6.10.2"
-    "ts-debounce" "^3.0.0"
-    "webrtc-adapter" "^7.7.1"
-
 "load-json-file@^4.0.0":
   "integrity" "sha1-L19Fq5HjMhYjT9U62rZo607AmTs="
   "resolved" "https://registry.npmjs.org/load-json-file/-/load-json-file-4.0.0.tgz"
@@ -11744,18 +11565,6 @@
     "error-ex" "^1.3.1"
     "json-parse-even-better-errors" "^2.3.0"
     "lines-and-columns" "^1.1.6"
-
-"parse5-htmlparser2-tree-adapter@^6.0.1":
-  "integrity" "sha512-qPuWvbLgvDGilKc5BoicRovlT4MtYT6JfJyBOMDsKoiT+GiuP5qyrPCnR9HcPECIJJmZh5jRndyNThnhhb/vlA=="
-  "resolved" "https://registry.npmjs.org/parse5-htmlparser2-tree-adapter/-/parse5-htmlparser2-tree-adapter-6.0.1.tgz"
-  "version" "6.0.1"
-  dependencies:
-    "parse5" "^6.0.1"
-
-"parse5@^6.0.1":
-  "integrity" "sha512-Ofn/CTFzRGTTxwpNEs9PP93gXShHcTq255nzRYSKe8AkVpZY7e1fpmTfOyoIvjP5HG7Z2ZM7VS9PPhQGW2pOpw=="
-  "resolved" "https://registry.npmjs.org/parse5/-/parse5-6.0.1.tgz"
-  "version" "6.0.1"
 
 "parse5@5.1.0":
   "integrity" "sha512-fxNG2sQjHvlVAYmzBZS9YlDp6PTSSDwa98vkD4QgVDDCAo84z5X1t5XyJQ62ImdLXx5NdIIfihey6xpum9/gRQ=="
@@ -13195,7 +13004,7 @@
     "object-assign" "^4.1.1"
     "react-is" "^16.8.1"
 
-"protobufjs@^6.10.2", "protobufjs@^6.11.2", "protobufjs@^6.8.8":
+"protobufjs@^6.11.2", "protobufjs@^6.8.8":
   "integrity" "sha512-4BQJoPooKJl2G9j3XftkIXjoC9C0Av2NOrWmbLWT1vH32GcSUHjM0Arra6UfTsVyfMAuFzaLucXn1sadxJydAw=="
   "resolved" "https://registry.npmjs.org/protobufjs/-/protobufjs-6.11.2.tgz"
   "version" "6.11.2"
@@ -13489,11 +13298,6 @@
   dependencies:
     "fscreen" "^1.0.2"
 
-"react-intersection-observer@^8.32.0":
-  "integrity" "sha512-RlC6FvS3MFShxTn4FHAy904bVjX5Nn4/eTjUkurW0fHK+M/fyQdXuyCy9+L7yjA+YMGogzzSJNc7M4UtfSKvtw=="
-  "resolved" "https://registry.npmjs.org/react-intersection-observer/-/react-intersection-observer-8.32.0.tgz"
-  "version" "8.32.0"
-
 "react-is@^16.12.0":
   "integrity" "sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ=="
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
@@ -13518,14 +13322,6 @@
   "integrity" "sha512-NAnt2iGDXohE5LI7uBnLnqvLQMtzhkiAOLXTmv+qnF9Ky7xAPcX8Up/xWIhxvLVGJvuLiNc4xQLtuqDRzb4fSA=="
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-17.0.1.tgz"
   "version" "17.0.1"
-
-"react-portalize@^2.1.0":
-  "integrity" "sha512-yLVPtGdIyizsUlArYJFgEpTjX4cIpqt1H0Pz4sdyVXrKL/Fve56SOOTRczh5PkpKhOowgfV1wNaibdFnlr8/Nw=="
-  "resolved" "https://registry.npmjs.org/react-portalize/-/react-portalize-2.1.0.tgz"
-  "version" "2.1.0"
-  dependencies:
-    "@types/cheerio" "^0.22.18"
-    "cheerio" "^1.0.0-rc.3"
 
 "react-refresh@^0.8.3", "react-refresh@>=0.8.3 <0.10.0":
   "integrity" "sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg=="
@@ -13598,7 +13394,7 @@
   optionalDependencies:
     "fsevents" "^2.1.3"
 
-"react@*", "react@^15.0.0 || ^16.0.0 || ^17.0.0|| ^18.0.0", "react@^16.14.0", "react@^16.8.0", "react@>= 0.14.0 < 18.0.0", "react@>= 16", "react@>= 16.3.0", "react@>=16.8", "react@>=16.x":
+"react@*", "react@^16.14.0", "react@^16.8.0", "react@>= 0.14.0 < 18.0.0", "react@>= 16", "react@>= 16.3.0", "react@>=16.8", "react@>=16.x":
   "integrity" "sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g=="
   "resolved" "https://registry.npmjs.org/react/-/react-16.14.0.tgz"
   "version" "16.14.0"
@@ -16034,7 +15830,7 @@
   "resolved" "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz"
   "version" "1.14.1"
 
-"tslib@^2.0.3", "tslib@^2.2.0", "tslib@^2.3.0":
+"tslib@^2.0.3", "tslib@^2.3.0":
   "integrity" "sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg=="
   "resolved" "https://registry.npmjs.org/tslib/-/tslib-2.3.0.tgz"
   "version" "2.3.0"
