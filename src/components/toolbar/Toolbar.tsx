@@ -46,14 +46,9 @@ import AudioDeviceBtn from './AudioDeviceBtn';
 import ToolbarButton from './ToolbarButton';
 import VidDeviceBtn from './VidDeviceBtn';
 import useLocalStorage from '../../hooks/useLocalStorage';
-import { ChatMessage } from '../../typings/interfaces';
+import { BackgroundFilter, ChatMessage } from '../../typings/interfaces';
 import Tippy from '@tippyjs/react';
 import useIsMounted from '../../hooks/useIsMounted';
-import {
-  initBgFilter,
-  applyBgFilterToTrack,
-} from '../../utils/bg_removal';
-import { BackgroundFilter } from '@vectorly-io/ai-filters';
 import { initAudioVideoDevices, reInitAudioDevice, reInitVideoDevice, startScreenShare } from '../../utils/devices';
 
 const Toolbar = ({
@@ -104,8 +99,8 @@ const Toolbar = ({
   const [showChatSent, setShowChatSent] = useState<boolean>(false);
   const chatBtnRef = useRef<HTMLDivElement>(null);
   // bg removal
-  const [filterEnabled, setFilterEnabled] = useState<boolean>(bgRemoval && bgRemoval !== 'none' ? true : false);
-  const [bgRemovalEffect, setBgRemovalEffect] = useState(bgRemoval ?? 'none');
+  // const [filterEnabled, setFilterEnabled] = useState<boolean>(bgRemoval && bgRemoval !== 'none' ? true : false);
+  // const [bgRemovalEffect, setBgRemovalEffect] = useState(bgRemoval ?? 'none');
 
   useEffect(() => {
     setAudioPub(publications.find(p => p.kind === Track.Kind.Audio));
@@ -122,12 +117,12 @@ const Toolbar = ({
   }, [audioDevice]);
 
   useEffect(() => {
-    reInitVideoDevice(room, setVidDId, video, videoDevice, vidDId, bgRemovalEffect, bgFilter);
+    reInitVideoDevice(room, setVidDId, video, videoDevice, vidDId);
   }, [videoDevice]);
 
-  useEffect(() => {
-    handleBgEffect();
-  }, [bgRemovalEffect]);
+  // useEffect(() => {
+  //   handleBgEffect();
+  // }, [bgRemovalEffect]);
 
   useEffect(() => {
     if (
@@ -166,62 +161,10 @@ const Toolbar = ({
     } else {
       let newTrack: LocalVideoTrack | MediaStreamTrack;
       newTrack = await createLocalVideoTrack({ deviceId: videoDevice?.deviceId })
-      if (bgRemovalEffect && bgFilter && !isMobile) {
-        await applyBgFilterToTrack(newTrack.mediaStreamTrack, bgFilter);
-        newTrack = await bgFilter.getOutputTrack();
-      }
+     
       if (newTrack) room.localParticipant.publishTrack(newTrack);
     }
   };
-
-    const handleBgEffect = async () => {
-      let filter: BackgroundFilter | undefined | null = bgFilter;
-      let track: LocalVideoTrack | MediaStreamTrack | undefined;
-      if (!filter && video && bgRemovalKey.length > 0 && !isMobile) {
-        track = await createLocalVideoTrack({
-          deviceId: videoDevice?.deviceId,
-        });
-        if (video) unpublishTrack(video.track as LocalVideoTrack);
-        filter = await initBgFilter(
-          bgRemovalKey,
-          video.track as LocalVideoTrack,
-          bgRemovalEffect
-        );
-        setBgFilter(filter);
-        setFilterEnabled(true);
-        if (filter) track = await filter.getOutputTrack();
-        room.localParticipant.publishTrack(track);
-      } else if (filter) {
-        if (bgRemovalEffect === 'none') {
-          const filterDisabledStream = await filter.disable();
-          if (filterDisabledStream) {
-            track = filterDisabledStream.getVideoTracks()[0];
-            if (track) {
-              if (video) unpublishTrack(video.track as LocalVideoTrack);
-              room.localParticipant.publishTrack(track);
-              setFilterEnabled(false);
-            }
-          }
-        } else {
-          if (!filterEnabled) {
-            const filterEnabledStream = await filter.enable();
-            if (filterEnabledStream) {
-              track = await filter.getOutputTrack();
-              if (track) {
-                if (video) unpublishTrack(video.track as LocalVideoTrack);
-                room.localParticipant.publishTrack(track);
-                setFilterEnabled(true);
-              }
-            }
-          }
-          if (bgRemovalEffect === 'blur' && filter.background !== 'blur') {
-            await filter.changeBackground('blur');
-          } else if (filter.background !== bgRemovalEffect) {
-            await filter.changeBackground(bgRemovalEffect);
-          }
-        }
-      }
-    };
 
   const getLastChat = () => {
     return chatMessages[chatMessages.length - 1];
@@ -247,8 +190,8 @@ const Toolbar = ({
         videoDevice={videoDevice}
         bgRemovalEnabled={bgRemovalKey.length > 0 && !isMobile}
         cstmSupportUrl={cstmSupportUrl}
-        bgRemovalEffect={bgRemovalEffect}
-        setBgRemovalEffect={setBgRemovalEffect}
+        // bgRemovalEffect={bgRemovalEffect}
+        // setBgRemovalEffect={setBgRemovalEffect}
       />
       {/* Screen Share */}
       {!isMobile && (

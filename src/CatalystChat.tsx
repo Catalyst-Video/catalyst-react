@@ -52,7 +52,7 @@ const CatalystChat = ({
   audioOffDefault,
   videoOffDefault,
   simulcast,
-  bgRemoval,
+  // bgRemoval,
   disableChat,
   disableSelfieMode,
   disableSetupView,
@@ -122,9 +122,6 @@ const CatalystChat = ({
                   .json()
                   .then((user: CatalystUserData) => {
                     if (!isMounted()) return;
-                    if (user.vectorlyToken.length > 0) {
-                      setBgRemovalKey(user.vectorlyToken);
-                    } 
                     if (handleUserData) {
                       handleUserData(user);
                     }

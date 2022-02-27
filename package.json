@@ -49,7 +49,6 @@
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@tippyjs/react": "^4.2.5",
     "@types/css-global-variables": "^3.0.1",
-    "@vectorly-io/ai-filters": "^1.4.6",
     "catalyst-lk-client": "github:Catalyst-Video/catalyst-lk-client#prod",
     "css-element-queries": "^1.2.3",
     "css-global-variables": "^3.0.2",
