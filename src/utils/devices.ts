@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 You can contact us for more details at support@catalyst.chat. */
 
-import { BackgroundFilter } from '@vectorly-io/ai-filters';
 import {
   createLocalAudioTrack,
   createLocalVideoTrack,
@@ -32,8 +31,8 @@ import {
   TrackPublication,
   VideoPresets,
 } from 'catalyst-lk-client';
-import { isMobile } from 'react-device-detect';
-import { applyBgFilterToTrack } from './bg_removal';
+// import { isMobile } from 'react-device-detect';
+import { BackgroundFilter } from '../typings/interfaces';
 
 export async function initOutputDevice(
   outDeviceId: string,
@@ -151,10 +150,6 @@ export async function reInitVideoDevice(
       deviceId: videoDevice?.deviceId,
     });
     if (video) unpublishTrack(video.track as LocalVideoTrack);
-    if (bgRemovalEffect && bgFilter && !isMobile) {
-      await applyBgFilterToTrack(newTrack.mediaStreamTrack, bgFilter);
-      newTrack = await bgFilter.getOutputTrack();
-    }
     room.localParticipant.publishTrack(newTrack);
   }
 }

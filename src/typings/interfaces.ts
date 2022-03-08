@@ -34,7 +34,7 @@ export interface CatalystChatProps {
   audioOffDefault?: boolean;
   videoOffDefault?: boolean;
   simulcast?: boolean;
-  bgRemoval?: 'blur' | string;
+  // bgRemoval?: 'blur' | string;
   disableChat?: boolean;
   disableSelfieMode?: boolean;
   disableSetupView?: boolean;
@@ -104,7 +104,6 @@ export interface CatalystUserData {
     __v: number;
   };
   isNewUser: boolean;
-  vectorlyToken: string;
 }
 
 export interface RoomData {
@@ -134,3 +133,5 @@ export interface DebouncedFunction<F extends Procedure> {
   (this: ThisParameterType<F>, ...args: Parameters<F>): Promise<ReturnType<F>>;
   cancel: (reason?: any) => void;
 }
+
+export type BackgroundFilter = any;
